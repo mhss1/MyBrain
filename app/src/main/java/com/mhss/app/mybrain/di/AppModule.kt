@@ -3,10 +3,7 @@ package com.mhss.app.mybrain.di
 import android.content.Context
 import androidx.room.Room
 import com.mhss.app.mybrain.data.local.MyBrainDatabase
-import com.mhss.app.mybrain.data.local.dao.BookmarkDao
-import com.mhss.app.mybrain.data.local.dao.DiaryDao
-import com.mhss.app.mybrain.data.local.dao.NoteDao
-import com.mhss.app.mybrain.data.local.dao.TaskDao
+import com.mhss.app.mybrain.data.local.dao.*
 import com.mhss.app.mybrain.data.repository.*
 import com.mhss.app.mybrain.domain.repository.*
 import dagger.Module
@@ -65,4 +62,12 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCalendarRepository(@ApplicationContext context: Context): CalendarRepository = CalendarRepositoryImpl(context)
+
+    @Singleton
+    @Provides
+    fun provideAlarmDao(myBrainDatabase: MyBrainDatabase) = myBrainDatabase.alarmDao()
+
+    @Singleton
+    @Provides
+    fun provideAlarmRepository(alarmDao: AlarmDao): AlarmRepository = AlarmRepositoryImpl(alarmDao)
 }

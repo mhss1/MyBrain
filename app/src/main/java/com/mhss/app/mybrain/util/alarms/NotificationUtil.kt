@@ -1,18 +1,41 @@
 package com.mhss.app.mybrain.util.alarms
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.app.getString
+import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.util.Constants
 
-fun NotificationManager.sendNotification(message: String, context: Context, id: Int) {
+fun NotificationManager.sendNotification(task: Task, context: Context, id: Int) {
+    val completeIntent = Intent(context, TaskActionButtonBroadcastReceiver::class.java).apply {
+        action = Constants.ACTION_COMPLETE
+        putExtra(Constants.TASK_ID_EXTRA, task.id)
+    }
+    val completePendingIntent: PendingIntent =
+        PendingIntent.getBroadcast(
+            context,
+            task.id,
+            completeIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+    // TODO("Add pending intent to navigate to the task details screen")
     val notification = NotificationCompat.Builder(context, Constants.REMINDERS_CHANNEL_ID)
-//       TODO() .setSmallIcon()
-        .setContentTitle(context.getString(R.string.app_name))
-        .setContentText(message)
+        .setSmallIcon(R.drawable.ic_done) // TODO change icon to app icon
+        .setContentTitle(task.title)
+        .setContentText(task.description)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .addAction(R.drawable.ic_done, getString(R.string.complete), completePendingIntent)
+        .setAutoCancel(true)
         .build()
 
     notify(id, notification)
+}
+
+fun NotificationManager.cancelNotification(id: Int) {
+    cancel(id)
 }

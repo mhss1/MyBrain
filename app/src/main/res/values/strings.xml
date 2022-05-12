@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">My Brain</string>
 
-    <!-- Notification -->
     <string name="reminders_channel_description">Notification channel for sending tasks reminders notification</string>
     <string name="reminders_channel_name">Reminders</string>
+    <string name="complete">Complete</string>
 
 </resources>
