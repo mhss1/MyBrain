@@ -25,11 +25,11 @@ fun NotificationManager.sendNotification(task: Task, context: Context, id: Int) 
 
     // TODO("Add pending intent to navigate to the task details screen")
     val notification = NotificationCompat.Builder(context, Constants.REMINDERS_CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_done) // TODO change icon to app icon
+        .setSmallIcon(R.drawable.app_icon_foreground_small)
         .setContentTitle(task.title)
         .setContentText(task.description)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .addAction(R.drawable.ic_done, getString(R.string.complete), completePendingIntent)
+        .addAction(R.drawable.ic_check, getString(R.string.complete), completePendingIntent)
         .setAutoCancel(true)
         .build()
 
