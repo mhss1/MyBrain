@@ -23,6 +23,12 @@ class BookmarkRepositoryImpl (
         }
     }
 
+    override suspend fun searchBookmarks(query: String): List<Bookmark> {
+        return withContext(ioDispatcher) {
+            bookmarkDao.getBookmarksByTitle(query)
+        }
+    }
+
     override suspend fun addBookmark(bookmark: Bookmark) {
         withContext(ioDispatcher) {
             bookmarkDao.insertBookmark(bookmark)

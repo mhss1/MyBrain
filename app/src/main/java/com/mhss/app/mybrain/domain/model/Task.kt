@@ -11,10 +11,10 @@ data class Task(
     @ColumnInfo(name = "is_completed")
     val isCompleted: Boolean = false,
     val priority: Int = 0,
-    @ColumnInfo(name = "created_at")
-    val createdAt: Long = 0L,
-    @ColumnInfo(name = "updated_at")
-    val updatedAt: Long = 0L,
+    @ColumnInfo(name = "created_date")
+    val createdDate: Long = 0L,
+    @ColumnInfo(name = "updated_date")
+    val updatedDate: Long = 0L,
     @ColumnInfo(name = "sub_tasks")
     val subTasks: List<SubTask> = emptyList(),
     val dueDate: Long = 0L,

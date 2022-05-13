@@ -10,6 +10,8 @@ interface BookmarkRepository {
 
     suspend fun getBookmark(id: Int): Bookmark
 
+    suspend fun searchBookmarks(query: String): List<Bookmark>
+
     suspend fun addBookmark(bookmark: Bookmark)
 
     suspend fun deleteBookmark(bookmark: Bookmark)
