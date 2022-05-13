@@ -2,6 +2,7 @@ package com.mhss.app.mybrain.di
 
 import android.content.Context
 import androidx.room.Room
+import com.mhss.app.mybrain.app.dataStore
 import com.mhss.app.mybrain.data.local.MyBrainDatabase
 import com.mhss.app.mybrain.data.local.dao.*
 import com.mhss.app.mybrain.data.repository.*
@@ -70,4 +71,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideAlarmRepository(alarmDao: AlarmDao): AlarmRepository = AlarmRepositoryImpl(alarmDao)
+
+    @Singleton
+    @Provides
+    fun provideSettingsRepository(@ApplicationContext context: Context): SettingsRepository = SettingsRepositoryImpl(context.dataStore)
 }

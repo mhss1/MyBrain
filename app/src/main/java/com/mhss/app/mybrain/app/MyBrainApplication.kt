@@ -6,9 +6,14 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.annotation.StringRes
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.util.Constants
 import dagger.hilt.android.HiltAndroidApp
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.SETTINGS_PREFERENCES)
 
 @HiltAndroidApp
 class MyBrainApplication : Application() {
