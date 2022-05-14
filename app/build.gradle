@@ -66,8 +66,9 @@ dependencies {
 
     // Compose navigation
     implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
-    // Room
+// Room
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"

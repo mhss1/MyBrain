@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBrain">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MyBrain">
             <intent-filter>

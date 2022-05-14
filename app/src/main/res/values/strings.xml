@@ -4,5 +4,20 @@
     <string name="reminders_channel_description">Notification channel for sending tasks reminders notification</string>
     <string name="reminders_channel_name">Reminders</string>
     <string name="complete">Complete</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="settings">Settings</string>
+    <string name="spaces">Spaces</string>
+    <string name="app_theme">App Theme</string>
+    <string name="light_theme">Light Theme</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="auto_theme">Auto</string>
+    <string name="default_start_up_screen">Default startup screen</string>
+    <string name="about">About</string>
+    <string name="app_version">App version</string>
+    <string name="project_on_github">Project on GitHub</string>
+    <string name="my_brain_is_open_source">My Brain is open source!</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="product">Product</string>
+    <string name="support_the_app">Support the app</string>
 
 </resources>

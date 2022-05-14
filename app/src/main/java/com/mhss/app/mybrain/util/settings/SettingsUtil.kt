@@ -7,6 +7,10 @@ enum class ThemeSettings(val value: Int) {
     AUTO(2)
 }
 
+enum class StartUpScreenSettings(val value: Int) {
+    DASHBOARD(0),
+    SPACES(1)
+}
 sealed class OrderType {
     object ASC : OrderType()
     object DESC : OrderType()
