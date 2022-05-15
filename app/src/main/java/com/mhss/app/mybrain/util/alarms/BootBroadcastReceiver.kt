@@ -16,7 +16,7 @@ class BootBroadcastReceiver : BroadcastReceiver() {
     lateinit var getAllAlarms: GetAllAlarmsUseCase
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent?.action == "android.intent.action.BOOT_COMPLETED") {
+        if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
             val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             runBlocking {
                 val alarms = getAllAlarms()

@@ -18,8 +18,6 @@ data class Task(
     @ColumnInfo(name = "sub_tasks")
     val subTasks: List<SubTask> = emptyList(),
     val dueDate: Long = 0L,
-    // TODO add colors
-    val color: Int = 0,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 )

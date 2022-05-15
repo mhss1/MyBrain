@@ -31,8 +31,8 @@ class TaskRepositoryImpl (
         }
     }
 
-    override suspend fun insertTask(task: Task) {
-        withContext(ioDispatcher) {
+    override suspend fun insertTask(task: Task): Long{
+        return withContext(ioDispatcher) {
             taskDao.insertTask(task)
         }
     }

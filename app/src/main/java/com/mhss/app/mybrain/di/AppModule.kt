@@ -1,5 +1,6 @@
 package com.mhss.app.mybrain.di
 
+import android.app.AlarmManager
 import android.content.Context
 import androidx.room.Room
 import com.mhss.app.mybrain.app.dataStore
@@ -75,4 +76,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideSettingsRepository(@ApplicationContext context: Context): SettingsRepository = SettingsRepositoryImpl(context.dataStore)
-}
+
+    @Singleton
+    @Provides
+    fun provideAppContext(@ApplicationContext context: Context) = context
+    }

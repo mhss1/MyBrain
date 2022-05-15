@@ -5,10 +5,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.mhss.app.mybrain.presentation.main.components.MainBottomBar
+import com.mhss.app.mybrain.presentation.main.components.NavigationGraph
 import com.mhss.app.mybrain.presentation.util.BottomNavItem
 
 
-@ExperimentalAnimationApi
 @Composable
 fun MainScreen(
     startUpScreen: String,

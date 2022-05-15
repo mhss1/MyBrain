@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.mhss.app.mybrain"
-        minSdk 23
+        minSdk 24
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -23,7 +23,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -33,6 +34,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+
     }
     buildFeatures {
         compose true
@@ -43,6 +45,16 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+kotlin {
+    sourceSets {
+        all {
+            languageSettings {
+                optIn("kotlin.RequiresOptIn")
+            }
         }
     }
 }

@@ -1,13 +1,14 @@
-package com.mhss.app.mybrain.presentation.main
+package com.mhss.app.mybrain.presentation.main.components
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.mhss.app.mybrain.presentation.main.DashboardScreen
+import com.mhss.app.mybrain.presentation.main.SettingsScreen
+import com.mhss.app.mybrain.presentation.main.SpacesScreen
 import com.mhss.app.mybrain.presentation.util.Screen
 
-@ExperimentalAnimationApi
 @Composable
 fun NavigationGraph(
     navController: NavHostController,

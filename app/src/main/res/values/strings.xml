@@ -11,13 +11,29 @@
     <string name="light_theme">Light Theme</string>
     <string name="dark_theme">Dark Theme</string>
     <string name="auto_theme">Auto</string>
-    <string name="default_start_up_screen">Default startup screen</string>
+    <string name="start_up_screen">Startup screen</string>
     <string name="about">About</string>
     <string name="app_version">App version</string>
     <string name="project_on_github">Project on GitHub</string>
-    <string name="my_brain_is_open_source">My Brain is open source!</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="product">Product</string>
-    <string name="support_the_app">Support the app</string>
+    <string name="donate">Donate</string>
+    <string name="notes">Notes</string>
+    <string name="tasks">Tasks</string>
+    <string name="diary">Diary</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="calendar">Calendar</string>
+    <string name="add_task">Add task</string>
+    <string name="search">Search</string>
+    <string name="title">Title</string>
+    <string name="delete_sub_task">Delete Sub task</string>
+    <string name="add_sub_task">Add sub task</string>
+    <string name="description">Description</string>
+    <string name="request_feature_report_bug">Request a feature / Report a bug</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+    <string name="due_date">Due date</string>
+    <string name="error_empty_title">Title cannot be empty</string>
 
 </resources>

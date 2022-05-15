@@ -7,11 +7,13 @@ import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun SettingsItemCard(
     modifier: Modifier = Modifier,
+    cornerRadius: Dp = 25.dp,
     onClick: () -> Unit = {},
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -19,7 +21,7 @@ fun SettingsItemCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 12.dp),
-        shape = RoundedCornerShape(25.dp),
+        shape = RoundedCornerShape(cornerRadius),
         elevation = 6.dp,
     ) {
         Row(

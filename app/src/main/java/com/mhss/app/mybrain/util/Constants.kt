@@ -20,11 +20,12 @@ object Constants {
     const val BOOKMARK_ORDER_KEY = "bookmark_order"
     const val DIARY_ORDER_KEY = "diary_order"
 
-    // NavArgs
+    // Navigation
     const val TASK_ID_ARG = "task_id"
     const val NOTE_ID_ARG = "note_id"
     const val BOOKMARK_ID_ARG = "bookmark_id"
     const val DIARY_ID_ARG = "diary_id"
+    const val TASK_DETAILS_URI = "app://com.mhss.app.mybrain/task_details"
 
     // lINKS
     const val PROJECT_GITHUB_LINK = "https://github.com/mhss1/ByBrain"
@@ -32,6 +33,7 @@ object Constants {
     const val KO_FI_LINK = "https://ko-fi.com/mhss1"
     const val BUY_ME_A_COFFEE_LINK = "https://www.buymeacoffee.com/mhss"
     const val PAYPAL_LINK = "https://www.paypal.me/mhss1"
+    const val GITHUB_ISSUES_LINK = "https://github.com/mhss1/ByBrain/issues"
 
 
 }
