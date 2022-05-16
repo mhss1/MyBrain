@@ -1,14 +1,15 @@
 package com.mhss.app.mybrain.domain.repository
 
 import com.mhss.app.mybrain.domain.model.Task
+import kotlinx.coroutines.flow.Flow
 
 interface TaskRepository {
 
-    suspend fun getAllTasks(): List<Task>
+    fun getAllTasks(): Flow<List<Task>>
 
     suspend fun getTaskById(id: Int): Task
 
-    suspend fun searchTasks(title: String): List<Task>
+    fun searchTasks(title: String): Flow<List<Task>>
 
     suspend fun insertTask(task: Task): Long
 

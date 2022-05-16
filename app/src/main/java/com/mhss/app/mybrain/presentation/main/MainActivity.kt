@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
@@ -21,6 +20,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
+import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.DarkBackground
 import com.mhss.app.mybrain.ui.theme.MyBrainTheme
@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 @Suppress("BlockingMethodInNonBlockingContext")
-@OptIn(ExperimentalAnimationApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -42,8 +41,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val themMode = viewModel.themMode.collectAsState(initial = ThemeSettings.AUTO.value)
-            var startUpScreenSettings by remember { mutableStateOf(StartUpScreenSettings.SPACES.value)}
-            LaunchedEffect(true){ runBlocking { startUpScreenSettings = viewModel.defaultStartUpScreen.first() }}
+            var startUpScreenSettings by remember { mutableStateOf(StartUpScreenSettings.SPACES.value) }
+            LaunchedEffect(true) {
+                runBlocking {
+                    startUpScreenSettings = viewModel.defaultStartUpScreen.first()
+                }
+            }
             val startUpScreen =
                 if (startUpScreenSettings == StartUpScreenSettings.SPACES.value)
                     Screen.SpacesScreen.route else Screen.DashboardScreen.route
@@ -62,40 +65,52 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         startDestination = Screen.Main.route,
                         navController = navController
-                    ){
-                        composable(Screen.Main.route){
-                            MainScreen(startUpScreen = startUpScreen, mainNavController = navController)
+                    ) {
+                        composable(Screen.Main.route) {
+                            MainScreen(
+                                startUpScreen = startUpScreen,
+                                mainNavController = navController
+                            )
                         }
-                        composable(Screen.TasksScreen.route){
+                        composable(Screen.TasksScreen.route) {
                             TasksScreen(navController = navController)
                         }
                         composable(
                             Screen.TaskDetailScreen.route,
-                            arguments = listOf(navArgument(Constants.TASK_ID_ARG) { type = NavType.IntType }),
+                            arguments = listOf(navArgument(Constants.TASK_ID_ARG) {
+                                type = NavType.IntType
+                            }),
                             deepLinks =
                             listOf(
                                 navDeepLink {
-                                    uriPattern = "${Constants.TASK_DETAILS_URI}/{${Constants.TASK_ID_ARG}}" }
+                                    uriPattern =
+                                        "${Constants.TASK_DETAILS_URI}/{${Constants.TASK_ID_ARG}}"
+                                }
                             )
-                        ){
-                            TaskDetailScreen(navController = navController, it.arguments?.getInt(Constants.TASK_ID_ARG)!!)
+                        ) {
+                            TaskDetailScreen(
+                                navController = navController,
+                                it.arguments?.getInt(Constants.TASK_ID_ARG)!!
+                            )
                         }
-                        composable(Screen.TaskSearchScreen.route){}
-                        composable(Screen.NotesScreen.route){}
-                        composable(Screen.NoteAddScreen.route){}
-                        composable(Screen.NoteDetailScreen.route){}
-                        composable(Screen.NoteSearchScreen.route){}
-                        composable(Screen.DiaryScreen.route){}
-                        composable(Screen.DiaryAddScreen.route){}
-                        composable(Screen.DiarySearchScreen.route){}
-                        composable(Screen.DiaryDetailScreen.route){}
-                        composable(Screen.DiarySummaryScreen.route){}
-                        composable(Screen.BookmarksScreen.route){}
-                        composable(Screen.BookmarkAddScreen.route){}
-                        composable(Screen.BookmarkDetailScreen.route){}
-                        composable(Screen.BookmarkSearchScreen.route){}
-                        composable(Screen.CalendarScreen.route){}
-                        composable(Screen.CalendarSearchScreen.route){}
+                        composable(Screen.TaskSearchScreen.route) {
+                            TasksSearchScreen(navController = navController)
+                        }
+                        composable(Screen.NotesScreen.route) {}
+                        composable(Screen.NoteAddScreen.route) {}
+                        composable(Screen.NoteDetailScreen.route) {}
+                        composable(Screen.NoteSearchScreen.route) {}
+                        composable(Screen.DiaryScreen.route) {}
+                        composable(Screen.DiaryAddScreen.route) {}
+                        composable(Screen.DiarySearchScreen.route) {}
+                        composable(Screen.DiaryDetailScreen.route) {}
+                        composable(Screen.DiarySummaryScreen.route) {}
+                        composable(Screen.BookmarksScreen.route) {}
+                        composable(Screen.BookmarkAddScreen.route) {}
+                        composable(Screen.BookmarkDetailScreen.route) {}
+                        composable(Screen.BookmarkSearchScreen.route) {}
+                        composable(Screen.CalendarScreen.route) {}
+                        composable(Screen.CalendarSearchScreen.route) {}
                     }
                 }
             }

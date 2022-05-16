@@ -18,12 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Task
+import com.mhss.app.mybrain.util.date.formatDate
+import com.mhss.app.mybrain.util.settings.toPriority
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -38,7 +41,7 @@ fun LazyItemScope.TaskItem(
             .padding(horizontal = 8.dp)
             .animateItemPlacement(),
         shape = RoundedCornerShape(20.dp),
-        elevation = 8.dp,
+        elevation = 8.dp
     ) {
         Column(
             Modifier
@@ -48,7 +51,11 @@ fun LazyItemScope.TaskItem(
                 .padding(16.dp)
         ) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                TaskCheckBox(isComplete = task.isCompleted, onComplete = { onComplete() })
+                TaskCheckBox(
+                    isComplete = task.isCompleted,
+                    task.priority.toPriority().color,
+                    onComplete = { onComplete() }
+                )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = task.title,
@@ -58,6 +65,21 @@ fun LazyItemScope.TaskItem(
                     textDecoration = if (task.isCompleted) TextDecoration.LineThrough else null
                 )
             }
+            if (task.dueDate != 0L) {
+                Spacer(Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        modifier = Modifier.size(15.dp),
+                        painter = painterResource(R.drawable.ic_alarm),
+                        contentDescription = stringResource(R.string.due_date)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = task.dueDate.formatDate(),
+                        style = MaterialTheme.typography.body2
+                    )
+                }
+            }
         }
     }
 }
@@ -65,12 +87,13 @@ fun LazyItemScope.TaskItem(
 @Composable
 fun TaskCheckBox(
     isComplete: Boolean,
+    borderColor: Color,
     onComplete: () -> Unit
 ) {
     Box(modifier = Modifier
         .size(30.dp)
         .clip(CircleShape)
-        .border(2.dp, Color.Gray, CircleShape)
+        .border(2.dp, borderColor, CircleShape)
         .clickable {
             onComplete()
         }, contentAlignment = Alignment.Center
@@ -93,6 +116,7 @@ fun LazyItemScope.TaskItemPreview() {
             title = "Task 1",
             description = "Task 1 description",
             dueDate = 1666999999999L,
+            priority = 1,
             isCompleted = false
         ),
         onComplete = {},

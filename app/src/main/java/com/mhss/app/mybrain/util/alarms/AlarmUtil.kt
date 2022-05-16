@@ -21,12 +21,12 @@ fun AlarmManager.scheduleAlarm(alarm: Alarm, context: Context) {
     AlarmManagerCompat.setExactAndAllowWhileIdle(this, AlarmManager.RTC_WAKEUP, alarm.time, pendingIntent)
 }
 
-fun AlarmManager.cancelAlarm(alarm: Alarm, context: Context) {
+fun AlarmManager.cancelAlarm(alarmId: Int, context: Context) {
 
     val intent = Intent(context, AlarmReceiver::class.java)
     val pendingIntent = PendingIntent.getBroadcast(
         context,
-        alarm.id,
+        alarmId,
         intent,
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )

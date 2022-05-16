@@ -1,9 +1,9 @@
 package com.mhss.app.mybrain.presentation.main
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,6 +29,7 @@ import com.mhss.app.mybrain.util.settings.ThemeSettings
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
+    val openDonationDialog = remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -143,36 +144,39 @@ fun SettingsScreen(
             }
 
             item {
-                var visible by remember { mutableStateOf(false) }
-                Column{
-                    SettingsBasicLinkItem(
-                        title = R.string.donate,
-                        icon = R.drawable.ic_heart,
-                        onClick = { visible = !visible }
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    AnimatedVisibility(visible = visible) {
-                        LazyRow(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp, horizontal = 12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            item {
-                                DonationItem("PayPal", Constants.PAYPAL_LINK, R.drawable.ic_paypal)
-                            }
-                            item {
-                                DonationItem("BuyMeACoffee", Constants.BUY_ME_A_COFFEE_LINK)
-                            }
-                            item {
-                                DonationItem("Ko-fi", Constants.KO_FI_LINK)
-                            }
-                        }
-                    }
-                }
+                SettingsBasicLinkItem(
+                    title = R.string.donate,
+                    icon = R.drawable.ic_heart,
+                    onClick = { openDonationDialog.value = true }
+                )
             }
             item { Spacer(Modifier.height(60.dp)) }
         }
+        if (openDonationDialog.value)
+            AlertDialog(
+                title = { Text(text = stringResource(R.string.thank_you_for_support)) },
+                text = { Text(text = stringResource(R.string.donate_with)) },
+                shape = RoundedCornerShape(25.dp),
+                onDismissRequest = { openDonationDialog.value = false },
+                buttons = {
+                    LazyRow(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp, horizontal = 12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        item {
+                            DonationItem("PayPal", Constants.PAYPAL_LINK, R.drawable.ic_paypal)
+                        }
+                        item {
+                            DonationItem("BuyMeACoffee", Constants.BUY_ME_A_COFFEE_LINK)
+                        }
+                        item {
+                            DonationItem("Ko-fi", Constants.KO_FI_LINK)
+                        }
+                    }
+                }
+            )
     }
 }
 

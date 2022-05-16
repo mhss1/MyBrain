@@ -35,5 +35,22 @@
     <string name="high">High</string>
     <string name="due_date">Due date</string>
     <string name="error_empty_title">Title cannot be empty</string>
+    <string name="priority">Priority</string>
+    <string name="order_by">Order By</string>
+    <string name="alphabetical">Alphabetical</string>
+    <string name="date_created">Date created</string>
+    <string name="date_modified">Date modified</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="show_completed_tasks">Show completed tasks</string>
+    <string name="search_tasks">Search tasks</string>
+    <string name="save_task">Save Task</string>
+    <string name="delete_task">Delete Task</string>
+    <string name="delete_task_confirmation_title">Delete Task?</string>
+    <string name="delete_task_confirmation_message">Are you sure you want to delete the Task: \n \"%1$s\""</string>
+    <string name="cancel">Cancel</string>
+    <string name="donate_with">Donate with:</string>
+    <string name="thank_you_for_support">Thank you for your support ❤</string>
+    <string name="no_tasks_yet">You don\'t have any tasks\n Click the \"+\" button the add a new Task</string>
 
 </resources>

@@ -5,18 +5,17 @@ import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.domain.repository.TaskRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class TaskRepositoryImpl (
+class TaskRepositoryImpl(
     private val taskDao: TaskDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : TaskRepository {
 
-    override suspend fun getAllTasks(): List<Task> {
-        return withContext(ioDispatcher) {
-            taskDao.getAllTasks()
-        }
+    override fun getAllTasks(): Flow<List<Task>> {
+        return taskDao.getAllTasks()
     }
 
     override suspend fun getTaskById(id: Int): Task {
@@ -25,13 +24,11 @@ class TaskRepositoryImpl (
         }
     }
 
-    override suspend fun searchTasks(title: String): List<Task> {
-        return withContext(ioDispatcher) {
-            taskDao.getTasksByTitle(title)
-        }
+    override fun searchTasks(title: String): Flow<List<Task>> {
+        return taskDao.getTasksByTitle(title)
     }
 
-    override suspend fun insertTask(task: Task): Long{
+    override suspend fun insertTask(task: Task): Long {
         return withContext(ioDispatcher) {
             taskDao.insertTask(task)
         }

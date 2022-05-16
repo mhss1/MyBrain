@@ -12,6 +12,8 @@ import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.presentation.main.MainActivity
 import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.mybrain.util.settings.Priority
+import com.mhss.app.mybrain.util.settings.toInt
 
 fun NotificationManager.sendNotification(task: Task, context: Context, id: Int) {
     val completeIntent = Intent(context, TaskActionButtonBroadcastReceiver::class.java).apply {
@@ -42,14 +44,17 @@ fun NotificationManager.sendNotification(task: Task, context: Context, id: Int) 
         .setContentTitle(task.title)
         .setContentText(task.description)
         .setContentIntent(taskDetailsPendingIntent)
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setPriority(
+            when (task.priority) {
+                Priority.LOW.toInt() -> NotificationCompat.PRIORITY_DEFAULT
+                Priority.MEDIUM.toInt() -> NotificationCompat.PRIORITY_HIGH
+                Priority.HIGH.toInt() -> NotificationCompat.PRIORITY_MAX
+                else -> NotificationCompat.PRIORITY_DEFAULT
+            }
+        )
         .addAction(R.drawable.ic_check, getString(R.string.complete), completePendingIntent)
         .setAutoCancel(true)
         .build()
 
     notify(id, notification)
-}
-
-fun NotificationManager.cancelNotification(id: Int) {
-    cancel(id)
 }
