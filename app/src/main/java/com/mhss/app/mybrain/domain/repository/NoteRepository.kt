@@ -1,10 +1,11 @@
 package com.mhss.app.mybrain.domain.repository
 
 import com.mhss.app.mybrain.domain.model.Note
+import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    suspend fun getAllNotes(): List<Note>
+    fun getAllNotes(): Flow<List<Note>>
 
     suspend fun getNote(id: Int): Note
 

@@ -48,7 +48,7 @@ fun TasksScreen(
 
             }
         else
-            navController.navigateUp()
+            navController.popBackStack()
     }
     Scaffold(
         scaffoldState = scaffoldState,

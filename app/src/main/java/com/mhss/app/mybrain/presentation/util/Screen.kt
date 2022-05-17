@@ -11,7 +11,7 @@ sealed class Screen(val route: String) {
     object TaskDetailScreen : Screen("task_detail_screen/{${Constants.TASK_ID_ARG}}")
     object TaskSearchScreen : Screen("task_search_screen")
     object NotesScreen : Screen("notes_screen")
-    object NoteDetailScreen : Screen("note_detail_screen/{${Constants.NOTE_ID_ARG}}")
+    object NoteDetailsScreen : Screen("note_detail_screen/{${Constants.NOTE_ID_ARG}}")
     object NoteSearchScreen : Screen("note_search_screen")
     object NoteAddScreen : Screen("note_add_screen")
     object DiaryScreen : Screen("diary_screen")

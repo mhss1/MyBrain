@@ -18,6 +18,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mhss.app.mybrain.presentation.notes.NoteDetailsScreen
+import com.mhss.app.mybrain.presentation.notes.NotesScreen
 import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
@@ -56,7 +58,7 @@ class MainActivity : ComponentActivity() {
                 ThemeSettings.LIGHT.value -> false
                 else -> isSystemInDarkTheme()
             }
-            SideEffect{
+            SideEffect {
                 systemUiController.setSystemBarsColor(
                     if (isDarkMode) DarkBackground else Color.White,
                     darkIcons = !isDarkMode
@@ -87,13 +89,15 @@ class MainActivity : ComponentActivity() {
                             deepLinks =
                             listOf(
                                 navDeepLink {
-                                    uriPattern = "${Constants.ADD_TASK_URI}/{${Constants.ADD_TASK_TILE_ARG}}"
+                                    uriPattern =
+                                        "${Constants.ADD_TASK_URI}/{${Constants.ADD_TASK_TILE_ARG}}"
                                 }
                             )
                         ) {
                             TasksScreen(
                                 navController = navController,
-                                addTask = it.arguments?.getBoolean(Constants.ADD_TASK_TILE_ARG) ?: false
+                                addTask = it.arguments?.getBoolean(Constants.ADD_TASK_TILE_ARG)
+                                    ?: false
                             )
                         }
                         composable(
@@ -117,9 +121,23 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.TaskSearchScreen.route) {
                             TasksSearchScreen(navController = navController)
                         }
-                        composable(Screen.NotesScreen.route) {}
+                        composable(
+                            Screen.NotesScreen.route
+                        ) {
+                            NotesScreen(navController = navController)
+                        }
                         composable(Screen.NoteAddScreen.route) {}
-                        composable(Screen.NoteDetailScreen.route) {}
+                        composable(
+                            Screen.NoteDetailsScreen.route,
+                            arguments = listOf(navArgument(Constants.NOTE_ID_ARG) {
+                                type = NavType.IntType
+                            }),
+                        ) {
+                            NoteDetailsScreen(
+                                navController,
+                                it.arguments?.getInt(Constants.NOTE_ID_ARG)!!
+                            )
+                        }
                         composable(Screen.NoteSearchScreen.route) {}
                         composable(Screen.DiaryScreen.route) {}
                         composable(Screen.DiaryAddScreen.route) {}

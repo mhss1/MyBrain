@@ -2,12 +2,13 @@ package com.mhss.app.mybrain.data.local.dao
 
 import androidx.room.*
 import com.mhss.app.mybrain.domain.model.Note
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
 
     @Query("SELECT * FROM notes")
-    suspend fun getAllNotes(): List<Note>
+    fun getAllNotes(): Flow<List<Note>>
 
     @Query("SELECT * FROM notes WHERE id = :id")
     suspend fun getNote(id: Int): Note

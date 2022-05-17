@@ -37,7 +37,7 @@ fun TaskDetailScreen(
     viewModel: TasksViewModel = hiltViewModel()
 ) {
     LaunchedEffect(true) {
-        viewModel.getTask(taskId)
+        viewModel.onEvent(TaskEvent.GetTask(taskId))
     }
     val uiState = viewModel.taskDetailsUiState
     val scaffoldState = rememberScaffoldState()
@@ -64,7 +64,7 @@ fun TaskDetailScreen(
     LaunchedEffect(uiState) {
         if (uiState.navigateUp) {
             openDialog = false
-            navController.navigateUp()
+            navController.popBackStack()
         }
         if (uiState.error != null) {
             scaffoldState.snackbarHostState.showSnackbar(
@@ -84,7 +84,7 @@ fun TaskDetailScreen(
                 subTasks = subTasks
             ),
             {
-                navController.navigateUp()
+                navController.popBackStack()
             }
         ) {
             viewModel.onEvent(TaskEvent.UpdateTask(it, dueDate != uiState.task.dueDate))

@@ -48,10 +48,20 @@
     <string name="delete_task">Delete Task</string>
     <string name="delete_task_confirmation_title">Delete Task?</string>
     <string name="delete_task_confirmation_message">Are you sure you want to delete the Task: \n \"%1$s\""</string>
+    <string name="delete_note_confirmation_message">Are you sure you want to delete the Note: \n \"%1$s\""</string>
     <string name="cancel">Cancel</string>
     <string name="donate_with">Donate with:</string>
     <string name="thank_you_for_support">Thank you for your support ❤</string>
     <string name="no_tasks_yet">You don\'t have any tasks\n Click the \"+\" button the add a new Task</string>
+    <string name="no_notes_yet">You don\'t have any notes\n Click the \"+\" button the add a new Note</string>
     <string name="project_roadmap">Project roadmap</string>
+    <string name="list">List</string>
+    <string name="grid">Grid</string>
+    <string name="note_content">Note content (supports markdown)</string>
+    <string name="delete_note">Delete Note</string>
+    <string name="error_empty_note">Note cannot be empty</string>
+    <string name="pin_note">Pin note</string>
+    <string name="reading_mode">Reading mode</string>
+    <string name="view_as">View as</string>
 
 </resources>

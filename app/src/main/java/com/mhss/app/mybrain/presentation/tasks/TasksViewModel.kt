@@ -20,7 +20,7 @@ import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import com.mhss.app.mybrain.util.settings.toInt
-import com.mhss.app.mybrain.util.settings.toTaskOrder
+import com.mhss.app.mybrain.util.settings.toOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -61,7 +61,7 @@ class TasksViewModel @Inject constructor(
                     false
                 )
             ){ order, showCompleted ->
-                getTasks(order.toTaskOrder(), showCompleted)
+                getTasks(order.toOrder(), showCompleted)
             }.collect()
         }
     }
@@ -140,6 +140,11 @@ class TasksViewModel @Inject constructor(
                     deleteAlarm(event.task.id)
                 taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
             }
+            is TaskEvent.GetTask -> viewModelScope.launch {
+                taskDetailsUiState = taskDetailsUiState.copy(
+                    task = getTaskUseCase(event.taskId)
+                )
+            }
         }
     }
 
@@ -180,13 +185,5 @@ class TasksViewModel @Inject constructor(
                 searchTasks = tasks
             )
         }.launchIn(viewModelScope)
-    }
-
-    fun getTask(id: Int) {
-        viewModelScope.launch {
-            taskDetailsUiState = taskDetailsUiState.copy(
-                task = getTaskUseCase(id)
-            )
-        }
     }
 }

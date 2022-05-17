@@ -1,5 +1,6 @@
 package com.mhss.app.mybrain.ui.theme
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.graphics.Color
 
 val Purple200 = Color(0xFFBB86FC)
@@ -12,21 +13,12 @@ val PrimaryDarkColor = Color(0xFF00B0B0)
 val SecondaryColor = Color(0xFF5939CE)
 val DarkBackground = Color(0xFF090909)
 
-val Red = Color(0xFFE43C30)
-val Blue = Color(0xFF2D6DD8)
+val Red = Color(0xFFD53A2F)
+val Blue = Color(0xFF2965C9)
 val Green = Color(0xFF1E9651)
-val Yellow = Color(0xFFCCA614)
-val Orange = Color(0xFFDF881B)
-val Purple = Color(0xFF724EB1)
+val Yellow = Color(0xFFC49F15)
+val Orange = Color(0xFFD68723)
+val Purple = Color(0xFF6B48A8)
 
 val DarkOrange = Color(0xFFC26301)
 val Gray = Color(0xFF7E7979)
-
-val itemColors = listOf(
-    Red,
-    Blue,
-    Green,
-    Yellow,
-    Orange,
-    Purple
-)
