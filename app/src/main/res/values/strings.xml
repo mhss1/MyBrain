@@ -52,5 +52,6 @@
     <string name="donate_with">Donate with:</string>
     <string name="thank_you_for_support">Thank you for your support ❤</string>
     <string name="no_tasks_yet">You don\'t have any tasks\n Click the \"+\" button the add a new Task</string>
+    <string name="project_roadmap">Project roadmap</string>
 
 </resources>

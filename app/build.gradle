@@ -99,4 +99,11 @@ dependencies {
 
     // Preferences DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    // Accompanist libraries
+    implementation "com.google.accompanist:accompanist-flowlayout:0.23.1"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.23.1"
+
+    // Compose MarkDown
+    implementation 'com.github.jeziellago:compose-markdown:0.2.9'
 }

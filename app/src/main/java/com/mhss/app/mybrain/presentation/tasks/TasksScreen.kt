@@ -5,9 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -22,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
@@ -33,6 +32,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TasksScreen(
     navController: NavHostController,
+    addTask: Boolean = false,
     viewModel: TasksViewModel = hiltViewModel()
 ) {
     var orderSettingsVisible by remember { mutableStateOf(false) }
@@ -96,12 +96,18 @@ fun TasksScreen(
                     focusRequester
                 )
             }) {
-            LaunchedEffect(key1 = uiState.error) {
+            LaunchedEffect(uiState.error) {
                 uiState.error?.let {
                     scaffoldState.snackbarHostState.showSnackbar(
                         uiState.error
                     )
                     viewModel.onEvent(TaskEvent.ErrorDisplayed)
+                }
+            }
+            LaunchedEffect(true){
+                if (addTask) scope.launch {
+                    sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                    focusRequester.requestFocus()
                 }
             }
             if (uiState.tasks.isEmpty())
@@ -225,19 +231,10 @@ fun TasksSettingsSection(
             style = MaterialTheme.typography.body1,
             modifier = Modifier.padding(start = 8.dp)
         )
-        val state = rememberLazyListState()
-        val scope = rememberCoroutineScope()
-        LaunchedEffect(key1 = true) {
-            scope.launch {
-                state.scrollToItem(orders.indexOfFirst { it.orderTitle == order.orderTitle })
-            }
-        }
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            state = state,
+        FlowRow(
             modifier = Modifier.padding(end = 8.dp)
         ) {
-            items(orders) {
+            orders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = order.orderTitle == it.orderTitle,
@@ -253,8 +250,8 @@ fun TasksSettingsSection(
             }
         }
         Divider()
-        LazyRow {
-            items(orderTypes) {
+        FlowRow {
+            orderTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = order.orderType.orderTitle == it.orderTitle,

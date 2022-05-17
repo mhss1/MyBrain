@@ -145,6 +145,14 @@ fun SettingsScreen(
 
             item {
                 SettingsBasicLinkItem(
+                    title = R.string.project_roadmap,
+                    icon = R.drawable.ic_roadmap,
+                    link = Constants.PROJECT_ROADMAP_LINK
+                )
+            }
+
+            item {
+                SettingsBasicLinkItem(
                     title = R.string.donate,
                     icon = R.drawable.ic_heart,
                     onClick = { openDonationDialog.value = true }

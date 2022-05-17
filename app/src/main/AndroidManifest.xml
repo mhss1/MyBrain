@@ -42,6 +42,18 @@
         <receiver
             android:name=".util.alarms.TaskActionButtonBroadcastReceiver"
             android:enabled="true" />
+        <service
+            android:name=".presentation.tasks.AddTaskTileService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/add_task"
+            android:icon="@drawable/ic_check"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action
+                    android:name="android.service.quicksettings.action.QS_TILE"/>
+            </intent-filter>
+        </service>
 
     </application>
 

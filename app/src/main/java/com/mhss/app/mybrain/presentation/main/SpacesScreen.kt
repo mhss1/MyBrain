@@ -18,6 +18,7 @@ import com.mhss.app.mybrain.presentation.main.components.SpaceRegularCard
 import com.mhss.app.mybrain.presentation.main.components.SpaceWideCard
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.*
+import com.mhss.app.mybrain.util.Constants
 
 @Composable
 fun SpacesScreen(
@@ -54,7 +55,9 @@ fun SpacesScreen(
                         image = R.drawable.tasks_img,
                         backgroundColor = Red
                     ){
-                        navController.navigate(Screen.TasksScreen.route)
+                        navController.navigate(
+                            Screen.TasksScreen.route
+                        )
                     }
                 }
             }

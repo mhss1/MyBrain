@@ -11,13 +11,13 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val themMode = viewModel.themMode.collectAsState(initial = ThemeSettings.AUTO.value)
             var startUpScreenSettings by remember { mutableStateOf(StartUpScreenSettings.SPACES.value) }
+            val systemUiController = rememberSystemUiController()
             LaunchedEffect(true) {
                 runBlocking {
                     startUpScreenSettings = viewModel.defaultStartUpScreen.first()
@@ -55,7 +56,12 @@ class MainActivity : ComponentActivity() {
                 ThemeSettings.LIGHT.value -> false
                 else -> isSystemInDarkTheme()
             }
-            handleThemeChange(isDarkMode)
+            SideEffect{
+                systemUiController.setSystemBarsColor(
+                    if (isDarkMode) DarkBackground else Color.White,
+                    darkIcons = !isDarkMode
+                )
+            }
             MyBrainTheme(darkTheme = isDarkMode) {
                 val navController = rememberNavController()
                 Surface(
@@ -72,8 +78,23 @@ class MainActivity : ComponentActivity() {
                                 mainNavController = navController
                             )
                         }
-                        composable(Screen.TasksScreen.route) {
-                            TasksScreen(navController = navController)
+                        composable(
+                            Screen.TasksScreen.route,
+                            arguments = listOf(navArgument(Constants.ADD_TASK_TILE_ARG) {
+                                type = NavType.BoolType
+                                defaultValue = false
+                            }),
+                            deepLinks =
+                            listOf(
+                                navDeepLink {
+                                    uriPattern = "${Constants.ADD_TASK_URI}/{${Constants.ADD_TASK_TILE_ARG}}"
+                                }
+                            )
+                        ) {
+                            TasksScreen(
+                                navController = navController,
+                                addTask = it.arguments?.getBoolean(Constants.ADD_TASK_TILE_ARG) ?: false
+                            )
                         }
                         composable(
                             Screen.TaskDetailScreen.route,
@@ -115,11 +136,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    private fun handleThemeChange(isDarkMode: Boolean) {
-        window.statusBarColor = if (isDarkMode) DarkBackground.toArgb() else Color.White.toArgb()
-        window.navigationBarColor =
-            if (isDarkMode) DarkBackground.toArgb() else Color.White.toArgb()
     }
 }
