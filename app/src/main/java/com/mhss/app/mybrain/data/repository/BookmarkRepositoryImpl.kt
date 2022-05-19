@@ -5,16 +5,16 @@ import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.domain.repository.BookmarkRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class BookmarkRepositoryImpl (
+class BookmarkRepositoryImpl(
     private val bookmarkDao: BookmarkDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BookmarkRepository {
-    override suspend fun getAllBookmarks(): List<Bookmark> {
-        return withContext(ioDispatcher) {
-            bookmarkDao.getAll()
-        }
+
+    override fun getAllBookmarks(): Flow<List<Bookmark>> {
+        return bookmarkDao.getAll()
     }
 
     override suspend fun getBookmark(id: Int): Bookmark {
@@ -25,7 +25,7 @@ class BookmarkRepositoryImpl (
 
     override suspend fun searchBookmarks(query: String): List<Bookmark> {
         return withContext(ioDispatcher) {
-            bookmarkDao.getBookmarksByTitle(query)
+            bookmarkDao.getBookmark(query)
         }
     }
 

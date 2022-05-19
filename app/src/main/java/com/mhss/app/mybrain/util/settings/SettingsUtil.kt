@@ -1,7 +1,6 @@
 package com.mhss.app.mybrain.util.settings
 
 import androidx.annotation.StringRes
-import androidx.compose.material.ContentAlpha.high
 import androidx.compose.ui.graphics.Color
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
@@ -57,13 +56,13 @@ enum class Priority( @StringRes val title: Int, val color: Color) {
     HIGH(R.string.high, Red)
 }
 
-enum class NotesView(@StringRes val title: Int, val value: Int) {
+enum class ItemView(@StringRes val title: Int, val value: Int) {
     LIST(R.string.list, 0),
     GRID(R.string.grid, 1)
 }
 
-fun Int.toNotesView(): NotesView {
-    return NotesView.values().first { it.value == this }
+fun Int.toNotesView(): ItemView {
+    return ItemView.values().first { it.value == this }
 }
 
 

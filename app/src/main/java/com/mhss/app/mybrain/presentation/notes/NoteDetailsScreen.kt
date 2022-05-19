@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Note
+import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.Orange
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
@@ -49,7 +50,7 @@ fun NoteDetailsScreen(
     LaunchedEffect(state) {
         if (state.navigateUp) {
             openDialog = false
-            navController.popBackStack()
+            navController.popBackStack(route = Screen.NotesScreen.route, inclusive = false)
         }
         if (state.error != null) {
             scaffoldState.snackbarHostState.showSnackbar(
@@ -66,7 +67,7 @@ fun NoteDetailsScreen(
                 pinned = pinned
             ),
             state.note,
-            onNotChanged = { navController.popBackStack() },
+            onNotChanged = { navController.popBackStack(route = Screen.NotesScreen.route, inclusive = false) },
             onUpdate = {
                 if (state.note != null) {
                     viewModel.onEvent(
@@ -176,7 +177,7 @@ fun NoteDetailsScreen(
             AlertDialog(
                 shape = RoundedCornerShape(25.dp),
                 onDismissRequest = { openDialog = false },
-                title = { Text(stringResource(R.string.delete_task_confirmation_title)) },
+                title = { Text(stringResource(R.string.delete_note_confirmation_title)) },
                 text = {
                     Text(
                         stringResource(

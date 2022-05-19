@@ -18,8 +18,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
+import com.mhss.app.mybrain.presentation.bookmarks.BookmarkSearchScreen
+import com.mhss.app.mybrain.presentation.bookmarks.BookmarksScreen
 import com.mhss.app.mybrain.presentation.notes.NoteDetailsScreen
 import com.mhss.app.mybrain.presentation.notes.NotesScreen
+import com.mhss.app.mybrain.presentation.notes.NotesSearchScreen
 import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
@@ -41,6 +45,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val themMode = viewModel.themMode.collectAsState(initial = ThemeSettings.AUTO.value)
             var startUpScreenSettings by remember { mutableStateOf(StartUpScreenSettings.SPACES.value) }
@@ -131,23 +136,38 @@ class MainActivity : ComponentActivity() {
                             Screen.NoteDetailsScreen.route,
                             arguments = listOf(navArgument(Constants.NOTE_ID_ARG) {
                                 type = NavType.IntType
-                            }),
+                            })
                         ) {
                             NoteDetailsScreen(
                                 navController,
                                 it.arguments?.getInt(Constants.NOTE_ID_ARG)!!
                             )
                         }
-                        composable(Screen.NoteSearchScreen.route) {}
+                        composable(Screen.NoteSearchScreen.route) {
+                            NotesSearchScreen(navController = navController)
+                        }
                         composable(Screen.DiaryScreen.route) {}
                         composable(Screen.DiaryAddScreen.route) {}
                         composable(Screen.DiarySearchScreen.route) {}
                         composable(Screen.DiaryDetailScreen.route) {}
                         composable(Screen.DiarySummaryScreen.route) {}
-                        composable(Screen.BookmarksScreen.route) {}
-                        composable(Screen.BookmarkAddScreen.route) {}
-                        composable(Screen.BookmarkDetailScreen.route) {}
-                        composable(Screen.BookmarkSearchScreen.route) {}
+                        composable(Screen.BookmarksScreen.route) {
+                            BookmarksScreen(navController = navController)
+                        }
+                        composable(
+                            Screen.BookmarkDetailScreen.route,
+                            arguments = listOf(navArgument(Constants.BOOKMARK_ID_ARG) {
+                                type = NavType.IntType
+                            })
+                        ) {
+                            BookmarkDetailsScreen(
+                                navController = navController,
+                                it.arguments?.getInt(Constants.BOOKMARK_ID_ARG)!!
+                            )
+                        }
+                        composable(Screen.BookmarkSearchScreen.route) {
+                            BookmarkSearchScreen(navController = navController)
+                        }
                         composable(Screen.CalendarScreen.route) {}
                         composable(Screen.CalendarSearchScreen.route) {}
                     }

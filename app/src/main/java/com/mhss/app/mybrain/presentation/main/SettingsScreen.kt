@@ -153,7 +153,7 @@ fun SettingsScreen(
 
             item {
                 SettingsBasicLinkItem(
-                    title = R.string.donate,
+                    title = R.string.support_the_developer,
                     icon = R.drawable.ic_heart,
                     onClick = { openDonationDialog.value = true }
                 )
@@ -163,7 +163,7 @@ fun SettingsScreen(
         if (openDonationDialog.value)
             AlertDialog(
                 title = { Text(text = stringResource(R.string.thank_you_for_support)) },
-                text = { Text(text = stringResource(R.string.donate_with)) },
+                text = { Text(text = stringResource(R.string.support_with)) },
                 shape = RoundedCornerShape(25.dp),
                 onDismissRequest = { openDonationDialog.value = false },
                 buttons = {

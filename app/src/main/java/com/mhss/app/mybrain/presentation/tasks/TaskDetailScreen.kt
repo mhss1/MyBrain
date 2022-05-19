@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.SubTask
 import com.mhss.app.mybrain.domain.model.Task
+import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.settings.Priority
 import com.mhss.app.mybrain.util.settings.toInt
@@ -84,7 +85,7 @@ fun TaskDetailScreen(
                 subTasks = subTasks
             ),
             {
-                navController.popBackStack()
+                navController.popBackStack(route = Screen.TasksScreen.route, inclusive = false)
             }
         ) {
             viewModel.onEvent(TaskEvent.UpdateTask(it, dueDate != uiState.task.dueDate))

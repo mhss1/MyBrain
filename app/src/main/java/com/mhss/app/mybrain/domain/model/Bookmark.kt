@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "bookmarks")
 data class Bookmark(
     val url: String,
-    val title: String,
-    val description: String,
+    val title: String = "",
+    val description: String = "",
     @ColumnInfo(name = "created_date")
     val createdDate: Long = 0L,
     @ColumnInfo(name = "updated_date")

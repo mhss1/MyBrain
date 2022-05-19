@@ -14,6 +14,7 @@ object Constants {
     const val SHOW_COMPLETED_TASKS_KEY = "show_completed_tasks"
     const val TASKS_ORDER_KEY = "tasks_order"
     const val NOTE_VIEW_KEY = "note_view"
+    const val BOOKMARK_VIEW_KEY = "bookmark_view"
     const val NOTES_ORDER_KEY = "notes_order"
     const val BOOKMARK_ORDER_KEY = "bookmark_order"
     const val DIARY_ORDER_KEY = "diary_order"

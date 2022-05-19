@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.presentation.notes
+package com.mhss.app.mybrain.presentation.bookmarks
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -27,21 +27,26 @@ import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.ItemView
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
+import kotlinx.coroutines.launch
+import com.mhss.app.mybrain.app.getString
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NotesScreen(
+fun BookmarksScreen(
     navController: NavHostController,
-    viewModel: NotesViewModel = hiltViewModel()
+    viewModel: BookmarksViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.notesUiState
+    val uiState = viewModel.uiState
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
     var orderSettingsVisible by remember { mutableStateOf(false) }
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.notes),
+                        text = stringResource(R.string.bookmarks),
                         style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
                     )
                 },
@@ -53,8 +58,8 @@ fun NotesScreen(
             FloatingActionButton(
                 onClick = {
                     navController.navigate(
-                        Screen.NoteDetailsScreen.route.replace(
-                            "{${Constants.NOTE_ID_ARG}}",
+                        Screen.BookmarkDetailScreen.route.replace(
+                            "{${Constants.BOOKMARK_ID_ARG}}",
                             "${-1}"
                         )
                     )
@@ -64,14 +69,14 @@ fun NotesScreen(
                 Icon(
                     modifier = Modifier.size(25.dp),
                     painter = painterResource(R.drawable.ic_add),
-                    contentDescription = stringResource(R.string.add_note),
+                    contentDescription = stringResource(R.string.add_bookmark),
                     tint = Color.White
                 )
             }
         },
     ) {
-        if (uiState.notes.isEmpty())
-            NoNotesMessage()
+        if (uiState.bookmarks.isEmpty())
+            NoBookmarksMessage()
         Column {
             Row(
                 Modifier.fillMaxWidth(),
@@ -86,7 +91,7 @@ fun NotesScreen(
                     )
                 }
                 IconButton(onClick = {
-                    navController.navigate(Screen.NoteSearchScreen.route)
+                    navController.navigate(Screen.BookmarkSearchScreen.route)
                 }) {
                     Icon(
                         modifier = Modifier.size(25.dp),
@@ -96,32 +101,39 @@ fun NotesScreen(
                 }
             }
             AnimatedVisibility(visible = orderSettingsVisible) {
-                NotesSettingsSection(
-                    uiState.notesOrder,
-                    uiState.noteView,
+                BookmarksSettingsSection(
+                    uiState.bookmarksOrder,
+                    uiState.bookmarksView,
                     onOrderChange = {
-                        viewModel.onEvent(NoteEvent.UpdateOrder(it))
+                        viewModel.onEvent(BookmarkEvent.UpdateOrder(it))
                     },
                     onViewChange = {
-                        viewModel.onEvent(NoteEvent.UpdateView(it))
+                        viewModel.onEvent(BookmarkEvent.UpdateView(it))
                     }
                 )
             }
-            if (uiState.noteView == ItemView.LIST){
+            if (uiState.bookmarksView == ItemView.LIST) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    items(uiState.notes, key = {it.id}) { note ->
-                        NoteItem(
-                            note = note,
+                    items(uiState.bookmarks, key = { it.id }) { bookmark ->
+                        BookmarkItem(
+                            bookmark = bookmark,
                             onClick = {
                                 navController.navigate(
-                                    Screen.NoteDetailsScreen.route.replace(
-                                        "{${Constants.NOTE_ID_ARG}}",
-                                        "${note.id}"
+                                    Screen.BookmarkDetailScreen.route.replace(
+                                        "{${Constants.BOOKMARK_ID_ARG}}",
+                                        "${bookmark.id}"
                                     )
                                 )
+                            },
+                            onInvalidUrl = {
+                                scope.launch {
+                                    scaffoldState.snackbarHostState.showSnackbar(
+                                        getString(R.string.invalid_url)
+                                    )
+                                }
                             }
                         )
                     }
@@ -132,18 +144,25 @@ fun NotesScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(12.dp)
-                ){
-                    items(uiState.notes){ note ->
-                        key(note.id) {
-                            NoteItem(
-                                note = note,
+                ) {
+                    items(uiState.bookmarks) { bookmark ->
+                        key(bookmark.id) {
+                            BookmarkItem(
+                                bookmark = bookmark,
                                 onClick = {
                                     navController.navigate(
-                                        Screen.NoteDetailsScreen.route.replace(
-                                            "{${Constants.NOTE_ID_ARG}}",
-                                            "${note.id}"
+                                        Screen.BookmarkDetailScreen.route.replace(
+                                            "{${Constants.BOOKMARK_ID_ARG}}",
+                                            "${bookmark.id}"
                                         )
                                     )
+                                },
+                                onInvalidUrl = {
+                                    scope.launch {
+                                        scaffoldState.snackbarHostState.showSnackbar(
+                                            getString(R.string.invalid_url)
+                                        )
+                                    }
                                 },
                                 modifier = Modifier.height(220.dp)
                             )
@@ -156,7 +175,12 @@ fun NotesScreen(
 }
 
 @Composable
-fun NotesSettingsSection(order: Order, view: ItemView, onOrderChange: (Order) -> Unit, onViewChange: (ItemView) -> Unit) {
+fun BookmarksSettingsSection(
+    order: Order,
+    view: ItemView,
+    onOrderChange: (Order) -> Unit,
+    onViewChange: (ItemView) -> Unit
+) {
     val orders = listOf(
         Order.DateModified(),
         Order.DateCreated(),
@@ -166,7 +190,7 @@ fun NotesSettingsSection(order: Order, view: ItemView, onOrderChange: (Order) ->
         OrderType.ASC(),
         OrderType.DESC()
     )
-    val noteViews = listOf(
+    val views = listOf(
         ItemView.LIST,
         ItemView.GRID
     )
@@ -219,7 +243,7 @@ fun NotesSettingsSection(order: Order, view: ItemView, onOrderChange: (Order) ->
             modifier = Modifier.padding(start = 8.dp, top = 8.dp)
         )
         FlowRow {
-            noteViews.forEach {
+            views.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = view.title == it.title,
@@ -240,14 +264,14 @@ fun NotesSettingsSection(order: Order, view: ItemView, onOrderChange: (Order) ->
 }
 
 @Composable
-fun NoNotesMessage() {
+fun NoBookmarksMessage() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.no_notes_yet),
+            text = stringResource(R.string.no_bookmarks_yet),
             style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
             color = Color.Gray,
             textAlign = TextAlign.Center
@@ -255,8 +279,8 @@ fun NoNotesMessage() {
         Spacer(modifier = Modifier.height(12.dp))
         Image(
             modifier = Modifier.size(125.dp),
-            painter = painterResource(id = R.drawable.notes_img),
-            contentDescription = stringResource(R.string.no_notes_yet),
+            painter = painterResource(id = R.drawable.bookmarks_img),
+            contentDescription = stringResource(R.string.no_bookmarks_yet),
             alpha = 0.7f
         )
     }

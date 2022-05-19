@@ -50,7 +50,7 @@ fun TasksSearchScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(top = 12.dp, bottom = 12.dp)
         ) {
-            items(state.searchTasks){ task ->
+            items(state.searchTasks, key = {it.id}){ task ->
                 TaskItem(
                     task = task,
                     onComplete = {

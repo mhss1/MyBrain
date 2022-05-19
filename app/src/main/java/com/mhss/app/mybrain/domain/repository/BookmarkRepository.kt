@@ -1,12 +1,11 @@
 package com.mhss.app.mybrain.domain.repository
 
-import com.mhss.app.mybrain.data.local.dao.BookmarkDao
 import com.mhss.app.mybrain.domain.model.Bookmark
-import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 interface BookmarkRepository {
 
-    suspend fun getAllBookmarks(): List<Bookmark>
+    fun getAllBookmarks(): Flow<List<Bookmark>>
 
     suspend fun getBookmark(id: Int): Bookmark
 

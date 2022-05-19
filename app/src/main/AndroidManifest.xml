@@ -42,19 +42,20 @@
         <receiver
             android:name=".util.alarms.TaskActionButtonBroadcastReceiver"
             android:enabled="true" />
-        <service
-            android:name=".presentation.tasks.AddTaskTileService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/add_task"
-            android:icon="@drawable/ic_check"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action
-                    android:name="android.service.quicksettings.action.QS_TILE"/>
+        <activity
+            android:name=".presentation.bookmarks.SaveArticleActivity"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:autoRemoveFromRecents="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:exported="true">
+            <intent-filter android:label="@string/save_bookmark">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
-        </service>
 
+        </activity>
     </application>
 
 </manifest>

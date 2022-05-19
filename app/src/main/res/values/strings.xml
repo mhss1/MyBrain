@@ -17,7 +17,7 @@
     <string name="project_on_github">Project on GitHub</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="product">Product</string>
-    <string name="donate">Donate</string>
+    <string name="support_the_developer">Support the developer</string>
     <string name="notes">Notes</string>
     <string name="tasks">Tasks</string>
     <string name="diary">Diary</string>
@@ -47,13 +47,17 @@
     <string name="save_task">Save Task</string>
     <string name="delete_task">Delete Task</string>
     <string name="delete_task_confirmation_title">Delete Task?</string>
+    <string name="delete_note_confirmation_title">Delete Note?</string>
+    <string name="delete_bookmark_confirmation_title">Delete Bookmark?</string>
     <string name="delete_task_confirmation_message">Are you sure you want to delete the Task: \n \"%1$s\""</string>
     <string name="delete_note_confirmation_message">Are you sure you want to delete the Note: \n \"%1$s\""</string>
+    <string name="delete_bookmark_confirmation_message">Are you sure you want to delete this bookmark""</string>
     <string name="cancel">Cancel</string>
-    <string name="donate_with">Donate with:</string>
+    <string name="support_with">Support with :</string>
     <string name="thank_you_for_support">Thank you for your support ❤</string>
-    <string name="no_tasks_yet">You don\'t have any tasks\n Click the \"+\" button the add a new Task</string>
-    <string name="no_notes_yet">You don\'t have any notes\n Click the \"+\" button the add a new Note</string>
+    <string name="no_tasks_yet">You don\'t have any tasks\n Click the + button the add a new Task</string>
+    <string name="no_notes_yet">You don\'t have any notes\n Click the + button the add a new Note</string>
+    <string name="no_bookmarks_yet">You don\'t have any bookmarks\n Click the + button the add a new bookmark\n or \nby using the share option from any browser</string>
     <string name="project_roadmap">Project roadmap</string>
     <string name="list">List</string>
     <string name="grid">Grid</string>
@@ -63,5 +67,16 @@
     <string name="pin_note">Pin note</string>
     <string name="reading_mode">Reading mode</string>
     <string name="view_as">View as</string>
+    <string name="search_notes">Search by title or content</string>
+    <string name="add_note">Add note</string>
+    <string name="save_bookmark">Save URL</string>
+    <string name="bookmark_saved">Bookmark saved successfully</string>
+    <string name="invalid_url">Invalid URL</string>
+    <string name="add_bookmark">Add bookmark</string>
+    <string name="open_link">Open link</string>
+    <string name="search_bookmarks">Search Bookmarks</string>
+    <string name="delete_bookmark">Delete Bookmark</string>
+    <string name="url">URL</string>
+    <string name="cancel_changes">Cancel changes</string>
 
 </resources>
