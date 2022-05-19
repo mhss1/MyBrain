@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.util.diary.Mood
 
 @Composable
 fun BookmarkDetailsScreen(
@@ -114,17 +115,17 @@ fun BookmarkDetailsScreen(
                         )
                     }
                     if (URLUtil.isValidUrl(url))
-                    IconButton(onClick = {
+                        IconButton(onClick = {
                             val intent = Intent(Intent.ACTION_VIEW)
                             intent.data = Uri.parse(url)
                             context.startActivity(intent)
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_open_link),
-                            contentDescription = stringResource(R.string.open_link),
-                            modifier = Modifier.size(24.dp),
-                        )
-                    }
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_open_link),
+                                contentDescription = stringResource(R.string.open_link),
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
                 },
                 backgroundColor = MaterialTheme.colors.background,
                 elevation = 0.dp,
@@ -160,15 +161,16 @@ fun BookmarkDetailsScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(8.dp))
-            TextButton(onClick = {
-                if (state.bookmark != null)
-                    url = state.bookmark.url
-                else navController.popBackStack(
-                    route = Screen.BookmarksScreen.route,
-                    inclusive = false
-                )
-            },
-            modifier = Modifier.align(Alignment.End)
+            TextButton(
+                onClick = {
+                    if (state.bookmark != null)
+                        url = state.bookmark.url
+                    else navController.popBackStack(
+                        route = Screen.BookmarksScreen.route,
+                        inclusive = false
+                    )
+                },
+                modifier = Modifier.align(Alignment.End)
             ) {
                 Text(
                     text = if (state.bookmark != null) stringResource(R.string.cancel_changes)

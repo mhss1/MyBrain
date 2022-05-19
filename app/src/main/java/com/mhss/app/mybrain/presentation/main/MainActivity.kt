@@ -21,6 +21,10 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkSearchScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarksScreen
+import com.mhss.app.mybrain.presentation.calendar.CalendarScreen
+import com.mhss.app.mybrain.presentation.diary.DiaryEntryDetailsScreen
+import com.mhss.app.mybrain.presentation.diary.DiaryScreen
+import com.mhss.app.mybrain.presentation.diary.DiarySearchScreen
 import com.mhss.app.mybrain.presentation.notes.NoteDetailsScreen
 import com.mhss.app.mybrain.presentation.notes.NotesScreen
 import com.mhss.app.mybrain.presentation.notes.NotesSearchScreen
@@ -146,11 +150,23 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.NoteSearchScreen.route) {
                             NotesSearchScreen(navController = navController)
                         }
-                        composable(Screen.DiaryScreen.route) {}
-                        composable(Screen.DiaryAddScreen.route) {}
-                        composable(Screen.DiarySearchScreen.route) {}
-                        composable(Screen.DiaryDetailScreen.route) {}
-                        composable(Screen.DiarySummaryScreen.route) {}
+                        composable(Screen.DiaryScreen.route) {
+                            DiaryScreen(navController = navController)
+                        }
+                        composable(Screen.DiarySearchScreen.route) {
+                            DiarySearchScreen(navController = navController)
+                        }
+                        composable(
+                            Screen.DiaryDetailScreen.route,
+                            arguments = listOf(navArgument(Constants.DIARY_ID_ARG) {
+                                type = NavType.IntType
+                            })
+                        ) {
+                            DiaryEntryDetailsScreen(
+                                navController = navController,
+                                it.arguments?.getInt(Constants.DIARY_ID_ARG)!!
+                            )
+                        }
                         composable(Screen.BookmarksScreen.route) {
                             BookmarksScreen(navController = navController)
                         }
@@ -168,7 +184,9 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.BookmarkSearchScreen.route) {
                             BookmarkSearchScreen(navController = navController)
                         }
-                        composable(Screen.CalendarScreen.route) {}
+                        composable(Screen.CalendarScreen.route) {
+                            CalendarScreen()
+                        }
                         composable(Screen.CalendarSearchScreen.route) {}
                     }
                 }

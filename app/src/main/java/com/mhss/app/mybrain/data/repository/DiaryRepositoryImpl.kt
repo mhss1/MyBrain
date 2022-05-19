@@ -5,17 +5,16 @@ import com.mhss.app.mybrain.domain.model.DiaryEntry
 import com.mhss.app.mybrain.domain.repository.DiaryRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class DiaryRepositoryImpl (
+class DiaryRepositoryImpl(
     private val diaryDao: DiaryDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : DiaryRepository {
 
-    override suspend fun getAllEntries(): List<DiaryEntry> {
-        return withContext(ioDispatcher) {
-            diaryDao.getAllEntries()
-        }
+    override fun getAllEntries(): Flow<List<DiaryEntry>> {
+        return diaryDao.getAllEntries()
     }
 
     override suspend fun getEntry(id: Int): DiaryEntry {

@@ -1,10 +1,11 @@
 package com.mhss.app.mybrain.domain.repository
 
 import com.mhss.app.mybrain.domain.model.DiaryEntry
+import kotlinx.coroutines.flow.Flow
 
 interface DiaryRepository {
 
-    suspend fun getAllEntries(): List<DiaryEntry>
+    fun getAllEntries(): Flow<List<DiaryEntry>>
 
     suspend fun getEntry(id: Int): DiaryEntry
 

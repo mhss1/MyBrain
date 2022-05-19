@@ -17,8 +17,6 @@ sealed class Screen(val route: String) {
     object DiaryScreen : Screen("diary_screen")
     object DiaryDetailScreen : Screen("diary_detail_screen/{${Constants.DIARY_ID_ARG}}")
     object DiarySearchScreen : Screen("diary_search_screen")
-    object DiaryAddScreen : Screen("diary_add_screen")
-    object DiarySummaryScreen : Screen("diary_summary_screen")
     object BookmarksScreen : Screen("bookmarks_screen")
     object BookmarkDetailScreen : Screen("bookmark_detail_screen/{${Constants.BOOKMARK_ID_ARG}}")
     object BookmarkSearchScreen : Screen("bookmark_search_screen")
