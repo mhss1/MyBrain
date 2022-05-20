@@ -42,6 +42,17 @@ fun DiaryScreen(
                 },
                 backgroundColor = MaterialTheme.colors.background,
                 elevation = 0.dp,
+                actions = {
+                    IconButton(onClick = {
+                        navController.navigate(Screen.DiaryChartScreen.route)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_pie_chart),
+                            contentDescription = stringResource(R.string.diary_chart),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -63,7 +74,7 @@ fun DiaryScreen(
                     tint = Color.White
                 )
             }
-        },
+        }
     ) {
         if (uiState.entries.isEmpty())
             NoEntriesMessage()

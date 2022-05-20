@@ -22,6 +22,7 @@ import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkSearchScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarksScreen
 import com.mhss.app.mybrain.presentation.calendar.CalendarScreen
+import com.mhss.app.mybrain.presentation.diary.DiaryChartScreen
 import com.mhss.app.mybrain.presentation.diary.DiaryEntryDetailsScreen
 import com.mhss.app.mybrain.presentation.diary.DiaryScreen
 import com.mhss.app.mybrain.presentation.diary.DiarySearchScreen
@@ -152,6 +153,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Screen.DiaryScreen.route) {
                             DiaryScreen(navController = navController)
+                        }
+                        composable(Screen.DiaryChartScreen.route) {
+                            DiaryChartScreen()
                         }
                         composable(Screen.DiarySearchScreen.route) {
                             DiarySearchScreen(navController = navController)

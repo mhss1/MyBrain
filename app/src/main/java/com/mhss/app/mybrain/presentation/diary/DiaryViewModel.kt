@@ -27,8 +27,9 @@ class DiaryViewModel @Inject constructor(
     private val getAlEntries: GetAllEntriesUseCase,
     private val searchEntries: SearchEntriesUseCase,
     private val getEntry: GetDiaryEntryUseCase,
-    getSettings: GetSettingsUseCase,
-    private val saveSettings: SaveSettingsUseCase
+    private val getSettings: GetSettingsUseCase,
+    private val saveSettings: SaveSettingsUseCase,
+    private val getEntriesForChart: GetDiaryForChartUseCase
 ) : ViewModel() {
 
     var uiState by mutableStateOf(UiState())
@@ -86,6 +87,9 @@ class DiaryViewModel @Inject constructor(
                 )
             }
             DiaryEvent.ErrorDisplayed -> uiState = uiState.copy(error = null)
+            is DiaryEvent.ChangeChartEntriesRange -> viewModelScope.launch {
+                uiState = uiState.copy(chartEntries = getEntriesForChart(event.monthly))
+            }
         }
     }
 
@@ -95,7 +99,8 @@ class DiaryViewModel @Inject constructor(
         val entry: DiaryEntry? = null,
         val error: String? = null,
         val searchEntries: List<DiaryEntry> = emptyList(),
-        val navigateUp: Boolean = false
+        val navigateUp: Boolean = false,
+        val chartEntries : List<DiaryEntry> = emptyList()
     )
 
     private fun getEntries(order: Order) {

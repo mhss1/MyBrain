@@ -103,5 +103,16 @@
     <string name="add_event">Add event</string>
     <string name="include_calendars">Include calendars :</string>
     <string name="added_task">Added to tasks</string>
+    <string name="diary_chart">Diary chart</string>
+    <string name="mood_during_month">You mood during the month</string>
+    <string name="mood_during_year">You mood during the year</string>
+    <string name="percent">%1$d%%</string>
+    <string name="mood_flow">Mood Flow</string>
+    <string name="mood_summary">Mood summary</string>
+    <string name="your_mood_was">"Your mood was "</string>
+    <string name="most_of_the_time">" most of the time "</string>
+    <string name="last_30_days">Last 30 days</string>
+    <string name="last_year">Last year</string>
+    <string name="no_data_yet">No data yet</string>
 
 </resources>

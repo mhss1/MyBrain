@@ -7,8 +7,8 @@ import com.mhss.app.mybrain.util.diary.Mood
 
 @Entity(tableName = "diary")
 data class DiaryEntry(
-    val title: String,
-    val content: String,
+    val title: String = "",
+    val content: String = "",
     @ColumnInfo(name = "created_date")
     val createdDate: Long = 0L,
     @ColumnInfo(name = "updated_date")
