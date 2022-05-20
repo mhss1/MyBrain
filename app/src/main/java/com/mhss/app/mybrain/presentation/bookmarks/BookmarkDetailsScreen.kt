@@ -21,7 +21,6 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.diary.Mood
 
 @Composable
 fun BookmarkDetailsScreen(

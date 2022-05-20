@@ -116,3 +116,7 @@ fun Order.toInt(): Int {
         }
     }
 }
+
+fun Set<String>.toIntList() = this.toList().map { it.toInt() }
+fun MutableList<Int>.addAndToStringSet(id: Int) = apply { add(id) }.map { it.toString() }.toSet()
+fun MutableList<Int>.removeAndToStringSet(id: Int) = apply { remove(id) }.map { it.toString() }.toSet()

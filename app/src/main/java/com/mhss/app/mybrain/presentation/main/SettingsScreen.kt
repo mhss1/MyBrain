@@ -192,6 +192,7 @@ fun SettingsScreen(
 fun ThemeSettingsItem(theme: Int = 0, onClick: () -> Unit = {}) {
     SettingsItemCard(
         onClick = onClick,
+        cornerRadius = 18.dp
     ) {
         Text(
             text = stringResource(R.string.app_theme),

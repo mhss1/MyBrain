@@ -43,7 +43,7 @@
             android:name=".util.alarms.TaskActionButtonBroadcastReceiver"
             android:enabled="true" />
         <activity
-            android:name=".presentation.bookmarks.SaveArticleActivity"
+            android:name=".presentation.bookmarks.SaveBookmarkActivity"
             android:theme="@android:style/Theme.NoDisplay"
             android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"
@@ -54,8 +54,32 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".domain.use_case.tasks.AddTaskFromShareActivity"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:autoRemoveFromRecents="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:exported="true">
+            <intent-filter android:label="@string/add_to_tasks">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
 
         </activity>
+        <service
+            android:name=".presentation.tasks.AddTaskTileService"
+            android:label="@string/add_task_to_my_brain"
+            android:icon="@drawable/ic_check"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

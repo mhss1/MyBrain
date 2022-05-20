@@ -8,4 +8,6 @@ data class CalendarEvent(
     val end: Long,
     val location: String?,
     val allDay: Boolean,
+    val color: Int,
+    val calendarId: Long
 )

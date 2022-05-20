@@ -11,7 +11,7 @@ import com.mhss.app.mybrain.domain.model.Bookmark
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SaveArticleActivity : ComponentActivity() {
+class SaveBookmarkActivity : ComponentActivity() {
 
     private val viewModel: BookmarksViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +19,7 @@ class SaveArticleActivity : ComponentActivity() {
         if (intent != null) {
             if (intent.action == Intent.ACTION_SEND && intent.type == "text/plain") {
                 val url = intent.getStringExtra(Intent.EXTRA_TEXT)
-                if (url != null && url.isNotBlank()) {
+                if (!url.isNullOrBlank()) {
                     if (URLUtil.isValidUrl(url)) {
                         viewModel.onEvent(
                             BookmarkEvent.AddBookmark(
