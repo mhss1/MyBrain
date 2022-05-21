@@ -37,6 +37,7 @@ object Constants {
     const val BUY_ME_A_COFFEE_LINK = "https://www.buymeacoffee.com/mhss"
     const val PAYPAL_LINK = "https://www.paypal.me/mhss1"
     const val GITHUB_ISSUES_LINK = "https://github.com/mhss1/ByBrain/issues"
+    const val GITHUB_RELEASES_LINK = "https://github.com/mhss1/ByBrain/releases"
 
 
 }

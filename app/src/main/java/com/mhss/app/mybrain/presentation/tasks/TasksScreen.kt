@@ -114,7 +114,7 @@ fun TasksScreen(
                 NoTasksMessage()
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(top = 12.dp, bottom = 12.dp)
+                contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
             ) {
                 item {
                     Column(

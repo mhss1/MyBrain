@@ -47,9 +47,10 @@ fun CalendarScreen(
     val readCalendarPermissionState = rememberPermissionState(
         android.Manifest.permission.READ_CALENDAR
     )
-    val month by derivedStateOf {
-        val index = lazyListState.firstVisibleItemIndex
-        state.events.values.elementAt(index).first().start.monthName()
+    val month by remember(state.events) {
+        derivedStateOf {
+            state.events.values.elementAt(lazyListState.firstVisibleItemIndex).first().start.monthName()
+        }
     }
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -287,7 +288,11 @@ fun CalendarSettingsSection(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Checkbox(
                                     checked = subCalendar.included,
-                                    onCheckedChange = { onCalendarClicked(subCalendar) }
+                                    onCheckedChange = { onCalendarClicked(subCalendar) },
+                                    colors = CheckboxDefaults.colors(
+                                        uncheckedColor = Color(subCalendar.color),
+                                        checkedColor = Color(subCalendar.color)
+                                    )
                                 )
                                 Text(
                                     text = subCalendar.name,

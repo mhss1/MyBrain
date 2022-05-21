@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.main.components.SpaceRegularCard
 import com.mhss.app.mybrain.presentation.main.components.SpaceWideCard
@@ -93,4 +95,12 @@ fun SpacesScreen(
             item { Spacer(Modifier.height(60.dp)) }
         }
     }
+}
+
+@Preview
+@Composable
+fun SpacesScreenPreview() {
+    SpacesScreen(
+        navController = rememberNavController()
+    )
 }

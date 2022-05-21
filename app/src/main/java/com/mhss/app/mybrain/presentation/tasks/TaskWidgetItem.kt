@@ -1,11 +1,9 @@
 package com.mhss.app.mybrain.presentation.tasks
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -28,9 +26,8 @@ import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.settings.toPriority
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyItemScope.TaskItem(
+fun TaskWidgetItem(
     modifier: Modifier = Modifier,
     task: Task,
     onComplete: () -> Unit,
@@ -38,8 +35,7 @@ fun LazyItemScope.TaskItem(
 ) {
     Card(
         modifier = modifier
-            .padding(horizontal = 8.dp)
-            .animateItemPlacement(),
+            .padding(horizontal = 8.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = 8.dp
     ) {
@@ -48,35 +44,35 @@ fun LazyItemScope.TaskItem(
                 .clickable {
                     onClick()
                 }
-                .padding(12.dp)
+                .padding(10.dp)
         ) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                TaskCheckBox(
+                TaskWidgetCheckBox(
                     isComplete = task.isCompleted,
                     task.priority.toPriority().color,
                     onComplete = { onComplete() }
                 )
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(6.dp))
                 Text(
                     text = task.title,
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.body1,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     textDecoration = if (task.isCompleted) TextDecoration.LineThrough else null
                 )
             }
             if (task.dueDate != 0L) {
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        modifier = Modifier.size(15.dp),
+                        modifier = Modifier.size(10.dp),
                         painter = painterResource(R.drawable.ic_alarm),
                         contentDescription = stringResource(R.string.due_date)
                     )
-                    Spacer(Modifier.width(4.dp))
+                    Spacer(Modifier.width(3.dp))
                     Text(
                         text = task.dueDate.formatDate(),
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTheme.typography.subtitle1
                     )
                 }
             }
@@ -85,13 +81,13 @@ fun LazyItemScope.TaskItem(
 }
 
 @Composable
-fun TaskCheckBox(
+fun TaskWidgetCheckBox(
     isComplete: Boolean,
     borderColor: Color,
     onComplete: () -> Unit
 ) {
     Box(modifier = Modifier
-        .size(30.dp)
+        .size(22.dp)
         .clip(CircleShape)
         .border(2.dp, borderColor, CircleShape)
         .clickable {
@@ -100,7 +96,7 @@ fun TaskCheckBox(
     ) {
         AnimatedVisibility(visible = isComplete) {
             Icon(
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(14.dp),
                 painter = painterResource(id = R.drawable.ic_check),
                 contentDescription = null
             )
@@ -110,8 +106,8 @@ fun TaskCheckBox(
 
 @Preview
 @Composable
-fun LazyItemScope.TaskItemPreview() {
-    TaskItem(
+fun TaskWidgetItemPreview() {
+    TaskWidgetItem(
         task = Task(
             title = "Task 1",
             description = "Task 1 description",

@@ -5,6 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,6 +110,7 @@ fun SettingsScreen(
                     title = R.string.app_version,
                     icon = R.drawable.ic_code,
                     subtitle = BuildConfig.VERSION_NAME,
+                    link = Constants.GITHUB_RELEASES_LINK
                 )
             }
             item {
@@ -196,8 +199,7 @@ fun ThemeSettingsItem(theme: Int = 0, onClick: () -> Unit = {}) {
     ) {
         Text(
             text = stringResource(R.string.app_theme),
-            style = MaterialTheme.typography.h6,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.h6
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -236,22 +238,27 @@ fun StartUpScreenSettingsItem(
     ) {
         Text(
             text = stringResource(R.string.start_up_screen),
-            style = MaterialTheme.typography.h6,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.h6
         )
         Box(
             modifier = Modifier
                 .fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
-            Text(
-                text = when (screen) {
-                    StartUpScreenSettings.SPACES.value -> stringResource(R.string.spaces)
-                    StartUpScreenSettings.DASHBOARD.value -> stringResource(R.string.dashboard)
-                    else -> stringResource(R.string.spaces)
-                },
-                style = MaterialTheme.typography.body1
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = when (screen) {
+                        StartUpScreenSettings.SPACES.value -> stringResource(R.string.spaces)
+                        StartUpScreenSettings.DASHBOARD.value -> stringResource(R.string.dashboard)
+                        else -> stringResource(R.string.spaces)
+                    },
+                    style = MaterialTheme.typography.body1
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
+            }
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
@@ -260,13 +267,19 @@ fun StartUpScreenSettingsItem(
                     onSpacesClick()
                     expanded = false
                 }) {
-                    Text(text = stringResource(id = R.string.spaces))
+                    Text(
+                        text = stringResource(id = R.string.spaces),
+                        style = MaterialTheme.typography.body1
+                    )
                 }
                 DropdownMenuItem(onClick = {
                     onDashboardClick()
                     expanded = false
                 }) {
-                    Text(text = stringResource(id = R.string.dashboard))
+                    Text(
+                        text = stringResource(id = R.string.dashboard),
+                        style = MaterialTheme.typography.body1
+                    )
                 }
             }
         }

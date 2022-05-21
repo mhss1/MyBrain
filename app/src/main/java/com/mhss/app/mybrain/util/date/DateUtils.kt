@@ -53,6 +53,12 @@ fun Long.inTheLastYear(): Boolean {
     return this > calendar.timeInMillis
 }
 
+fun Long.inTheLastWeek(): Boolean {
+    val calendar = Calendar.getInstance()
+    calendar.add(Calendar.WEEK_OF_MONTH, -1)
+    return this > calendar.timeInMillis
+}
+
 fun Long.isCurrentYear(): Boolean {
     val sdf = SimpleDateFormat("yyyy", Locale.getDefault())
     return sdf.format(this) == sdf.format(Date())

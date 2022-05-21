@@ -114,5 +114,10 @@
     <string name="last_30_days">Last 30 days</string>
     <string name="last_year">Last year</string>
     <string name="no_data_yet">No data yet</string>
+    <string name="no_events">No events yet</string>
+    <string name="tasks_summary">Tasks summary</string>
+    <string name="you_completed">You completed</string>
+    <string name="of_last_week_tasks">of Tasks in the last Week</string>
+    <string name="no_tasks_today">No tasks due today</string>
 
 </resources>

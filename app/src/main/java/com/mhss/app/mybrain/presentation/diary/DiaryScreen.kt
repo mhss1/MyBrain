@@ -47,9 +47,9 @@ fun DiaryScreen(
                         navController.navigate(Screen.DiaryChartScreen.route)
                     }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_pie_chart),
+                            painter = painterResource(id = R.drawable.ic_chart),
                             contentDescription = stringResource(R.string.diary_chart),
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(34.dp)
                         )
                     }
                 }

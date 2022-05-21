@@ -1,6 +1,7 @@
 package com.mhss.app.mybrain.presentation.diary
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -27,21 +28,34 @@ import com.mhss.app.mybrain.util.diary.Mood
 
 @Composable
 fun MoodCircularBar(
+    modifier: Modifier = Modifier,
     entries: List<DiaryEntry>,
     strokeWidth: Float = 85f,
+    showPercentage: Boolean = true,
+    onClick: () -> Unit = {}
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
         elevation = 8.dp,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Column {
-            val mostFrequentMood by derivedStateOf {
-                entries.groupBy { it.mood }.maxByOrNull { it.value.size }?.key ?: Mood.OKAY
+        Column(
+            Modifier.clickable {
+                onClick()
             }
-            val moods by derivedStateOf { entries.toPercentages() }
+        ) {
+            val mostFrequentMood by remember(entries) {
+                derivedStateOf {
+                    entries.groupBy { it.mood }.maxByOrNull { it.value.size }?.key ?: Mood.OKAY
+                }
+            }
+            val moods by remember(entries) {
+                derivedStateOf {
+                    entries.toPercentages()
+                }
+            }
             Text(
                 text = stringResource(R.string.mood_summary),
                 style = MaterialTheme.typography.h5,
@@ -57,7 +71,7 @@ fun MoodCircularBar(
                         .aspectRatio(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    var currentAngle by remember { mutableStateOf(90f) }
+                    var currentAngle = remember { 90f }
                     Canvas(
                         modifier = Modifier
                             .fillMaxSize()
@@ -75,7 +89,7 @@ fun MoodCircularBar(
                             currentAngle += percentage * 360f
                         }
                     }
-                    Column(
+                    if (showPercentage) Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
