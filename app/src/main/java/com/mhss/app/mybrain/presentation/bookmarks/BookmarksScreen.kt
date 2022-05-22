@@ -3,6 +3,7 @@ package com.mhss.app.mybrain.presentation.bookmarks
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
@@ -194,7 +195,9 @@ fun BookmarksSettingsSection(
         ItemView.LIST,
         ItemView.GRID
     )
-    Column {
+    Column(
+        Modifier.background(color = MaterialTheme.colors.background)
+    ) {
         Text(
             text = stringResource(R.string.order_by),
             style = MaterialTheme.typography.body1,

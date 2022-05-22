@@ -3,11 +3,9 @@
     package="com.mhss.app.mybrain">
 
     <!-- For the Calendar events features -->
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
-    <!-- For reminders -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-    <!--to start the alarms after restart. (By default, all alarms are canceled when a device shuts down)-->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR" /> <!-- For reminders -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- to start the alarms after restart. (By default, all alarms are canceled when a device shuts down) -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".app.MyBrainApplication"
@@ -28,10 +26,10 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".util.alarms.BootBroadcastReceiver"
+        <receiver
+            android:name=".util.alarms.BootBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -42,44 +40,74 @@
         <receiver
             android:name=".util.alarms.TaskActionButtonBroadcastReceiver"
             android:enabled="true" />
+
         <activity
             android:name=".presentation.bookmarks.SaveBookmarkActivity"
-            android:theme="@android:style/Theme.NoDisplay"
             android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:noHistory="true"
-            android:exported="true">
+            android:theme="@android:style/Theme.NoDisplay">
             <intent-filter android:label="@string/save_bookmark">
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
         <activity
             android:name=".domain.use_case.tasks.AddTaskFromShareActivity"
-            android:theme="@android:style/Theme.NoDisplay"
             android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:noHistory="true"
-            android:exported="true">
+            android:theme="@android:style/Theme.NoDisplay">
             <intent-filter android:label="@string/add_to_tasks">
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
-
         </activity>
+
+        <!-- The Add task tile in the quick settings -->
         <service
             android:name=".presentation.tasks.AddTaskTileService"
-            android:label="@string/add_task_to_my_brain"
+            android:exported="true"
             android:icon="@drawable/ic_check"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-            android:exported="true">
+            android:label="@string/add_task_to_my_brain"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
 
+        <!-- Calendar widget-->
+        <receiver
+            android:name=".presentation.glance_widgets.CalendarWidgetReceiver"
+            android:enabled="@bool/glance_appwidget_available"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/calendar_widget_info" />
+        </receiver>
+
+        <!-- For updating the events in the  calendar widget when there are changes-->
+        <receiver
+            android:name=".presentation.glance_widgets.RefreshCalendarWidgetReceiver"
+            android:enabled="@bool/glance_appwidget_available"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.PROVIDER_CHANGED"/>
+                <data android:scheme="content"/>
+                <data android:host="com.android.calendar"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

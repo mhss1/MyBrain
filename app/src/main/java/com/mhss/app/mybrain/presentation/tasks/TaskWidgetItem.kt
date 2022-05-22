@@ -72,7 +72,7 @@ fun TaskWidgetItem(
                     Spacer(Modifier.width(3.dp))
                     Text(
                         text = task.dueDate.formatDate(),
-                        style = MaterialTheme.typography.subtitle1
+                        style = MaterialTheme.typography.subtitle2
                     )
                 }
             }

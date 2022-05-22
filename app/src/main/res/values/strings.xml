@@ -118,6 +118,12 @@
     <string name="tasks_summary">Tasks summary</string>
     <string name="you_completed">You completed</string>
     <string name="of_last_week_tasks">of Tasks in the last Week</string>
-    <string name="no_tasks_today">No tasks due today</string>
+    <string name="no_tasks">No tasks yet</string>
+    <string name="loading">Loading…</string>
+    <string name="calendar_widget_refresh_message">Click the refresh button if you already granted the permission</string>
+    <string name="thursday_30_calendar_preview">Thursday 30</string>
+    <string name="sunday_5_calendar_preview">Sunday 5</string>
+    <string name="dinner_with_ali_calender_preview">Dinner with Ali</string>
+    <string name="cs_lecture_calender_preview">CS lecture</string>
 
 </resources>

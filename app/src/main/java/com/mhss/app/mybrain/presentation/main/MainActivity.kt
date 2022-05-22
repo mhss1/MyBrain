@@ -11,6 +11,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -68,6 +69,8 @@ class MainActivity : ComponentActivity() {
                 ThemeSettings.LIGHT.value -> false
                 else -> isSystemInDarkTheme()
             }
+            val color = MaterialTheme.colors.background
+            println("red: ${color.toArgb()}, green: ${color.green}, blue: ${color.blue}")
             SideEffect {
                 systemUiController.setSystemBarsColor(
                     if (isDarkMode) DarkBackground else Color.White,
@@ -188,7 +191,14 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.BookmarkSearchScreen.route) {
                             BookmarkSearchScreen(navController = navController)
                         }
-                        composable(Screen.CalendarScreen.route) {
+                        composable(
+                            Screen.CalendarScreen.route,
+                            deepLinks = listOf(
+                                navDeepLink {
+                                    uriPattern = Constants.CALENDAR_SCREEN_URI
+                                }
+                            )
+                        ) {
                             CalendarScreen()
                         }
                         composable(Screen.CalendarSearchScreen.route) {}

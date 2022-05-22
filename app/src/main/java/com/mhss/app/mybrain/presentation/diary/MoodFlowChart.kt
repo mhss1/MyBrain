@@ -57,7 +57,15 @@ fun MoodFlowChart(
             ) {
                 val mostFrequentMood by remember(entries) {
                     derivedStateOf {
-                        entries.groupBy { it.mood }.maxByOrNull { it.value.size }?.key ?: Mood.OKAY
+                        // if multiple ones with the same frequency, return the most positive one
+                        val entriesGrouped = entries
+                            .groupBy { it.mood }
+                        val max = entriesGrouped.maxOf { it.value.size }
+                        entriesGrouped
+                            .filter { it.value.size == max }
+                            .maxByOrNull {
+                                it.key.value
+                            }?.key ?: Mood.OKAY
                     }
                 }
                 val moods = listOf(Mood.AWESOME, Mood.GOOD, Mood.OKAY, Mood.BAD, Mood.TERRIBLE)
@@ -105,7 +113,11 @@ fun MoodFlowChart(
                         val fillPath = android.graphics.Path(path.asAndroidPath())
                             .asComposePath()
                             .apply {
-                                lineTo(offsets.last().x, h)
+                                lineTo(
+                                    if (offsets.size > 1)
+                                        (offsets[offsets.size - 2].x + offsets.last().x) / 2
+                                    else offsets.last().x, h
+                                )
                                 lineTo(0f, h)
                                 close()
                             }

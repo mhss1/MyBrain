@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import com.mhss.app.mybrain.domain.use_case.alarm.DeleteAlarmUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetTaskByIdUseCase
-import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskUseCase
 import com.mhss.app.mybrain.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
@@ -19,8 +18,6 @@ class AlarmReceiver : BroadcastReceiver() {
     lateinit var deleteAlarmUseCase: DeleteAlarmUseCase
     @Inject
     lateinit var getTaskByIdUseCase: GetTaskByIdUseCase
-    @Inject
-    lateinit var updateTaskByIdUseCase: UpdateTaskUseCase
 
     override fun onReceive(context: Context?, intent: Intent?) {
         runBlocking {
@@ -28,7 +25,6 @@ class AlarmReceiver : BroadcastReceiver() {
             task?.let {
                 val manager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 manager.sendNotification(task, context, task.id)
-                updateTaskByIdUseCase(task.copy(dueDate = 0L))
                 deleteAlarmUseCase(task.id)
             }
         }

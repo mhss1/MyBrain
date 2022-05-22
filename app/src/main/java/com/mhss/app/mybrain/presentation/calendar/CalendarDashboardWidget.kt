@@ -28,7 +28,7 @@ import com.mhss.app.mybrain.ui.theme.LightGray
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CalendarWidget(
+fun CalendarDashboardWidget(
     modifier: Modifier = Modifier,
     events: Map<String, List<CalendarEvent>>,
     onPermission: (Boolean) -> Unit = {},
@@ -100,7 +100,7 @@ fun CalendarWidget(
                                         style = MaterialTheme.typography.body2
                                     )
                                     events.forEach { event ->
-                                        CalendarEventWidgetItem(event = event, onClick = {
+                                        CalendarEventSmallItem(event = event, onClick = {
                                             val intent = Intent(Intent.ACTION_VIEW)
                                             intent.data = ContentUris.withAppendedId(
                                                 CalendarContract.Events.CONTENT_URI,

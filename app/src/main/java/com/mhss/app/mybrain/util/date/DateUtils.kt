@@ -1,9 +1,8 @@
 package com.mhss.app.mybrain.util.date
 
 import android.text.format.DateUtils
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.app.getString
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -64,13 +63,13 @@ fun Long.isCurrentYear(): Boolean {
     return sdf.format(this) == sdf.format(Date())
 }
 
-@Composable
+
 fun formatEventStartEnd(start: Long, end: Long, location: String?, allDay: Boolean): String {
     return if (allDay)
-        stringResource(R.string.all_day)
+        getString(R.string.all_day)
     else
-        stringResource(
-            id = if (!location.isNullOrBlank())
+        getString(
+            if (!location.isNullOrBlank())
                 R.string.event_time_at
             else R.string.event_time,
             start.formatTime(),

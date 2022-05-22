@@ -19,6 +19,11 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -107,4 +112,8 @@ dependencies {
 
     // Compose MarkDown
     implementation 'com.github.jeziellago:compose-markdown:0.2.9'
+
+    // Compose Glance (Widgets)
+    implementation "androidx.glance:glance-appwidget:1.0.0-alpha03"
+
 }

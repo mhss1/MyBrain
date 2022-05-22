@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.calendar.CalendarWidget
+import com.mhss.app.mybrain.presentation.calendar.CalendarDashboardWidget
 import com.mhss.app.mybrain.presentation.diary.MoodCircularBar
 import com.mhss.app.mybrain.presentation.tasks.TasksWidget
 import com.mhss.app.mybrain.presentation.util.Screen
@@ -43,7 +43,7 @@ fun DashboardScreen(
         LaunchedEffect(true) { viewModel.onDashboardEvent(DashboardEvent.InitAll) }
         LazyColumn {
             item {
-                CalendarWidget(
+                CalendarDashboardWidget(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1.5f),

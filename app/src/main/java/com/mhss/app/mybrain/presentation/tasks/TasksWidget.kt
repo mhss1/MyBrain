@@ -2,7 +2,6 @@ package com.mhss.app.mybrain.presentation.tasks
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -78,7 +77,7 @@ fun TasksWidget(
                 if (tasks.isEmpty()){
                     item {
                         Text(
-                            text = stringResource(R.string.no_tasks_today),
+                            text = stringResource(R.string.no_tasks),
                             style = MaterialTheme.typography.h6,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center

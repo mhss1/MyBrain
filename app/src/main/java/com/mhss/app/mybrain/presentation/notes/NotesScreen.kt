@@ -3,6 +3,7 @@ package com.mhss.app.mybrain.presentation.notes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
@@ -110,7 +111,7 @@ fun NotesScreen(
             if (uiState.noteView == ItemView.LIST){
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(12.dp)
+                    contentPadding = PaddingValues(top = 12.dp, bottom = 24.dp, start = 12.dp, end = 12.dp)
                 ) {
                     items(uiState.notes, key = {it.id}) { note ->
                         NoteItem(
@@ -131,7 +132,7 @@ fun NotesScreen(
                     cells = GridCells.Adaptive(150.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(12.dp)
+                    contentPadding = PaddingValues(top = 12.dp, bottom = 24.dp, start = 12.dp, end = 12.dp)
                 ){
                     items(uiState.notes){ note ->
                         key(note.id) {
@@ -170,7 +171,9 @@ fun NotesSettingsSection(order: Order, view: ItemView, onOrderChange: (Order) ->
         ItemView.LIST,
         ItemView.GRID
     )
-    Column {
+    Column(
+        Modifier.background(color = MaterialTheme.colors.background)
+    ) {
         Text(
             text = stringResource(R.string.order_by),
             style = MaterialTheme.typography.body1,

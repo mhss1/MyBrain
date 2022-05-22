@@ -2,6 +2,7 @@ package com.mhss.app.mybrain.presentation.diary
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -142,7 +143,9 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
         OrderType.ASC(),
         OrderType.DESC()
     )
-    Column {
+    Column(
+        Modifier.background(color = MaterialTheme.colors.background)
+    ) {
         Text(
             text = stringResource(R.string.order_by),
             style = MaterialTheme.typography.body1,

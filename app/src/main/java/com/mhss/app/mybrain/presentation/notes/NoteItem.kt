@@ -34,7 +34,7 @@ fun LazyItemScope.NoteItem(
         modifier = modifier
             .animateItemPlacement(),
         shape = RoundedCornerShape(20.dp),
-        elevation = 8.dp
+        elevation = 12.dp
     ) {
         Column(
             modifier = Modifier

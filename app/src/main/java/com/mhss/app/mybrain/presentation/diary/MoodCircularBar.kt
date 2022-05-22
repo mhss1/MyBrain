@@ -48,7 +48,15 @@ fun MoodCircularBar(
         ) {
             val mostFrequentMood by remember(entries) {
                 derivedStateOf {
-                    entries.groupBy { it.mood }.maxByOrNull { it.value.size }?.key ?: Mood.OKAY
+                    // if multiple ones with the same frequency, return the most positive one
+                    val entriesGrouped = entries
+                        .groupBy { it.mood }
+                    val max = entriesGrouped.maxOf { it.value.size }
+                    entriesGrouped
+                        .filter { it.value.size == max }
+                        .maxByOrNull {
+                            it.key.value
+                        }?.key ?: Mood.OKAY
                 }
             }
             val moods by remember(entries) {

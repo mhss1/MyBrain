@@ -102,7 +102,7 @@ fun TasksSummaryCard(
                 )
             } else {
                 Text(
-                    text = stringResource(R.string.no_tasks_today),
+                    text = stringResource(R.string.no_tasks),
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier
                         .fillMaxWidth()
