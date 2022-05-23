@@ -3,7 +3,7 @@
 # My Brain
   
   
-### All-in-one, open-source productivity app for Tasks, Notes, Calendar, Diary and Bookmarks.
+### Open-source, All-in-one productivity app for Tasks, Notes, Calendar, Diary and Bookmarks.
 
 <div align="left">
 <img src = "https://user-images.githubusercontent.com/58703865/169859205-54c0b8f3-7423-4c2a-9a9b-9e43861814c0.png" width ="160" />
