@@ -1,0 +1,10 @@
+My Brain is an Open source, All in one productivity app for Tasks, Notes, Calendar, Diary and Bookmarks.
+
+Features :
+- Private with no data collection and no internet permission at all.
+- Create tasks with priority, sub-tasks, description and due date and reminders.
+- Create Notes that supports markdown which enables you to use Headers, lists, links etc..
+- Record your mood daily and view your mood summary with beautiful graphs.
+- Save bookmarks for later by using the share menu from any other app.
+- View your calendar events in a modern view and also with a beautiful home screen widget.
+- Dashboard screen to see your tasks, calendar events, and more to see your day at a glance.
