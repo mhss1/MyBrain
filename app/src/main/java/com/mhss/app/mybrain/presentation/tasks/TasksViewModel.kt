@@ -88,7 +88,6 @@ class TasksViewModel @Inject constructor(
                 updateTask(
                     event.task.copy(
                         isCompleted = event.complete,
-                        dueDate = if (event.complete) 0L else event.task.dueDate
                     )
                 )
                 if (event.complete)

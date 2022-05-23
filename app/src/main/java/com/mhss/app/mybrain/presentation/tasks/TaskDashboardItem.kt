@@ -24,10 +24,11 @@ import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.util.date.formatDate
+import com.mhss.app.mybrain.util.date.isDueDateOverdue
 import com.mhss.app.mybrain.util.settings.toPriority
 
 @Composable
-fun TaskWidgetItem(
+fun TaskDashboardItem(
     modifier: Modifier = Modifier,
     task: Task,
     onComplete: () -> Unit,
@@ -67,12 +68,14 @@ fun TaskWidgetItem(
                     Icon(
                         modifier = Modifier.size(10.dp),
                         painter = painterResource(R.drawable.ic_alarm),
-                        contentDescription = stringResource(R.string.due_date)
+                        contentDescription = stringResource(R.string.due_date),
+                        tint = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colors.onSurface
                     )
                     Spacer(Modifier.width(3.dp))
                     Text(
                         text = task.dueDate.formatDate(),
-                        style = MaterialTheme.typography.subtitle2
+                        style = MaterialTheme.typography.subtitle2,
+                        color = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colors.onSurface,
                     )
                 }
             }
@@ -106,8 +109,8 @@ fun TaskWidgetCheckBox(
 
 @Preview
 @Composable
-fun TaskWidgetItemPreview() {
-    TaskWidgetItem(
+fun TaskDashboardItemPreview() {
+    TaskDashboardItem(
         task = Task(
             title = "Task 1",
             description = "Task 1 description",

@@ -17,7 +17,6 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
-
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.presentation.glance_widgets.AddEventAction
 import com.mhss.app.mybrain.presentation.glance_widgets.GoToSettingsAction
@@ -101,12 +100,13 @@ fun CalendarHomeScreenWidget(
                             )
                         }
                     } else {
+                        item { Spacer(GlanceModifier.height(6.dp))}
                         events.forEach { (day, events) ->
                             item {
                                 Column(
                                     modifier = GlanceModifier
                                         .fillMaxWidth()
-                                        .padding(top = 6.dp, start = 4.dp, end = 4.dp)
+                                        .padding(start = 4.dp, end = 4.dp)
                                 ) {
                                     Text(
                                         text = day,

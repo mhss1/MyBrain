@@ -63,6 +63,9 @@ fun Long.isCurrentYear(): Boolean {
     return sdf.format(this) == sdf.format(Date())
 }
 
+fun Long.isDueDateOverdue(): Boolean {
+    return this < System.currentTimeMillis()
+}
 
 fun formatEventStartEnd(start: Long, end: Long, location: String?, allDay: Boolean): String {
     return if (allDay)

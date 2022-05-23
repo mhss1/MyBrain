@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
     private val getSettings: GetSettingsUseCase,
     private val getAllTasks: GetAllTasksUseCase,
     private val getAllEntriesUseCase: GetAllEntriesUseCase,
-    private val upDateTask: UpdateTaskUseCase,
+    private val updateTask: UpdateTaskUseCase,
     private val getAllEventsUseCase: GetAllEventsUseCase
 ) : ViewModel() {
 
@@ -48,7 +48,7 @@ class MainViewModel @Inject constructor(
                     getCalendarEvents()
             }
             is DashboardEvent.UpdateTask -> viewModelScope.launch {
-                upDateTask(event.task)
+                updateTask(event.task)
             }
             DashboardEvent.InitAll -> collectDashboardData()
         }

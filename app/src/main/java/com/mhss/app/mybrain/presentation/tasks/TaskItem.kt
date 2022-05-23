@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.util.date.formatDate
+import com.mhss.app.mybrain.util.date.isDueDateOverdue
 import com.mhss.app.mybrain.util.settings.toPriority
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -69,14 +70,16 @@ fun LazyItemScope.TaskItem(
                 Spacer(Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        modifier = Modifier.size(15.dp),
+                        modifier = Modifier.size(13.dp),
                         painter = painterResource(R.drawable.ic_alarm),
-                        contentDescription = stringResource(R.string.due_date)
+                        contentDescription = stringResource(R.string.due_date),
+                        tint = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colors.onSurface
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
                         text = task.dueDate.formatDate(),
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTheme.typography.body2,
+                        color = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colors.onSurface
                     )
                 }
             }

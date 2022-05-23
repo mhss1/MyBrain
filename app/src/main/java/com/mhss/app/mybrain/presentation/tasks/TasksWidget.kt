@@ -84,7 +84,7 @@ fun TasksWidget(
                         )
                     }
                 } else items(tasks) {
-                    TaskWidgetItem(
+                    TaskDashboardItem(
                         task = it,
                         onClick = { onTaskClick(it) },
                         onComplete = { onCheck(it.copy(isCompleted = !it.isCompleted)) },
