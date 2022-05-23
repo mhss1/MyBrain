@@ -24,6 +24,7 @@ import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.presentation.glance_widgets.*
 import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.date.isDueDateOverdue
+import com.mhss.app.mybrain.util.settings.Priority
 import com.mhss.app.mybrain.util.settings.toPriority
 
 @Composable
@@ -74,14 +75,18 @@ fun TaskWidgetItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         modifier = GlanceModifier.size(10.dp),
-                        provider = if (task.dueDate.isDueDateOverdue()) ImageProvider(R.drawable.ic_alarm_red) else ImageProvider(R.drawable.ic_alarm),
+                        provider = if (task.dueDate.isDueDateOverdue()) ImageProvider(R.drawable.ic_alarm_red) else ImageProvider(
+                            R.drawable.ic_alarm
+                        ),
                         contentDescription = "",
                     )
                     Spacer(GlanceModifier.width(3.dp))
                     Text(
                         text = task.dueDate.formatDate(),
                         style = TextStyle(
-                            color = if (task.dueDate.isDueDateOverdue()) ColorProvider(Color.Red) else ColorProvider(Color.White),
+                            color = if (task.dueDate.isDueDateOverdue()) ColorProvider(Color.Red) else ColorProvider(
+                                Color.White
+                            ),
                             fontWeight = FontWeight.Bold,
                             fontSize = 10.sp,
                         )
@@ -100,35 +105,24 @@ fun TaskWidgetCheckBox(
 ) {
     Box(
         modifier = GlanceModifier
-            .size(26.dp)
+            .size(25.dp)
             .cornerRadius(99.dp)
-            .background(ImageProvider(R.drawable.task_check_box_background))
+            .background(ImageProvider(
+                when (borderColor){
+                      Priority.LOW.color -> R.drawable.task_check_box_background_green
+                      Priority.MEDIUM.color -> R.drawable.task_check_box_background_orange
+                    else -> R.drawable.task_check_box_background_red
+                }))
             .clickable(
                 onClick = onComplete
-            ).padding(2.dp)
+            ).padding(3.dp)
     ) {
-        Box(
-            modifier = GlanceModifier
-                .fillMaxSize()
-                .cornerRadius(99.dp)
-                .background(ColorProvider(borderColor))
-                .padding(2.dp)
-        ) {
-            Box(
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .cornerRadius(99.dp)
-                    .background(ImageProvider(R.drawable.task_check_box_background)),
-                contentAlignment = Alignment.Center
-            ) {
-                if (isComplete) {
-                    Image(
-                        modifier = GlanceModifier.size(14.dp),
-                        provider = ImageProvider(R.drawable.ic_check),
-                        contentDescription = null
-                    )
-                }
-            }
+        if (isComplete) {
+            Image(
+                modifier = GlanceModifier.size(14.dp),
+                provider = ImageProvider(R.drawable.ic_check),
+                contentDescription = null
+            )
         }
     }
 }

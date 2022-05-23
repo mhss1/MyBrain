@@ -30,7 +30,7 @@ android:orientation="vertical">
             android:layout_height="26dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/task_check_box_background"
+            android:background="@drawable/task_check_box_background_green"
             android:backgroundTint="#FF9800"
             android:padding="2dp"
             >
@@ -38,7 +38,7 @@ android:orientation="vertical">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/task_check_box_background"
+                android:background="@drawable/task_check_box_background_green"
                 android:backgroundTint="#121212"
                 android:padding="2dp"
                 >
@@ -76,7 +76,7 @@ android:orientation="vertical">
             android:layout_height="26dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/task_check_box_background"
+            android:background="@drawable/task_check_box_background_green"
             android:backgroundTint="@android:color/holo_red_dark"
             android:padding="2dp"
             >
@@ -84,7 +84,7 @@ android:orientation="vertical">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/task_check_box_background"
+                android:background="@drawable/task_check_box_background_green"
                 android:backgroundTint="#121212"
                 android:padding="2dp"
                 >
@@ -144,7 +144,7 @@ android:orientation="vertical">
             android:layout_height="26dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/task_check_box_background"
+            android:background="@drawable/task_check_box_background_green"
             android:backgroundTint="#1E9651"
             android:padding="2dp"
             >
@@ -152,7 +152,7 @@ android:orientation="vertical">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/task_check_box_background"
+                android:background="@drawable/task_check_box_background_green"
                 android:backgroundTint="#121212"
                 android:padding="2dp"
                 >
