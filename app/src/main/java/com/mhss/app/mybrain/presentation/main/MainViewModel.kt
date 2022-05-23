@@ -17,6 +17,7 @@ import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetAllTasksUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskUseCase
 import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.mybrain.util.date.inTheLastWeek
 import com.mhss.app.mybrain.util.settings.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -57,6 +58,7 @@ class MainViewModel @Inject constructor(
     data class UiState(
         val dashBoardTasks: List<Task> = emptyList(),
         val dashBoardEvents: Map<String, List<CalendarEvent>> = emptyMap(),
+        val summaryTasks: List<Task> = emptyList(),
         val dashBoardEntries: List<DiaryEntry> = emptyList()
     )
 
@@ -92,15 +94,10 @@ class MainViewModel @Inject constructor(
 
     private fun refreshTasks(order: Order, showCompleted: Boolean) {
         refreshTasksJob?.cancel()
-        refreshTasksJob = getAllTasks(order)
-            .map { list ->
-                if (showCompleted)
-                    list
-                else
-                    list.filter { !it.isCompleted }
-            }.onEach { tasks ->
+        refreshTasksJob = getAllTasks(order).onEach { tasks ->
                 uiState = uiState.copy(
-                    dashBoardTasks = tasks
+                    dashBoardTasks = if (showCompleted) tasks else tasks.filter { !it.isCompleted },
+                    summaryTasks = tasks.filter { it.createdDate.inTheLastWeek() }
                 )
             }.launchIn(viewModelScope)
     }

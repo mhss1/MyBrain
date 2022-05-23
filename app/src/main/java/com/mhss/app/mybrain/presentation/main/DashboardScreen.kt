@@ -5,8 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,7 +17,6 @@ import com.mhss.app.mybrain.presentation.diary.MoodCircularBar
 import com.mhss.app.mybrain.presentation.tasks.TasksDashboardWidget
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
-import com.mhss.app.mybrain.util.date.inTheLastWeek
 
 @Composable
 fun DashboardScreen(
@@ -95,11 +92,6 @@ fun DashboardScreen(
             }
             item {
                 Row {
-                    val tasks = remember(viewModel.uiState.dashBoardTasks) {
-                        derivedStateOf {
-                            viewModel.uiState.dashBoardTasks.filter { it.createdDate.inTheLastWeek() }
-                        }
-                    }
                     MoodCircularBar(
                         entries = viewModel.uiState.dashBoardEntries,
                         showPercentage = false,
@@ -112,7 +104,7 @@ fun DashboardScreen(
                     )
                     TasksSummaryCard(
                         modifier = Modifier.weight(1f, fill = true),
-                        tasks = tasks.value
+                        tasks = viewModel.uiState.summaryTasks
                     )
                 }
             }

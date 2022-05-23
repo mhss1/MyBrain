@@ -117,7 +117,7 @@ android:orientation="vertical">
         <TextView
             android:text="8 PM"
             android:textColor="@color/white"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="2dp"
             tools:ignore="HardcodedText" />

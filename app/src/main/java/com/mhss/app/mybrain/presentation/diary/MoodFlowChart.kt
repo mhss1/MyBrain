@@ -79,7 +79,7 @@ fun MoodFlowChart(
                         Icon(
                             painter = painterResource(mood.icon),
                             tint = mood.color,
-                            contentDescription = mood.name,
+                            contentDescription = stringResource(mood.title),
                             modifier = Modifier.size(18.dp)
                         )
                     }

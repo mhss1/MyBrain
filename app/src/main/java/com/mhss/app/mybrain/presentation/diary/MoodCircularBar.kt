@@ -114,7 +114,7 @@ fun MoodCircularBar(
                                 Spacer(Modifier.width(8.dp))
                                 Icon(
                                     painter = painterResource(mood.icon),
-                                    contentDescription = mood.name,
+                                    contentDescription = stringResource(mood.title),
                                     tint = mood.color,
                                     modifier = Modifier.size(strokeWidth.dp / 3)
                                 )
@@ -131,7 +131,7 @@ fun MoodCircularBar(
                                 color = mostFrequentMood.color
                             )
                         ) {
-                            append(mostFrequentMood.name)
+                            append(stringResource(mostFrequentMood.title))
                         }
                         append(stringResource(R.string.most_of_the_time))
                     },
