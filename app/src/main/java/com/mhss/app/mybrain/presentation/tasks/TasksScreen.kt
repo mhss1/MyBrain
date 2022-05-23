@@ -195,7 +195,7 @@ fun NoTasksMessage(){
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.no_tasks_yet),
+            text = stringResource(R.string.no_tasks_message),
             style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
             color = Color.Gray,
             textAlign = TextAlign.Center
@@ -204,7 +204,7 @@ fun NoTasksMessage(){
         Image(
             modifier = Modifier.size(125.dp),
             painter = painterResource(id = R.drawable.tasks_img),
-            contentDescription = stringResource(R.string.no_tasks_yet),
+            contentDescription = stringResource(R.string.no_tasks_message),
             alpha = 0.7f
         )
     }

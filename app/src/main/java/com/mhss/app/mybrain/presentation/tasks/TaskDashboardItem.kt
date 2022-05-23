@@ -48,7 +48,7 @@ fun TaskDashboardItem(
                 .padding(10.dp)
         ) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                TaskWidgetCheckBox(
+                TaskDashboardCheckBox(
                     isComplete = task.isCompleted,
                     task.priority.toPriority().color,
                     onComplete = { onComplete() }
@@ -84,7 +84,7 @@ fun TaskDashboardItem(
 }
 
 @Composable
-fun TaskWidgetCheckBox(
+fun TaskDashboardCheckBox(
     isComplete: Boolean,
     borderColor: Color,
     onComplete: () -> Unit

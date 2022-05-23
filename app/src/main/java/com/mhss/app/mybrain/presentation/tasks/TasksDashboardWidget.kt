@@ -26,7 +26,7 @@ import com.mhss.app.mybrain.ui.theme.LightGray
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TasksWidget(
+fun TasksDashboardWidget(
     modifier: Modifier = Modifier,
     tasks: List<Task>,
     onTaskClick: (Task) -> Unit = {},
@@ -77,7 +77,7 @@ fun TasksWidget(
                 if (tasks.isEmpty()){
                     item {
                         Text(
-                            text = stringResource(R.string.no_tasks),
+                            text = stringResource(R.string.no_tasks_message),
                             style = MaterialTheme.typography.h6,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center

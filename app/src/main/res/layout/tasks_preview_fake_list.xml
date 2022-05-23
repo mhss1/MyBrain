@@ -1,0 +1,172 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+xmlns:tools="http://schemas.android.com/tools"
+android:background="@drawable/large_inner_item_rounded_corner_shape"
+android:padding="6dp"
+android:layout_marginStart="8dp"
+android:layout_marginEnd="8dp"
+android:layout_marginBottom="8dp"
+android:orientation="vertical">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="start|center"
+    android:orientation="vertical"
+    android:layout_marginHorizontal="2dp"
+    android:layout_marginBottom="4dp"
+    android:background="@drawable/small_item_rounded_corner_shape">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|center"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <FrameLayout
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/task_check_box_background"
+            android:backgroundTint="#FF9800"
+            android:padding="2dp"
+            >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/task_check_box_background"
+                android:backgroundTint="#121212"
+                android:padding="2dp"
+                >
+            </FrameLayout>
+        </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buy_groceries_tasks_preview"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="start|center"
+    android:orientation="vertical"
+    android:layout_marginHorizontal="2dp"
+    android:layout_marginBottom="4dp"
+    android:background="@drawable/small_item_rounded_corner_shape">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        >
+        <FrameLayout
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/task_check_box_background"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:padding="2dp"
+            >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/task_check_box_background"
+                android:backgroundTint="#121212"
+                android:padding="2dp"
+                >
+
+            </FrameLayout>
+        </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/visit_dentist_tasks_preview"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start|center"
+        android:layout_marginStart="12dp"
+        tools:ignore="UseCompoundDrawables">
+        <ImageView
+            android:src="@drawable/ic_alarm"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_margin="4dp"
+            android:padding="2dp"
+            android:contentDescription="@string/due_date"
+            />
+        <TextView
+            android:text="8 PM"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="start|center"
+    android:orientation="vertical"
+    android:layout_marginHorizontal="2dp"
+    android:layout_marginBottom="4dp"
+    android:background="@drawable/small_item_rounded_corner_shape">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|center"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <FrameLayout
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/task_check_box_background"
+            android:backgroundTint="#1E9651"
+            android:padding="2dp"
+            >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/task_check_box_background"
+                android:backgroundTint="#121212"
+                android:padding="2dp"
+                >
+
+            </FrameLayout>
+        </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/call_mom_tasks_preview"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
+
+</LinearLayout>

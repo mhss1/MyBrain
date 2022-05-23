@@ -274,7 +274,7 @@ fun NoBookmarksMessage() {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.no_bookmarks_yet),
+            text = stringResource(R.string.no_bookmarks_message),
             style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
             color = Color.Gray,
             textAlign = TextAlign.Center
@@ -283,7 +283,7 @@ fun NoBookmarksMessage() {
         Image(
             modifier = Modifier.size(125.dp),
             painter = painterResource(id = R.drawable.bookmarks_img),
-            contentDescription = stringResource(R.string.no_bookmarks_yet),
+            contentDescription = stringResource(R.string.no_bookmarks_message),
             alpha = 0.7f
         )
     }

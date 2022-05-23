@@ -16,7 +16,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.calendar.CalendarDashboardWidget
 import com.mhss.app.mybrain.presentation.diary.MoodCircularBar
-import com.mhss.app.mybrain.presentation.tasks.TasksWidget
+import com.mhss.app.mybrain.presentation.tasks.TasksDashboardWidget
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.inTheLastWeek
@@ -59,7 +59,7 @@ fun DashboardScreen(
                 )
             }
             item {
-                TasksWidget(
+                TasksDashboardWidget(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1.5f),
@@ -81,7 +81,7 @@ fun DashboardScreen(
                             Screen.TasksScreen
                                 .route
                                 .replace(
-                                    "{${Constants.ADD_TASK_TILE_ARG}}",
+                                    "{${Constants.ADD_TASK_ARG}}",
                                     "true"
                                 )
                         )

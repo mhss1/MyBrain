@@ -58,10 +58,10 @@
     <string name="cancel">Cancel</string>
     <string name="support_with">Support with :</string>
     <string name="thank_you_for_support">Thank you for your support ❤</string>
-    <string name="no_tasks_yet">You don\'t have any tasks\n Click the + button the add a new Task\n or \nby using the shortcut in the quick settings</string>
-    <string name="no_notes_yet">You don\'t have any notes\n Click the + button the add a new Note</string>
-    <string name="no_entries_yet">You don\'t have any entries\n Click the + button the add a new entry</string>
-    <string name="no_bookmarks_yet">You don\'t have any bookmarks\n Click the + button the add a new bookmark\n or \nby using the share option from any browser</string>
+    <string name="no_tasks_message">You don\'t have any tasks\n Click the + button the add a new Task\n or \nby using the shortcut in the quick settings menu</string>
+    <string name="no_notes_message">You don\'t have any notes\n Click the + button the add a new Note</string>
+    <string name="no_entries_message">You don\'t have any entries\n Click the + button the add a new entry</string>
+    <string name="no_bookmarks_message">You don\'t have any bookmarks\n Click the + button the add a new bookmark\n or \nby using the share option from any browser</string>
     <string name="project_roadmap">Project roadmap</string>
     <string name="list">List</string>
     <string name="grid">Grid</string>
@@ -118,12 +118,15 @@
     <string name="tasks_summary">Tasks summary</string>
     <string name="you_completed">You completed</string>
     <string name="of_last_week_tasks">of Tasks in the last Week</string>
-    <string name="no_tasks">No tasks yet</string>
+    <string name="no_tasks_yet">No tasks yet</string>
     <string name="loading">Loading…</string>
     <string name="calendar_widget_refresh_message">Click the refresh button if you already granted the permission</string>
     <string name="thursday_30_calendar_preview">Thursday 30</string>
     <string name="sunday_5_calendar_preview">Sunday 5</string>
     <string name="dinner_with_ali_calender_preview">Dinner with Ali</string>
     <string name="cs_lecture_calender_preview">CS lecture</string>
+    <string name="visit_dentist_tasks_preview">Visit dentist</string>
+    <string name="buy_groceries_tasks_preview">Buy groceries</string>
+    <string name="call_mom_tasks_preview">Call mom</string>
 
 </resources>

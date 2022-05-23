@@ -95,7 +95,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(
                             Screen.TasksScreen.route,
-                            arguments = listOf(navArgument(Constants.ADD_TASK_TILE_ARG) {
+                            arguments = listOf(navArgument(Constants.ADD_TASK_ARG) {
                                 type = NavType.BoolType
                                 defaultValue = false
                             }),
@@ -103,13 +103,13 @@ class MainActivity : ComponentActivity() {
                             listOf(
                                 navDeepLink {
                                     uriPattern =
-                                        "${Constants.ADD_TASK_URI}/{${Constants.ADD_TASK_TILE_ARG}}"
+                                        "${Constants.TASKS_SCREEN_URI}/{${Constants.ADD_TASK_ARG}}"
                                 }
                             )
                         ) {
                             TasksScreen(
                                 navController = navController,
-                                addTask = it.arguments?.getBoolean(Constants.ADD_TASK_TILE_ARG)
+                                addTask = it.arguments?.getBoolean(Constants.ADD_TASK_ARG)
                                     ?: false
                             )
                         }

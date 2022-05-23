@@ -12,7 +12,7 @@ class AddTaskTileService: TileService() {
         super.onClick()
         val intent = Intent(
             Intent.ACTION_VIEW,
-            "${Constants.ADD_TASK_URI}/true".toUri(),
+            "${Constants.TASKS_SCREEN_URI}/true".toUri(),
             this,
             MainActivity::class.java
         ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
