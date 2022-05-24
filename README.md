@@ -40,10 +40,20 @@
  - Jetpack Compose
  - Compose Glance
 
-
 Icons Attribution 
 <a href="https://www.flaticon.com/free-icons/paper" title="paper icons">Paper icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/list" title="list icons">List icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/bookmark" title="bookmark icons">Bookmark icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/book" title="book icons">Book icons created by Freepik - Flaticon</a>
+
+## Contributing
+### To contribute to My Brain:
+- Report bugs/glitches.
+- Create new issues to give us ideas and feedback.
+- Ask questions or suggest ideas in the comments section of any issue.
+### Or if you are a developer:
+- Pick an issue or create a new one.
+- Fork the repo.
+- Create a feature branch in your fork and make your changes.
+- Submit a pull request to the `dev` branch of the official [My Brain repo](https://github.com/mhss1/MyBrain/pulls) (PR to master will be rejected).
