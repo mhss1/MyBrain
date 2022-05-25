@@ -83,7 +83,7 @@ fun TasksHomeScreenWidget(
                                 style = TextStyle(
                                     color = ColorProvider(Color.White),
                                     fontWeight = FontWeight.Normal,
-                                    fontSize = 18.sp,
+                                    fontSize = 16.sp,
                                     textAlign = TextAlign.Center
                                 )
                             )
