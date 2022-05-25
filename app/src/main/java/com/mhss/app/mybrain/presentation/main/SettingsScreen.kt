@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,9 +24,9 @@ import com.mhss.app.mybrain.presentation.settings.DonationItem
 import com.mhss.app.mybrain.presentation.settings.SettingsBasicLinkItem
 import com.mhss.app.mybrain.presentation.settings.SettingsItemCard
 import com.mhss.app.mybrain.presentation.settings.SettingsViewModel
+import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
-import com.mhss.app.mybrain.util.settings.StartUpScreenSettings
-import com.mhss.app.mybrain.util.settings.ThemeSettings
+import com.mhss.app.mybrain.util.settings.*
 
 @Composable
 fun SettingsScreen(
@@ -94,6 +95,23 @@ fun SettingsScreen(
                         )
                     }
                 )
+            }
+            item {
+                val screen = viewModel
+                    .getSettings(
+                        intPreferencesKey(Constants.APP_FONT_KEY),
+                        Rubik.toInt()
+                    ).collectAsState(
+                        initial = Rubik.toInt()
+                    )
+                AppFontSettingsItem(
+                    screen.value,
+                ) { font ->
+                    viewModel.saveSettings(
+                        intPreferencesKey(Constants.APP_FONT_KEY),
+                        font
+                    )
+                }
             }
 
             item {
@@ -280,6 +298,63 @@ fun StartUpScreenSettingsItem(
                         text = stringResource(id = R.string.dashboard),
                         style = MaterialTheme.typography.body1
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AppFontSettingsItem(
+    selectedFont: Int,
+    onFontChange: (Int) -> Unit = {}
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val fonts = listOf(
+        FontFamily.Default,
+        Rubik,
+        FontFamily.Monospace,
+        FontFamily.SansSerif
+    )
+    SettingsItemCard(
+        cornerRadius = 16.dp,
+        onClick = {
+            expanded = true
+        },
+    ) {
+        Text(
+            text = stringResource(R.string.app_font),
+            style = MaterialTheme.typography.h6
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    selectedFont.toFontFamily().getName(),
+                    style = MaterialTheme.typography.body1
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                fonts.forEach {
+                    DropdownMenuItem(onClick = {
+                        onFontChange(it.toInt())
+                        expanded = false
+                    }) {
+                        Text(
+                            text = it.getName(),
+                            style = MaterialTheme.typography.body1
+                        )
+                    }
                 }
             }
         }

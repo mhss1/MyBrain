@@ -124,9 +124,11 @@
     <string name="calendar_widget_refresh_message">أضغط زر التحديث إذا كنت قد منحت الاذن بالفعل</string>
     <string name="thursday_30_calendar_preview">الخميس 30</string>
     <string name="sunday_5_calendar_preview">الأحد 5</string>
-    <string name="dinner_with_ali_calender_preview">العشاء من علي</string>
+    <string name="dinner_with_ali_calender_preview">العشاء مع علي</string>
     <string name="cs_lecture_calender_preview">محاضرة علوم الحاسب</string>
     <string name="visit_dentist_tasks_preview">زيارة طبيب الاسنان</string>
     <string name="buy_groceries_tasks_preview">شراء الاحتياجات من البقالة</string>
     <string name="call_mom_tasks_preview">الاتصال بأمي</string>
+    <string name="app_font">نوع خط التطبيق</string>
+    <string name="font_system_default">خط النظام الافتراضي</string>
 </resources>
