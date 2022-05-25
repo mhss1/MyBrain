@@ -128,5 +128,7 @@
     <string name="visit_dentist_tasks_preview">Visit dentist</string>
     <string name="buy_groceries_tasks_preview">Buy groceries</string>
     <string name="call_mom_tasks_preview">Call mom</string>
+    <string name="app_font">App Font</string>
+    <string name="font_system_default">System default</string>
 
 </resources>

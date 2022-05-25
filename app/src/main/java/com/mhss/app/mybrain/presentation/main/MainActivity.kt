@@ -36,9 +36,12 @@ import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.DarkBackground
 import com.mhss.app.mybrain.ui.theme.MyBrainTheme
+import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.StartUpScreenSettings
 import com.mhss.app.mybrain.util.settings.ThemeSettings
+import com.mhss.app.mybrain.util.settings.toFontFamily
+import com.mhss.app.mybrain.util.settings.toInt
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -53,7 +56,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val themMode = viewModel.themMode.collectAsState(initial = ThemeSettings.AUTO.value)
+            val themeMode = viewModel.themeMode.collectAsState(initial = ThemeSettings.AUTO.value)
+            val font = viewModel.font.collectAsState(initial = Rubik.toInt())
             var startUpScreenSettings by remember { mutableStateOf(StartUpScreenSettings.SPACES.value) }
             val systemUiController = rememberSystemUiController()
             LaunchedEffect(true) {
@@ -64,7 +68,7 @@ class MainActivity : ComponentActivity() {
             val startUpScreen =
                 if (startUpScreenSettings == StartUpScreenSettings.SPACES.value)
                     Screen.SpacesScreen.route else Screen.DashboardScreen.route
-            val isDarkMode = when (themMode.value) {
+            val isDarkMode = when (themeMode.value) {
                 ThemeSettings.DARK.value -> true
                 ThemeSettings.LIGHT.value -> false
                 else -> isSystemInDarkTheme()
@@ -77,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     darkIcons = !isDarkMode
                 )
             }
-            MyBrainTheme(darkTheme = isDarkMode) {
+            MyBrainTheme(darkTheme = isDarkMode, fontFamily = font.value.toFontFamily()) {
                 val navController = rememberNavController()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
