@@ -1,6 +1,5 @@
 ![Stars](https://img.shields.io/github/stars/mhss1/mybrain?style=social)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![PRs welcome!](https://img.shields.io/badge/Community-Telegram-informational)](https://t.me/+wKGhHhVJzt45MDQ0)
 
 <img align="left" width="80" height="80" src="https://user-images.githubusercontent.com/58703865/169863670-eee3c8f1-1308-4eb2-9aea-f7c0a47e6a31.png" alt="app icon">
 
@@ -51,9 +50,6 @@
  - Alarm Manager
  - Jetpack Compose
  - Compose Glance
-
-## Communication
-Join the community on Telegram to chat and discuss ideas. [Link to Telegram](https://t.me/+wKGhHhVJzt45MDQ0)
 
 ## Contributing
 To get started, take a look at [CONTRIBUTING.md](CONTRIBUTING.md).
