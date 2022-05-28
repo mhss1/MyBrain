@@ -128,4 +128,16 @@
     <string name="no_notes_message">आपके पास कोई नोट नहीं है। नया नोट जोड़ने के लिए + बटन पर क्लिक करें</string>
     <string name="no_entries_message">आपके पास कोई एंट्री नहीं है। + बटन पर क्लिक करें एक नई एंट्री जोड़ें</string>
     <string name="no_bookmarks_message">आपके पास कोई बुकमार्क नहीं है। + बटन पर क्लिक करके एक नया बुकमार्क जोड़ें या किसी भी ब्राउज़र से शेयर विकल्प का उपयोग करे</string>
+    <string name="app_font">ऐप फ़ॉन्ट</string>
+    <string name="font_system_default">सिस्टम डिफ़ॉल्ट</string>
+    <string name="delete_event">इवेंट डिलीट करे</string>
+    <string name="location">स्थान</string>
+    <string name="do_not_repeat">दोहराहे नहीं</string>
+    <string name="every_day">प्रतिदिन</string>
+    <string name="every_week">प्रति सप्ताह</string>
+    <string name="every_month">हर महीने</string>
+    <string name="every_year">सालाना</string>
+    <string name="error_future_event">घटना भूतकाल की नहीं होनी चाहिए</string>
+    <string name="delete_event_confirmation_title">इवेंट मिटाएं?</string>
+    <string name="delete_event_confirmation_message">निश्चित तौर पर क्या इस घटना को हटाना चाहते हैं?</string>
 </resources>
