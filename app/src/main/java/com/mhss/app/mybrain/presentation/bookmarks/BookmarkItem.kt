@@ -2,7 +2,6 @@ package com.mhss.app.mybrain.presentation.bookmarks
 
 import android.content.Intent
 import android.net.Uri
-import android.webkit.URLUtil
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Bookmark
+import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -62,7 +62,7 @@ fun LazyItemScope.BookmarkItem(
             )
             IconButton(
                 onClick = {
-                    if (URLUtil.isValidUrl(bookmark.url)){
+                    if (bookmark.url.isValidUrl()){
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(bookmark.url)
                         context.startActivity(intent)
