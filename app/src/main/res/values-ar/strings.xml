@@ -97,8 +97,9 @@
     <string name="mood">المزاج</string>
     <string name="event_time_at">%1$s - %2$s في %3$s</string>
     <string name="event_time">%1$s - %2$s</string>
-    <string name="all_day">كل اليوم</string>                                                    \n
+    <string name="all_day">كل اليوم</string>
     <string name="no_read_calendar_permission_message">إذن قرائة التقويم مطلوب لهذه الميزة. \n الرجاء منح الإذن للإستخدام</string>
+    <string name="no_write_calendar_permission_message">إذن الكتابة الى التقويم مطلوب لهذه الميزة. \n الرجاء منح الإذن للإستخدام</string>
     <string name="grant_permission">قبول الأذونات</string>
     <string name="go_to_settings">الإنتقال الى الاعدادات</string>
     <string name="add_event">إضافة حدث</string>
@@ -131,4 +132,15 @@
     <string name="call_mom_tasks_preview">الاتصال بأمي</string>
     <string name="app_font">نوع خط التطبيق</string>
     <string name="font_system_default">خط النظام الافتراضي</string>
+    <string name="delete_event">حذف الحدث</string>
+    <string name="location">المكان</string>
+    <string name="do_not_repeat">بدون تكرار</string>
+    <string name="every_day">كل يوم</string>
+    <string name="every_week">كل اسبوع</string>
+    <string name="every_month">كل شهر</string>
+    <string name="every_year">كل سنة</string>
+    <string name="error_future_event">الحدث لا يمكن أن يكون في الماضي</string>
+    <string name="delete_event_confirmation_title">حذف الحدث؟</string>
+    <string name="delete_event_confirmation_message">هل أنت متأكد من حذف هذا الحدث؟</string>
+
 </resources>
