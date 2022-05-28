@@ -140,4 +140,5 @@
     <string name="error_future_event">घटना भूतकाल की नहीं होनी चाहिए</string>
     <string name="delete_event_confirmation_title">इवेंट मिटाएं?</string>
     <string name="delete_event_confirmation_message">निश्चित तौर पर क्या इस घटना को हटाना चाहते हैं?</string>
+    <string name="no_write_calendar_permission_message">इस सुविधा के उपलब्ध होने के लिए आवश्यक कैलेंडर अनुमति दें। कृपया अनुमति प्रदान करे।</string>
 </resources>
