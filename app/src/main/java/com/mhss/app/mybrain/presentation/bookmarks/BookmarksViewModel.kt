@@ -1,6 +1,5 @@
 package com.mhss.app.mybrain.presentation.bookmarks
 
-import android.webkit.URLUtil
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,6 +13,7 @@ import com.mhss.app.mybrain.domain.use_case.bookmarks.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
 import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 import com.mhss.app.mybrain.util.settings.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -73,7 +73,7 @@ class BookmarksViewModel @Inject constructor(
                 )
                     uiState.copy(navigateUp = true)
                 else {
-                    if (URLUtil.isValidUrl(event.bookmark.url)) {
+                    if (event.bookmark.url.isValidUrl()) {
                         addBookmark(event.bookmark)
                         uiState.copy(navigateUp = true)
                     } else
@@ -93,7 +93,7 @@ class BookmarksViewModel @Inject constructor(
                 uiState = uiState.copy(searchBookmarks = bookmarks)
             }
             is BookmarkEvent.UpdateBookmark -> viewModelScope.launch {
-                uiState = if (!URLUtil.isValidUrl(event.bookmark.url)) {
+                uiState = if (!event.bookmark.url.isValidUrl()) {
                     uiState.copy(error = getString(R.string.invalid_url))
                 } else {
                     updateBookmark(event.bookmark.copy(updatedDate = System.currentTimeMillis()))
