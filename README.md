@@ -1,3 +1,6 @@
+![Stars](https://img.shields.io/github/stars/mhss1/mybrain?style=social)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 <img align="left" width="80" height="80" src="https://user-images.githubusercontent.com/58703865/169863670-eee3c8f1-1308-4eb2-9aea-f7c0a47e6a31.png" alt="app icon">
 
 # My Brain
@@ -18,6 +21,10 @@
 [<img src="https://camo.githubusercontent.com/70bffd8873ab81e1bb0bccc44e488c3a989e3bd5/68747470733a2f2f692e6962622e636f2f71306d6463345a2f6765742d69742d6f6e2d6769746875622e706e67"
      alt="Get it on GitHub"
      height="80">](https://github.com/mhss1/MyBrain/releases/latest)
+     [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" 
+      alt='Get it on IzzyOnDroid' 
+      height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.mhss.app.mybrain)
+      Soon on F-Droid
 
 ## Features
 - Private with no data collection and no internet permission at all.
@@ -44,20 +51,12 @@
  - Jetpack Compose
  - Compose Glance
 
+## Contributing
+To get started, take a look at [CONTRIBUTING.md](CONTRIBUTING.md).
+
 Icons Attribution 
 <a href="https://www.flaticon.com/free-icons/paper" title="paper icons">Paper icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/list" title="list icons">List icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/bookmark" title="bookmark icons">Bookmark icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/book" title="book icons">Book icons created by Freepik - Flaticon</a>
-
-## Contributing
-### To contribute to My Brain:
-- Report bugs/glitches.
-- Create new issues to give us ideas and feedback.
-- Ask questions or suggest ideas in the comments section of any issue.
-### Or if you are a developer:
-- Pick an issue or create a new one.
-- Fork the repo.
-- Create a feature branch in your fork and make your changes.
-- Submit a pull request to the `dev` branch of the official [My Brain repo](https://github.com/mhss1/MyBrain/pulls) (PR to master will be rejected).
