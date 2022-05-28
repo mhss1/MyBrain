@@ -6,7 +6,7 @@ import com.mhss.app.mybrain.app.getString
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun Long.formatDate(): String {
+fun Long.formatDateDependingOnDay(): String {
     val sdf = if (DateUtils.isToday(this))
         SimpleDateFormat("h:mm a", Locale.getDefault())
     else
@@ -31,6 +31,11 @@ fun Long.formatTime(): String {
     val sdfNoMinutes = SimpleDateFormat("h a", Locale.getDefault())
     val minutes = SimpleDateFormat("mm", Locale.getDefault()).format(this)
     return if (minutes == "00") sdfNoMinutes.format(this) else sdf.format(this)
+}
+
+fun Long.formatDate(): String {
+    val sdf = SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault())
+    return sdf.format(this)
 }
 
 fun Long.monthName(): String {
@@ -80,3 +85,5 @@ fun formatEventStartEnd(start: Long, end: Long, location: String?, allDay: Boole
             location ?: ""
         )
 }
+
+const val HOUR_IN_MILLIS = 60 * 60 * 1000L

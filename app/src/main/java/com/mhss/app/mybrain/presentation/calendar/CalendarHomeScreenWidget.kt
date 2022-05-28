@@ -26,7 +26,7 @@ import com.mhss.app.mybrain.presentation.glance_widgets.RefreshCalendarAction
 @Composable
 fun CalendarHomeScreenWidget(
     events: Map<String, List<CalendarEvent>>,
-    permissionGranted: Boolean = false,
+    permissionGranted: Boolean
 ) {
     Box(
         modifier = GlanceModifier
@@ -79,14 +79,15 @@ fun CalendarHomeScreenWidget(
                 }
             }
             Spacer(GlanceModifier.height(8.dp))
-            LazyColumn(
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .background(ImageProvider(R.drawable.large_inner_item_rounded_corner_shape))
-                    .cornerRadius(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (permissionGranted) {
+            println("granted:::: $permissionGranted")
+            if (permissionGranted) {
+                LazyColumn(
+                    modifier = GlanceModifier
+                        .fillMaxSize()
+                        .background(ImageProvider(R.drawable.large_inner_item_rounded_corner_shape))
+                        .cornerRadius(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     if (events.isEmpty()) {
                         item {
                             Text(
@@ -100,7 +101,7 @@ fun CalendarHomeScreenWidget(
                             )
                         }
                     } else {
-                        item { Spacer(GlanceModifier.height(6.dp))}
+                        item { Spacer(GlanceModifier.height(6.dp)) }
                         events.forEach { (day, events) ->
                             item {
                                 Column(
@@ -124,34 +125,32 @@ fun CalendarHomeScreenWidget(
                             }
                         }
                     }
-                } else {
-                    item {
-                        Column(
-                            modifier = GlanceModifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = getString(R.string.no_read_calendar_permission_message),
-                                modifier = GlanceModifier.padding(16.dp),
-                                style = TextStyle(
-                                    textAlign = TextAlign.Center
-                                )
-                            )
-                            Spacer(GlanceModifier.height(4.dp))
-                            Button(
-                                text = getString(R.string.go_to_settings),
-                                onClick = actionRunCallback<GoToSettingsAction>()
-                            )
-                            Spacer(GlanceModifier.height(4.dp))
-                            Text(
-                                text = getString(R.string.calendar_widget_refresh_message),
-                                modifier = GlanceModifier.padding(12.dp),
-                                style = TextStyle(
-                                    textAlign = TextAlign.Center
-                                )
-                            )
-                        }
-                    }
+                }
+            } else {
+                Column(
+                    modifier = GlanceModifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = getString(R.string.no_read_calendar_permission_message),
+                        modifier = GlanceModifier.padding(16.dp),
+                        style = TextStyle(
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                    Spacer(GlanceModifier.height(4.dp))
+                    Button(
+                        text = getString(R.string.go_to_settings),
+                        onClick = actionRunCallback<GoToSettingsAction>()
+                    )
+                    Spacer(GlanceModifier.height(4.dp))
+                    Text(
+                        text = getString(R.string.calendar_widget_refresh_message),
+                        modifier = GlanceModifier.padding(12.dp),
+                        style = TextStyle(
+                            textAlign = TextAlign.Center
+                        )
+                    )
                 }
             }
         }

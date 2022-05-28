@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.SubTask
 import com.mhss.app.mybrain.domain.model.Task
-import com.mhss.app.mybrain.util.date.formatDate
+import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.settings.Priority
 import com.mhss.app.mybrain.util.settings.toInt
 import com.mhss.app.mybrain.util.settings.toPriority
@@ -168,7 +168,7 @@ fun AddTaskBottomSheetContent(
                     )
                 }
                 Text(
-                    text = dueDate.timeInMillis.formatDate(),
+                    text = dueDate.timeInMillis.formatDateDependingOnDay(),
                     style = MaterialTheme.typography.body2
                 )
             }

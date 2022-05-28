@@ -16,10 +16,11 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import com.google.gson.Gson
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.presentation.glance_widgets.CalendarWidgetItemClick
-import com.mhss.app.mybrain.presentation.glance_widgets.eventIdKey
+import com.mhss.app.mybrain.presentation.glance_widgets.eventJson
 import com.mhss.app.mybrain.util.date.formatEventStartEnd
 
 @Composable
@@ -32,7 +33,7 @@ fun CalendarEventWidgetItem(
             .clickable(
             onClick = actionRunCallback<CalendarWidgetItemClick>(
                 parameters = actionParametersOf(
-                    eventIdKey to event.id
+                    eventJson to Gson().toJson(event, CalendarEvent::class.java)
                 )
             )
         )

@@ -11,7 +11,6 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,6 +21,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkSearchScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarksScreen
+import com.mhss.app.mybrain.presentation.calendar.CalendarEventDetailsScreen
 import com.mhss.app.mybrain.presentation.calendar.CalendarScreen
 import com.mhss.app.mybrain.presentation.diary.DiaryChartScreen
 import com.mhss.app.mybrain.presentation.diary.DiaryEntryDetailsScreen
@@ -73,8 +73,6 @@ class MainActivity : ComponentActivity() {
                 ThemeSettings.LIGHT.value -> false
                 else -> isSystemInDarkTheme()
             }
-            val color = MaterialTheme.colors.background
-            println("red: ${color.toArgb()}, green: ${color.green}, blue: ${color.blue}")
             SideEffect {
                 systemUiController.setSystemBarsColor(
                     if (isDarkMode) DarkBackground else Color.White,
@@ -203,9 +201,24 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) {
-                            CalendarScreen()
+                            CalendarScreen(navController = navController)
                         }
-                        composable(Screen.CalendarSearchScreen.route) {}
+                        composable(
+                            Screen.CalendarEventDetailsScreen.route,
+                            arguments = listOf(navArgument(Constants.CALENDAR_EVENT_ARG) {
+                                type = NavType.StringType
+                            }),
+                            deepLinks = listOf(
+                                navDeepLink {
+                                    uriPattern = "${Constants.CALENDAR_DETAILS_SCREEN_URI}/{${Constants.CALENDAR_EVENT_ARG}}"
+                                }
+                            )
+                        ) {
+                            CalendarEventDetailsScreen(
+                                navController = navController,
+                                eventJson = it.arguments?.getString(Constants.CALENDAR_EVENT_ARG) ?: ""
+                            )
+                        }
                     }
                 }
             }
