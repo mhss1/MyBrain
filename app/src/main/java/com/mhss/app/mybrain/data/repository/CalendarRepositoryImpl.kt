@@ -1,5 +1,7 @@
 package com.mhss.app.mybrain.data.repository
 
+import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
@@ -7,8 +9,10 @@ import android.provider.CalendarContract
 import com.mhss.app.mybrain.domain.model.Calendar
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.domain.repository.CalendarRepository
+import com.mhss.app.mybrain.util.calendar.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class CalendarRepositoryImpl(private val context: Context) : CalendarRepository {
 
@@ -24,6 +28,8 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                 CalendarContract.Events.ALL_DAY,
                 CalendarContract.Events.CALENDAR_COLOR,
                 CalendarContract.Events.CALENDAR_ID,
+                CalendarContract.Events.RRULE,
+                CalendarContract.Events.DURATION,
             )
 
             val uri: Uri = CalendarContract.Events.CONTENT_URI
@@ -31,7 +37,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
             val cur: Cursor? = contentResolver.query(
                 uri,
                 projection,
-                "${CalendarContract.Events.DTSTART} > ?",
+                "${CalendarContract.Events.DTSTART} > ? AND ${CalendarContract.Events.DELETED} = 0",
                 // events today or in the future only
                 arrayOf(System.currentTimeMillis().toString()),
                 "${CalendarContract.Events.DTSTART} ASC"
@@ -44,13 +50,29 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                     val title: String = cur.getString(TITLE_INDEX) ?: continue
                     val description: String? = cur.getString(DESC_INDEX)
                     val start: Long = cur.getLong(START_INDEX)
-                    val end: Long = cur.getLong(END_INDEX)
+                    val duration: String = cur.getString(EVENT_DURATION_INDEX) ?: ""
+                    val end: Long = if (duration.isNotBlank()) duration.extractEndFromDuration(start) else cur.getLong(END_INDEX)
                     val location: String? = cur.getString(LOCATION_INDEX)
                     val allDay: Boolean = cur.getInt(ALL_DAY_INDEX) == 1
                     val color: Int = cur.getInt(COlOR_INDEX)
                     val calendarId: Long = cur.getLong(EVENT_CALENDAR_ID_INDEX)
+                    val rrule: String = cur.getString(EVENT_RRULE_INDEX) ?: ""
+                    val recurring: Boolean = rrule.isNotBlank()
+                    val frequency: String = rrule.extractFrequency()
 
-                    events.add(CalendarEvent(eventId, title, description, start, end, location, allDay, color, calendarId))
+                    events.add(CalendarEvent(
+                        id = eventId,
+                        title = title,
+                        description = description,
+                        start = start,
+                        end = end,
+                        location = location,
+                        allDay = allDay,
+                        color = color,
+                        calendarId = calendarId,
+                        frequency = frequency,
+                        recurring = recurring,
+                    ))
                 }
                 cur.close()
                 events
@@ -103,6 +125,60 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
         }
     }
 
+    override suspend fun addEvent(event: CalendarEvent) {
+        withContext(Dispatchers.IO){
+            val values = ContentValues().apply {
+                put(CalendarContract.Events.CALENDAR_ID, event.calendarId)
+                put(CalendarContract.Events.TITLE, event.title)
+                put(CalendarContract.Events.DESCRIPTION, event.description)
+                put(CalendarContract.Events.DTSTART, event.start)
+                put(CalendarContract.Events.ALL_DAY, event.allDay)
+                put(CalendarContract.Events.EVENT_LOCATION, event.location)
+                if (event.recurring){
+                    put(CalendarContract.Events.RRULE, event.getEventRRule())
+                    put(CalendarContract.Events.DURATION, event.getEventDuration())
+                } else {
+                    put(CalendarContract.Events.DTEND, event.end)
+                }
+                put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
+            }
+            context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
+        }
+    }
+
+    override suspend fun updateEvent(event: CalendarEvent) {
+        withContext(Dispatchers.IO){
+            val values = ContentValues().apply {
+                put(CalendarContract.Events.CALENDAR_ID, event.calendarId)
+                put(CalendarContract.Events.TITLE, event.title)
+                put(CalendarContract.Events.DESCRIPTION, event.description)
+                put(CalendarContract.Events.DTSTART, event.start)
+                if (event.recurring){
+                    val end: Long? = null
+                    put(CalendarContract.Events.RRULE, event.getEventRRule())
+                    put(CalendarContract.Events.DURATION, event.getEventDuration())
+                    put(CalendarContract.Events.DTEND, end)
+                }else {
+                    val rule: String? = null
+                    put(CalendarContract.Events.RRULE, rule)
+                    put(CalendarContract.Events.DURATION, rule)
+                    put(CalendarContract.Events.DTEND, event.end)
+                }
+                put(CalendarContract.Events.ALL_DAY, event.allDay)
+                put(CalendarContract.Events.EVENT_LOCATION, event.location)
+            }
+            val updateUri: Uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.id)
+            context.contentResolver.update(updateUri, values, null, null)
+        }
+    }
+
+    override suspend fun deleteEvent(event: CalendarEvent) {
+        withContext(Dispatchers.IO){
+            val updateUri: Uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.id)
+            context.contentResolver.delete(updateUri, null, null)
+        }
+    }
+
     companion object {
         private const val ID_INDEX = 0
         private const val TITLE_INDEX = 1
@@ -113,6 +189,8 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
         private const val ALL_DAY_INDEX = 6
         private const val COlOR_INDEX = 7
         private const val EVENT_CALENDAR_ID_INDEX = 8
+        private const val EVENT_RRULE_INDEX = 9
+        private const val EVENT_DURATION_INDEX = 10
 
         private const val CALENDAR_ID_INDEX: Int = 0
         private const val CALENDAR_NAME_INDEX: Int = 1

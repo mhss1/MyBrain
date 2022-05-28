@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Task
-import com.mhss.app.mybrain.util.date.formatDate
+import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.date.isDueDateOverdue
 import com.mhss.app.mybrain.util.settings.toPriority
 
@@ -73,7 +73,7 @@ fun TaskDashboardItem(
                     )
                     Spacer(Modifier.width(3.dp))
                     Text(
-                        text = task.dueDate.formatDate(),
+                        text = task.dueDate.formatDateDependingOnDay(),
                         style = MaterialTheme.typography.subtitle2,
                         color = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colors.onSurface,
                     )

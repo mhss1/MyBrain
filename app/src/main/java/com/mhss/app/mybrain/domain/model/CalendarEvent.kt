@@ -7,7 +7,9 @@ data class CalendarEvent(
     val start: Long,
     val end: Long,
     val location: String?,
-    val allDay: Boolean,
-    val color: Int,
-    val calendarId: Long
-)
+    val allDay: Boolean = false,
+    val color: Int = 0,
+    val calendarId: Long,
+    val recurring: Boolean = false,
+    val frequency: String = "",
+    )
