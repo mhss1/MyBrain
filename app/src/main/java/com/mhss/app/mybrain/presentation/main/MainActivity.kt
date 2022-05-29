@@ -34,7 +34,6 @@ import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.ui.theme.DarkBackground
 import com.mhss.app.mybrain.ui.theme.MyBrainTheme
 import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
@@ -75,7 +74,7 @@ class MainActivity : ComponentActivity() {
             }
             SideEffect {
                 systemUiController.setSystemBarsColor(
-                    if (isDarkMode) DarkBackground else Color.White,
+                    if (isDarkMode) Color.Black else Color.White,
                     darkIcons = !isDarkMode
                 )
             }
