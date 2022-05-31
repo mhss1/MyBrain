@@ -18,7 +18,7 @@ interface NoteDao {
     suspend fun getNotesByTitle(query: String): List<Note>
 
     @Query("SELECT * FROM notes WHERE folder = :folder")
-    suspend fun getNotesByFolder(folder: String): Flow<List<Note>>
+    fun getNotesByFolder(folder: String): Flow<List<Note>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: Note)
@@ -39,5 +39,5 @@ interface NoteDao {
     suspend fun deleteNoteFolder(folder: NoteFolder)
 
     @Query("SELECT * FROM note_folders")
-    suspend fun getAllNoteFolders(): Flow<List<NoteFolder>>
+    fun getAllNoteFolders(): Flow<List<NoteFolder>>
 }
