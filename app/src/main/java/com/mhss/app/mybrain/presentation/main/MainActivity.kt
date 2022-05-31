@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mhss.app.mybrain.domain.use_case.notes.NoteFolderDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkSearchScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarksScreen
@@ -216,6 +217,17 @@ class MainActivity : ComponentActivity() {
                             CalendarEventDetailsScreen(
                                 navController = navController,
                                 eventJson = it.arguments?.getString(Constants.CALENDAR_EVENT_ARG) ?: ""
+                            )
+                        }
+                        composable(
+                            Screen.NoteFolderDetailsScreen.route,
+                            arguments = listOf(navArgument(Constants.FOLDER_NAME) {
+                                type = NavType.StringType
+                            })
+                        ) {
+                            NoteFolderDetailsScreen(
+                                navController = navController,
+                                it.arguments?.getString(Constants.FOLDER_NAME) ?: ""
                             )
                         }
                     }

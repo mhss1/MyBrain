@@ -4,11 +4,13 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,16 +20,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
-import com.mhss.app.mybrain.util.settings.ItemView
-import com.mhss.app.mybrain.util.settings.Order
-import com.mhss.app.mybrain.util.settings.OrderType
+import com.mhss.app.mybrain.util.settings.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -37,12 +39,26 @@ fun NotesScreen(
 ) {
     val uiState = viewModel.notesUiState
     var orderSettingsVisible by remember { mutableStateOf(false) }
+    var selectedTab by remember { mutableStateOf(0) }
+    var openCreateFolderDialog by remember { mutableStateOf(false) }
+    val scaffoldState = rememberScaffoldState()
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let {
+            scaffoldState.snackbarHostState.showSnackbar(
+                it
+            )
+            viewModel.onEvent(NoteEvent.ErrorDisplayed)
+        }
+    }
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.notes),
+                        text = if (selectedTab == 0) stringResource(R.string.notes) else stringResource(
+                            R.string.folders
+                        ),
                         style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
                     )
                 },
@@ -53,89 +69,98 @@ fun NotesScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(
-                        Screen.NoteDetailsScreen.route.replace(
-                            "{${Constants.NOTE_ID_ARG}}",
-                            "${-1}"
+                    if (selectedTab == 0) {
+                        navController.navigate(
+                            Screen.NoteDetailsScreen.route.replace(
+                                "{${Constants.NOTE_ID_ARG}}",
+                                "${-1}"
+                            )
                         )
-                    )
+                    } else {
+                        openCreateFolderDialog = true
+                    }
                 },
                 backgroundColor = MaterialTheme.colors.primary,
             ) {
                 Icon(
                     modifier = Modifier.size(25.dp),
-                    painter = painterResource(R.drawable.ic_add),
+                    painter = if (selectedTab == 0) painterResource(R.drawable.ic_add) else painterResource(
+                        R.drawable.ic_create_folder
+                    ),
                     contentDescription = stringResource(R.string.add_note),
                     tint = Color.White
                 )
             }
         },
     ) {
-        if (uiState.notes.isEmpty())
-            NoNotesMessage()
         Column {
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+            TabRow(
+                selectedTabIndex = selectedTab,
+                backgroundColor = MaterialTheme.colors.background
             ) {
-                IconButton(onClick = { orderSettingsVisible = !orderSettingsVisible }) {
-                    Icon(
-                        modifier = Modifier.size(25.dp),
-                        painter = painterResource(R.drawable.ic_settings_sliders),
-                        contentDescription = stringResource(R.string.order_by)
-                    )
-                }
-                IconButton(onClick = {
-                    navController.navigate(Screen.NoteSearchScreen.route)
-                }) {
-                    Icon(
-                        modifier = Modifier.size(25.dp),
-                        painter = painterResource(id = R.drawable.ic_search),
-                        contentDescription = stringResource(R.string.search)
-                    )
-                }
-            }
-            AnimatedVisibility(visible = orderSettingsVisible) {
-                NotesSettingsSection(
-                    uiState.notesOrder,
-                    uiState.noteView,
-                    onOrderChange = {
-                        viewModel.onEvent(NoteEvent.UpdateOrder(it))
-                    },
-                    onViewChange = {
-                        viewModel.onEvent(NoteEvent.UpdateView(it))
+                Tab(
+                    text = { Text(stringResource(R.string.notes)) },
+                    selected = selectedTab == 0,
+                    onClick = {
+                        selectedTab = 0
+                    }
+                )
+                Tab(
+                    text = { Text(stringResource(R.string.folders)) },
+                    selected = selectedTab == 1,
+                    onClick = {
+                        selectedTab = 1
                     }
                 )
             }
-            if (uiState.noteView == ItemView.LIST){
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(top = 12.dp, bottom = 24.dp, start = 12.dp, end = 12.dp)
+            if (uiState.notes.isEmpty())
+                NoNotesMessage()
+            if (selectedTab == 0) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    items(uiState.notes, key = {it.id}) { note ->
-                        NoteItem(
-                            note = note,
-                            onClick = {
-                                navController.navigate(
-                                    Screen.NoteDetailsScreen.route.replace(
-                                        "{${Constants.NOTE_ID_ARG}}",
-                                        "${note.id}"
-                                    )
-                                )
-                            }
+                    IconButton(onClick = { orderSettingsVisible = !orderSettingsVisible }) {
+                        Icon(
+                            modifier = Modifier.size(25.dp),
+                            painter = painterResource(R.drawable.ic_settings_sliders),
+                            contentDescription = stringResource(R.string.order_by)
+                        )
+                    }
+                    IconButton(onClick = {
+                        navController.navigate(Screen.NoteSearchScreen.route)
+                    }) {
+                        Icon(
+                            modifier = Modifier.size(25.dp),
+                            painter = painterResource(id = R.drawable.ic_search),
+                            contentDescription = stringResource(R.string.search)
                         )
                     }
                 }
-            } else {
-                LazyVerticalGrid(
-                    cells = GridCells.Adaptive(150.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(top = 12.dp, bottom = 24.dp, start = 12.dp, end = 12.dp)
-                ){
-                    items(uiState.notes){ note ->
-                        key(note.id) {
+                AnimatedVisibility(visible = orderSettingsVisible) {
+                    NotesSettingsSection(
+                        uiState.notesOrder,
+                        uiState.noteView,
+                        onOrderChange = {
+                            viewModel.onEvent(NoteEvent.UpdateOrder(it))
+                        },
+                        onViewChange = {
+                            viewModel.onEvent(NoteEvent.UpdateView(it))
+                        }
+                    )
+                }
+                if (uiState.noteView == ItemView.LIST) {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(
+                            top = 12.dp,
+                            bottom = 24.dp,
+                            start = 12.dp,
+                            end = 12.dp
+                        )
+                    ) {
+                        items(uiState.notes, key = { it.id }) { note ->
                             NoteItem(
                                 note = note,
                                 onClick = {
@@ -145,11 +170,106 @@ fun NotesScreen(
                                             "${note.id}"
                                         )
                                     )
-                                },
-                                modifier = Modifier.height(220.dp)
+                                }
                             )
                         }
                     }
+                } else {
+                    LazyVerticalGrid(
+                        cells = GridCells.Adaptive(150.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(
+                            top = 12.dp,
+                            bottom = 24.dp,
+                            start = 12.dp,
+                            end = 12.dp
+                        )
+                    ) {
+                        items(uiState.notes) { note ->
+                            key(note.id) {
+                                NoteItem(
+                                    note = note,
+                                    onClick = {
+                                        navController.navigate(
+                                            Screen.NoteDetailsScreen.route.replace(
+                                                "{${Constants.NOTE_ID_ARG}}",
+                                                "${note.id}"
+                                            )
+                                        )
+                                    },
+                                    modifier = Modifier.height(220.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                FoldersTab(uiState.folders) {
+                    navController.navigate(
+                        Screen.NoteFolderDetailsScreen.route.replace(
+                            "{${Constants.FOLDER_NAME}}",
+                            it.name
+                        )
+                    )
+                }
+                if (openCreateFolderDialog)
+                    CreateFolderDialog(
+                        onCreate = {
+                            viewModel.onEvent(NoteEvent.CreateFolder(NoteFolder(it.trim())))
+                        },
+                        onDismiss = {
+                            openCreateFolderDialog = false
+                        }
+                    )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun FoldersTab(
+    folders: List<NoteFolder>,
+    onItemClick: (NoteFolder) -> Unit
+) {
+    LazyVerticalGrid(
+        cells = GridCells.Fixed(2),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(
+            top = 12.dp,
+            bottom = 24.dp,
+            start = 12.dp,
+            end = 12.dp
+        )
+    ) {
+        items(folders) { folder ->
+            Card(
+                modifier = Modifier.height(180.dp),
+                shape = RoundedCornerShape(20.dp),
+                elevation = 8.dp
+            ) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .clickable { onItemClick(folder) },
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_folder),
+                        contentDescription = folder.name,
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Text(
+                        text = folder.name,
+                        style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
@@ -157,7 +277,12 @@ fun NotesScreen(
 }
 
 @Composable
-fun NotesSettingsSection(order: Order, view: ItemView, onOrderChange: (Order) -> Unit, onViewChange: (ItemView) -> Unit) {
+fun NotesSettingsSection(
+    order: Order,
+    view: ItemView,
+    onOrderChange: (Order) -> Unit,
+    onViewChange: (ItemView) -> Unit
+) {
     val orders = listOf(
         Order.DateModified(),
         Order.DateCreated(),
@@ -263,4 +388,51 @@ fun NoNotesMessage() {
             alpha = 0.7f
         )
     }
+}
+
+@Composable
+fun CreateFolderDialog(
+    onCreate: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = {
+            Text(
+                text = stringResource(id = R.string.create_folder),
+                style = MaterialTheme.typography.h6
+            )
+        },
+        text = {
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.name),
+                        style = MaterialTheme.typography.body1
+                    )
+                },
+            )
+        },
+        confirmButton = {
+            Button(
+                shape = RoundedCornerShape(25.dp),
+                onClick = {
+                    onCreate(name)
+                },
+            ) {
+                Text(stringResource(R.string.create_folder), color = Color.White)
+            }
+        },
+        dismissButton = {
+            TextButton(
+                shape = RoundedCornerShape(25.dp),
+                onClick = { onDismiss() },
+            ) {
+                Text(stringResource(R.string.cancel), color = Color.White)
+            }
+        }
+    )
 }

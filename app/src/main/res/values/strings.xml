@@ -141,4 +141,8 @@
     <string name="error_future_event">Event should not be in the past</string>
     <string name="delete_event_confirmation_title">Delete Event?</string>
     <string name="delete_event_confirmation_message">Are you sure you want do delete this event?</string>
+    <string name="folders">Folders</string>
+    <string name="create_folder">Create folder</string>
+    <string name="error_folder_exists">Folder already exists</string>
+    <string name="name">Name</string>
 </resources>
