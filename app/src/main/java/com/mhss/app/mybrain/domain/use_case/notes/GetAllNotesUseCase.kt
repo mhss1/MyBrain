@@ -16,7 +16,7 @@ class GetAllNotesUseCase @Inject constructor(
             when (order.orderType) {
                 is OrderType.ASC -> {
                     when (order) {
-                        is Order.Alphabetical -> list.sortedWith(compareBy({!it.pinned}, { it.title }, ))
+                        is Order.Alphabetical -> list.sortedWith(compareBy({!it.pinned}, { it.title }))
                         is Order.DateCreated -> list.sortedWith(compareBy({!it.pinned}, { it.createdDate }))
                         is Order.DateModified -> list.sortedWith(compareBy({!it.pinned}, { it.updatedDate }))
                         else -> list.sortedWith(compareBy({!it.pinned}, { it.updatedDate }))

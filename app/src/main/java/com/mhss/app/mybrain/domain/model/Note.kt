@@ -2,9 +2,21 @@ package com.mhss.app.mybrain.domain.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "notes")
+@Entity(
+    tableName = "notes",
+    foreignKeys = [
+        ForeignKey(
+            entity = NoteFolder::class,
+            parentColumns = ["name"],
+            childColumns = ["folder"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ]
+)
 data class Note(
     val title: String = "",
     val content: String = "",
@@ -13,6 +25,7 @@ data class Note(
     @ColumnInfo(name = "updated_date")
     val updatedDate: Long = 0L,
     val pinned: Boolean = false,
+    val folder: String? = null,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 )

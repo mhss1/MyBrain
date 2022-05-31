@@ -9,7 +9,7 @@ import com.mhss.app.mybrain.domain.model.*
 
 @Database(
     entities = [Note::class, Task::class, DiaryEntry::class, Bookmark::class, Alarm::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(DBConverters::class)
 abstract class MyBrainDatabase: RoomDatabase() {
