@@ -49,6 +49,9 @@ fun NoteFolderDetailsScreen(
                             Screen.NoteDetailsScreen.route.replace(
                                 "{${Constants.NOTE_ID_ARG}}",
                                 "${note.id}"
+                            ).replace(
+                                "{${Constants.FOLDER_NAME}}",
+                                ""
                             )
                         )
                     }
@@ -76,6 +79,9 @@ fun NoteFolderDetailsScreen(
                                 Screen.NoteDetailsScreen.route.replace(
                                     "{${Constants.NOTE_ID_ARG}}",
                                     "${note.id}"
+                                ).replace(
+                                    "{${Constants.FOLDER_NAME}}",
+                                    ""
                                 )
                             )
                         },

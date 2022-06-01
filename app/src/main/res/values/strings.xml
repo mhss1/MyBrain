@@ -145,4 +145,6 @@
     <string name="create_folder">Create folder</string>
     <string name="error_folder_exists">Folder already exists</string>
     <string name="name">Name</string>
+    <string name="change_folder">Change folder</string>
+    <string name="none">None</string>
 </resources>

@@ -141,16 +141,20 @@ class MainActivity : ComponentActivity() {
                         ) {
                             NotesScreen(navController = navController)
                         }
-                        composable(Screen.NoteAddScreen.route) {}
                         composable(
                             Screen.NoteDetailsScreen.route,
                             arguments = listOf(navArgument(Constants.NOTE_ID_ARG) {
                                 type = NavType.IntType
-                            })
+                            },
+                                navArgument(Constants.FOLDER_NAME) {
+                                    type = NavType.StringType
+                                }
+                            ),
                         ) {
                             NoteDetailsScreen(
                                 navController,
-                                it.arguments?.getInt(Constants.NOTE_ID_ARG)!!
+                                it.arguments?.getInt(Constants.NOTE_ID_ARG) ?: -1,
+                                it.arguments?.getString(Constants.FOLDER_NAME) ?: ""
                             )
                         }
                         composable(Screen.NoteSearchScreen.route) {

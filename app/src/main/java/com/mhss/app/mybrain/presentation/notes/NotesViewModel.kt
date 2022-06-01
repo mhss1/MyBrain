@@ -134,7 +134,15 @@ class NotesViewModel @Inject constructor(
                 deleteFolder(event.folder)
             }
             is NoteEvent.UpdateFolder -> viewModelScope.launch {
-                updateFolder(event.folder)
+                if (event.folder.name.isBlank()) {
+                    notesUiState = notesUiState.copy(error = getString(R.string.error_empty_title))
+                } else {
+                    if (!notesUiState.folders.contains(event.folder)) {
+                        updateFolder(event.folder)
+                    } else {
+                        notesUiState = notesUiState.copy(error = getString(R.string.error_folder_exists))
+                    }
+                }
             }
             is NoteEvent.GetFolderNotes -> {
                 getNotesFromFolder(event.folderName, notesUiState.notesOrder)

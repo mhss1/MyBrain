@@ -74,6 +74,9 @@ fun NotesScreen(
                             Screen.NoteDetailsScreen.route.replace(
                                 "{${Constants.NOTE_ID_ARG}}",
                                 "${-1}"
+                            ).replace(
+                                "{${Constants.FOLDER_NAME}}",
+                                ""
                             )
                         )
                     } else {
@@ -168,6 +171,9 @@ fun NotesScreen(
                                         Screen.NoteDetailsScreen.route.replace(
                                             "{${Constants.NOTE_ID_ARG}}",
                                             "${note.id}"
+                                        ).replace(
+                                            "{${Constants.FOLDER_NAME}}",
+                                            ""
                                         )
                                     )
                                 }
@@ -195,6 +201,9 @@ fun NotesScreen(
                                             Screen.NoteDetailsScreen.route.replace(
                                                 "{${Constants.NOTE_ID_ARG}}",
                                                 "${note.id}"
+                                            ).replace(
+                                                "{${Constants.FOLDER_NAME}}",
+                                                ""
                                             )
                                         )
                                     },
@@ -217,6 +226,7 @@ fun NotesScreen(
                     CreateFolderDialog(
                         onCreate = {
                             viewModel.onEvent(NoteEvent.CreateFolder(NoteFolder(it.trim())))
+                            openCreateFolderDialog = false
                         },
                         onDismiss = {
                             openCreateFolderDialog = false
