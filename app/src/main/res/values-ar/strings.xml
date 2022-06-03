@@ -142,5 +142,14 @@
     <string name="error_future_event">الحدث لا يمكن أن يكون في الماضي</string>
     <string name="delete_event_confirmation_title">حذف الحدث؟</string>
     <string name="delete_event_confirmation_message">هل أنت متأكد من حذف هذا الحدث؟</string>
-
+    <string name="folders">الملفات</string>
+    <string name="create_folder">انشاء ملف</string>
+    <string name="error_folder_exists">الملف موجود بالفعل</string>
+    <string name="name">الاسم</string>
+    <string name="change_folder">تغيير الملف</string>
+    <string name="none">بدون ملف</string>
+    <string name="delete_folder">حذف الملف</string>
+    <string name="delete_folder_confirmation_message">هل انت متأكد من حذف الملف و كل محنوياته؟</string>
+    <string name="save">حفظ</string>
+    <string name="edit_folder">تعديل الملف</string>
 </resources>
