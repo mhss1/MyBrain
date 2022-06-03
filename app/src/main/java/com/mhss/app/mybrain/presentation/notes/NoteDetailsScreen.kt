@@ -67,6 +67,7 @@ fun NoteDetailsScreen(
             )
             viewModel.onEvent(NoteEvent.ErrorDisplayed)
         }
+        if (state.folder != folder) folder = state.folder
     }
     BackHandler {
         addOrUpdateNote(

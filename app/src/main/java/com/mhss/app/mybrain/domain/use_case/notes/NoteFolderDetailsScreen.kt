@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,7 +48,7 @@ fun NoteFolderDetailsScreen(
     LaunchedEffect(true) {viewModel.onEvent(NoteEvent.GetFolderNotes(id)) }
     LaunchedEffect(uiState) {
         if (viewModel.notesUiState.navigateUp) {
-            navController.popBackStack()
+            navController.popBackStack(route = Screen.NotesScreen.route, inclusive = false)
         }
         if (uiState.error != null) {
             scaffoldState.snackbarHostState.showSnackbar(
@@ -76,6 +78,29 @@ fun NoteFolderDetailsScreen(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                        navController.navigate(
+                            Screen.NoteDetailsScreen.route.replace(
+                                "{${Constants.NOTE_ID_ARG}}",
+                                "${-1}"
+                            ).replace(
+                                "{${Constants.FOLDER_ID}}",
+                                "$id"
+                            )
+                        )
+                },
+                backgroundColor = MaterialTheme.colors.primary,
+            ) {
+                Icon(
+                    modifier = Modifier.size(25.dp),
+                    painter = painterResource(R.drawable.ic_add),
+                    contentDescription = stringResource(R.string.add_note),
+                    tint = Color.White
+                )
+            }
         }
     ) {
         if (uiState.noteView == ItemView.LIST) {
