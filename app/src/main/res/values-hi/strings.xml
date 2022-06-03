@@ -141,4 +141,14 @@
     <string name="delete_event_confirmation_title">इवेंट मिटाएं?</string>
     <string name="delete_event_confirmation_message">निश्चित तौर पर क्या इस घटना को हटाना चाहते हैं?</string>
     <string name="no_write_calendar_permission_message">इस सुविधा के उपलब्ध होने के लिए आवश्यक कैलेंडर अनुमति दें। कृपया अनुमति प्रदान करे।</string>
+    <string name="folders">फ़ोल्डर</string>
+    <string name="create_folder">फोल्डर बनाएं</string>
+    <string name="error_folder_exists">फोल्डर पहले से मौजूद है</string>
+    <string name="name">नाम</string>
+    <string name="change_folder">फोल्डर बदले</string>
+    <string name="none">कोई नहीं</string>
+    <string name="delete_folder">फोल्डर हटा दें</string>
+    <string name="delete_folder_confirmation_message">क्या आप वाकई इस फ़ोल्डर और इसकी सभी सामग्री को हटाना चाहते हैं?</string>
+    <string name="save">बचाना</string>
+    <string name="edit_folder">फोल्डर संपादित करें</string>
 </resources>
