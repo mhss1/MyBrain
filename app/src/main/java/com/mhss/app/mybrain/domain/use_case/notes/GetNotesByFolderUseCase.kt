@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetNotesByFolderUseCase @Inject constructor(
     private val notesRepository: NoteRepository
 ) {
-    operator fun invoke(folder: String, order: Order) = notesRepository.getNotesByFolder(folder).map { list ->
+    operator fun invoke(folderId: Int, order: Order) = notesRepository.getNotesByFolder(folderId).map { list ->
         when (order.orderType) {
             is OrderType.ASC -> {
                 when (order) {

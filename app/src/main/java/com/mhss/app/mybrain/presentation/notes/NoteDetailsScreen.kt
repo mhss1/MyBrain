@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Note
+import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.Orange
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -29,13 +30,12 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 fun NoteDetailsScreen(
     navController: NavHostController,
     noteId: Int,
-    folderName: String,
+    folderId: Int,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     LaunchedEffect(true) {
-        if (noteId != -1) {
-            viewModel.onEvent(NoteEvent.GetNote(noteId))
-        }
+        if (noteId != -1) viewModel.onEvent(NoteEvent.GetNote(noteId))
+        if (folderId != -1) viewModel.onEvent(NoteEvent.GetFolder(folderId))
     }
     val state = viewModel.notesUiState
     val scaffoldState = rememberScaffoldState()
@@ -46,14 +46,14 @@ fun NoteDetailsScreen(
     var content by rememberSaveable { mutableStateOf(state.note?.content ?: "") }
     var pinned by rememberSaveable { mutableStateOf(state.note?.pinned ?: false) }
     val readingMode = state.readingMode
-    var folder by rememberSaveable { mutableStateOf(folderName) }
+    var folder: NoteFolder? by rememberSaveable { mutableStateOf(state.folder) }
 
     LaunchedEffect(state.note) {
         if (state.note != null) {
             title = state.note.title
             content = state.note.content
             pinned = state.note.pinned
-            state.note.folder?.let { folder = it }
+            folder = state.folder
         }
     }
     LaunchedEffect(state) {
@@ -74,7 +74,7 @@ fun NoteDetailsScreen(
                 title = title,
                 content = content,
                 pinned = pinned,
-                folder = folder.ifBlank { null }
+                folderId = folder?.id
             ),
             state.note,
             onNotChanged = {
@@ -90,7 +90,7 @@ fun NoteDetailsScreen(
                             state.note.copy(
                                 title = title,
                                 content = content,
-                                folder = folder.ifBlank { null }
+                                folderId = folder?.id
                             )
                         )
                     )
@@ -101,7 +101,7 @@ fun NoteDetailsScreen(
                                 title = title,
                                 content = content,
                                 pinned = pinned,
-                                folder = folder.ifBlank { null }
+                                folderId = folder?.id
                             )
                         )
                     )
@@ -115,7 +115,7 @@ fun NoteDetailsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    if (folder.isNotBlank()) {
+                    if (folder != null) {
                         Row(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(25.dp))
@@ -130,7 +130,7 @@ fun NoteDetailsScreen(
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text = folder,
+                                text = folder?.name!!,
                                 modifier = Modifier.padding(end = 8.dp, top = 8.dp, bottom = 8.dp),
                                 style = MaterialTheme.typography.body1
                             )
@@ -267,17 +267,17 @@ fun NoteDetailsScreen(
                                 .clip(RoundedCornerShape(25.dp))
                                 .border(1.dp, Color.Gray, RoundedCornerShape(25.dp))
                                 .clickable {
-                                    folder = ""
+                                    folder = null
                                     openFolderDialog = false
                                 }
-                                .background(if (folder.isBlank()) MaterialTheme.colors.onBackground else Color.Transparent),
+                                .background(if (folder == null) MaterialTheme.colors.onBackground else Color.Transparent),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = stringResource(R.string.none),
                                 modifier = Modifier.padding(8.dp),
                                 style = MaterialTheme.typography.body1,
-                                color = if (folder.isBlank()) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
+                                color = if (folder == null) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
                             )
                         }
                         state.folders.forEach {
@@ -287,10 +287,10 @@ fun NoteDetailsScreen(
                                     .clip(RoundedCornerShape(25.dp))
                                     .border(1.dp, Color.Gray, RoundedCornerShape(25.dp))
                                     .clickable {
-                                        folder = it.name
+                                        folder = it
                                         openFolderDialog = false
                                     }
-                                    .background(if (folder == it.name) MaterialTheme.colors.onBackground else Color.Transparent),
+                                    .background(if (folder?.id == it.id) MaterialTheme.colors.onBackground else Color.Transparent),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
@@ -301,7 +301,7 @@ fun NoteDetailsScreen(
                                         top = 8.dp,
                                         bottom = 8.dp
                                     ),
-                                    tint = if (folder == it.name) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
+                                    tint = if (folder?.id == it.id) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
@@ -312,7 +312,7 @@ fun NoteDetailsScreen(
                                         bottom = 8.dp
                                     ),
                                     style = MaterialTheme.typography.body1,
-                                    color = if (folder == it.name) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
+                                    color = if (folder?.id == it.id) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
                                 )
                             }
                         }
@@ -345,5 +345,5 @@ private fun noteChanged(
 ): Boolean {
     return note.title != newNote.title ||
             note.content != newNote.content ||
-            note.folder != newNote.folder
+            note.folderId != newNote.folderId
 }
