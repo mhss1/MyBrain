@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.mhss.app.mybrain.app.dataStore
 import com.mhss.app.mybrain.data.local.MyBrainDatabase
 import com.mhss.app.mybrain.data.local.dao.*
+import com.mhss.app.mybrain.data.local.migrations.MIGRATION_1_2
 import com.mhss.app.mybrain.data.repository.*
 import com.mhss.app.mybrain.domain.repository.*
 import dagger.Module
@@ -26,7 +27,8 @@ object AppModule {
         context,
         MyBrainDatabase::class.java,
         MyBrainDatabase.DATABASE_NAME
-    ).build()
+    ).addMigrations(MIGRATION_1_2)
+        .build()
 
     @Singleton
     @Provides

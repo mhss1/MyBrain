@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mhss.app.mybrain.domain.use_case.notes.NoteFolderDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkSearchScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarksScreen
@@ -140,16 +141,20 @@ class MainActivity : ComponentActivity() {
                         ) {
                             NotesScreen(navController = navController)
                         }
-                        composable(Screen.NoteAddScreen.route) {}
                         composable(
                             Screen.NoteDetailsScreen.route,
                             arguments = listOf(navArgument(Constants.NOTE_ID_ARG) {
                                 type = NavType.IntType
-                            })
+                            },
+                                navArgument(Constants.FOLDER_ID) {
+                                    type = NavType.IntType
+                                }
+                            ),
                         ) {
                             NoteDetailsScreen(
                                 navController,
-                                it.arguments?.getInt(Constants.NOTE_ID_ARG)!!
+                                it.arguments?.getInt(Constants.NOTE_ID_ARG) ?: -1,
+                                it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
                             )
                         }
                         composable(Screen.NoteSearchScreen.route) {
@@ -216,6 +221,17 @@ class MainActivity : ComponentActivity() {
                             CalendarEventDetailsScreen(
                                 navController = navController,
                                 eventJson = it.arguments?.getString(Constants.CALENDAR_EVENT_ARG) ?: ""
+                            )
+                        }
+                        composable(
+                            Screen.NoteFolderDetailsScreen.route,
+                            arguments = listOf(navArgument(Constants.FOLDER_ID) {
+                                type = NavType.IntType
+                            })
+                        ) {
+                            NoteFolderDetailsScreen(
+                                navController = navController,
+                                it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
                             )
                         }
                     }

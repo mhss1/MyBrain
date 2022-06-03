@@ -32,6 +32,7 @@ object Constants {
     const val BOOKMARK_ID_ARG = "bookmark_id"
     const val DIARY_ID_ARG = "diary_id"
     const val CALENDAR_EVENT_ARG = "calendar_event"
+    const val FOLDER_ID = "folder_id"
 
     // lINKS
     const val PROJECT_GITHUB_LINK = "https://github.com/mhss1/ByBrain"
