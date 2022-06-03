@@ -146,15 +146,15 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument(Constants.NOTE_ID_ARG) {
                                 type = NavType.IntType
                             },
-                                navArgument(Constants.FOLDER_NAME) {
-                                    type = NavType.StringType
+                                navArgument(Constants.FOLDER_ID) {
+                                    type = NavType.IntType
                                 }
                             ),
                         ) {
                             NoteDetailsScreen(
                                 navController,
                                 it.arguments?.getInt(Constants.NOTE_ID_ARG) ?: -1,
-                                it.arguments?.getString(Constants.FOLDER_NAME) ?: ""
+                                it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
                             )
                         }
                         composable(Screen.NoteSearchScreen.route) {
@@ -225,13 +225,13 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(
                             Screen.NoteFolderDetailsScreen.route,
-                            arguments = listOf(navArgument(Constants.FOLDER_NAME) {
-                                type = NavType.StringType
+                            arguments = listOf(navArgument(Constants.FOLDER_ID) {
+                                type = NavType.IntType
                             })
                         ) {
                             NoteFolderDetailsScreen(
                                 navController = navController,
-                                it.arguments?.getString(Constants.FOLDER_NAME) ?: ""
+                                it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
                             )
                         }
                     }

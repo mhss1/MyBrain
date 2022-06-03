@@ -63,7 +63,7 @@ fun NotesSearchScreen(
                                     "{${Constants.NOTE_ID_ARG}}",
                                     "${note.id}"
                                 ).replace(
-                                    "{${Constants.FOLDER_NAME}}",
+                                    "{${Constants.FOLDER_ID}}",
                                     ""
                                 )
                             )
@@ -88,7 +88,7 @@ fun NotesSearchScreen(
                                         "{${Constants.NOTE_ID_ARG}}",
                                         "${note.id}"
                                     ).replace(
-                                        "{${Constants.FOLDER_NAME}}",
+                                        "{${Constants.FOLDER_ID}}",
                                         ""
                                     )
                                 )

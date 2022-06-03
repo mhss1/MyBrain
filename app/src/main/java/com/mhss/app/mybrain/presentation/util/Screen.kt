@@ -11,7 +11,7 @@ sealed class Screen(val route: String) {
     object TaskDetailScreen : Screen("task_detail_screen/{${Constants.TASK_ID_ARG}}")
     object TaskSearchScreen : Screen("task_search_screen")
     object NotesScreen : Screen("notes_screen")
-    object NoteDetailsScreen : Screen("note_detail_screen/{${Constants.NOTE_ID_ARG}}?${Constants.FOLDER_NAME}={${Constants.FOLDER_NAME}}")
+    object NoteDetailsScreen : Screen("note_detail_screen/{${Constants.NOTE_ID_ARG}}?${Constants.FOLDER_ID}={${Constants.FOLDER_ID}}")
     object NoteSearchScreen : Screen("note_search_screen")
     object DiaryScreen : Screen("diary_screen")
     object DiaryDetailScreen : Screen("diary_detail_screen/{${Constants.DIARY_ID_ARG}}")
@@ -22,5 +22,5 @@ sealed class Screen(val route: String) {
     object BookmarkSearchScreen : Screen("bookmark_search_screen")
     object CalendarScreen : Screen("calendar_screen")
     object CalendarEventDetailsScreen : Screen("calendar_event_details_screen/{${Constants.CALENDAR_EVENT_ARG}}")
-    object NoteFolderDetailsScreen : Screen("note_folder_details_screen/{${Constants.FOLDER_NAME}}")
+    object NoteFolderDetailsScreen : Screen("note_folder_details_screen/{${Constants.FOLDER_ID}}")
 }

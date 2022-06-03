@@ -75,8 +75,8 @@ fun NotesScreen(
                                 "{${Constants.NOTE_ID_ARG}}",
                                 "${-1}"
                             ).replace(
-                                "{${Constants.FOLDER_NAME}}",
-                                ""
+                                "{${Constants.FOLDER_ID}}",
+                                "-1"
                             )
                         )
                     } else {
@@ -116,9 +116,9 @@ fun NotesScreen(
                     }
                 )
             }
-            if (uiState.notes.isEmpty())
-                NoNotesMessage()
             if (selectedTab == 0) {
+                if (uiState.notes.isEmpty())
+                    NoNotesMessage()
                 Row(
                     Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -172,8 +172,8 @@ fun NotesScreen(
                                             "{${Constants.NOTE_ID_ARG}}",
                                             "${note.id}"
                                         ).replace(
-                                            "{${Constants.FOLDER_NAME}}",
-                                            ""
+                                            "{${Constants.FOLDER_ID}}",
+                                            "-1"
                                         )
                                     )
                                 }
@@ -202,8 +202,8 @@ fun NotesScreen(
                                                 "{${Constants.NOTE_ID_ARG}}",
                                                 "${note.id}"
                                             ).replace(
-                                                "{${Constants.FOLDER_NAME}}",
-                                                ""
+                                                "{${Constants.FOLDER_ID}}",
+                                                "-1"
                                             )
                                         )
                                     },
@@ -217,8 +217,8 @@ fun NotesScreen(
                 FoldersTab(uiState.folders) {
                     navController.navigate(
                         Screen.NoteFolderDetailsScreen.route.replace(
-                            "{${Constants.FOLDER_NAME}}",
-                            it.name
+                            "{${Constants.FOLDER_ID}}",
+                            "${it.id}"
                         )
                     )
                 }
