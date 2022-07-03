@@ -62,6 +62,9 @@ fun NotesSearchScreen(
                                 Screen.NoteDetailsScreen.route.replace(
                                     "{${Constants.NOTE_ID_ARG}}",
                                     "${note.id}"
+                                ).replace(
+                                    "{${Constants.FOLDER_ID}}",
+                                    ""
                                 )
                             )
                         }
@@ -84,6 +87,9 @@ fun NotesSearchScreen(
                                     Screen.NoteDetailsScreen.route.replace(
                                         "{${Constants.NOTE_ID_ARG}}",
                                         "${note.id}"
+                                    ).replace(
+                                        "{${Constants.FOLDER_ID}}",
+                                        ""
                                     )
                                 )
                             },

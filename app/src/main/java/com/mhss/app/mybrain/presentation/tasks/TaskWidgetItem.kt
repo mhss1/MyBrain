@@ -22,7 +22,7 @@ import androidx.glance.unit.ColorProvider
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.presentation.glance_widgets.*
-import com.mhss.app.mybrain.util.date.formatDate
+import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.date.isDueDateOverdue
 import com.mhss.app.mybrain.util.settings.Priority
 import com.mhss.app.mybrain.util.settings.toPriority
@@ -82,7 +82,7 @@ fun TaskWidgetItem(
                     )
                     Spacer(GlanceModifier.width(3.dp))
                     Text(
-                        text = task.dueDate.formatDate(),
+                        text = task.dueDate.formatDateDependingOnDay(),
                         style = TextStyle(
                             color = if (task.dueDate.isDueDateOverdue()) ColorProvider(Color.Red) else ColorProvider(
                                 Color.White
@@ -115,7 +115,8 @@ fun TaskWidgetCheckBox(
                 }))
             .clickable(
                 onClick = onComplete
-            ).padding(3.dp)
+            ).padding(3.dp),
+        contentAlignment = Alignment.Center
     ) {
         if (isComplete) {
             Image(

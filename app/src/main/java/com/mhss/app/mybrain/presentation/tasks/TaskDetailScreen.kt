@@ -25,7 +25,7 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.SubTask
 import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.date.formatDate
+import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.settings.Priority
 import com.mhss.app.mybrain.util.settings.toInt
 import com.mhss.app.mybrain.util.settings.toPriority
@@ -251,7 +251,7 @@ fun TaskDetailScreen(
                         )
                     }
                     Text(
-                        text = dueDate.formatDate(),
+                        text = dueDate.formatDateDependingOnDay(),
                         style = MaterialTheme.typography.body2
                     )
                 }

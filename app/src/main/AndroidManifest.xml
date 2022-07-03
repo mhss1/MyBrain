@@ -3,7 +3,9 @@
     package="com.mhss.app.mybrain">
 
     <!-- For the Calendar events features -->
-    <uses-permission android:name="android.permission.READ_CALENDAR" /> <!-- For reminders -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <!-- For reminders -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- to start the alarms after restart. (By default, all alarms are canceled when a device shuts down) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -18,7 +20,9 @@
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyBrain">
+            android:theme="@style/Theme.MyBrain"
+            android:windowSoftInputMode="adjustResize"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

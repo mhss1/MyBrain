@@ -19,6 +19,7 @@ object Constants {
     const val BOOKMARK_ORDER_KEY = "bookmark_order"
     const val DIARY_ORDER_KEY = "diary_order"
     const val EXCLUDED_CALENDARS_KEY = "excluded_calendars"
+    const val APP_FONT_KEY = "app_font"
 
     // Navigation
     const val TASK_ID_ARG = "task_id"
@@ -26,9 +27,12 @@ object Constants {
     const val ADD_TASK_ARG = "add_task"
     const val TASKS_SCREEN_URI = "app://com.mhss.app.mybrain/tasks"
     const val CALENDAR_SCREEN_URI = "app://com.mhss.app.mybrain/calendar"
+    const val CALENDAR_DETAILS_SCREEN_URI = "app://com.mhss.app.mybrain/calendar_event_details"
     const val NOTE_ID_ARG = "note_id"
     const val BOOKMARK_ID_ARG = "bookmark_id"
     const val DIARY_ID_ARG = "diary_id"
+    const val CALENDAR_EVENT_ARG = "calendar_event"
+    const val FOLDER_ID = "folder_id"
 
     // lINKS
     const val PROJECT_GITHUB_LINK = "https://github.com/mhss1/ByBrain"

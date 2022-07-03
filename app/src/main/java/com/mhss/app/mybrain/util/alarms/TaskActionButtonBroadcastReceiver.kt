@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskCompletedUseCase
+import com.mhss.app.mybrain.domain.use_case.tasks.refreshTasksWidget
 import com.mhss.app.mybrain.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
@@ -23,6 +24,7 @@ class TaskActionButtonBroadcastReceiver : BroadcastReceiver() {
                 updateTaskCompleted(taskId, true)
                 val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 manager.cancel(taskId)
+                context.refreshTasksWidget()
             }
         }
     }

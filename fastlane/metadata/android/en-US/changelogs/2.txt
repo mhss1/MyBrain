@@ -1,0 +1,4 @@
+- Added Font options in settings.
+- Added Folders for Notes.
+- Added Hindi language support.
+- Bug fixes.

@@ -2,11 +2,13 @@ package com.mhss.app.mybrain.util.settings
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.ui.theme.Green
 import com.mhss.app.mybrain.ui.theme.Orange
 import com.mhss.app.mybrain.ui.theme.Red
+import com.mhss.app.mybrain.ui.theme.Rubik
 
 
 enum class ThemeSettings(val value: Int) {
@@ -114,6 +116,36 @@ fun Order.toInt(): Int {
                 is Order.Priority -> 7
             }
         }
+    }
+}
+
+fun Int.toFontFamily(): FontFamily {
+    return when (this) {
+        0 -> FontFamily.Default
+        1 -> Rubik
+        2 -> FontFamily.Monospace
+        3 -> FontFamily.SansSerif
+        else -> FontFamily.Default
+    }
+}
+
+fun FontFamily.toInt(): Int {
+    return when (this) {
+        FontFamily.Default -> 0
+        Rubik -> 1
+        FontFamily.Monospace -> 2
+        FontFamily.SansSerif -> 3
+        else -> 0
+    }
+}
+
+fun FontFamily.getName(): String {
+    return when (this) {
+        FontFamily.Default -> getString(R.string.font_system_default)
+        Rubik -> "Rubik"
+        FontFamily.Monospace -> "Monospace"
+        FontFamily.SansSerif -> "Sans Serif"
+        else -> getString(R.string.font_system_default)
     }
 }
 

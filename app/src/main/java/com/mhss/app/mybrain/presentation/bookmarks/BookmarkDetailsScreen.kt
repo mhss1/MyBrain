@@ -2,7 +2,6 @@ package com.mhss.app.mybrain.presentation.bookmarks
 
 import android.content.Intent
 import android.net.Uri
-import android.webkit.URLUtil
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +20,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 
 @Composable
 fun BookmarkDetailsScreen(
@@ -113,10 +113,10 @@ fun BookmarkDetailsScreen(
                             contentDescription = stringResource(R.string.delete_bookmark)
                         )
                     }
-                    if (URLUtil.isValidUrl(url))
+                    if (url.isValidUrl())
                         IconButton(onClick = {
                             val intent = Intent(Intent.ACTION_VIEW)
-                            intent.data = Uri.parse(url)
+                            intent.data = Uri.parse(if (!url.startsWith("http://") && !url.startsWith("https://")) "http://$url" else url)
                             context.startActivity(intent)
                         }) {
                             Icon(

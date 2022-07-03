@@ -2,11 +2,9 @@
 
 package com.mhss.app.mybrain.presentation.calendar
 
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.CalendarContract
 import android.provider.Settings
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -29,15 +27,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.gson.Gson
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Calendar
+import com.mhss.app.mybrain.domain.model.CalendarEvent
+import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.*
 import kotlinx.coroutines.launch
 
 @Composable
 fun CalendarScreen(
+    navController: NavHostController,
     viewModel: CalendarViewModel = hiltViewModel()
 ) {
     val state = viewModel.uiState
@@ -82,11 +86,14 @@ fun CalendarScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
+            if (readCalendarPermissionState.hasPermission) FloatingActionButton(
                 onClick = {
-                   val intent = Intent(Intent.ACTION_INSERT)
-                    intent.type = "vnd.android.cursor.item/event"
-                    context.startActivity(intent)
+                    navController.navigate(
+                        Screen.CalendarEventDetailsScreen.route.replace(
+                            "{${Constants.CALENDAR_EVENT_ARG}}",
+                            " "
+                        )
+                    )
                 },
                 backgroundColor = MaterialTheme.colors.primary,
             ) {
@@ -148,12 +155,13 @@ fun CalendarScreen(
                                 )
                                 events.forEach { event ->
                                     CalendarEventItem(event = event, onClick = {
-                                        val intent = Intent(Intent.ACTION_VIEW)
-                                        intent.data = ContentUris.withAppendedId(
-                                            CalendarContract.Events.CONTENT_URI,
-                                            event.id
+                                        val eventJson = Gson().toJson(event, CalendarEvent::class.java)
+                                        navController.navigate(
+                                            Screen.CalendarEventDetailsScreen.route.replace(
+                                                "{${Constants.CALENDAR_EVENT_ARG}}",
+                                                eventJson
+                                            )
                                         )
-                                        context.startActivity(intent)
                                     })
                                 }
                             }

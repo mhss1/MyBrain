@@ -1,9 +1,6 @@
 package com.mhss.app.mybrain.presentation.calendar
 
 import android.Manifest
-import android.content.ContentUris
-import android.content.Intent
-import android.provider.CalendarContract
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -32,7 +29,9 @@ fun CalendarDashboardWidget(
     modifier: Modifier = Modifier,
     events: Map<String, List<CalendarEvent>>,
     onPermission: (Boolean) -> Unit = {},
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    onAddEventClicked: () -> Unit = {},
+    onEventClicked: (CalendarEvent) -> Unit = {}
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
@@ -63,9 +62,7 @@ fun CalendarDashboardWidget(
                     modifier = Modifier
                         .size(18.dp)
                         .clickable {
-                            val intent = Intent(Intent.ACTION_INSERT)
-                            intent.type = "vnd.android.cursor.item/event"
-                            context.startActivity(intent)
+                            onAddEventClicked()
                         }
                 )
             }
@@ -92,6 +89,7 @@ fun CalendarDashboardWidget(
                     } else {
                         events.forEach { (day, events) ->
                             item {
+                                LaunchedEffect(true) { onPermission(true) }
                                 Column(
                                     verticalArrangement = Arrangement.spacedBy(4.dp),
                                 ) {
@@ -101,12 +99,7 @@ fun CalendarDashboardWidget(
                                     )
                                     events.forEach { event ->
                                         CalendarEventSmallItem(event = event, onClick = {
-                                            val intent = Intent(Intent.ACTION_VIEW)
-                                            intent.data = ContentUris.withAppendedId(
-                                                CalendarContract.Events.CONTENT_URI,
-                                                event.id
-                                            )
-                                            context.startActivity(intent)
+                                            onEventClicked(event)
                                         })
                                     }
                                 }

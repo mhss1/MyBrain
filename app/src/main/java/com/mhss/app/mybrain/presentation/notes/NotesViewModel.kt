@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.Note
+import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.domain.use_case.notes.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
@@ -28,14 +29,20 @@ class NotesViewModel @Inject constructor(
     private val addNote: AddNoteUseCase,
     private val searchNotes: SearchNotesUseCase,
     private val deleteNote: DeleteNoteUseCase,
-    getSettings: GetSettingsUseCase,
-    private val saveSettings: SaveSettingsUseCase
+    private val getSettings: GetSettingsUseCase,
+    private val saveSettings: SaveSettingsUseCase,
+    private val getAllFolders: GetAllNoteFoldersUseCase,
+    private val createFolder: AddNoteFolderUseCass,
+    private val deleteFolder: DeleteNoteFolderUseCass,
+    private val updateFolder: UpdateNoteFolderUseCass,
+    private val getFolderNotes: GetNotesByFolderUseCase,
 ) : ViewModel() {
 
     var notesUiState by mutableStateOf((UiState()))
         private set
 
     private var getNotesJob: Job? = null
+    private var getFolderNotesJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -47,9 +54,10 @@ class NotesViewModel @Inject constructor(
                 getSettings(
                     intPreferencesKey(Constants.NOTE_VIEW_KEY),
                     ItemView.LIST.value
-                )
-            ) { order, view ->
-                notesUiState = notesUiState.copy(notesOrder = order.toOrder())
+                ),
+                getAllFolders()
+            ) { order, view, folders ->
+                notesUiState = notesUiState.copy(notesOrder = order.toOrder(), folders = folders)
                 getNotes(order.toOrder())
                 if (notesUiState.noteView.value != view) {
                     notesUiState = notesUiState.copy(noteView = view.toNotesView())
@@ -79,7 +87,8 @@ class NotesViewModel @Inject constructor(
             }
             is NoteEvent.GetNote -> viewModelScope.launch {
                 val note = getNote(event.noteId)
-                notesUiState = notesUiState.copy(note = note)
+                val folder = getAllFolders().first().firstOrNull { it.id == note.folderId }
+                notesUiState = notesUiState.copy(note = note, folder = folder)
             }
             is NoteEvent.SearchNotes -> viewModelScope.launch {
                 val notes = searchNotes(event.query)
@@ -111,6 +120,40 @@ class NotesViewModel @Inject constructor(
                     event.view.value
                 )
             }
+            is NoteEvent.CreateFolder -> viewModelScope.launch {
+                if (event.folder.name.isBlank()) {
+                    notesUiState = notesUiState.copy(error = getString(R.string.error_empty_title))
+                } else {
+                    if (!notesUiState.folders.contains(event.folder)) {
+                        createFolder(event.folder)
+                    } else {
+                        notesUiState = notesUiState.copy(error = getString(R.string.error_folder_exists))
+                    }
+                }
+            }
+            is NoteEvent.DeleteFolder -> viewModelScope.launch {
+                deleteFolder(event.folder)
+                notesUiState = notesUiState.copy(navigateUp = true)
+            }
+            is NoteEvent.UpdateFolder -> viewModelScope.launch {
+                if (event.folder.name.isBlank()) {
+                    notesUiState = notesUiState.copy(error = getString(R.string.error_empty_title))
+                } else {
+                    if (!notesUiState.folders.contains(event.folder)) {
+                        updateFolder(event.folder)
+                        notesUiState = notesUiState.copy(folder = event.folder)
+                    } else {
+                        notesUiState = notesUiState.copy(error = getString(R.string.error_folder_exists))
+                    }
+                }
+            }
+            is NoteEvent.GetFolderNotes -> {
+                getNotesFromFolder(event.id, notesUiState.notesOrder)
+            }
+            is NoteEvent.GetFolder -> viewModelScope.launch {
+                val folder = getAllFolders().first().firstOrNull { it.id == event.id }
+                notesUiState = notesUiState.copy(folder = folder)
+            }
         }
     }
 
@@ -122,16 +165,31 @@ class NotesViewModel @Inject constructor(
         val noteView: ItemView = ItemView.LIST,
         val navigateUp: Boolean = false,
         val readingMode: Boolean = true,
-        val searchNotes: List<Note> = emptyList()
+        val searchNotes: List<Note> = emptyList(),
+        val folders: List<NoteFolder> = emptyList(),
+        val folderNotes: List<Note> = emptyList(),
+        val folder: NoteFolder? = null
     )
 
     private fun getNotes(order: Order) {
         getNotesJob?.cancel()
         getNotesJob = allNotes(order)
-            .onEach { tasks ->
+            .onEach { notes ->
                 notesUiState = notesUiState.copy(
-                    notes = tasks,
+                    notes = notes,
                     notesOrder = order
+                )
+            }.launchIn(viewModelScope)
+    }
+
+    private fun getNotesFromFolder(id: Int, order: Order) {
+        getFolderNotesJob?.cancel()
+        getFolderNotesJob = getFolderNotes(id, order)
+            .onEach { notes ->
+                val noteFolder = getAllFolders().first().firstOrNull() { it.id == id }
+                notesUiState = notesUiState.copy(
+                    folderNotes = notes,
+                    folder = noteFolder
                 )
             }.launchIn(viewModelScope)
     }

@@ -11,7 +11,6 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,9 +18,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mhss.app.mybrain.domain.use_case.notes.NoteFolderDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkSearchScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarksScreen
+import com.mhss.app.mybrain.presentation.calendar.CalendarEventDetailsScreen
 import com.mhss.app.mybrain.presentation.calendar.CalendarScreen
 import com.mhss.app.mybrain.presentation.diary.DiaryChartScreen
 import com.mhss.app.mybrain.presentation.diary.DiaryEntryDetailsScreen
@@ -34,11 +35,13 @@ import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.ui.theme.DarkBackground
 import com.mhss.app.mybrain.ui.theme.MyBrainTheme
+import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.StartUpScreenSettings
 import com.mhss.app.mybrain.util.settings.ThemeSettings
+import com.mhss.app.mybrain.util.settings.toFontFamily
+import com.mhss.app.mybrain.util.settings.toInt
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -53,7 +56,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val themMode = viewModel.themMode.collectAsState(initial = ThemeSettings.AUTO.value)
+            val themeMode = viewModel.themeMode.collectAsState(initial = ThemeSettings.AUTO.value)
+            val font = viewModel.font.collectAsState(initial = Rubik.toInt())
             var startUpScreenSettings by remember { mutableStateOf(StartUpScreenSettings.SPACES.value) }
             val systemUiController = rememberSystemUiController()
             LaunchedEffect(true) {
@@ -64,20 +68,18 @@ class MainActivity : ComponentActivity() {
             val startUpScreen =
                 if (startUpScreenSettings == StartUpScreenSettings.SPACES.value)
                     Screen.SpacesScreen.route else Screen.DashboardScreen.route
-            val isDarkMode = when (themMode.value) {
+            val isDarkMode = when (themeMode.value) {
                 ThemeSettings.DARK.value -> true
                 ThemeSettings.LIGHT.value -> false
                 else -> isSystemInDarkTheme()
             }
-            val color = MaterialTheme.colors.background
-            println("red: ${color.toArgb()}, green: ${color.green}, blue: ${color.blue}")
             SideEffect {
                 systemUiController.setSystemBarsColor(
-                    if (isDarkMode) DarkBackground else Color.White,
+                    if (isDarkMode) Color.Black else Color.White,
                     darkIcons = !isDarkMode
                 )
             }
-            MyBrainTheme(darkTheme = isDarkMode) {
+            MyBrainTheme(darkTheme = isDarkMode, fontFamily = font.value.toFontFamily()) {
                 val navController = rememberNavController()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -139,16 +141,20 @@ class MainActivity : ComponentActivity() {
                         ) {
                             NotesScreen(navController = navController)
                         }
-                        composable(Screen.NoteAddScreen.route) {}
                         composable(
                             Screen.NoteDetailsScreen.route,
                             arguments = listOf(navArgument(Constants.NOTE_ID_ARG) {
                                 type = NavType.IntType
-                            })
+                            },
+                                navArgument(Constants.FOLDER_ID) {
+                                    type = NavType.IntType
+                                }
+                            ),
                         ) {
                             NoteDetailsScreen(
                                 navController,
-                                it.arguments?.getInt(Constants.NOTE_ID_ARG)!!
+                                it.arguments?.getInt(Constants.NOTE_ID_ARG) ?: -1,
+                                it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
                             )
                         }
                         composable(Screen.NoteSearchScreen.route) {
@@ -199,9 +205,35 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) {
-                            CalendarScreen()
+                            CalendarScreen(navController = navController)
                         }
-                        composable(Screen.CalendarSearchScreen.route) {}
+                        composable(
+                            Screen.CalendarEventDetailsScreen.route,
+                            arguments = listOf(navArgument(Constants.CALENDAR_EVENT_ARG) {
+                                type = NavType.StringType
+                            }),
+                            deepLinks = listOf(
+                                navDeepLink {
+                                    uriPattern = "${Constants.CALENDAR_DETAILS_SCREEN_URI}/{${Constants.CALENDAR_EVENT_ARG}}"
+                                }
+                            )
+                        ) {
+                            CalendarEventDetailsScreen(
+                                navController = navController,
+                                eventJson = it.arguments?.getString(Constants.CALENDAR_EVENT_ARG) ?: ""
+                            )
+                        }
+                        composable(
+                            Screen.NoteFolderDetailsScreen.route,
+                            arguments = listOf(navArgument(Constants.FOLDER_ID) {
+                                type = NavType.IntType
+                            })
+                        ) {
+                            NoteFolderDetailsScreen(
+                                navController = navController,
+                                it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
+                            )
+                        }
                     }
                 }
             }
