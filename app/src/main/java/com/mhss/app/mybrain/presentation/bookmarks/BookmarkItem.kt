@@ -64,7 +64,7 @@ fun LazyItemScope.BookmarkItem(
                 onClick = {
                     if (bookmark.url.isValidUrl()){
                         val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(bookmark.url)
+                        intent.data = Uri.parse(if (!bookmark.url.startsWith("http://") && !bookmark.url.startsWith("https://")) "http://${bookmark.url}" else bookmark.url)
                         context.startActivity(intent)
                     } else
                         onInvalidUrl()

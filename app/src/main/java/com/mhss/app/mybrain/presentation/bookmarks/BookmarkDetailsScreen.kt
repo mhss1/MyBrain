@@ -116,7 +116,7 @@ fun BookmarkDetailsScreen(
                     if (url.isValidUrl())
                         IconButton(onClick = {
                             val intent = Intent(Intent.ACTION_VIEW)
-                            intent.data = Uri.parse(url)
+                            intent.data = Uri.parse(if (!url.startsWith("http://") && !url.startsWith("https://")) "http://$url" else url)
                             context.startActivity(intent)
                         }) {
                             Icon(
