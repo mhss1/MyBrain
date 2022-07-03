@@ -46,7 +46,7 @@ fun NoteDetailsScreen(
     var content by rememberSaveable { mutableStateOf(state.note?.content ?: "") }
     var pinned by rememberSaveable { mutableStateOf(state.note?.pinned ?: false) }
     val readingMode = state.readingMode
-    var folder: NoteFolder? by rememberSaveable { mutableStateOf(state.folder) }
+    var folder: NoteFolder? by remember { mutableStateOf(state.folder) }
 
     LaunchedEffect(state.note) {
         if (state.note != null) {
