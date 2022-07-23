@@ -18,14 +18,13 @@
 
 [screenshots made by previewed](https://previewed.app/template/00CBF3F6)
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">](https://f-droid.org/packages/com.mhss.app.mybrain)
 [<img src="https://camo.githubusercontent.com/70bffd8873ab81e1bb0bccc44e488c3a989e3bd5/68747470733a2f2f692e6962622e636f2f71306d6463345a2f6765742d69742d6f6e2d6769746875622e706e67"
      alt="Get it on GitHub"
      height="80">](https://github.com/mhss1/MyBrain/releases/latest)
-     [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" 
-      alt='Get it on IzzyOnDroid' 
-      height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.mhss.app.mybrain)
-      Soon on F-Droid
-
+      
 ## Features
 - Private with no data collection and no internet permission at all.
 - Create tasks with priority, sub-tasks, description and due date and reminders.
