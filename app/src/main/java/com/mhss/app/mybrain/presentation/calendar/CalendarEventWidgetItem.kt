@@ -76,7 +76,8 @@ fun CalendarEventWidgetItem(
                             end = event.end,
                             location = event.location,
                             allDay = event.allDay,
-                        )
+                        ),
+                        style = TextStyle(color = ColorProvider(Color.LightGray))
                     )
                 }
             }
