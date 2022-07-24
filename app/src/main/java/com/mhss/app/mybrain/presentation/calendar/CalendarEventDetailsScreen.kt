@@ -34,11 +34,12 @@ import com.google.gson.Gson
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Calendar
 import com.mhss.app.mybrain.domain.model.CalendarEvent
-import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.calendar.*
 import com.mhss.app.mybrain.util.date.HOUR_IN_MILLIS
 import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.date.formatTime
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -56,7 +57,8 @@ fun CalendarEventDetailsScreen(
     val event by remember {
         mutableStateOf(
             if (eventJson.isNotEmpty()) {
-                Gson().fromJson(eventJson, CalendarEvent::class.java)
+                val decodedJson = URLDecoder.decode(eventJson, StandardCharsets.UTF_8.toString())
+                Gson().fromJson(decodedJson, CalendarEvent::class.java)
             } else
                 null
         )
