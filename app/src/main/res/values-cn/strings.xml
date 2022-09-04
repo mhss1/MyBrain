@@ -139,7 +139,7 @@
     <string name="every_month">每月</string>
     <string name="every_year">每年</string>
     <string name="error_future_event">不能创建过去的事项</string>
-    <string name="delete_event_confirmation_title"删除事项？</string>
+    <string name="delete_event_confirmation_title">删除事项？</string>
     <string name="delete_event_confirmation_message">你确定要删除这个事项吗？</string>
     <string name="folders">文件夹</string>
     <string name="create_folder">创建文件夹</string>
