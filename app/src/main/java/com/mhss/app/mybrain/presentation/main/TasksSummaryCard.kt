@@ -34,7 +34,7 @@ fun TasksSummaryCard(
         elevation = 8.dp,
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(6.dp)
     ) {
         val percentage by remember(tasks) {
             derivedStateOf {
@@ -44,7 +44,7 @@ fun TasksSummaryCard(
         Column {
             Text(
                 text = stringResource(R.string.tasks_summary),
-                style = MaterialTheme.typography.h5,
+                style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
@@ -103,7 +103,7 @@ fun TasksSummaryCard(
             } else {
                 Text(
                     text = stringResource(R.string.no_tasks_yet),
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.body1,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
