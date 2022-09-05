@@ -1,9 +1,7 @@
 package com.mhss.app.mybrain.presentation.notes
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -23,16 +21,14 @@ import com.mhss.app.mybrain.domain.model.Note
 import com.mhss.app.mybrain.ui.theme.Orange
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyItemScope.NoteItem(
+fun NoteItem(
     modifier: Modifier = Modifier,
     note: Note,
     onClick: (Note) -> Unit
 ) {
     Card(
-        modifier = modifier
-            .animateItemPlacement(),
+        modifier = modifier,
         shape = RoundedCornerShape(20.dp),
         elevation = 12.dp
     ) {

@@ -5,9 +5,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -75,12 +76,12 @@ fun BookmarksScreen(
                 )
             }
         },
-    ) {
+    ) { paddingValues ->
         if (uiState.bookmarks.isEmpty())
             NoBookmarksMessage()
         Column {
             Row(
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth().padding(paddingValues),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -135,13 +136,14 @@ fun BookmarksScreen(
                                         getString(R.string.invalid_url)
                                     )
                                 }
-                            }
+                            },
+                            modifier = Modifier.animateItemPlacement()
                         )
                     }
                 }
             } else {
                 LazyVerticalGrid(
-                    cells = GridCells.Adaptive(150.dp),
+                    columns = GridCells.Adaptive(150.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(12.dp)
@@ -165,7 +167,7 @@ fun BookmarksScreen(
                                         )
                                     }
                                 },
-                                modifier = Modifier.height(220.dp)
+                                modifier = Modifier.animateItemPlacement().height(220.dp)
                             )
                         }
                     }
