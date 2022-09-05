@@ -53,6 +53,7 @@
 ## Contributing
 To get started, take a look at [CONTRIBUTING.md](CONTRIBUTING.md).
 
+---
 Icons Attribution 
 <a href="https://www.flaticon.com/free-icons/paper" title="paper icons">Paper icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/list" title="list icons">List icons created by Freepik - Flaticon</a>
