@@ -117,7 +117,7 @@ dependencies {
     implementation 'com.github.jeziellago:compose-markdown:0.2.9'
 
     // Compose Glance (Widgets)
-    implementation "androidx.glance:glance-appwidget:1.0.0-alpha04"
+    implementation "androidx.glance:glance-appwidget:1.0.0-alpha03"
 
 }
 
