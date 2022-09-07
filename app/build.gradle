@@ -19,6 +19,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        resConfigs "en", "ar", "zh-rCN", "hi", "pl", "ru"
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
