@@ -1,10 +1,10 @@
 - Added Russian translation by @Ftonans
 - Added polish translation by @maciej-klupp
-- Added Chinese translation by @Daietto
+- Added Chinese (Simplified) translation by @Daietto
 - Android 13 support
+- Added support for per-app language on Android 13
 - Bug fixes
 
 Features coming soon:
-- Backup feature
-- Markdown for diary
-- Folders for bookmarks
+- Backup data
+- Folders for more spaces
