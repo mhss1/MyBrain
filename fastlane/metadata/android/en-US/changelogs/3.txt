@@ -1,0 +1,10 @@
+- Added Russian translation by @Ftonans
+- Added polish translation by @maciej-klupp
+- Added Chinese (Simplified) translation by @Daietto
+- Android 13 support
+- Added support for per-app language on Android 13
+- Bug fixes
+
+Features coming soon:
+- Backup data
+- Folders for more spaces

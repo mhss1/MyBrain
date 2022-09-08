@@ -2,8 +2,6 @@ package com.mhss.app.mybrain.presentation.main
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -20,7 +18,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mhss.app.mybrain.BuildConfig
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.settings.DonationItem
 import com.mhss.app.mybrain.presentation.settings.SettingsBasicLinkItem
 import com.mhss.app.mybrain.presentation.settings.SettingsItemCard
 import com.mhss.app.mybrain.presentation.settings.SettingsViewModel
@@ -32,7 +29,6 @@ import com.mhss.app.mybrain.util.settings.*
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val openDonationDialog = remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -171,41 +167,8 @@ fun SettingsScreen(
                     link = Constants.PROJECT_ROADMAP_LINK
                 )
             }
-
-            item {
-                SettingsBasicLinkItem(
-                    title = R.string.support_the_developer,
-                    icon = R.drawable.ic_heart,
-                    onClick = { openDonationDialog.value = true }
-                )
-            }
             item { Spacer(Modifier.height(60.dp)) }
         }
-        if (openDonationDialog.value)
-            AlertDialog(
-                title = { Text(text = stringResource(R.string.thank_you_for_support)) },
-                text = { Text(text = stringResource(R.string.support_with)) },
-                shape = RoundedCornerShape(25.dp),
-                onDismissRequest = { openDonationDialog.value = false },
-                buttons = {
-                    LazyRow(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp, horizontal = 12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        item {
-                            DonationItem("PayPal", Constants.PAYPAL_LINK, R.drawable.ic_paypal)
-                        }
-                        item {
-                            DonationItem("BuyMeACoffee", Constants.BUY_ME_A_COFFEE_LINK)
-                        }
-                        item {
-                            DonationItem("Ko-fi", Constants.KO_FI_LINK)
-                        }
-                    }
-                }
-            )
     }
 }
 

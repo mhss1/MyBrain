@@ -38,6 +38,8 @@ import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.*
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun CalendarScreen(
@@ -156,10 +158,12 @@ fun CalendarScreen(
                                 events.forEach { event ->
                                     CalendarEventItem(event = event, onClick = {
                                         val eventJson = Gson().toJson(event, CalendarEvent::class.java)
+                                        // encoding the string to avoid crashes when the event contains fields that equals a URL
+                                        val encodedJson = URLEncoder.encode(eventJson, StandardCharsets.UTF_8.toString())
                                         navController.navigate(
                                             Screen.CalendarEventDetailsScreen.route.replace(
                                                 "{${Constants.CALENDAR_EVENT_ARG}}",
-                                                eventJson
+                                                encodedJson
                                             )
                                         )
                                     })

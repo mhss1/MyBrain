@@ -39,7 +39,7 @@ fun MoodCircularBar(
         elevation = 8.dp,
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(6.dp)
     ) {
         Column(
             Modifier.clickable {
@@ -66,7 +66,7 @@ fun MoodCircularBar(
             }
             Text(
                 text = stringResource(R.string.mood_summary),
-                style = MaterialTheme.typography.h5,
+                style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
@@ -144,7 +144,7 @@ fun MoodCircularBar(
             } else {
                 Text(
                     text = stringResource(R.string.no_data_yet),
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.body1,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),

@@ -2,10 +2,8 @@ package com.mhss.app.mybrain.presentation.bookmarks
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -22,17 +20,15 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyItemScope.BookmarkItem(
+fun BookmarkItem(
     modifier: Modifier = Modifier,
     bookmark: Bookmark,
     onClick: (Bookmark) -> Unit,
     onInvalidUrl: () -> Unit
 ) {
     Card(
-        modifier = modifier
-            .animateItemPlacement(),
+        modifier = modifier,
         shape = RoundedCornerShape(20.dp),
         elevation = 8.dp
     ) {

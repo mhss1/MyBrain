@@ -6,9 +6,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -95,8 +96,8 @@ fun NotesScreen(
                 )
             }
         },
-    ) {
-        Column {
+    ) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
             TabRow(
                 selectedTabIndex = selectedTab,
                 backgroundColor = MaterialTheme.colors.background
@@ -176,13 +177,14 @@ fun NotesScreen(
                                             "-1"
                                         )
                                     )
-                                }
+                                },
+                                modifier = Modifier.animateItemPlacement()
                             )
                         }
                     }
                 } else {
                     LazyVerticalGrid(
-                        cells = GridCells.Adaptive(150.dp),
+                        columns = GridCells.Adaptive(150.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         contentPadding = PaddingValues(
@@ -207,7 +209,7 @@ fun NotesScreen(
                                             )
                                         )
                                     },
-                                    modifier = Modifier.height(220.dp)
+                                    modifier = Modifier.animateItemPlacement().height(220.dp)
                                 )
                             }
                         }
@@ -237,14 +239,13 @@ fun NotesScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FoldersTab(
     folders: List<NoteFolder>,
     onItemClick: (NoteFolder) -> Unit
 ) {
     LazyVerticalGrid(
-        cells = GridCells.Fixed(2),
+        columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(
