@@ -55,8 +55,6 @@
     <string name="delete_bookmark_confirmation_message">Sigur dorești ștergerea marcajului""?</string>
     <string name="delete_diary_entry_confirmation_message">Sigur dorești ștergerea acestei intrări""?</string>
     <string name="cancel">Anulare</string>
-    <string name="support_with">Sprijină prin:</string>
-    <string name="thank_you_for_support">Mulțumesc pentru sprijin ❤</string>
     <string name="no_tasks_message">Nu aveți nicio sarcină\n Faceți clic pe butonul + pentru a adăuga o nouă sarcină\n sau \nprin utilizarea comenzii rapide din meniul de setări rapide</string>
     <string name="no_notes_message">Nu aveți nicio notă\n Faceți clic pe butonul + pentru a adăuga o nouă notă</string>
     <string name="no_entries_message">Nu aveți nicio intrare\n Faceți clic pe butonul + pentru a adăuga o nouă intrare</string>

@@ -55,7 +55,7 @@
     <string name="delete_bookmark_confirmation_message">Are you sure you want to delete this bookmark""?</string>
     <string name="delete_diary_entry_confirmation_message">Are you sure you want to delete this entry""?</string>
     <string name="cancel">Cancel</string>
-    <string name="support_with">Support with:</string>
+    <string name="support_with">Support with :</string>
     <string name="thank_you_for_support">Thank you for your support ❤</string>
     <string name="no_tasks_message">You don\'t have any tasks\n Click the + button to add a new Task\n or \nby using the shortcut in the quick settings menu</string>
     <string name="no_notes_message">You don\'t have any notes\n Click the + button to add a new Note</string>
