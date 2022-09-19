@@ -56,8 +56,6 @@
     <string name="delete_bookmark_confirmation_message">Czy na pewno chcesz usunąć tą zakładkę&quot;&quot;</string>
     <string name="delete_diary_entry_confirmation_message">Czy na pewno chcesz usunąć ten wpis&quot;&quot;</string>
     <string name="cancel">Anuluj</string>
-    <string name="support_with">Możesz nas wesprzeć :</string>
-    <string name="thank_you_for_support">Dziękujemy za wsparcie ❤</string>
     <string name="no_tasks_message">Nie dodano żadnych zadań\nAby dodać nowe Zadanie kliknij przycisk +\n lub \nużyj skrótu na pasku szybkich ustawień</string>
     <string name="no_notes_message">Nie dodano żadnych notatek\n Aby dodać nową Notatkę kliknij przycisk +</string>
     <string name="no_entries_message">Nie dodano żadnych wpisów\n Aby dodać nowy wpis kliknij przycisk +</string>

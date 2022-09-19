@@ -56,8 +56,6 @@
     <string name="delete_bookmark_confirmation_message">هل أنت متأكد من حذف هذه العلامة المرجعية؟</string>
     <string name="delete_diary_entry_confirmation_message">هل أنت متأكد من حذف هذه من اليوميات؟</string>
     <string name="cancel">إلغاء</string>
-    <string name="support_with">الدعم بواسطة :</string>
-    <string name="thank_you_for_support">شكراً على دعمك ❤</string>
     <string name="no_tasks_message">ليس لديك أي مهام\n أظغط على زر + لإضافة مهام جديدة \n أو \n بواسطة الإختصار من قائمة الاعدادات السريعة بجهازك</string>
     <string name="no_notes_message">ليس لديك أي ملاحظات.\n اضغط على + لإضافة ملاحظة جديدة</string>
     <string name="no_entries_message">ليس لديك أي يوميات.\n اضغط على + لإضافة يومية جديدة</string>

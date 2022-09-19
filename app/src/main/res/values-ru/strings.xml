@@ -55,8 +55,6 @@
     <string name="delete_bookmark_confirmation_message">Вы уверены, что хотите удалить эту закладку?""</string>
     <string name="delete_diary_entry_confirmation_message">Вы уверены, что хотите удалить эту запись?""</string>
     <string name="cancel">Отмена</string>
-    <string name="support_with">Поддержать с помощью</string>
-    <string name="thank_you_for_support">Спасибо за поддержку ❤</string>
     <string name="no_tasks_message">У вас нет задач\nНажмите на  +, чтобы добавить новую задачу\nили используйте кнопку\nв меню быстрого доступа</string>
     <string name="no_notes_message">У вас нет заметок\nНажмите на +, чтобы добавить новую заметку</string>
     <string name="no_entries_message">У вас нет записей\nНажмите на +, чтобы добавить новую запись</string>

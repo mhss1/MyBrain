@@ -52,8 +52,6 @@
     <string name="delete_bookmark_confirmation_message">क्या आप वाकई इस बुकमार्क को हटाना चाहते हैं</string>
     <string name="delete_diary_entry_confirmation_message">क्या आप वाकई इस एंट्री को हटाना चाहते हैं</string>
     <string name="cancel">रद्द करे</string>
-    <string name="support_with">समर्थन करे:</string>
-    <string name="thank_you_for_support">आपके समर्थन के लिए धन्यवाद ❤</string>
     <string name="project_roadmap">प्रोजेक्ट रोडमैप</string>
     <string name="list">सूची</string>
     <string name="grid">ग्रिड</string>

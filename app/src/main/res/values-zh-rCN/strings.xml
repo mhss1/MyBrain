@@ -55,8 +55,6 @@
     <string name="delete_bookmark_confirmation_message">你确定要删除这个书签吗？</string>
     <string name="delete_diary_entry_confirmation_message">你确定要删除这篇日记吗？</string>
     <string name="cancel">取消</string>
-    <string name="support_with">可选方式:</string>
-    <string name="thank_you_for_support">感谢你的支持 ❤</string>
     <string name="no_tasks_message">目前没有待办事项\n 点击+按钮创建待办事项\n 或使用快速设置菜单中的快捷方式</string>
     <string name="no_notes_message">目前没有笔记\n 点击+按钮创建笔记</string>
     <string name="no_entries_message">目前没有日记\n 点击+按钮创建日记</string>
