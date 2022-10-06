@@ -55,9 +55,7 @@
     <string name="delete_bookmark_confirmation_message">Você deseja realmente remover este bookmark""</string>
     <string name="delete_diary_entry_confirmation_message">Você deseja realmente remover esta entrada""</string>
     <string name="cancel">Cancelar</string>
-    <string name="support_with">Ajude com :</string>
-    <string name="thank_you_for_support">Obrigado pela sua ajuda ❤</string>
-    <string name="no_tasks_message">Você não tem nenhuma tarefa\n Clique no botão + para adicionar uma nova Tarefa\n ou \nuse o atalho no menu das configurações rápidas
+    <string name="no_tasks_message">Você não tem nenhuma tarefa\n Clique no botão + para adicionar uma nova Tarefa\n ou \nuse o atalho no menu das configurações rápidas</string>
     <string name="no_notes_message">Você não tem nenhuma nota\n Clique no botão + para adicionar uma nova Nota</string>
     <string name="no_entries_message">Você não tem nenhuma entrada\n Clique no botão + para adicionar uma nova entrada</string>
     <string name="no_bookmarks_message">Você não tem nenhum favorito\n Clique no botão + para adicionar um novo favorito\n ou \nuse a opção de compartilhar de qualquer navegador</string>
@@ -150,4 +148,5 @@
     <string name="delete_folder_confirmation_message">Você tem certeza que deseja remover esta pasta e todo o seu conteúdo?</string>
     <string name="save">Salvar</string>
     <string name="edit_folder">Editar pasta</string>
+    <string name="block_screenshots">Block screenshots</string>
 </resources> 
