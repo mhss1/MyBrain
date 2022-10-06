@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -69,16 +69,15 @@ kotlin {
 }
 
 dependencies {
-    def nav_version = "2.5.1"
     def room_version = "2.4.3"
     def coroutines_version = "1.6.1"
 
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
-    implementation 'androidx.activity:activity-compose:1.5.1'
+    implementation 'androidx.activity:activity-compose:1.6.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -86,7 +85,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     // Compose navigation
-    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation "androidx.navigation:navigation-compose:2.5.2"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
 // Room
@@ -118,7 +117,7 @@ dependencies {
     implementation 'com.github.jeziellago:compose-markdown:0.2.9'
 
     // Compose Glance (Widgets)
-    implementation "androidx.glance:glance-appwidget:1.0.0-alpha03"
+    implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
 
 }
 
