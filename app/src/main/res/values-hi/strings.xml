@@ -148,4 +148,5 @@
     <string name="delete_folder_confirmation_message">क्या आप वाकई इस फ़ोल्डर और इसकी सभी सामग्री को हटाना चाहते हैं?</string>
     <string name="save">बचाना</string>
     <string name="edit_folder">फोल्डर संपादित करें</string>
+    <string name="block_screenshots">Block screenshots</string>
 </resources>

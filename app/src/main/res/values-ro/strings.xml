@@ -148,4 +148,5 @@
     <string name="delete_folder_confirmation_message">Sunteți sigur că doriți să ștergeți acest dosar și tot conținutul său?</string>
     <string name="save">Save</string>
     <string name="edit_folder">Editează dosarul</string>
+    <string name="block_screenshots">Block screenshots</string>
 </resources>

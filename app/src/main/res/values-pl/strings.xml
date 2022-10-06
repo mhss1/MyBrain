@@ -149,4 +149,5 @@
     <string name="delete_folder_confirmation_message">Czy </string>
     <string name="save">Zapisz</string>
     <string name="edit_folder">Edytuj folder</string>
+    <string name="block_screenshots">Block screenshots</string>
 </resources>

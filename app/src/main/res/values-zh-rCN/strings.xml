@@ -148,4 +148,5 @@
     <string name="delete_folder_confirmation_message">你确定要删除这个文件夹以及其中的内容吗？</string>
     <string name="save">保存</string>
     <string name="edit_folder">编辑文件夹</string>
+    <string name="block_screenshots">Block screenshots</string>
 </resources>

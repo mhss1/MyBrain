@@ -149,4 +149,5 @@
     <string name="delete_folder_confirmation_message">هل انت متأكد من حذف الملف و كل محنوياته؟</string>
     <string name="save">حفظ</string>
     <string name="edit_folder">تعديل الملف</string>
+    <string name="block_screenshots">منع لقطات الشاشة</string>
 </resources>

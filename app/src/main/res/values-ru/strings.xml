@@ -148,4 +148,5 @@
     <string name="delete_folder_confirmation_message">Вы уверены, что хотите удалить папку и всё её содержимое?</string>
     <string name="save">Сохранить</string>
     <string name="edit_folder">Редактировать папку</string>
+    <string name="block_screenshots">Block screenshots</string>
 </resources>

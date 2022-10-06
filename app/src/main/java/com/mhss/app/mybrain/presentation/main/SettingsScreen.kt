@@ -354,7 +354,7 @@ fun BlockScreenshotsSettingsItem(
         vPadding = 10.dp
     ) {
         Text(
-            text = "Block screenshots",
+            text = stringResource(R.string.block_screenshots),
             style = MaterialTheme.typography.h6
         )
         Switch(checked = block, onCheckedChange = {
