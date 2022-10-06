@@ -12,8 +12,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mhss.app.mybrain.BuildConfig
@@ -106,6 +106,23 @@ fun SettingsScreen(
                     viewModel.saveSettings(
                         intPreferencesKey(Constants.APP_FONT_KEY),
                         font
+                    )
+                }
+            }
+            item {
+                val block = viewModel
+                    .getSettings(
+                        booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY),
+                        false
+                    ).collectAsState(
+                        initial = false
+                    )
+                BlockScreenshotsSettingsItem(
+                    block.value
+                ){
+                    viewModel.saveSettings(
+                        booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY),
+                        it
                     )
                 }
             }
@@ -324,14 +341,24 @@ fun AppFontSettingsItem(
     }
 }
 
-@Preview
 @Composable
-fun ThemeItemPreview() {
-    ThemeSettingsItem()
-}
-
-@Preview
-@Composable
-fun StartUpItemPreview() {
-    StartUpScreenSettingsItem(0)
+fun BlockScreenshotsSettingsItem(
+    block: Boolean,
+    onBlockClick: (Boolean) -> Unit = {}
+) {
+    SettingsItemCard(
+        cornerRadius = 16.dp,
+        onClick = {
+            onBlockClick(!block)
+        },
+        vPadding = 10.dp
+    ) {
+        Text(
+            text = "Block screenshots",
+            style = MaterialTheme.typography.h6
+        )
+        Switch(checked = block, onCheckedChange = {
+            onBlockClick(it)
+        })
+    }
 }
