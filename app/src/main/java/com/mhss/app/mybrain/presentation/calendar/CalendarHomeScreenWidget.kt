@@ -36,7 +36,6 @@ fun CalendarHomeScreenWidget(
     ) {
         Column(
             modifier = GlanceModifier
-                .clickable(onClick = actionRunCallback<NavigateToCalendarAction>())
                 .padding(8.dp)
         ) {
             Row(
@@ -51,30 +50,33 @@ fun CalendarHomeScreenWidget(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     ),
-                    modifier = GlanceModifier.padding(horizontal = 8.dp),
+                    modifier = GlanceModifier
+                        .padding(horizontal = 8.dp)
+                        .clickable(onClick = actionRunCallback<NavigateToCalendarAction>())
+                    ,
                 )
                 Row(
-                    modifier = GlanceModifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = GlanceModifier
+                        .clickable(onClick = actionRunCallback<NavigateToCalendarAction>())
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
                     horizontalAlignment = Alignment.End
                 ) {
-                    Button(
-                        text = "",
+                    Image(
                         modifier = GlanceModifier
                             .size(22.dp)
-                            .background(ImageProvider(R.drawable.ic_refresh))
-                            .padding(8.dp)
-                        ,
-                        onClick = actionRunCallback<RefreshCalendarAction>()
+                            .clickable(actionRunCallback<RefreshCalendarAction>()),
+                        provider = ImageProvider(R.drawable.ic_refresh),
+                        contentDescription = "refresh"
                     )
                     Spacer(GlanceModifier.width(12.dp))
-                    Button(
-                        text = "",
+                    Image(
                         modifier = GlanceModifier
                             .size(22.dp)
-                            .background(ImageProvider(R.drawable.ic_add))
-                            .padding(8.dp)
+                            .clickable(actionRunCallback<AddEventAction>())
                         ,
-                        onClick = actionRunCallback<AddEventAction>()
+                        provider = ImageProvider(R.drawable.ic_add),
+                        contentDescription = "add event",
                     )
                 }
             }

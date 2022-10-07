@@ -32,22 +32,29 @@ fun TaskWidgetItem(
     task: Task
 ) {
     Box(
-        GlanceModifier
-            .padding(bottom = 3.dp)
-            .clickable(
-                onClick = actionRunCallback<TaskWidgetItemClickAction>(
-                    parameters = actionParametersOf(
-                        taskId to task.id
-                    )
-                )
-            )
+        GlanceModifier.padding(bottom = 3.dp)
     ) {
         Column(
             GlanceModifier
                 .background(ImageProvider(R.drawable.small_item_rounded_corner_shape))
                 .padding(10.dp)
+                .clickable(
+                    actionRunCallback<TaskWidgetItemClickAction>(
+                        parameters = actionParametersOf(
+                            taskId to task.id
+                        )
+                    )
+                )
         ) {
-            Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Row(GlanceModifier
+                .fillMaxWidth()
+                .clickable(
+                    actionRunCallback<TaskWidgetItemClickAction>(
+                    parameters = actionParametersOf(
+                        taskId to task.id
+                    )
+                ))
+                , verticalAlignment = Alignment.CenterVertically) {
                 TaskWidgetCheckBox(
                     isComplete = task.isCompleted,
                     task.priority.toPriority().color,
@@ -68,6 +75,12 @@ fun TaskWidgetItem(
                         textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
                     ),
                     maxLines = 2,
+                    modifier = GlanceModifier.clickable(actionRunCallback<CompleteTaskAction>(
+                        parameters = actionParametersOf(
+                            taskId to task.id,
+                            completed to !task.isCompleted
+                        )
+                    ))
                 )
             }
             if (task.dueDate != 0L) {

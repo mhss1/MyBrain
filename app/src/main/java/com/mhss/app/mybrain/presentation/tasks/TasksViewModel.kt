@@ -33,6 +33,7 @@ class TasksViewModel @Inject constructor(
     private val getAllTasks: GetAllTasksUseCase,
     private val getTaskUseCase: GetTaskByIdUseCase,
     private val updateTask: UpdateTaskUseCase,
+    private val completeTask: UpdateTaskCompletedUseCase,
     getSettings: GetSettingsUseCase,
     private val saveSettings: SaveSettingsUseCase,
     private val addAlarm: AddAlarmUseCase,
@@ -85,11 +86,7 @@ class TasksViewModel @Inject constructor(
                     tasksUiState = tasksUiState.copy(error = getString(R.string.error_empty_title))
             }
             is TaskEvent.CompleteTask -> viewModelScope.launch {
-                updateTask(
-                    event.task.copy(
-                        isCompleted = event.complete,
-                    )
-                )
+                completeTask(event.task.id, event.complete)
                 if (event.complete)
                 deleteAlarm(event.task.id)
             }
