@@ -28,9 +28,6 @@ fun MainBottomBar(
                     ,
                     contentDescription = stringResource(it.title),
                 ) },
-                label = {
-                    Text(stringResource(it.title), style = MaterialTheme.typography.body2)
-                },
                 selected = currentDestination?.route == it.route,
                 onClick = {
                     navController.navigate(it.route) {
