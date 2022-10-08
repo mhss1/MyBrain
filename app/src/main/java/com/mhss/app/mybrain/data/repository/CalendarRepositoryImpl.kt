@@ -26,10 +26,11 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                 CalendarContract.Events.DTEND,
                 CalendarContract.Events.EVENT_LOCATION,
                 CalendarContract.Events.ALL_DAY,
-                CalendarContract.Events.CALENDAR_COLOR,
+                CalendarContract.Events.EVENT_COLOR,
                 CalendarContract.Events.CALENDAR_ID,
                 CalendarContract.Events.RRULE,
                 CalendarContract.Events.DURATION,
+                CalendarContract.Events.CALENDAR_COLOR
             )
 
             val uri: Uri = CalendarContract.Events.CONTENT_URI
@@ -55,6 +56,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                     val location: String? = cur.getString(LOCATION_INDEX)
                     val allDay: Boolean = cur.getInt(ALL_DAY_INDEX) == 1
                     val color: Int = cur.getInt(COlOR_INDEX)
+                    val calendarColor: Int = cur.getInt(CALENDAR_COLOR_INDEX)
                     val calendarId: Long = cur.getLong(EVENT_CALENDAR_ID_INDEX)
                     val rrule: String = cur.getString(EVENT_RRULE_INDEX) ?: ""
                     val recurring: Boolean = rrule.isNotBlank()
@@ -68,7 +70,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                         end = end,
                         location = location,
                         allDay = allDay,
-                        color = color,
+                        color = if (color != 0) color else calendarColor,
                         calendarId = calendarId,
                         frequency = frequency,
                         recurring = recurring,
@@ -191,6 +193,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
         private const val EVENT_CALENDAR_ID_INDEX = 8
         private const val EVENT_RRULE_INDEX = 9
         private const val EVENT_DURATION_INDEX = 10
+        private const val CALENDAR_COLOR_INDEX = 11
 
         private const val CALENDAR_ID_INDEX: Int = 0
         private const val CALENDAR_NAME_INDEX: Int = 1
