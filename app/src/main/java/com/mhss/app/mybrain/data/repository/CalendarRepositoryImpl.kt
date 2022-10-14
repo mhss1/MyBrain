@@ -32,19 +32,33 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                 CalendarContract.Events.DURATION,
                 CalendarContract.Events.CALENDAR_COLOR
             )
+            val instancesProjection = arrayOf(
+                CalendarContract.Instances.EVENT_ID,
+                CalendarContract.Instances.TITLE,
+                CalendarContract.Instances.DESCRIPTION,
+                CalendarContract.Instances.BEGIN,
+                CalendarContract.Instances.END,
+                CalendarContract.Instances.EVENT_LOCATION,
+                CalendarContract.Instances.ALL_DAY,
+                CalendarContract.Instances.EVENT_COLOR,
+                CalendarContract.Instances.CALENDAR_ID,
+                CalendarContract.Instances.RRULE,
+                CalendarContract.Instances.DURATION,
+                CalendarContract.Instances.CALENDAR_COLOR
+            )
+            val contentResolver = context.contentResolver
+            val events = mutableListOf<CalendarEvent>()
 
             val uri: Uri = CalendarContract.Events.CONTENT_URI
-            val contentResolver = context.contentResolver
             val cur: Cursor? = contentResolver.query(
                 uri,
                 projection,
                 "${CalendarContract.Events.DTSTART} > ? AND ${CalendarContract.Events.DELETED} = 0",
                 // events today or in the future only
                 arrayOf(System.currentTimeMillis().toString()),
-                "${CalendarContract.Events.DTSTART} ASC"
+                null
             )
 
-            val events: MutableList<CalendarEvent> = mutableListOf()
             if (cur != null) {
                 while (cur.moveToNext()) {
                     val eventId: Long = cur.getLong(ID_INDEX)
@@ -60,8 +74,51 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                     val calendarId: Long = cur.getLong(EVENT_CALENDAR_ID_INDEX)
                     val rrule: String = cur.getString(EVENT_RRULE_INDEX) ?: ""
                     val recurring: Boolean = rrule.isNotBlank()
-                    val frequency: String = rrule.extractFrequency()
+//                    val frequency: String = rrule.extractFrequency()
 
+                    if (!recurring)
+                        events.add(CalendarEvent(
+                        id = eventId ,
+                        title = title,
+                        description = description,
+                        start = start,
+                        end = end,
+                        location = location,
+                        allDay = allDay,
+                        color = if (color != 0) color else calendarColor,
+                        calendarId = calendarId,
+                    ))
+                }
+                cur.close()
+            }
+
+            // get recurring events
+            val startM = java.util.Calendar.getInstance().timeInMillis
+            val endM = startM + 6 * 30 * 24 * 60 * 60 * 1000L
+            val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+            ContentUris.appendId(builder, startM)
+            ContentUris.appendId(builder, endM)
+            val curI = contentResolver.query(
+                builder.build(),
+                instancesProjection,
+                null, null, null
+            )
+            if (curI != null){
+                while (curI.moveToNext()){
+                    val eventId: Long = curI.getLong(ID_INDEX)
+                    val title: String = curI.getString(TITLE_INDEX) ?: continue
+                    val description: String? = curI.getString(DESC_INDEX)
+                    val start: Long = curI.getLong(START_INDEX)
+                    val duration: String = curI.getString(EVENT_DURATION_INDEX) ?: ""
+                    val end: Long = if (duration.isNotBlank()) duration.extractEndFromDuration(start) else curI.getLong(END_INDEX)
+                    val location: String? = curI.getString(LOCATION_INDEX)
+                    val allDay: Boolean = curI.getInt(ALL_DAY_INDEX) == 1
+                    val color: Int = curI.getInt(COlOR_INDEX)
+                    val calendarColor: Int = curI.getInt(CALENDAR_COLOR_INDEX)
+                    val calendarId: Long = curI.getLong(EVENT_CALENDAR_ID_INDEX)
+                    val rrule: String = curI.getString(EVENT_RRULE_INDEX) ?: ""
+                    val recurring: Boolean = rrule.isNotBlank()
+                    val frequency: String = rrule.extractFrequency()
                     events.add(CalendarEvent(
                         id = eventId,
                         title = title,
@@ -76,10 +133,9 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                         recurring = recurring,
                     ))
                 }
-                cur.close()
-                events
-            }else
-                emptyList()
+                curI.close()
+            }
+            events.sortedBy { it.start }
         }
     }
 

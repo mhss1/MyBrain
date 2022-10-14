@@ -111,7 +111,7 @@ fun CalendarHomeScreenWidget(
                                         .padding(start = 4.dp, end = 4.dp)
                                 ) {
                                     Text(
-                                        text = day,
+                                        text = day.substring(0, day.indexOf(",")),
                                         style = TextStyle(
                                             color = ColorProvider(Color.White),
                                             fontWeight = FontWeight.Normal,

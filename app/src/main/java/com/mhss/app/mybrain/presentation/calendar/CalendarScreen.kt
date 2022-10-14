@@ -152,7 +152,7 @@ fun CalendarScreen(
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                             ) {
                                 Text(
-                                    text = day,
+                                    text = day.substring(0, day.indexOf(",")),
                                     style = MaterialTheme.typography.h5
                                 )
                                 events.forEach { event ->
