@@ -150,4 +150,5 @@
     <string name="delete_folder_confirmation_message">Bist du dir sicher das du diesen Ordner und dessen Inhalt löschen möchtest?</string>
     <string name="save">Speichern</string>
     <string name="edit_folder">Ordner bearbeiten</string>
+    <string name="block_screenshots">Bildschirmfotos blockieren</string>
 </resources>
