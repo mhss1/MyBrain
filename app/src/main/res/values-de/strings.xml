@@ -55,8 +55,6 @@
     <string name="delete_bookmark_confirmation_message">Dieses Lesezeichen wirklich löschen?:""</string>
     <string name="delete_diary_entry_confirmation_message">Diesen Eintrag wirklich löschen?:""</string>
     <string name="cancel">Abbrechen</string>
-    <string name="support_with">Mit Unterstützung von :</string>
-    <string name="thank_you_for_support">Danke für deine Unterstützung ❤</string>
     <string name="no_tasks_message">Du hast noch keine Aufgaben\n Klicke auf den + Button um eine neue\n Aufgabe oder \nin dem du den Shortcut in den\n Schnelleinstellungen benutzt</string>
     <string name="no_notes_message">Du hast noch keine Notizen\n Klicke auf den + Butten um eine neue Notiz hinzuzufügen</string>
     <string name="no_entries_message">Du hast noch keine Einträge\n Klicke auf den + Button um einen neuen Eintrag hinzuzufügen</string>
@@ -151,4 +149,11 @@
     <string name="save">Speichern</string>
     <string name="edit_folder">Ordner bearbeiten</string>
     <string name="block_screenshots">Bildschirmfotos blockieren</string>
+    <string name="export_import">Export/Import</string>
+    <string name="export">Export</string>
+    <string name="export_success">Successfully exported data to \"Documents/MyBrain Backup\"</string>
+    <string name="export_failed">Something went wrong while exporting</string>
+    <string name="import_data">Import data</string>
+    <string name="import_success">Successfully imported %1$s</string>
+    <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
 </resources>
