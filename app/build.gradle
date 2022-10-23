@@ -104,7 +104,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.9.1'
 
     // Preferences DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
@@ -121,11 +121,13 @@ dependencies {
     implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
 
     //Moshi
-    implementation "com.squareup.moshi:moshi:1.8.0"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.8.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:2.7.1"
+
+    // Compose live data
+    implementation "androidx.compose.runtime:runtime-livedata:1.2.1"
 }
 
 kapt {
