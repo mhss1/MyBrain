@@ -158,4 +158,5 @@
     <string name="import_success">Successfully imported %1$s</string>
     <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
     <string name="grant_permission_to_export">Grant permission to export</string>
+    <string name="importing">Importing....</string>
 </resources>

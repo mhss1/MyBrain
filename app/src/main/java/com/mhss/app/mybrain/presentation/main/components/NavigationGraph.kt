@@ -24,7 +24,7 @@ fun NavigationGraph(
             SpacesScreen(mainNavController)
         }
         composable(Screen.SettingsScreen.route){
-            SettingsScreen()
+            SettingsScreen(mainNavController)
         }
     }
 }

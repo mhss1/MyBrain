@@ -32,6 +32,7 @@ import com.mhss.app.mybrain.presentation.diary.DiarySearchScreen
 import com.mhss.app.mybrain.presentation.notes.NoteDetailsScreen
 import com.mhss.app.mybrain.presentation.notes.NotesScreen
 import com.mhss.app.mybrain.presentation.notes.NotesSearchScreen
+import com.mhss.app.mybrain.presentation.settings.ImportExportScreen
 import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
@@ -244,6 +245,9 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
                             )
+                        }
+                        composable(Screen.ImportExportScreen.route) {
+                            ImportExportScreen()
                         }
                     }
                 }

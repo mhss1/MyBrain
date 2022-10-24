@@ -42,4 +42,11 @@ object Constants {
     const val GITHUB_ISSUES_LINK = "https://github.com/mhss1/ByBrain/issues"
     const val GITHUB_RELEASES_LINK = "https://github.com/mhss1/ByBrain/releases"
 
+    // Backup
+    const val EXPORT_DIR = "MyBrain Export"
+    const val BACKUP_NOTES_FILE_NAME = "mybrain_notes.txt"
+    const val BACKUP_TASKS_FILE_NAME = "mybrain_tasks.txt"
+    const val BACKUP_DIARY_FILE_NAME = "mybrain_diary.txt"
+    const val BACKUP_BOOKMARKS_FILE_NAME = "mybrain_bookmarks.txt"
+
 }
