@@ -9,23 +9,26 @@
     <!-- For reminders -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- to start the alarms after restart. (By default, all alarms are canceled when a device shuts down) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- For backup    -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+         android:maxSdkVersion="28"/>
 
     <application
         android:name=".app.MyBrainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBrain"
-        android:localeConfig="@xml/locales_config"
         tools:targetApi="33">
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MyBrain"
-            android:windowSoftInputMode="adjustResize"
-            >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -95,8 +98,8 @@
         <receiver
             android:name=".presentation.glance_widgets.CalendarWidgetReceiver"
             android:enabled="@bool/glance_appwidget_available"
-            android:label="@string/calendar"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/calendar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -111,9 +114,10 @@
             android:enabled="@bool/glance_appwidget_available"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.PROVIDER_CHANGED"/>
-                <data android:scheme="content"/>
-                <data android:host="com.android.calendar"/>
+                <action android:name="android.intent.action.PROVIDER_CHANGED" />
+
+                <data android:scheme="content" />
+                <data android:host="com.android.calendar" />
             </intent-filter>
         </receiver>
 
@@ -121,8 +125,8 @@
         <receiver
             android:name=".presentation.glance_widgets.TasksWidgetReceiver"
             android:enabled="@bool/glance_appwidget_available"
-            android:label="@string/tasks"
-            android:exported="false">
+            android:exported="false"
+            android:label="@string/tasks">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -134,8 +138,14 @@
         <receiver
             android:name=".presentation.glance_widgets.CompleteTaskWidgetReceiver"
             android:enabled="@bool/glance_appwidget_available"
-            android:exported="false">
-        </receiver>
+            android:exported="false" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
+
+
     </application>
 
 </manifest>

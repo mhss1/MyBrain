@@ -23,6 +23,9 @@ interface NoteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: Note)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertNotes(notes: List<Note>)
+
     @Update
     suspend fun updateNote(note: Note)
 
@@ -31,6 +34,9 @@ interface NoteDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertNoteFolder(folder: NoteFolder)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertNoteFolders(folders: List<NoteFolder>)
 
     @Update
     suspend fun updateNoteFolder(folder: NoteFolder)

@@ -19,6 +19,9 @@ interface DiaryDao {
     @Insert
     suspend fun insertEntry(diary: DiaryEntry)
 
+    @Insert
+    suspend fun insertEntries(diary: List<DiaryEntry>)
+
     @Update
     suspend fun updateEntry(diary: DiaryEntry)
 

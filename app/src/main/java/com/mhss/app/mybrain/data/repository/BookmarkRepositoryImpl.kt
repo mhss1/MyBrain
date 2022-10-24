@@ -14,7 +14,7 @@ class BookmarkRepositoryImpl(
 ) : BookmarkRepository {
 
     override fun getAllBookmarks(): Flow<List<Bookmark>> {
-        return bookmarkDao.getAll()
+        return bookmarkDao.getAllBookmarks()
     }
 
     override suspend fun getBookmark(id: Int): Bookmark {
