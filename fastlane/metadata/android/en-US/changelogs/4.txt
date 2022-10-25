@@ -1,0 +1,7 @@
+- Added export/import data
+- Added block screenshots option
+- Added Romanian translation by @SebiTalent04
+- Added Brazilian Portuguese translation by @abChimp
+- Added German translation by @SteveMutter
+- Fixed recurring events shows only one instance
+- Bug fixes
