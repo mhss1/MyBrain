@@ -148,14 +148,14 @@
     <string name="delete_folder_confirmation_message">你确定要删除这个文件夹以及其中的内容吗？</string>
     <string name="save">保存</string>
     <string name="edit_folder">编辑文件夹</string>
-    <string name="block_screenshots">Block screenshots</string>
-    <string name="export_import">Export/Import</string>
-    <string name="export">Export</string>
-    <string name="export_success">Successfully exported data to \"Documents/MyBrain Export\"</string>
-    <string name="export_failed">Something went wrong while exporting</string>
-    <string name="import_data">Import data</string>
-    <string name="import_success">Successfully imported %1$s</string>
-    <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
-    <string name="grant_permission_to_export">Grant permission to export</string>
-    <string name="importing">Importing....</string>
+    <string name="block_screenshots">阻止截屏</string>
+    <string name="export_import">导出/导入数据</string>
+    <string name="export">导出数据</string>
+    <string name="export_success">数据已导出至\"Documents/MyBrain Export\"</string>
+    <string name="export_failed">导出失败</string>
+    <string name="import_data">导入数据</string>
+    <string name="import_success">已成功导入 %1$s</string>
+    <string name="import_failed">导入失败，请确认文件名及内容无误</string>
+    <string name="grant_permission_to_export">获取导出权限</string>
+    <string name="importing">导入中....</string>
 </resources>
