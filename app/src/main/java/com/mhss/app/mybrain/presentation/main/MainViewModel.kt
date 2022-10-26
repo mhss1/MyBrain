@@ -43,6 +43,7 @@ class MainViewModel @Inject constructor(
     val themeMode = getSettings(intPreferencesKey(Constants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value)
     val defaultStartUpScreen = getSettings(intPreferencesKey(Constants.DEFAULT_START_UP_SCREEN_KEY), StartUpScreenSettings.SPACES.value)
     val font = getSettings(intPreferencesKey(Constants.APP_FONT_KEY), Rubik.toInt())
+    val blockScreenshots = getSettings(booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY), false)
 
     fun onDashboardEvent(event: DashboardEvent) {
         when(event) {

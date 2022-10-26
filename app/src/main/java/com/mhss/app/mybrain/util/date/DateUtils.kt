@@ -21,8 +21,8 @@ fun Long.fullDate(): String {
     return sdf.format(this)
 }
 
-fun Long.formatDay(): String {
-    val sdf = SimpleDateFormat("EEEE d", Locale.getDefault())
+fun Long.formatDateForMapping(): String {
+    val sdf = SimpleDateFormat("EEEE d, MMM yyy", Locale.getDefault())
     return sdf.format(this)
 }
 

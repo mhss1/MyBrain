@@ -30,13 +30,6 @@ fun CalendarEventWidgetItem(
     Box(
         GlanceModifier
             .padding(vertical = 4.dp)
-            .clickable(
-            onClick = actionRunCallback<CalendarWidgetItemClick>(
-                parameters = actionParametersOf(
-                    eventJson to Gson().toJson(event, CalendarEvent::class.java)
-                )
-            )
-        )
     ) {
         Box(
             modifier = GlanceModifier
@@ -81,6 +74,13 @@ fun CalendarEventWidgetItem(
                     )
                 }
             }
+            Box(GlanceModifier.fillMaxSize().clickable(
+                actionRunCallback<CalendarWidgetItemClick>(
+                    parameters = actionParametersOf(
+                        eventJson to Gson().toJson(event, CalendarEvent::class.java)
+                    )
+                )
+            )) {}
         }
     }
 }

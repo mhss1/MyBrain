@@ -23,4 +23,5 @@ sealed class Screen(val route: String) {
     object CalendarScreen : Screen("calendar_screen")
     object CalendarEventDetailsScreen : Screen("calendar_event_details_screen/{${Constants.CALENDAR_EVENT_ARG}}")
     object NoteFolderDetailsScreen : Screen("note_folder_details_screen/{${Constants.FOLDER_ID}}")
+    object ImportExportScreen : Screen("import_export_screen")
 }

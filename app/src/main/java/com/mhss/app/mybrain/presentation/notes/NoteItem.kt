@@ -30,7 +30,7 @@ fun NoteItem(
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
-        elevation = 12.dp
+        elevation = 4.dp
     ) {
         Column(
             modifier = Modifier
@@ -61,7 +61,7 @@ fun NoteItem(
             Spacer(Modifier.height(8.dp))
             MarkdownText(
                 markdown = note.content,
-                maxLines = 8,
+                maxLines = 14,
                 onClick = {onClick(note)},
                 fontSize = 12.sp
             )

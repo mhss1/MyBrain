@@ -56,8 +56,6 @@
     <string name="delete_bookmark_confirmation_message">هل أنت متأكد من حذف هذه العلامة المرجعية؟</string>
     <string name="delete_diary_entry_confirmation_message">هل أنت متأكد من حذف هذه من اليوميات؟</string>
     <string name="cancel">إلغاء</string>
-    <string name="support_with">الدعم بواسطة :</string>
-    <string name="thank_you_for_support">شكراً على دعمك ❤</string>
     <string name="no_tasks_message">ليس لديك أي مهام\n أظغط على زر + لإضافة مهام جديدة \n أو \n بواسطة الإختصار من قائمة الاعدادات السريعة بجهازك</string>
     <string name="no_notes_message">ليس لديك أي ملاحظات.\n اضغط على + لإضافة ملاحظة جديدة</string>
     <string name="no_entries_message">ليس لديك أي يوميات.\n اضغط على + لإضافة يومية جديدة</string>
@@ -151,4 +149,14 @@
     <string name="delete_folder_confirmation_message">هل انت متأكد من حذف الملف و كل محنوياته؟</string>
     <string name="save">حفظ</string>
     <string name="edit_folder">تعديل الملف</string>
+    <string name="block_screenshots">منع لقطات الشاشة</string>
+    <string name="export_import">تصدير\استيراد البيانات</string>
+    <string name="export">تصدير</string>
+    <string name="export_success">تم تصدير البيانات الى \"Documents/MyBrain Export\"</string>
+    <string name="export_failed">حدث خطأ أثناء التصدير</string>
+    <string name="import_data">استيراد البيانات</string>
+    <string name="import_success">تم تصدير %1$s</string>
+    <string name="import_failed">حدث خطأ أثناء الاستيراد. تأكد من عدم نغيير اسم الملف او المحتوى</string>
+    <string name="grant_permission_to_export">منح اذن التخزين للتصدير</string>
+    <string name="importing">يتم الاستيراد....</string>
 </resources>

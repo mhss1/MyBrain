@@ -20,6 +20,7 @@ object Constants {
     const val DIARY_ORDER_KEY = "diary_order"
     const val EXCLUDED_CALENDARS_KEY = "excluded_calendars"
     const val APP_FONT_KEY = "app_font"
+    const val BLOCK_SCREENSHOTS_KEY = "block_screen_shots"
 
     // Navigation
     const val TASK_ID_ARG = "task_id"
@@ -40,5 +41,12 @@ object Constants {
     const val PRIVACY_POLICY_LINK = "https://github.com/mhss1/ByBrain/blob/master/privacy-policy.md"
     const val GITHUB_ISSUES_LINK = "https://github.com/mhss1/ByBrain/issues"
     const val GITHUB_RELEASES_LINK = "https://github.com/mhss1/ByBrain/releases"
+
+    // Backup
+    const val EXPORT_DIR = "MyBrain Export"
+    const val BACKUP_NOTES_FILE_NAME = "mybrain_notes.txt"
+    const val BACKUP_TASKS_FILE_NAME = "mybrain_tasks.txt"
+    const val BACKUP_DIARY_FILE_NAME = "mybrain_diary.txt"
+    const val BACKUP_BOOKMARKS_FILE_NAME = "mybrain_bookmarks.txt"
 
 }

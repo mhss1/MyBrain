@@ -52,8 +52,6 @@
     <string name="delete_bookmark_confirmation_message">क्या आप वाकई इस बुकमार्क को हटाना चाहते हैं</string>
     <string name="delete_diary_entry_confirmation_message">क्या आप वाकई इस एंट्री को हटाना चाहते हैं</string>
     <string name="cancel">रद्द करे</string>
-    <string name="support_with">समर्थन करे:</string>
-    <string name="thank_you_for_support">आपके समर्थन के लिए धन्यवाद ❤</string>
     <string name="project_roadmap">प्रोजेक्ट रोडमैप</string>
     <string name="list">सूची</string>
     <string name="grid">ग्रिड</string>
@@ -150,4 +148,14 @@
     <string name="delete_folder_confirmation_message">क्या आप वाकई इस फ़ोल्डर और इसकी सभी सामग्री को हटाना चाहते हैं?</string>
     <string name="save">बचाना</string>
     <string name="edit_folder">फोल्डर संपादित करें</string>
+    <string name="block_screenshots">Block screenshots</string>
+    <string name="export_import">Export/Import</string>
+    <string name="export">Export</string>
+    <string name="export_success">Successfully exported data to \"Documents/MyBrain Export\"</string>
+    <string name="export_failed">Something went wrong while exporting</string>
+    <string name="import_data">Import data</string>
+    <string name="import_success">Successfully imported %1$s</string>
+    <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
+    <string name="grant_permission_to_export">Grant permission to export</string>
+    <string name="importing">Importing....</string>
 </resources>

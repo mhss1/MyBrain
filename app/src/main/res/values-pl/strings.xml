@@ -56,8 +56,6 @@
     <string name="delete_bookmark_confirmation_message">Czy na pewno chcesz usunąć tą zakładkę&quot;&quot;</string>
     <string name="delete_diary_entry_confirmation_message">Czy na pewno chcesz usunąć ten wpis&quot;&quot;</string>
     <string name="cancel">Anuluj</string>
-    <string name="support_with">Możesz nas wesprzeć :</string>
-    <string name="thank_you_for_support">Dziękujemy za wsparcie ❤</string>
     <string name="no_tasks_message">Nie dodano żadnych zadań\nAby dodać nowe Zadanie kliknij przycisk +\n lub \nużyj skrótu na pasku szybkich ustawień</string>
     <string name="no_notes_message">Nie dodano żadnych notatek\n Aby dodać nową Notatkę kliknij przycisk +</string>
     <string name="no_entries_message">Nie dodano żadnych wpisów\n Aby dodać nowy wpis kliknij przycisk +</string>
@@ -151,4 +149,14 @@
     <string name="delete_folder_confirmation_message">Czy </string>
     <string name="save">Zapisz</string>
     <string name="edit_folder">Edytuj folder</string>
+    <string name="block_screenshots">Block screenshots</string>
+    <string name="export_import">Export/Import</string>
+    <string name="export">Export</string>
+    <string name="export_success">Successfully exported data to \"Documents/MyBrain Export\"</string>
+    <string name="export_failed">Something went wrong while exporting</string>
+    <string name="import_data">Import data</string>
+    <string name="import_success">Successfully imported %1$s</string>
+    <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
+    <string name="grant_permission_to_export">Grant permission to export</string>
+    <string name="importing">Importing....</string>
 </resources>

@@ -2,11 +2,11 @@ package com.mhss.app.mybrain.presentation.notes
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -73,9 +73,8 @@ fun NotesSearchScreen(
                 }
             }
         } else {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(150.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Adaptive(150.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(12.dp)
             ){
@@ -94,7 +93,7 @@ fun NotesSearchScreen(
                                     )
                                 )
                             },
-                            modifier = Modifier.animateItemPlacement().height(220.dp)
+                            modifier = Modifier.padding(bottom = 12.dp)
                         )
                     }
                 }

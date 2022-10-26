@@ -9,18 +9,29 @@ import androidx.annotation.StringRes
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.util.Constants
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.SETTINGS_PREFERENCES)
 
 @HiltAndroidApp
-class MyBrainApplication : Application() {
+class MyBrainApplication : Application(), Configuration.Provider {
 
     companion object {
         lateinit var appContext: Context
     }
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 
     override fun onCreate() {
         super.onCreate()

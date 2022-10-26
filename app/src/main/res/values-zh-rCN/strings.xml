@@ -55,8 +55,6 @@
     <string name="delete_bookmark_confirmation_message">你确定要删除这个书签吗？</string>
     <string name="delete_diary_entry_confirmation_message">你确定要删除这篇日记吗？</string>
     <string name="cancel">取消</string>
-    <string name="support_with">可选方式:</string>
-    <string name="thank_you_for_support">感谢你的支持 ❤</string>
     <string name="no_tasks_message">目前没有待办事项\n 点击+按钮创建待办事项\n 或使用快速设置菜单中的快捷方式</string>
     <string name="no_notes_message">目前没有笔记\n 点击+按钮创建笔记</string>
     <string name="no_entries_message">目前没有日记\n 点击+按钮创建日记</string>
@@ -150,4 +148,14 @@
     <string name="delete_folder_confirmation_message">你确定要删除这个文件夹以及其中的内容吗？</string>
     <string name="save">保存</string>
     <string name="edit_folder">编辑文件夹</string>
+    <string name="block_screenshots">阻止截屏</string>
+    <string name="export_import">导出/导入数据</string>
+    <string name="export">导出数据</string>
+    <string name="export_success">数据已导出至\"Documents/MyBrain Export\"</string>
+    <string name="export_failed">导出失败</string>
+    <string name="import_data">导入数据</string>
+    <string name="import_success">已成功导入 %1$s</string>
+    <string name="import_failed">导入失败，请确认文件名及内容无误</string>
+    <string name="grant_permission_to_export">获取导出权限</string>
+    <string name="importing">导入中....</string>
 </resources>

@@ -26,8 +26,8 @@ fun CalendarEvent.getEventDuration(): String {
 
 fun String.extractEndFromDuration(start: Long): Long {
     return try {
-        val duration = this.substring(1, this.length - 1)
-        start + duration.toLong()
+        val duration = this.substring(1, this.length - 1).toLong() * 1000
+        start + duration
     }catch (e: Exception) {
         start
     }

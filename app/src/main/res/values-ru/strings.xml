@@ -55,8 +55,6 @@
     <string name="delete_bookmark_confirmation_message">Вы уверены, что хотите удалить эту закладку?""</string>
     <string name="delete_diary_entry_confirmation_message">Вы уверены, что хотите удалить эту запись?""</string>
     <string name="cancel">Отмена</string>
-    <string name="support_with">Поддержать с помощью</string>
-    <string name="thank_you_for_support">Спасибо за поддержку ❤</string>
     <string name="no_tasks_message">У вас нет задач\nНажмите на  +, чтобы добавить новую задачу\nили используйте кнопку\nв меню быстрого доступа</string>
     <string name="no_notes_message">У вас нет заметок\nНажмите на +, чтобы добавить новую заметку</string>
     <string name="no_entries_message">У вас нет записей\nНажмите на +, чтобы добавить новую запись</string>
@@ -150,4 +148,14 @@
     <string name="delete_folder_confirmation_message">Вы уверены, что хотите удалить папку и всё её содержимое?</string>
     <string name="save">Сохранить</string>
     <string name="edit_folder">Редактировать папку</string>
+    <string name="block_screenshots">Block screenshots</string>
+    <string name="export_import">Export/Import</string>
+    <string name="export">Export</string>
+    <string name="export_success">Successfully exported data to \"Documents/MyBrain Export\"</string>
+    <string name="export_failed">Something went wrong while exporting</string>
+    <string name="import_data">Import data</string>
+    <string name="import_success">Successfully imported %1$s</string>
+    <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
+    <string name="grant_permission_to_export">Grant permission to export</string>
+    <string name="importing">Importing....</string>
 </resources>

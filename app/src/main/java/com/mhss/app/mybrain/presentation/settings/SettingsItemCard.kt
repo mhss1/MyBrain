@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 fun SettingsItemCard(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 25.dp,
+    hPadding: Dp = 12.dp,
+    vPadding: Dp = 16.dp,
     onClick: () -> Unit = {},
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -28,7 +30,7 @@ fun SettingsItemCard(
             Modifier
                 .fillMaxWidth()
                 .clickable { onClick() }
-                .padding(horizontal = 12.dp, vertical = 16.dp),
+                .padding(horizontal = hPadding, vertical = vPadding),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = content

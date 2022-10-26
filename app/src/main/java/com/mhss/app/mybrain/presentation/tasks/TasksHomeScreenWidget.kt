@@ -33,9 +33,7 @@ fun TasksHomeScreenWidget(
             .cornerRadius(25.dp)
     ) {
         Column(
-            modifier = GlanceModifier
-                .clickable(onClick = actionRunCallback<NavigateToTasksAction>())
-                .padding(8.dp)
+            modifier = GlanceModifier.padding(8.dp)
         ) {
             Row(
                 GlanceModifier.fillMaxWidth(),
@@ -49,20 +47,24 @@ fun TasksHomeScreenWidget(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     ),
-                    modifier = GlanceModifier.padding(horizontal = 8.dp),
+                    modifier = GlanceModifier
+                        .padding(horizontal = 8.dp)
+                        .clickable(actionRunCallback<NavigateToTasksAction>()),
                 )
                 Row(
-                    modifier = GlanceModifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                        .clickable(actionRunCallback<NavigateToTasksAction>()),
                     horizontalAlignment = Alignment.End
                 ) {
-                    Button(
-                        text = "",
+                    Image(
+                        provider = ImageProvider(R.drawable.ic_add),
                         modifier = GlanceModifier
                             .size(22.dp)
-                            .background(ImageProvider(R.drawable.ic_add))
-                            .padding(8.dp)
+                            .clickable(actionRunCallback<AddTaskAction>())
                         ,
-                        onClick = actionRunCallback<AddTaskAction>()
+                        contentDescription = "Add task"
                     )
                 }
             }

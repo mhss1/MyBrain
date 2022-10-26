@@ -1,6 +1,7 @@
 package com.mhss.app.mybrain.presentation.main
 
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -31,6 +32,7 @@ import com.mhss.app.mybrain.presentation.diary.DiarySearchScreen
 import com.mhss.app.mybrain.presentation.notes.NoteDetailsScreen
 import com.mhss.app.mybrain.presentation.notes.NotesScreen
 import com.mhss.app.mybrain.presentation.notes.NotesSearchScreen
+import com.mhss.app.mybrain.presentation.settings.ImportExportScreen
 import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
@@ -58,12 +60,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             val themeMode = viewModel.themeMode.collectAsState(initial = ThemeSettings.AUTO.value)
             val font = viewModel.font.collectAsState(initial = Rubik.toInt())
+            val blockScreenshots = viewModel.blockScreenshots.collectAsState(initial = false)
             var startUpScreenSettings by remember { mutableStateOf(StartUpScreenSettings.SPACES.value) }
             val systemUiController = rememberSystemUiController()
             LaunchedEffect(true) {
                 runBlocking {
                     startUpScreenSettings = viewModel.defaultStartUpScreen.first()
                 }
+            }
+            LaunchedEffect(blockScreenshots.value) {
+                if (blockScreenshots.value) {
+                    window.setFlags(
+                        LayoutParams.FLAG_SECURE,
+                        LayoutParams.FLAG_SECURE
+                    )
+                } else
+                    window.clearFlags(LayoutParams.FLAG_SECURE)
             }
             val startUpScreen =
                 if (startUpScreenSettings == StartUpScreenSettings.SPACES.value)
@@ -233,6 +245,9 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
                             )
+                        }
+                        composable(Screen.ImportExportScreen.route) {
+                            ImportExportScreen()
                         }
                     }
                 }
