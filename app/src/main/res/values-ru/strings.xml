@@ -151,7 +151,7 @@
     <string name="block_screenshots">Запретить скриншоты</string>
     <string name="export_import">Экспорт/Импорт</string>
     <string name="export">Экспортировать данные</string>
-    <string name="export_success">Данные успешно экспортированы в \n\"Documents/MyBrain Export\"</string>
+    <string name="export_success">Данные успешно экспортированы в\n\"Documents/MyBrain Export\"</string>
     <string name="export_failed">Что-то пошло не так при экспорте</string>
     <string name="import_data">Импортировать данные</string>
     <string name="import_success">Успешно импортировал %1$s</string>
