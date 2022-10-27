@@ -102,8 +102,8 @@
     <string name="include_calendars">Include calendars :</string>
     <string name="added_task">Added to tasks</string>
     <string name="diary_chart">Diary chart</string>
-    <string name="mood_during_month">You mood during the month</string>
-    <string name="mood_during_year">You mood during the year</string>
+    <string name="mood_during_month">Your mood during the month</string>
+    <string name="mood_during_year">Your mood during the year</string>
     <string name="percent">%1$d%%</string>
     <string name="mood_flow">Mood flow</string>
     <string name="mood_summary">Mood summary</string>
@@ -155,7 +155,7 @@
     <string name="export_failed">Something went wrong while exporting</string>
     <string name="import_data">Import data</string>
     <string name="import_success">Successfully imported %1$s</string>
-    <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
+    <string name="import_failed">Something went wrong while importing. Make sure that the file name and content are not corrupted</string>
     <string name="grant_permission_to_export">Grant permission to export</string>
     <string name="importing">Importing....</string>
 </resources>
