@@ -148,14 +148,14 @@
     <string name="delete_folder_confirmation_message">Вы уверены, что хотите удалить папку и всё её содержимое?</string>
     <string name="save">Сохранить</string>
     <string name="edit_folder">Редактировать папку</string>
-    <string name="block_screenshots">Block screenshots</string>
-    <string name="export_import">Export/Import</string>
-    <string name="export">Export</string>
-    <string name="export_success">Successfully exported data to \"Documents/MyBrain Export\"</string>
-    <string name="export_failed">Something went wrong while exporting</string>
-    <string name="import_data">Import data</string>
-    <string name="import_success">Successfully imported %1$s</string>
-    <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
-    <string name="grant_permission_to_export">Grant permission to export</string>
-    <string name="importing">Importing....</string>
+    <string name="block_screenshots">Запретить скриншоты</string>
+    <string name="export_import">Экспорт/Импорт</string>
+    <string name="export">Экспортировать данные</string>
+    <string name="export_success">Данные успешно экспортированы в \n\"Documents/MyBrain Export\"</string>
+    <string name="export_failed">Что-то пошло не так при экспорте</string>
+    <string name="import_data">Импортировать данные</string>
+    <string name="import_success">Успешно импортировал %1$s</string>
+    <string name="import_failed">Что-то пошло не так при импорте.\nУбедитесь, что имя файла правильное, и содержимое не повреждено</string>
+    <string name="grant_permission_to_export">Предоставьте разрешение, чтобы экспортировать</string>
+    <string name="importing">Импортирование....</string>
 </resources>
