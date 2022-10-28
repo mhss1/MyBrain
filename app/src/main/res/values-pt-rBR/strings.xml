@@ -148,14 +148,14 @@
     <string name="delete_folder_confirmation_message">Você tem certeza que deseja remover esta pasta e todo o seu conteúdo?</string>
     <string name="save">Salvar</string>
     <string name="edit_folder">Editar pasta</string>
-    <string name="block_screenshots">Block screenshots</string>
-    <string name="export_import">Export/Import</string>
-    <string name="export">Export</string>
-    <string name="export_success">Successfully exported data to \"Documents/MyBrain Export\"</string>
-    <string name="export_failed">Something went wrong while exporting</string>
-    <string name="import_data">Import data</string>
-    <string name="import_success">Successfully imported %1$s</string>
-    <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
-    <string name="grant_permission_to_export">Grant permission to export</string>
-    <string name="importing">Importing....</string>
+    <string name="block_screenshots">Bloquear captura de tela</string>
+    <string name="export_import">Exportar/Importar</string>
+    <string name="export">Exportar</string>
+    <string name="export_success">Arquivos exportados com sucesso para \"Documents/MyBrain Export\"</string>
+    <string name="export_failed">Algo deu errado ao exportar</string>
+    <string name="import_data">Importar arquivo</string>
+    <string name="import_success">Importado com sucesso %1$s</string>
+    <string name="import_failed">Algo deu errado ao importar. Assegure-se que o nome do arquivo e o conteúdo não estão corrompidos</string>
+    <string name="grant_permission_to_export">Conceda permissão para exportar</string>
+    <string name="importing">Importando....</string>
 </resources>
