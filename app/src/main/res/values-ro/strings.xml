@@ -20,7 +20,7 @@
     <string name="notes">Note</string>
     <string name="tasks">Sarcini</string>
     <string name="diary">Jurnal</string>
-    <string name="bookmarks">Marcaj</string>
+    <string name="bookmarks">Marcaje</string>
     <string name="calendar">Calendar</string>
     <string name="add_task">Adaugă sarcină</string>
     <string name="add_task_to_my_brain">Adaugă sarcina la My Brain</string>
@@ -148,14 +148,14 @@
     <string name="delete_folder_confirmation_message">Sunteți sigur că doriți să ștergeți acest dosar și tot conținutul său?</string>
     <string name="save">Save</string>
     <string name="edit_folder">Editează dosarul</string>
-    <string name="block_screenshots">Block screenshots</string>
-    <string name="export_import">Export/Import</string>
-    <string name="export">Export</string>
-    <string name="export_success">Successfully exported data to \"Documents/MyBrain Export\"</string>
-    <string name="export_failed">Something went wrong while exporting</string>
-    <string name="import_data">Import data</string>
-    <string name="import_success">Successfully imported %1$s</string>
-    <string name="import_failed">Something went wrong while importing. make sure that the file name and content are not corrupted</string>
-    <string name="grant_permission_to_export">Grant permission to export</string>
-    <string name="importing">Importing....</string>
+    <string name="block_screenshots">Blochează capturile de ecran</string>
+    <string name="export_import">Exportă/Importă</string>
+    <string name="export">Exportă</string>
+    <string name="export_success">Date exportate cu succes în \"Documents/MyBrain Export\"</string>
+    <string name="export_failed">Ceva nu a mers în timpul importării</string>
+    <string name="import_data">Importă date</string>
+    <string name="import_success">%1$s importat cu succes</string>
+    <string name="import_failed">Ceva nu a mers în timpul importării. Asigurați-vă că numele fișerului și conținutul nu sunt corupte</string>
+    <string name="grant_permission_to_export">Acordă permisiunea pentru a exporta</string>
+    <string name="importing">Se importă....</string>
 </resources>
