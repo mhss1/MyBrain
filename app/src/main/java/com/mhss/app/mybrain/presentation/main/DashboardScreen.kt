@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -20,6 +19,8 @@ import com.mhss.app.mybrain.presentation.diary.MoodCircularBar
 import com.mhss.app.mybrain.presentation.tasks.TasksDashboardWidget
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun DashboardScreen(
@@ -65,10 +66,13 @@ fun DashboardScreen(
                         )
                     },
                     onEventClicked = {
+                        val eventJson = Gson().toJson(it, CalendarEvent::class.java)
+                        // encoding the string to avoid crashes when the event contains fields that equals a URL
+                        val encodedJson = URLEncoder.encode(eventJson, StandardCharsets.UTF_8.toString())
                         navController.navigate(
                             Screen.CalendarEventDetailsScreen.route.replace(
                                 "{${Constants.CALENDAR_EVENT_ARG}}",
-                                Gson().toJson(it, CalendarEvent::class.java)
+                                encodedJson
                             )
                         )
                     }
