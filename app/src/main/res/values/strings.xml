@@ -102,8 +102,8 @@
     <string name="include_calendars">Include calendars :</string>
     <string name="added_task">Added to tasks</string>
     <string name="diary_chart">Diary chart</string>
-    <string name="mood_during_month">You mood during the month</string>
-    <string name="mood_during_year">You mood during the year</string>
+    <string name="mood_during_month">Your mood during the month</string>
+    <string name="mood_during_year">Your mood during the year</string>
     <string name="percent">%1$d%%</string>
     <string name="mood_flow">Mood flow</string>
     <string name="mood_summary">Mood summary</string>
