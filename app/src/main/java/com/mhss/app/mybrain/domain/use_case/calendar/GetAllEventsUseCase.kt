@@ -8,11 +8,17 @@ import javax.inject.Inject
 class GetAllEventsUseCase @Inject constructor(
     private val calendarRepository: CalendarRepository
 ) {
-    suspend operator fun invoke(excluded: List<Int>): Map<String, List<CalendarEvent>> {
-        return calendarRepository.getEvents()
+    suspend operator fun invoke(excluded: List<Int>, fromWidget: Boolean = false): Map<String, List<CalendarEvent>> {
+        val events =  calendarRepository.getEvents()
             .filter { it.calendarId.toInt() !in excluded }
-            .groupBy { event ->
-                    event.start.formatDateForMapping()
+        return if (fromWidget)
+            events.take(60).groupBy { event ->
+                event.start.formatDateForMapping()
             }
+        else
+            events.groupBy { event ->
+                event.start.formatDateForMapping()
+            }
+
     }
 }

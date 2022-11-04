@@ -78,7 +78,7 @@ class CalendarWidgetReceiver : GlanceAppWidgetReceiver() {
                     stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
                     emptySet()
                 ).first()
-                val events = gson.toJson(getAllEventsUseCase(includedCalendars.toIntList()), type)
+                val events = gson.toJson(getAllEventsUseCase(includedCalendars.toIntList(), true), type)
                 val glanceId =
                     GlanceAppWidgetManager(context).getGlanceIds(CalendarHomeWidget::class.java).firstOrNull()
 

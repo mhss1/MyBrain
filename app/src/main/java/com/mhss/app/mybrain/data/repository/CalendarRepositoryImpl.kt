@@ -119,6 +119,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                     val rrule: String = curI.getString(EVENT_RRULE_INDEX) ?: ""
                     val recurring: Boolean = rrule.isNotBlank()
                     val frequency: String = rrule.extractFrequency()
+                    if (recurring)
                     events.add(CalendarEvent(
                         id = eventId,
                         title = title,
@@ -130,7 +131,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                         color = if (color != 0) color else calendarColor,
                         calendarId = calendarId,
                         frequency = frequency,
-                        recurring = recurring,
+                        recurring = true,
                     ))
                 }
                 curI.close()
@@ -211,7 +212,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                 put(CalendarContract.Events.TITLE, event.title)
                 put(CalendarContract.Events.DESCRIPTION, event.description)
                 put(CalendarContract.Events.DTSTART, event.start)
-                if (event.recurring){
+                if (event.recurring && event.frequency.isNotBlank()){
                     val end: Long? = null
                     put(CalendarContract.Events.RRULE, event.getEventRRule())
                     put(CalendarContract.Events.DURATION, event.getEventDuration())

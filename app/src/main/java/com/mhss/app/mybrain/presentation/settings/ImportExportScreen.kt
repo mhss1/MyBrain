@@ -88,7 +88,7 @@ fun ImportExportScreen() {
                 onClick = {
                     if (Build.VERSION.SDK_INT < 29 && !writeStoragePermission.hasPermission) {
                         writeStoragePermission.launchPermissionRequest()
-                    } else if (Build.VERSION.SDK_INT < 29 && !writeStoragePermission.shouldShowRationale) {
+                    } else if (Build.VERSION.SDK_INT < 29 && !writeStoragePermission.hasPermission && !writeStoragePermission.shouldShowRationale ) {
                         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         intent.data = Uri.fromParts(
                             "package",

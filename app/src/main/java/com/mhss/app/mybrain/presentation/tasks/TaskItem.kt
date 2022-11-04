@@ -63,7 +63,7 @@ fun LazyItemScope.TaskItem(
                     style = MaterialTheme.typography.h6,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    textDecoration = if (task.isCompleted) TextDecoration.LineThrough else null
+                    textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
                 )
             }
             if (task.dueDate != 0L) {
