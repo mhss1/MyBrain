@@ -1,0 +1,5 @@
+- Updated translations
+- Fixed new calendar event duplicates
+- Fixed strike-through remains on task after marking it incomplete
+- Fixed clicking on "Export data" navigates to app settings
+- Fixed Export data fails in android 9 and lower

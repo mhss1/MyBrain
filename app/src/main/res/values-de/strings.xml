@@ -55,8 +55,6 @@
     <string name="delete_bookmark_confirmation_message">Dieses Lesezeichen wirklich löschen?""</string>
     <string name="delete_diary_entry_confirmation_message">Diesen Eintrag wirklich löschen?""</string>
     <string name="cancel">Abbrechen</string>
-    <string name="support_with">Mit Unterstützung von :</string>
-    <string name="thank_you_for_support">Danke für deine Unterstützung ❤</string>
     <string name="no_tasks_message">Du hast noch keine Aufgaben\n Klicke auf das + Symbol eine neue\n Aufgabe zu erstellen.\n Oder nutze den Shortcut in den\n Schnelleinstellungen</string>
     <string name="no_notes_message">Du hast noch keine Notizen\n Klicke auf das + Symbol eine neue Notiz zu erstellen</string>
     <string name="no_entries_message">Du hast noch keine Einträge\n Klicke auf das + Symbol um einen neuen Eintrag zu erstellen</string>

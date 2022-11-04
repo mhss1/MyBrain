@@ -90,6 +90,7 @@ class ExportWorker @AssistedInject constructor(
     }
 
     private fun getFileUri(name: String): Uri? {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         val projection = arrayOf(
             MediaStore.Files.FileColumns._ID,
             MediaStore.Files.FileColumns.DISPLAY_NAME
@@ -118,6 +119,15 @@ class ExportWorker @AssistedInject constructor(
             }
         }
         return null
+    } else {
+            val docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+            val file = File(docs.path + File.separator + "${Constants.EXPORT_DIR}/", name)
+            if (!file.exists()) {
+                file.parentFile?.mkdirs()
+                file.createNewFile()
+            }
+            return Uri.fromFile(file)
+        }
     }
 
 }
