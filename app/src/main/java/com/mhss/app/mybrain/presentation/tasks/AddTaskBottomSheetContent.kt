@@ -43,6 +43,11 @@ fun AddTaskBottomSheetContent(
     val subTasks = remember { mutableStateListOf<SubTask>() }
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
     val context = LocalContext.current
+    val formattedDate by remember {
+        derivedStateOf {
+            dueDate.timeInMillis.formatDateDependingOnDay()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -168,7 +173,7 @@ fun AddTaskBottomSheetContent(
                     )
                 }
                 Text(
-                    text = dueDate.timeInMillis.formatDateDependingOnDay(),
+                    text = formattedDate,
                     style = MaterialTheme.typography.body2
                 )
             }

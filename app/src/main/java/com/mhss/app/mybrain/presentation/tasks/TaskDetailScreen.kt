@@ -53,6 +53,12 @@ fun TaskDetailScreen(
     val subTasks = remember { mutableStateListOf<SubTask>() }
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
     val context = LocalContext.current
+    val formattedDate by remember {
+        derivedStateOf {
+            dueDate.formatDateDependingOnDay()
+        }
+    }
+
     LaunchedEffect(uiState.task) {
         title = uiState.task.title
         description = uiState.task.description
@@ -251,7 +257,7 @@ fun TaskDetailScreen(
                         )
                     }
                     Text(
-                        text = dueDate.formatDateDependingOnDay(),
+                        text = formattedDate,
                         style = MaterialTheme.typography.body2
                     )
                 }
