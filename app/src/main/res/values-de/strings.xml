@@ -145,7 +145,7 @@
     <string name="change_folder">Ordner wechseln</string>
     <string name="none">Keine</string>
     <string name="delete_folder">Ordner löschen</string>
-    <string name="delete_folder_confirmation_message">Bist du dir sicher das du diesen Ordner und dessen Inhalt löschen möchtest?</string>
+    <string name="delete_folder_confirmation_message">Bist du dir sicher, dass du diesen Ordner und dessen Inhalt löschen möchtest?</string>
     <string name="save">Speichern</string>
     <string name="edit_folder">Ordner bearbeiten</string>
     <string name="block_screenshots">Bildschirmfotos blockieren</string>
@@ -155,7 +155,7 @@
     <string name="export_failed">Export fehlgeschlagen</string>
     <string name="import_data">Daten importieren</string>
     <string name="import_success">Import Erfolgreich %1$s</string>
-    <string name="import_failed">Import fehlgeschlagen. Stelle sicher das der Dateiname und Inhalt richtig ist</string>
+    <string name="import_failed">Import fehlgeschlagen. Stelle sicher, dass der Dateiname und Inhalt richtig ist</string>
     <string name="grant_permission_to_export">Berechtigung zum Export notwendig</string>
     <string name="importing">Importiere...</string>
 </resources>
