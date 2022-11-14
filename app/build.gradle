@@ -121,7 +121,7 @@ dependencies {
     implementation 'com.github.jeziellago:compose-markdown:0.2.9'
 
     // Compose Glance (Widgets)
-    implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
+    implementation "androidx.glance:glance-appwidget:1.0.0-alpha03"
 
     //Moshi
     implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
