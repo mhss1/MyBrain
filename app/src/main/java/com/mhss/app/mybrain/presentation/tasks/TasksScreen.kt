@@ -218,6 +218,7 @@ fun TasksSettingsSection(
 ) {
     val orders = listOf(
         Order.DateModified(),
+        Order.DueDate(),
         Order.DateCreated(),
         Order.Alphabetical(),
         Order.Priority()

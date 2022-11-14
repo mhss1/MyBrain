@@ -20,6 +20,7 @@ class GetAllTasksUseCase @Inject constructor(
                         is Order.DateCreated -> tasks.sortedBy { it.createdDate }
                         is Order.DateModified -> tasks.sortedBy { it.updatedDate }
                         is Order.Priority -> tasks.sortedBy { it.priority }
+                        is Order.DueDate -> tasks.sortedWith(compareBy({ it.dueDate == 0L }, { it.dueDate }))
                     }
                 }
                 is OrderType.DESC -> {
@@ -28,6 +29,7 @@ class GetAllTasksUseCase @Inject constructor(
                         is Order.DateCreated -> tasks.sortedByDescending { it.createdDate }
                         is Order.DateModified -> tasks.sortedByDescending { it.updatedDate }
                         is Order.Priority -> tasks.sortedByDescending { it.priority }
+                        is Order.DueDate -> tasks.sortedWith(compareBy({ it.dueDate == 0L }, { it.dueDate })).reversed()
                     }
                 }
             }

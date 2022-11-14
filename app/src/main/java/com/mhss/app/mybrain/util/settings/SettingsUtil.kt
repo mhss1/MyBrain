@@ -50,6 +50,12 @@ sealed class Order(val orderType: OrderType, val orderTitle: String){
             return this.copy(type = orderType)
         }
     }
+
+    data class DueDate(val type: OrderType = OrderType.ASC(), val title: String = getString(R.string.due_date)) : Order(type, title) {
+        override fun copy(orderType: OrderType): Order {
+            return this.copy(type = orderType)
+        }
+    }
 }
 
 enum class Priority( @StringRes val title: Int, val color: Color) {
@@ -91,10 +97,12 @@ fun Int.toOrder(): Order {
         1 -> Order.DateCreated(OrderType.ASC())
         2 -> Order.DateModified(OrderType.ASC())
         3 -> Order.Priority(OrderType.ASC())
+        8 -> Order.DueDate(OrderType.ASC())
         4 -> Order.Alphabetical(OrderType.DESC())
         5 -> Order.DateCreated(OrderType.DESC())
         6 -> Order.DateModified(OrderType.DESC())
         7 -> Order.Priority(OrderType.DESC())
+        9 -> Order.DueDate(OrderType.DESC())
         else -> Order.Alphabetical(OrderType.ASC())
     }
 }
@@ -106,6 +114,7 @@ fun Order.toInt(): Int {
                 is Order.DateCreated -> 1
                 is Order.DateModified -> 2
                 is Order.Priority -> 3
+                is Order.DueDate -> 8
             }
         }
         is OrderType.DESC -> {
@@ -114,6 +123,7 @@ fun Order.toInt(): Int {
                 is Order.DateCreated -> 5
                 is Order.DateModified -> 6
                 is Order.Priority -> 7
+                is Order.DueDate -> 9
             }
         }
     }
