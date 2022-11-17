@@ -7,9 +7,9 @@
     <string name="dashboard">Dashboard</string>
     <string name="settings">Einstellungen</string>
     <string name="spaces">Übersicht</string>
-    <string name="app_theme">App Theme</string>
-    <string name="light_theme">Helles Theme</string>
-    <string name="dark_theme">Dunkles Theme</string>
+    <string name="app_theme">App Design</string>
+    <string name="light_theme">Helles Design</string>
+    <string name="dark_theme">Dunkles Design</string>
     <string name="auto_theme">Auto</string>
     <string name="start_up_screen">Startbildschirm</string>
     <string name="about">Über</string>
@@ -26,7 +26,7 @@
     <string name="add_task_to_my_brain">Aufgabe zu My Brain hinzufügen</string>
     <string name="search">Suche</string>
     <string name="title">Titel</string>
-    <string name="delete_sub_task">Unteraugabe löschen</string>
+    <string name="delete_sub_task">Unteraufgabe löschen</string>
     <string name="add_sub_task">Unteraufgabe hinzufügen</string>
     <string name="description">Beschreibung</string>
     <string name="request_feature_report_bug">Fordere ein Feature an / Melde einen Fehler</string>
@@ -42,7 +42,7 @@
     <string name="date_modified">Änderungsdatum</string>
     <string name="ascending">Aufsteigend</string>
     <string name="descending">Absteigend</string>
-    <string name="show_completed_tasks">Komplette Aufgabe anzeigen</string>
+    <string name="show_completed_tasks">Erledigte Aufgaben anzeigen</string>
     <string name="search_tasks">Aufgabe suchen</string>
     <string name="save_task">Aufgabe speichern</string>
     <string name="delete_task">Aufgabe löschen</string>
@@ -74,7 +74,7 @@
     <string name="add_to_tasks">Zu Aufgaben hinzufügen</string>
     <string name="bookmark_saved">Lesezeichen erfolgreich gespeichert</string>
     <string name="invalid_url">Ungültige URL</string>
-    <string name="add_bookmark">füge Lesezeichen hinzu</string>
+    <string name="add_bookmark">Füge Lesezeichen hinzu</string>
     <string name="open_link">Link öffnen</string>
     <string name="search_bookmarks">Lesezeichen suchen</string>
     <string name="delete_bookmark">Lesezeichen löschen</string>
@@ -91,15 +91,15 @@
     <string name="save_entry">Eintrag speichern</string>
     <string name="search_diary">Tagebuch suchen</string>
     <string name="mood">Stimmung</string>
-    <string name="event_time_at">%1$s - %2$s at %3$s</string>
+    <string name="event_time_at">%1$s - %2$s um %3$s</string>
     <string name="event_time">%1$s - %2$s</string>
     <string name="all_day">Ganztags</string>
     <string name="no_read_calendar_permission_message">Dieses Feature benötigt Leserechte\n für deinen Kalender.\n Bitte erteile deine Erlaubnis</string>
     <string name="no_write_calendar_permission_message">Dieses Feature benötigt Schreibrechte\n für deinen Kalender.\n Bitte erteile deine Erlaubnis</string>
     <string name="grant_permission">Erlaubnis erteilen</string>
-    <string name="go_to_settings">Gehe zu Einstellungen</string>
+    <string name="go_to_settings">Gehe zu den Einstellungen</string>
     <string name="add_event">Ereignis hinzufügen</string>
-    <string name="include_calendars">anzuzeigende Kalender:</string>
+    <string name="include_calendars">Anzuzeigende Kalender:</string>
     <string name="added_task">Zu Aufgaben hinzugefügt</string>
     <string name="diary_chart">Tagebuch Diagramm</string>
     <string name="mood_during_month">Deine Stimmung in diesem Monat</string>
@@ -112,13 +112,13 @@
     <string name="last_30_days">In den letzten 30 Tagen</string>
     <string name="last_year">Im letzten Jahr</string>
     <string name="no_data_yet">Keine Daten</string>
-    <string name="no_events">Keine Ereignis</string>
+    <string name="no_events">Keine Ereignisse</string>
     <string name="tasks_summary">Aufgaben Anzahl</string>
     <string name="you_completed">Du bist fertig</string>
     <string name="of_last_week_tasks">mit den Aufgaben der letzten Woche</string>
     <string name="no_tasks_yet">Keine Aufgaben</string>
-    <string name="loading">Lade…</string>
-    <string name="calendar_widget_refresh_message">Drücke den Aktualisieren Button wenn du die Erlaubnis bereits erteilt hast</string>
+    <string name="loading">Lade...</string>
+    <string name="calendar_widget_refresh_message">Drücke den Aktualisieren Button wenn du bereits die Erlaubnis erteilt hast</string>
     <string name="thursday_30_calendar_preview">Donnerstag 30</string>
     <string name="sunday_5_calendar_preview">Sonntag 5</string>
     <string name="dinner_with_ali_calender_preview">Abendessen mit Ali</string>
@@ -145,7 +145,7 @@
     <string name="change_folder">Ordner wechseln</string>
     <string name="none">Keine</string>
     <string name="delete_folder">Ordner löschen</string>
-    <string name="delete_folder_confirmation_message">Bist du dir sicher das du diesen Ordner und dessen Inhalt löschen möchtest?</string>
+    <string name="delete_folder_confirmation_message">Bist du dir sicher, dass du diesen Ordner und dessen Inhalt löschen möchtest?</string>
     <string name="save">Speichern</string>
     <string name="edit_folder">Ordner bearbeiten</string>
     <string name="block_screenshots">Bildschirmfotos blockieren</string>
@@ -155,7 +155,7 @@
     <string name="export_failed">Export fehlgeschlagen</string>
     <string name="import_data">Daten importieren</string>
     <string name="import_success">Import Erfolgreich %1$s</string>
-    <string name="import_failed">Import fehlgeschlagen. Stelle sicher das der Dateiname und Inhalt richtig ist</string>
+    <string name="import_failed">Import fehlgeschlagen. Stelle sicher, dass der Dateiname und Inhalt richtig ist</string>
     <string name="grant_permission_to_export">Berechtigung zum Export notwendig</string>
-    <string name="importing">Importiere....</string>
+    <string name="importing">Importiere...</string>
 </resources>
