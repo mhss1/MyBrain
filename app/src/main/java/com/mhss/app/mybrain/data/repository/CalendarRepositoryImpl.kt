@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
+import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Calendar
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.domain.repository.CalendarRepository
@@ -230,6 +231,31 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
             context.contentResolver.update(updateUri, values, null, null)
         }
     }
+
+    override suspend fun createCalendar() {
+        withContext(Dispatchers.IO){
+            val uri = CalendarContract.Calendars.CONTENT_URI.asSyncAdapter(context.getString(R.string.app_name), CalendarContract.ACCOUNT_TYPE_LOCAL)
+            val values = ContentValues().apply {
+                put(CalendarContract.Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
+                put(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, context.getString(R.string.app_name))
+                put(CalendarContract.Calendars.NAME, context.getString(R.string.app_name))
+                put(CalendarContract.Calendars.ACCOUNT_NAME, context.getString(R.string.app_name))
+                put(CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL, CalendarContract.Calendars.CAL_ACCESS_OWNER)
+                put(CalendarContract.Calendars.CALENDAR_COLOR, 0x03DAC5)
+                put(CalendarContract.Calendars.VISIBLE, 1)
+                put(CalendarContract.Calendars.SYNC_EVENTS, 1)
+            }
+            context.contentResolver.insert(uri, values)
+        }
+    }
+
+    fun Uri.asSyncAdapter(account: String, accountType: String): Uri {
+        return buildUpon()
+            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+            .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account)
+            .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType).build()
+    }
+
 
     override suspend fun deleteEvent(event: CalendarEvent) {
         withContext(Dispatchers.IO){

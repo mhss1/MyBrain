@@ -12,7 +12,14 @@ class AddCalendarEventUseCase @Inject constructor(
     private val context: Context
 ) {
     suspend operator fun invoke(calendarEvent: CalendarEvent) {
-        calendarEventRepository.addEvent(calendarEvent)
+        val calendars = calendarEventRepository.getCalendars()
+        if (calendars.isNotEmpty()) {
+            calendarEventRepository.addEvent(calendarEvent)
+        } else {
+            calendarEventRepository.createCalendar()
+            val calendar = calendarEventRepository.getCalendars().first()
+            calendarEventRepository.addEvent(calendarEvent.copy(calendarId = calendar.id))
+        }
         val updateIntent = Intent(context, RefreshCalendarWidgetReceiver::class.java)
         context.sendBroadcast(updateIntent)
     }
