@@ -59,7 +59,7 @@
     <string name="no_notes_message">Du hast noch keine Notizen\n Klicke auf das + Symbol eine neue Notiz zu erstellen</string>
     <string name="no_entries_message">Du hast noch keine Einträge\n Klicke auf das + Symbol um einen neuen Eintrag zu erstellen</string>
     <string name="no_bookmarks_message">Du hast noch keine Lesezeichen\n Klicke auf das + Symbol um ein neues\n Lesezeichen hinzuzufügen\n oder \nnutze die Teilen Funktion deines Browsers</string>
-    <string name="project_roadmap">Projekt Fahrplan</string>
+    <string name="project_roadmap">Projektplan</string>
     <string name="list">Liste</string>
     <string name="grid">Gitter</string>
     <string name="note_content">Notizinhalt (unterstützt Markdown)</string>
@@ -69,7 +69,7 @@
     <string name="reading_mode">Lesemodus</string>
     <string name="view_as">Zeige als</string>
     <string name="search_notes">Suche nach Titel oder Inhalt</string>
-    <string name="add_note">Füge Notiz hinzu</string>
+    <string name="add_note">Notiz hinzufügen</string>
     <string name="save_bookmark">Lesezeichen Link</string>
     <string name="add_to_tasks">Zu Aufgaben hinzufügen</string>
     <string name="bookmark_saved">Lesezeichen erfolgreich gespeichert</string>
