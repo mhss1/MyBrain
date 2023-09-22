@@ -45,8 +45,8 @@ fun SettingsScreen(
                 elevation = 0.dp,
             )
         }
-    ) {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+    ) { paddingValues ->
+        LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = paddingValues) {
             item {
                 val theme = viewModel
                     .getSettings(

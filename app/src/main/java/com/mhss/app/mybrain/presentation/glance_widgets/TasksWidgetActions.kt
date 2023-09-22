@@ -10,7 +10,7 @@ import com.mhss.app.mybrain.presentation.main.MainActivity
 import com.mhss.app.mybrain.util.Constants
 
 class AddTaskAction : ActionCallback {
-    override suspend fun onRun(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
+    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val intent = Intent(
             Intent.ACTION_VIEW,
             "${Constants.TASKS_SCREEN_URI}/true".toUri(),
@@ -22,7 +22,7 @@ class AddTaskAction : ActionCallback {
 }
 
 class NavigateToTasksAction : ActionCallback {
-    override suspend fun onRun(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
+    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val intent = Intent(
             Intent.ACTION_VIEW,
             "${Constants.TASKS_SCREEN_URI}/false".toUri(),
@@ -34,7 +34,7 @@ class NavigateToTasksAction : ActionCallback {
 }
 
 class TaskWidgetItemClickAction : ActionCallback {
-    override suspend fun onRun(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
+    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         parameters[taskId]?.let {
             val intent = Intent(
                 Intent.ACTION_VIEW,
@@ -48,7 +48,7 @@ class TaskWidgetItemClickAction : ActionCallback {
 }
 
 class CompleteTaskAction : ActionCallback {
-    override suspend fun onRun(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
+    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         parameters[taskId]?.let { id ->
             parameters[completed].let { completed ->
                 val intent = Intent(context, CompleteTaskWidgetReceiver::class.java)

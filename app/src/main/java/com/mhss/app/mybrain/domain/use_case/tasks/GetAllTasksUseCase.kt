@@ -11,7 +11,7 @@ import javax.inject.Inject
 class GetAllTasksUseCase @Inject constructor(
     private val tasksRepository: TaskRepository
 ) {
-    operator fun invoke(order: Order): Flow<List<Task>> {
+    operator fun invoke(order: Order, showCompleted: Boolean = true): Flow<List<Task>> {
         return tasksRepository.getAllTasks().map { tasks ->
             when (order.orderType) {
                 is OrderType.ASC -> {
@@ -33,6 +33,11 @@ class GetAllTasksUseCase @Inject constructor(
                     }
                 }
             }
+        }.map { list ->
+            if (showCompleted)
+                list
+            else
+                list.filter { !it.isCompleted }
         }
     }
 }
