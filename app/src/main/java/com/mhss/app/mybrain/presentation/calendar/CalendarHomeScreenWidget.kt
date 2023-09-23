@@ -1,12 +1,9 @@
 package com.mhss.app.mybrain.presentation.calendar
 
-import android.content.pm.PackageManager
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.glance.*
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionRunCallback
@@ -29,14 +26,8 @@ import com.mhss.app.mybrain.presentation.glance_widgets.RefreshCalendarAction
 @Composable
 fun CalendarHomeScreenWidget(
     events: Map<String, List<CalendarEvent>>,
+    permissionGranted: Boolean
 ) {
-    val context = LocalContext.current
-    val permissionGranted = remember {
-        ContextCompat.checkSelfPermission(
-            context,
-            android.Manifest.permission.READ_CALENDAR
-        ) == PackageManager.PERMISSION_GRANTED
-    }
     Box(
         modifier = GlanceModifier
             .fillMaxWidth()
@@ -145,7 +136,8 @@ fun CalendarHomeScreenWidget(
                         text = getString(R.string.no_read_calendar_permission_message),
                         modifier = GlanceModifier.padding(16.dp),
                         style = TextStyle(
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            color = ColorProvider(Color.White)
                         )
                     )
                     Spacer(GlanceModifier.height(4.dp))

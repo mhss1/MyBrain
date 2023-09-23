@@ -120,8 +120,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
                     val rrule: String = curI.getString(EVENT_RRULE_INDEX) ?: ""
                     val recurring: Boolean = rrule.isNotBlank()
                     val frequency: String = rrule.extractFrequency()
-                    if (recurring)
-                    events.add(CalendarEvent(
+                    if (recurring) events.add(CalendarEvent(
                         id = eventId,
                         title = title,
                         description = description,
