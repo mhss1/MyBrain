@@ -158,4 +158,5 @@
     <string name="import_failed">Algo deu errado ao importar. Assegure-se que o nome do arquivo e o conteúdo não estão corrompidos</string>
     <string name="grant_permission_to_export">Conceda permissão para exportar</string>
     <string name="importing">Importando....</string>
+    <string name="recurring">Recurring</string>
 </resources>

@@ -159,4 +159,5 @@
     <string name="import_failed">حدث خطأ أثناء الاستيراد. تأكد من عدم نغيير اسم الملف او المحتوى</string>
     <string name="grant_permission_to_export">منح اذن التخزين للتصدير</string>
     <string name="importing">يتم الاستيراد....</string>
+    <string name="recurring">متكرر</string>
 </resources>

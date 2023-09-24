@@ -69,7 +69,7 @@ fun TasksScreen(
             FloatingActionButton(
                 onClick = {
                     scope.launch {
-                        sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                        sheetState.show()
                         focusRequester.requestFocus()
                     }
                 },
@@ -83,8 +83,9 @@ fun TasksScreen(
                 )
             }
         },
-    ) {
+    ) {paddingValues ->
         ModalBottomSheetLayout(
+            modifier = Modifier.padding(paddingValues),
             sheetState = sheetState,
             sheetShape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
             sheetContent = {
@@ -107,7 +108,7 @@ fun TasksScreen(
             }
             LaunchedEffect(true){
                 if (addTask) scope.launch {
-                    sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                    sheetState.show()
                     focusRequester.requestFocus()
                 }
             }
@@ -218,6 +219,7 @@ fun TasksSettingsSection(
 ) {
     val orders = listOf(
         Order.DateModified(),
+        Order.DueDate(),
         Order.DateCreated(),
         Order.Alphabetical(),
         Order.Priority()

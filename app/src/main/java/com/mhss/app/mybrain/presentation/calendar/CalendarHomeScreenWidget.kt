@@ -26,7 +26,7 @@ import com.mhss.app.mybrain.presentation.glance_widgets.RefreshCalendarAction
 @Composable
 fun CalendarHomeScreenWidget(
     events: Map<String, List<CalendarEvent>>,
-    permissionGranted: Boolean
+    hasPermission: Boolean
 ) {
     Box(
         modifier = GlanceModifier
@@ -53,7 +53,6 @@ fun CalendarHomeScreenWidget(
                     modifier = GlanceModifier
                         .padding(horizontal = 8.dp)
                         .clickable(onClick = actionRunCallback<NavigateToCalendarAction>())
-                    ,
                 )
                 Row(
                     modifier = GlanceModifier
@@ -81,7 +80,7 @@ fun CalendarHomeScreenWidget(
                 }
             }
             Spacer(GlanceModifier.height(8.dp))
-            if (permissionGranted) {
+            if (hasPermission) {
                 LazyColumn(
                     modifier = GlanceModifier
                         .fillMaxSize()
@@ -93,35 +92,35 @@ fun CalendarHomeScreenWidget(
                         item {
                             Text(
                                 text = getString(R.string.no_events),
-                                modifier = GlanceModifier.padding(16.dp),
+                                modifier = GlanceModifier.fillMaxWidth().padding(16.dp),
                                 style = TextStyle(
                                     color = ColorProvider(Color.White),
                                     fontWeight = FontWeight.Normal,
-                                    fontSize = 18.sp
-                                )
+                                    fontSize = 18.sp,
+                                    textAlign = TextAlign.Center
+                                ),
                             )
                         }
-                    } else {
-                        item { Spacer(GlanceModifier.height(6.dp)) }
-                        events.forEach { (day, events) ->
-                            item {
-                                Column(
-                                    modifier = GlanceModifier
-                                        .fillMaxWidth()
-                                        .padding(start = 4.dp, end = 4.dp)
-                                ) {
-                                    Text(
-                                        text = day.substring(0, day.indexOf(",")),
-                                        style = TextStyle(
-                                            color = ColorProvider(Color.White),
-                                            fontWeight = FontWeight.Normal,
-                                            fontSize = 14.sp
-                                        ),
-                                        modifier = GlanceModifier.padding(bottom = 3.dp)
-                                    )
-                                    events.forEach { event ->
-                                        CalendarEventWidgetItem(event = event)
-                                    }
+                    }
+                    item { Spacer(GlanceModifier.height(6.dp)) }
+                    events.forEach { (day, dayEvents) ->
+                        item {
+                            Column(
+                                modifier = GlanceModifier
+                                    .fillMaxWidth()
+                                    .padding(start = 4.dp, end = 4.dp)
+                            ) {
+                                Text(
+                                    text = day.substring(0, day.indexOf(",")),
+                                    style = TextStyle(
+                                        color = ColorProvider(Color.White),
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = 14.sp
+                                    ),
+                                    modifier = GlanceModifier.padding(bottom = 3.dp)
+                                )
+                                dayEvents.forEach { event ->
+                                    CalendarEventWidgetItem(event = event)
                                 }
                             }
                         }
@@ -136,7 +135,8 @@ fun CalendarHomeScreenWidget(
                         text = getString(R.string.no_read_calendar_permission_message),
                         modifier = GlanceModifier.padding(16.dp),
                         style = TextStyle(
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            color = ColorProvider(Color.White)
                         )
                     )
                     Spacer(GlanceModifier.height(4.dp))

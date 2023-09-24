@@ -9,8 +9,12 @@ class GetAllEventsUseCase @Inject constructor(
     private val calendarRepository: CalendarRepository
 ) {
     suspend operator fun invoke(excluded: List<Int>, fromWidget: Boolean = false): Map<String, List<CalendarEvent>> {
-        val events =  calendarRepository.getEvents()
-            .filter { it.calendarId.toInt() !in excluded }
+        val events = try {
+            calendarRepository.getEvents()
+                .filter { it.calendarId.toInt() !in excluded }
+        } catch (e: Exception) {
+             return emptyMap()
+        }
         return if (fromWidget)
             events.take(60).groupBy { event ->
                 event.start.formatDateForMapping()

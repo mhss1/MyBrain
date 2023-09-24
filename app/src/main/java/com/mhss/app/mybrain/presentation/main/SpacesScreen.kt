@@ -20,7 +20,6 @@ import com.mhss.app.mybrain.presentation.main.components.SpaceRegularCard
 import com.mhss.app.mybrain.presentation.main.components.SpaceWideCard
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.*
-import com.mhss.app.mybrain.util.Constants
 
 @Composable
 fun SpacesScreen(
@@ -39,8 +38,8 @@ fun SpacesScreen(
                 elevation = 0.dp
             )
         }
-    ) {
-        LazyColumn {
+    ) { paddingValues ->
+        LazyColumn(contentPadding = paddingValues) {
             item {
                 Row {
                     SpaceRegularCard(

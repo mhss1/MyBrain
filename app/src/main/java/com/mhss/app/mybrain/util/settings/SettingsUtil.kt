@@ -50,8 +50,19 @@ sealed class Order(val orderType: OrderType, val orderTitle: String){
             return this.copy(type = orderType)
         }
     }
+
+    data class DueDate(val type: OrderType = OrderType.ASC(), val title: String = getString(R.string.due_date)) : Order(type, title) {
+        override fun copy(orderType: OrderType): Order {
+            return this.copy(type = orderType)
+        }
+    }
 }
 
+enum class TaskFrequency(@StringRes val title: Int, val value: Int) {
+    DAILY(R.string.every_day, 0),
+    WEEKLY(R.string.every_week, 1),
+    MONTHLY(R.string.every_month, 2)
+}
 enum class Priority( @StringRes val title: Int, val color: Color) {
     LOW(R.string.low, Green),
     MEDIUM(R.string.medium, Orange),
@@ -85,16 +96,27 @@ fun Priority.toInt(): Int {
     }
 }
 
+fun Int.toTaskFrequency(): TaskFrequency {
+    return when (this) {
+        0 -> TaskFrequency.DAILY
+        1 -> TaskFrequency.WEEKLY
+        2 -> TaskFrequency.MONTHLY
+        else -> TaskFrequency.DAILY
+    }
+}
+
 fun Int.toOrder(): Order {
     return when(this){
         0 -> Order.Alphabetical(OrderType.ASC())
         1 -> Order.DateCreated(OrderType.ASC())
         2 -> Order.DateModified(OrderType.ASC())
         3 -> Order.Priority(OrderType.ASC())
+        8 -> Order.DueDate(OrderType.ASC())
         4 -> Order.Alphabetical(OrderType.DESC())
         5 -> Order.DateCreated(OrderType.DESC())
         6 -> Order.DateModified(OrderType.DESC())
         7 -> Order.Priority(OrderType.DESC())
+        9 -> Order.DueDate(OrderType.DESC())
         else -> Order.Alphabetical(OrderType.ASC())
     }
 }
@@ -106,6 +128,7 @@ fun Order.toInt(): Int {
                 is Order.DateCreated -> 1
                 is Order.DateModified -> 2
                 is Order.Priority -> 3
+                is Order.DueDate -> 8
             }
         }
         is OrderType.DESC -> {
@@ -114,6 +137,7 @@ fun Order.toInt(): Int {
                 is Order.DateCreated -> 5
                 is Order.DateModified -> 6
                 is Order.Priority -> 7
+                is Order.DueDate -> 9
             }
         }
     }

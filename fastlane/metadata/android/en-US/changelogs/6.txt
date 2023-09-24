@@ -1,0 +1,7 @@
+- Added recurring tasks
+- Added support for Material You icon theming
+- Added Turkish translation
+- Added sorting tasks by due date
+- Fixed widgets errors
+- Performance improvements
+- But fixes

@@ -40,9 +40,9 @@ fun DashboardScreen(
                 elevation = 0.dp
             )
         }
-    ) {
+    ) {paddingValues ->
         LaunchedEffect(true) { viewModel.onDashboardEvent(DashboardEvent.InitAll) }
-        LazyColumn {
+        LazyColumn(contentPadding = paddingValues) {
             item {
                 CalendarDashboardWidget(
                     modifier = Modifier
