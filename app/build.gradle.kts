@@ -116,7 +116,7 @@ dependencies {
 
     // Compose Glance (Widgets)
     implementation("androidx.glance:glance-appwidget:1.0.0")
-    implementation("androidx.glance:glance-material3:1.0.0")
+    implementation("androidx.glance:glance-material:1.0.0")
 
     //Moshi
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
