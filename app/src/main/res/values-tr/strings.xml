@@ -158,4 +158,5 @@
     <string name="import_failed">İçe aktarırken bir sorun oluştu. Dosya isimleri veya içerikleri bozuk olabilir</string>
     <string name="grant_permission_to_export">Dışa aktarmak için izin ver</string>
     <string name="importing">İçe aktarılıyor....</string>
+    <string name="recurring">Recurring</string>
 </resources>

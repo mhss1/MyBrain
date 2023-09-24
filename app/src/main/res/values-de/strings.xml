@@ -117,7 +117,7 @@
     <string name="you_completed">Du bist fertig</string>
     <string name="of_last_week_tasks">mit den Aufgaben der letzten Woche</string>
     <string name="no_tasks_yet">Keine Aufgaben</string>
-    <string name="loading">Lade...</string>
+    <string name="loading">Lade…</string>
     <string name="calendar_widget_refresh_message">Drücke den Aktualisieren Button wenn du bereits die Erlaubnis erteilt hast</string>
     <string name="thursday_30_calendar_preview">Donnerstag 30</string>
     <string name="sunday_5_calendar_preview">Sonntag 5</string>
@@ -157,5 +157,6 @@
     <string name="import_success">Import Erfolgreich %1$s</string>
     <string name="import_failed">Import fehlgeschlagen. Stelle sicher, dass der Dateiname und Inhalt richtig ist</string>
     <string name="grant_permission_to_export">Berechtigung zum Export notwendig</string>
-    <string name="importing">Importiere...</string>
+    <string name="importing">Importiere…</string>
+    <string name="recurring">Recurring</string>
 </resources>

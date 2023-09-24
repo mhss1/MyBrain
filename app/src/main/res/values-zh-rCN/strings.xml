@@ -158,4 +158,5 @@
     <string name="import_failed">导入失败，请确认文件名及内容无误</string>
     <string name="grant_permission_to_export">获取导出权限</string>
     <string name="importing">导入中....</string>
+    <string name="recurring">Recurring</string>
 </resources>

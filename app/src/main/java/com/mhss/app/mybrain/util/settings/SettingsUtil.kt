@@ -58,6 +58,11 @@ sealed class Order(val orderType: OrderType, val orderTitle: String){
     }
 }
 
+enum class TaskFrequency(@StringRes val title: Int, val value: Int) {
+    DAILY(R.string.every_day, 0),
+    WEEKLY(R.string.every_week, 1),
+    MONTHLY(R.string.every_month, 2)
+}
 enum class Priority( @StringRes val title: Int, val color: Color) {
     LOW(R.string.low, Green),
     MEDIUM(R.string.medium, Orange),
@@ -88,6 +93,15 @@ fun Priority.toInt(): Int {
         Priority.LOW -> 0
         Priority.MEDIUM -> 1
         Priority.HIGH -> 2
+    }
+}
+
+fun Int.toTaskFrequency(): TaskFrequency {
+    return when (this) {
+        0 -> TaskFrequency.DAILY
+        1 -> TaskFrequency.WEEKLY
+        2 -> TaskFrequency.MONTHLY
+        else -> TaskFrequency.DAILY
     }
 }
 

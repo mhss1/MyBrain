@@ -18,6 +18,8 @@ data class Task(
     @ColumnInfo(name = "sub_tasks")
     val subTasks: List<SubTask> = emptyList(),
     val dueDate: Long = 0L,
+    val recurring: Boolean = false,
+    val frequency: Int = 0,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 )
