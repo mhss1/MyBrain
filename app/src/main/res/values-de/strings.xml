@@ -158,5 +158,5 @@
     <string name="import_failed">Import fehlgeschlagen. Stelle sicher, dass der Dateiname und Inhalt richtig ist</string>
     <string name="grant_permission_to_export">Berechtigung zum Export notwendig</string>
     <string name="importing">Importiere…</string>
-    <string name="recurring">Recurring</string>
+    <string name="recurring">Wiederholend</string>
 </resources>
