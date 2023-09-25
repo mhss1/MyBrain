@@ -1,5 +1,8 @@
 package com.mhss.app.mybrain.presentation.main
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams
 import androidx.activity.ComponentActivity
@@ -12,6 +15,8 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -67,6 +72,12 @@ class MainActivity : ComponentActivity() {
                 runBlocking {
                     startUpScreenSettings = viewModel.defaultStartUpScreen.first()
                 }
+                if (!isNotificationPermissionGranted())
+                    ActivityCompat.requestPermissions(
+                        this@MainActivity,
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        0
+                    )
             }
             LaunchedEffect(blockScreenshots.value) {
                 if (blockScreenshots.value) {
@@ -226,13 +237,15 @@ class MainActivity : ComponentActivity() {
                             }),
                             deepLinks = listOf(
                                 navDeepLink {
-                                    uriPattern = "${Constants.CALENDAR_DETAILS_SCREEN_URI}/{${Constants.CALENDAR_EVENT_ARG}}"
+                                    uriPattern =
+                                        "${Constants.CALENDAR_DETAILS_SCREEN_URI}/{${Constants.CALENDAR_EVENT_ARG}}"
                                 }
                             )
                         ) {
                             CalendarEventDetailsScreen(
                                 navController = navController,
-                                eventJson = it.arguments?.getString(Constants.CALENDAR_EVENT_ARG) ?: ""
+                                eventJson = it.arguments?.getString(Constants.CALENDAR_EVENT_ARG)
+                                    ?: ""
                             )
                         }
                         composable(
@@ -253,5 +266,12 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun isNotificationPermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED || Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
     }
 }

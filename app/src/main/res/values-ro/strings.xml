@@ -158,4 +158,5 @@
     <string name="import_failed">Ceva nu a mers în timpul importării. Asigurați-vă că numele fișerului și conținutul nu sunt corupte</string>
     <string name="grant_permission_to_export">Acordă permisiunea pentru a exporta</string>
     <string name="importing">Se importă....</string>
+    <string name="recurring">Recurring</string>
 </resources>

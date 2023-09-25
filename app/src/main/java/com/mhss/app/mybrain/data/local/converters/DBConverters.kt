@@ -11,14 +11,14 @@ class DBConverters {
     @TypeConverter
     fun fromSubTasksList(value: List<SubTask>): String {
         val gson = Gson()
-        val type = object : TypeToken<List<SubTask>>() {}.type
+        val type = TypeToken.getParameterized(List::class.java, SubTask::class.java).type
         return gson.toJson(value, type)
     }
 
     @TypeConverter
     fun toSubTasksList(value: String): List<SubTask> {
         val gson = Gson()
-        val type = object : TypeToken<List<SubTask>>() {}.type
+        val type = TypeToken.getParameterized(List::class.java, SubTask::class.java).type
         return gson.fromJson(value, type)
     }
 

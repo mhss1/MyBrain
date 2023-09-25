@@ -82,8 +82,8 @@ fun ImportExportScreen() {
                 elevation = 0.dp,
             )
         }
-    ) {
-        Column(Modifier.fillMaxSize()) {
+    ) { paddingValues ->
+        Column(Modifier.fillMaxSize().padding(paddingValues)) {
             Button(
                 onClick = {
                     if (Build.VERSION.SDK_INT < 29 && !writeStoragePermission.hasPermission) {

@@ -8,6 +8,7 @@ import androidx.core.net.toUri
 import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
+import androidx.glance.appwidget.updateAll
 import com.mhss.app.mybrain.presentation.main.MainActivity
 import com.mhss.app.mybrain.util.Constants
 
@@ -59,8 +60,7 @@ class GoToSettingsAction : ActionCallback {
 
 class RefreshCalendarAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        val updateIntent = Intent(context, RefreshCalendarWidgetReceiver::class.java)
-        context.sendBroadcast(updateIntent)
+        CalendarHomeWidget().updateAll(context)
     }
 }
 
