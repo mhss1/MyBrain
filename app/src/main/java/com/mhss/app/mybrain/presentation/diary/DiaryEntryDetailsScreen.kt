@@ -48,13 +48,13 @@ fun DiaryEntryDetailsScreen(
     var content by rememberSaveable { mutableStateOf(state.entry?.content ?: "") }
     var mood by rememberSaveable { mutableStateOf(state.entry?.mood ?: Mood.OKAY) }
     var date by rememberSaveable {
-        mutableStateOf(
+        mutableLongStateOf(
             state.entry?.createdDate ?: System.currentTimeMillis()
         )
     }
 
     LaunchedEffect(state.entry) {
-        if (state.entry != null) {
+        if (state.entry != null && title.isBlank() && content.isBlank()) {
             title = state.entry.title
             content = state.entry.content
             date = state.entry.createdDate
@@ -147,11 +147,12 @@ fun DiaryEntryDetailsScreen(
                     )
                 }
         }
-    ) {
+    ) { paddingValues ->
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(12.dp)
+                .padding(paddingValues)
         ) {
             Text(
                 text = stringResource(R.string.mood),
