@@ -182,11 +182,12 @@ fun NoteDetailsScreen(
                 elevation = 0.dp,
             )
         },
-    ) {
+    ) { paddingValues ->
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(12.dp)
+                .padding(paddingValues)
         ) {
             OutlinedTextField(
                 value = title,
