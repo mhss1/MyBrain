@@ -55,7 +55,7 @@ class AlarmReceiver : BroadcastReceiver() {
                             TaskFrequency.WEEKLY.value -> 7L * 24 * 60 * 60 * 1000
                             TaskFrequency.MONTHLY.value -> 30L * 24 * 60 * 60 * 1000
                             else -> 24L * 60 * 60 * 1000
-                        }
+                        } * task.frequencyAmount
                     )
                     updateTaskUseCase(newTask)
                     addAlarmUseCase(Alarm(newTask.id, newTask.dueDate))

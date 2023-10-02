@@ -159,4 +159,5 @@
     <string name="grant_permission_to_export">Berechtigung zum Export notwendig</string>
     <string name="importing">Importiere…</string>
     <string name="recurring">Wiederholend</string>
+    <string name="repeats_every">Repeats every</string>
 </resources>

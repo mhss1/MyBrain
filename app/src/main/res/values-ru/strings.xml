@@ -159,4 +159,5 @@
     <string name="grant_permission_to_export">Предоставьте разрешение, чтобы экспортировать</string>
     <string name="importing">Импортирование....</string>
     <string name="recurring">Recurring</string>
+    <string name="repeats_every">Repeats every</string>
 </resources>

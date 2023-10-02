@@ -97,12 +97,7 @@ fun Priority.toInt(): Int {
 }
 
 fun Int.toTaskFrequency(): TaskFrequency {
-    return when (this) {
-        0 -> TaskFrequency.DAILY
-        1 -> TaskFrequency.WEEKLY
-        2 -> TaskFrequency.MONTHLY
-        else -> TaskFrequency.DAILY
-    }
+    return TaskFrequency.values().firstOrNull { it.value == this } ?: TaskFrequency.DAILY
 }
 
 fun Int.toOrder(): Order {

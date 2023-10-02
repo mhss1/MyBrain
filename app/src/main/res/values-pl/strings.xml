@@ -160,4 +160,5 @@
     <string name="grant_permission_to_export">Udziel zezwolenia, aby wyeksportować dane</string>
     <string name="importing">Importowanie....</string>
     <string name="recurring">Recurring</string>
+    <string name="repeats_every">Repeats every</string>
 </resources>

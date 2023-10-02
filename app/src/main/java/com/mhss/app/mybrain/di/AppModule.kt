@@ -7,6 +7,7 @@ import com.mhss.app.mybrain.data.local.MyBrainDatabase
 import com.mhss.app.mybrain.data.local.dao.*
 import com.mhss.app.mybrain.data.local.migrations.MIGRATION_1_2
 import com.mhss.app.mybrain.data.local.migrations.MIGRATION_2_3
+import com.mhss.app.mybrain.data.local.migrations.MIGRATION_3_4
 import com.mhss.app.mybrain.data.repository.*
 import com.mhss.app.mybrain.domain.repository.*
 import dagger.Module
@@ -28,7 +29,7 @@ object AppModule {
         context,
         MyBrainDatabase::class.java,
         MyBrainDatabase.DATABASE_NAME
-    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
         .build()
 
     @Singleton

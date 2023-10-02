@@ -160,4 +160,5 @@
     <string name="grant_permission_to_export">منح اذن التخزين للتصدير</string>
     <string name="importing">يتم الاستيراد....</string>
     <string name="recurring">متكرر</string>
+    <string name="repeats_every">يتكرر كل</string>
 </resources>

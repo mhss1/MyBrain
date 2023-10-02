@@ -12,5 +12,5 @@ sealed class TaskEvent {
     data class ShowCompletedTasks(val showCompleted: Boolean) : TaskEvent()
     data class UpdateTask(val task: Task, val dueDateUpdated: Boolean) : TaskEvent()
     data class DeleteTask(val task: Task) : TaskEvent()
-    object ErrorDisplayed: TaskEvent()
+    data object ErrorDisplayed: TaskEvent()
 }
