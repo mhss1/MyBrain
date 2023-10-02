@@ -1,23 +1,28 @@
 package com.mhss.app.mybrain.util.date
 
+import android.text.format.DateFormat
 import android.text.format.DateUtils
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.app.MyBrainApplication.Companion.appContext
 import com.mhss.app.mybrain.app.getString
 import java.text.SimpleDateFormat
 import java.util.*
 
 fun Long.formatDateDependingOnDay(): String {
+    val hourPatternString = if (is24Hour()) "H:mm" else "h:mm a"
+
     val sdf = if (DateUtils.isToday(this))
-        SimpleDateFormat("h:mm a", Locale.getDefault())
+        SimpleDateFormat(hourPatternString, Locale.getDefault())
     else
-        SimpleDateFormat("MMM dd,yyyy h:mm a", Locale.getDefault())
+        SimpleDateFormat("MMM dd,yyyy $hourPatternString", Locale.getDefault())
 
 
     return sdf.format(this)
 }
 
 fun Long.fullDate(): String {
-    val sdf = SimpleDateFormat("MMM dd,yyyy h:mm a", Locale.getDefault())
+    val hourPatternString = if (is24Hour()) "H:mm" else "h:mm a"
+    val sdf = SimpleDateFormat("MMM dd,yyyy $hourPatternString", Locale.getDefault())
     return sdf.format(this)
 }
 
@@ -27,8 +32,9 @@ fun Long.formatDateForMapping(): String {
 }
 
 fun Long.formatTime(): String {
-    val sdf = SimpleDateFormat("h:mm a", Locale.getDefault())
-    val sdfNoMinutes = SimpleDateFormat("h a", Locale.getDefault())
+    val is24 = is24Hour()
+    val sdf = SimpleDateFormat(if (is24) "H:mm" else "h:mm a", Locale.getDefault())
+    val sdfNoMinutes = SimpleDateFormat(if (is24) "H:mm" else "h a", Locale.getDefault())
     val minutes = SimpleDateFormat("mm", Locale.getDefault()).format(this)
     return if (minutes == "00") sdfNoMinutes.format(this) else sdf.format(this)
 }
@@ -85,5 +91,7 @@ fun formatEventStartEnd(start: Long, end: Long, location: String?, allDay: Boole
             location ?: ""
         )
 }
+
+fun is24Hour() = DateFormat.is24HourFormat(appContext)
 
 const val HOUR_IN_MILLIS = 60 * 60 * 1000L
