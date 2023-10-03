@@ -204,10 +204,7 @@ fun NoteDetailsScreen(
                         .fillMaxHeight()
                         .padding(vertical = 6.dp)
                         .border(1.dp, Color.Gray, RoundedCornerShape(20.dp))
-                        .padding(10.dp),
-                    onClick = {
-                        viewModel.onEvent(NoteEvent.ToggleReadingMode)
-                    }
+                        .padding(10.dp)
                 )
             else
                 OutlinedTextField(
