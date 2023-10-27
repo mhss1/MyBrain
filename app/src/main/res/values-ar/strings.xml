@@ -150,15 +150,19 @@
     <string name="save">حفظ</string>
     <string name="edit_folder">تعديل الملف</string>
     <string name="block_screenshots">منع لقطات الشاشة</string>
-    <string name="export_import">تصدير\استيراد البيانات</string>
+    <string name="export_import">تصدير/استيراد البيانات</string>
     <string name="export">تصدير</string>
-    <string name="export_success">تم تصدير البيانات الى \"Documents/MyBrain Export\"</string>
+    <string name="export_success">تم تصدير البيانات</string>
     <string name="export_failed">حدث خطأ أثناء التصدير</string>
     <string name="import_data">استيراد البيانات</string>
     <string name="import_success">تم تصدير %1$s</string>
-    <string name="import_failed">حدث خطأ أثناء الاستيراد. تأكد من عدم نغيير اسم الملف او المحتوى</string>
+    <string name="import_failed">حدث خطأ أثناء الاستيراد. تأكد من عدم تخريب محتوى الملف</string>
     <string name="grant_permission_to_export">منح اذن التخزين للتصدير</string>
     <string name="importing">يتم الاستيراد....</string>
     <string name="recurring">متكرر</string>
     <string name="repeats_every">يتكرر كل</string>
+    <string name="encrypted">مشفر</string>
+    <string name="password">كلمة السر</string>
+    <string name="every_hour">كل ساعة</string>
+    <string name="every_minute">كل دقيقة</string>
 </resources>

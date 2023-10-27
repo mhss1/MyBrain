@@ -126,6 +126,9 @@ dependencies {
 
     // Compose live data
     implementation("androidx.compose.runtime:runtime-livedata")
+
+    // DocumentFile
+    implementation("androidx.documentfile:documentfile:1.0.1")
 }
 
 ksp {

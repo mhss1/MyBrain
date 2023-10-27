@@ -160,4 +160,8 @@
     <string name="importing">导入中....</string>
     <string name="recurring">Recurring</string>
     <string name="repeats_every">Repeats every</string>
+    <string name="encrypted">Encrypted</string>
+    <string name="password">Password</string>
+    <string name="every_hour">Every hour</string>
+    <string name="every_minute">Every minute</string>
 </resources>
