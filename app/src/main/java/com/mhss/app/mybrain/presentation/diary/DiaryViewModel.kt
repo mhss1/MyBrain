@@ -90,6 +90,7 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.ChangeChartEntriesRange -> viewModelScope.launch {
                 uiState = uiState.copy(chartEntries = getEntriesForChart(event.monthly))
             }
+            is DiaryEvent.ToggleReadingMode -> uiState = uiState.copy(readingMode = !uiState.readingMode)
         }
     }
 
@@ -100,7 +101,8 @@ class DiaryViewModel @Inject constructor(
         val error: String? = null,
         val searchEntries: List<DiaryEntry> = emptyList(),
         val navigateUp: Boolean = false,
-        val chartEntries : List<DiaryEntry> = emptyList()
+        val chartEntries : List<DiaryEntry> = emptyList(),
+        val readingMode: Boolean = true
     )
 
     private fun getEntries(order: Order) {

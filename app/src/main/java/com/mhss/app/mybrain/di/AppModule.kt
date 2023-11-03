@@ -3,10 +3,12 @@ package com.mhss.app.mybrain.di
 import android.content.Context
 import androidx.room.Room
 import com.mhss.app.mybrain.app.dataStore
+import com.mhss.app.mybrain.data.backup.RoomBackupRepositoryImpl
 import com.mhss.app.mybrain.data.local.MyBrainDatabase
 import com.mhss.app.mybrain.data.local.dao.*
 import com.mhss.app.mybrain.data.local.migrations.MIGRATION_1_2
 import com.mhss.app.mybrain.data.local.migrations.MIGRATION_2_3
+import com.mhss.app.mybrain.data.local.migrations.MIGRATION_3_4
 import com.mhss.app.mybrain.data.repository.*
 import com.mhss.app.mybrain.domain.repository.*
 import dagger.Module
@@ -28,7 +30,7 @@ object AppModule {
         context,
         MyBrainDatabase::class.java,
         MyBrainDatabase.DATABASE_NAME
-    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
         .build()
 
     @Singleton
@@ -53,7 +55,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideBookmarkRepository(bookmarkDao: BookmarkDao): BookmarkRepository = BookmarkRepositoryImpl(bookmarkDao)
+    fun provideBookmarkRepository(bookmarkDao: BookmarkDao): BookmarkRepository =
+        BookmarkRepositoryImpl(bookmarkDao)
 
     @Singleton
     @Provides
@@ -65,7 +68,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCalendarRepository(@ApplicationContext context: Context): CalendarRepository = CalendarRepositoryImpl(context)
+    fun provideCalendarRepository(@ApplicationContext context: Context): CalendarRepository =
+        CalendarRepositoryImpl(context)
 
     @Singleton
     @Provides
@@ -77,9 +81,17 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideSettingsRepository(@ApplicationContext context: Context): SettingsRepository = SettingsRepositoryImpl(context.dataStore)
+    fun provideSettingsRepository(@ApplicationContext context: Context): SettingsRepository =
+        SettingsRepositoryImpl(context.dataStore)
 
     @Singleton
     @Provides
     fun provideAppContext(@ApplicationContext context: Context) = context
-    }
+
+    @Singleton
+    @Provides
+    fun provideBackupRepository(
+        myBrainDatabase: MyBrainDatabase,
+        @ApplicationContext context: Context
+    ): RoomBackupRepository = RoomBackupRepositoryImpl(myBrainDatabase ,context)
+}

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,7 @@ import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.diary.Mood
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.util.date.fullDate
+import dev.jeziellago.compose.markdowntext.MarkdownText
 import java.util.*
 
 @Composable
@@ -48,13 +50,14 @@ fun DiaryEntryDetailsScreen(
     var content by rememberSaveable { mutableStateOf(state.entry?.content ?: "") }
     var mood by rememberSaveable { mutableStateOf(state.entry?.mood ?: Mood.OKAY) }
     var date by rememberSaveable {
-        mutableStateOf(
+        mutableLongStateOf(
             state.entry?.createdDate ?: System.currentTimeMillis()
         )
     }
+    val readingMode = state.readingMode
 
     LaunchedEffect(state.entry) {
-        if (state.entry != null) {
+        if (state.entry != null && title.isBlank() && content.isBlank()) {
             title = state.entry.title
             content = state.entry.content
             date = state.entry.createdDate
@@ -97,6 +100,16 @@ fun DiaryEntryDetailsScreen(
             TopAppBar(
                 title = {},
                 actions = {
+                    IconButton(onClick = {
+                        viewModel.onEvent(DiaryEvent.ToggleReadingMode)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_read_mode),
+                            contentDescription = stringResource(R.string.reading_mode),
+                            modifier = Modifier.size(24.dp),
+                            tint = if (readingMode) Color.Green else Color.Gray
+                        )
+                    }
                     if (state.entry != null) IconButton(onClick = { openDialog = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_delete),
@@ -147,11 +160,12 @@ fun DiaryEntryDetailsScreen(
                     )
                 }
         }
-    ) {
+    ) { paddingValues ->
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(12.dp)
+                .padding(paddingValues)
         ) {
             Text(
                 text = stringResource(R.string.mood),
@@ -171,13 +185,25 @@ fun DiaryEntryDetailsScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(
-                value = content,
-                onValueChange = { content = it },
-                label = { Text(text = stringResource(R.string.content)) },
-                shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth(),
-            )
+            if (readingMode) {
+                MarkdownText(
+                    markdown = content.ifBlank { stringResource(R.string.content) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(vertical = 6.dp)
+                        .border(1.dp, Color.Gray, RoundedCornerShape(20.dp))
+                        .padding(10.dp)
+                )
+            } else {
+                OutlinedTextField(
+                    value = content,
+                    onValueChange = { content = it },
+                    label = { Text(text = stringResource(R.string.content)) },
+                    shape = RoundedCornerShape(15.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
         if (openDialog)
             AlertDialog(
@@ -244,7 +270,7 @@ fun EntryMoodSection(
 
 @Composable
 private fun MoodItem(mood: Mood, chosen: Boolean, onMoodChange: () -> Unit) {
-    Box(Modifier.clip(RoundedCornerShape(8.dp))){
+    Box(Modifier.clip(RoundedCornerShape(8.dp))) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier

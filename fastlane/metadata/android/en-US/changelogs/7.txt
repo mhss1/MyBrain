@@ -1,0 +1,8 @@
+- Added more options to recurring tasks
+- Added last modified date & word count for Notes
+- Added markdown support for Diary
+- Added support for 24-hour time format
+- Fixed backup issues
+- Bug fixes
+
+- Coming soon: Encrypted backups

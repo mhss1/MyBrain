@@ -20,6 +20,8 @@ data class Task(
     val dueDate: Long = 0L,
     val recurring: Boolean = false,
     val frequency: Int = 0,
+    @ColumnInfo(name = "frequency_amount")
+    val frequencyAmount: Int = 1,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 )

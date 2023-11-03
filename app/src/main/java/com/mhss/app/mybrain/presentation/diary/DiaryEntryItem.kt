@@ -17,8 +17,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mhss.app.mybrain.domain.model.DiaryEntry
 import com.mhss.app.mybrain.util.date.fullDate
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -55,13 +57,13 @@ fun LazyItemScope.DiaryEntryItem(
                 )
             }
             if (entry.content.isNotBlank()){
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    entry.content,
-                    style = MaterialTheme.typography.body2,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
+                MarkdownText(
+                    markdown = entry.content,
+                    maxLines = 10,
+                    onClick = {onClick(entry)},
+                    fontSize = 12.sp
                 )
+                Spacer(Modifier.height(8.dp))
             }
             Spacer(Modifier.height(8.dp))
             Text(

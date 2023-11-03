@@ -55,6 +55,7 @@ fun TaskDetailScreen(
     var dueDate by rememberSaveable { mutableLongStateOf(0L) }
     var recurring by rememberSaveable { mutableStateOf(false) }
     var frequency by rememberSaveable { mutableIntStateOf(0) }
+    var frequencyAmount by rememberSaveable { mutableIntStateOf(1) }
     var dueDateExists by rememberSaveable { mutableStateOf(false) }
     var completed by rememberSaveable { mutableStateOf(false) }
     val subTasks = remember { mutableStateListOf<SubTask>() }
@@ -75,6 +76,7 @@ fun TaskDetailScreen(
         completed = uiState.task.isCompleted
         recurring = uiState.task.recurring
         frequency = uiState.task.frequency
+        frequencyAmount = uiState.task.frequencyAmount
         subTasks.addAll(uiState.task.subTasks)
     }
     LaunchedEffect(uiState) {
@@ -100,7 +102,8 @@ fun TaskDetailScreen(
                 priority = priority.toInt(),
                 subTasks = subTasks,
                 recurring = recurring,
-                frequency = frequency
+                frequency = frequency,
+                frequencyAmount = frequencyAmount
             ),
             {
                 navController.popBackStack(Screen.TaskSearchScreen.route, false)
@@ -289,36 +292,47 @@ fun TaskDetailScreen(
                         )
                     }
                     AnimatedVisibility(recurring) {
-                        var expanded by remember { mutableStateOf(false) }
-                        Box {
-                            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                TaskFrequency.values().forEach { f ->
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            expanded = false
-                                            frequency = f.ordinal
+                        var frequencyMenuVisible by remember { mutableStateOf(false) }
+                        Column {
+                            Box {
+                                DropdownMenu(
+                                    expanded = frequencyMenuVisible,
+                                    onDismissRequest = { frequencyMenuVisible = false }) {
+                                    TaskFrequency.values().forEach { f ->
+                                        DropdownMenuItem(
+                                            onClick = {
+                                                frequencyMenuVisible = false
+                                                frequency = f.value
+                                            }
+                                        ) {
+                                            Text(text = stringResource(f.title))
                                         }
-                                    ) {
-                                        Text(text = stringResource(f.title))
                                     }
                                 }
-                            }
-                            Row(
-                                Modifier
-                                    .clickable { expanded = true }
-                                    .padding(vertical = 8.dp, horizontal = 16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = stringResource(
-                                        frequency.toTaskFrequency().title
+                                Row(
+                                    Modifier
+                                        .clickable { frequencyMenuVisible = true }
+                                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = stringResource(
+                                            frequency.toTaskFrequency().title
+                                        )
                                     )
-                                )
-                                Icon(
-                                    imageVector = Icons.Default.ArrowDropDown,
-                                    contentDescription = stringResource(R.string.recurring),
-                                    modifier = Modifier.size(22.dp)
-                                )
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowDropDown,
+                                        contentDescription = stringResource(R.string.recurring),
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                }
+                            }
+                            Spacer(Modifier.height(8.dp))
+                            NumberPicker(
+                                stringResource(R.string.repeats_every),
+                                frequencyAmount
+                            ) {
+                                if (it > 0) frequencyAmount = it
                             }
                         }
                     }
@@ -389,5 +403,6 @@ private fun taskChanged(
             task.priority != newTask.priority ||
             task.subTasks != newTask.subTasks ||
             task.recurring != newTask.recurring ||
-            task.frequency != newTask.frequency
+            task.frequency != newTask.frequency ||
+            task.frequencyAmount != newTask.frequencyAmount
 }

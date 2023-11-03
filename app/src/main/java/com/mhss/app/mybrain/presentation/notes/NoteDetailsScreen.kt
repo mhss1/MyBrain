@@ -24,6 +24,7 @@ import com.mhss.app.mybrain.domain.model.Note
 import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.Orange
+import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
@@ -47,6 +48,13 @@ fun NoteDetailsScreen(
     var pinned by rememberSaveable { mutableStateOf(state.note?.pinned ?: false) }
     val readingMode = state.readingMode
     var folder: NoteFolder? by remember { mutableStateOf(state.folder) }
+    val lastModified by remember(state.note) {
+        derivedStateOf { state.note?.updatedDate?.formatDateDependingOnDay() }
+    }
+    val wordCountString by remember {
+        derivedStateOf { content.split(" ").size.toString() }
+    }
+
 
     LaunchedEffect(state.note) {
         if (state.note != null) {
@@ -182,11 +190,12 @@ fun NoteDetailsScreen(
                 elevation = 0.dp,
             )
         },
-    ) {
+    ) { paddingValues ->
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(12.dp)
+                .padding(paddingValues)
         ) {
             OutlinedTextField(
                 value = title,
@@ -200,13 +209,10 @@ fun NoteDetailsScreen(
                     markdown = content.ifBlank { stringResource(R.string.note_content) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
+                        .weight(1f)
                         .padding(vertical = 6.dp)
                         .border(1.dp, Color.Gray, RoundedCornerShape(20.dp))
-                        .padding(10.dp),
-                    onClick = {
-                        viewModel.onEvent(NoteEvent.ToggleReadingMode)
-                    }
+                        .padding(10.dp)
                 )
             else
                 OutlinedTextField(
@@ -218,8 +224,24 @@ fun NoteDetailsScreen(
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .weight(1f)
+                        .padding(bottom = 8.dp),
                 )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = lastModified ?: "",
+                    style = MaterialTheme.typography.caption.copy(color = Color.Gray)
+                )
+                Text(
+                    text = wordCountString,
+                    style = MaterialTheme.typography.caption.copy(color = Color.Gray)
+                )
+            }
         }
         if (openDeleteDialog)
             AlertDialog(

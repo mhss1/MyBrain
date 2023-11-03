@@ -151,12 +151,17 @@
     <string name="block_screenshots">Block screenshots</string>
     <string name="export_import">Export/Import</string>
     <string name="export">Export data</string>
-    <string name="export_success">Successfully exported data to \n\"/Documents/MyBrain Export\"</string>
+    <string name="export_success">Successfully exported data"</string>
     <string name="export_failed">Something went wrong while exporting</string>
     <string name="import_data">Import data</string>
     <string name="import_success">Successfully imported %1$s</string>
-    <string name="import_failed">Something went wrong while importing. Make sure that the file name and content are not corrupted</string>
+    <string name="import_failed">Something went wrong while importing. Make sure the file content are not corrupted</string>
     <string name="grant_permission_to_export">Grant permission to export</string>
     <string name="importing">Importing....</string>
     <string name="recurring">Recurring</string>
+    <string name="repeats_every">Repeats every</string>
+    <string name="encrypted">Encrypted</string>
+    <string name="password">Password</string>
+    <string name="every_hour">Every hour</string>
+    <string name="every_minute">Every minute</string>
 </resources>

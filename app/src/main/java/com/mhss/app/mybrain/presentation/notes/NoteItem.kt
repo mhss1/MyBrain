@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Note
 import com.mhss.app.mybrain.ui.theme.Orange
+import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
@@ -64,6 +66,12 @@ fun NoteItem(
                 maxLines = 14,
                 onClick = {onClick(note)},
                 fontSize = 12.sp
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = note.updatedDate.formatDateDependingOnDay(),
+                style = MaterialTheme.typography.caption.copy(color = Color.Gray),
+                modifier = Modifier.align(Alignment.End)
             )
         }
     }

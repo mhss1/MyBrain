@@ -16,7 +16,7 @@ class GetAllEventsUseCase @Inject constructor(
              return emptyMap()
         }
         return if (fromWidget)
-            events.take(60).groupBy { event ->
+            events.take(30).groupBy { event ->
                 event.start.formatDateForMapping()
             }
         else

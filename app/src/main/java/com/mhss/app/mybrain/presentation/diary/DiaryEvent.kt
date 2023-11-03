@@ -11,5 +11,6 @@ sealed class DiaryEvent {
     data class UpdateEntry(val entry: DiaryEntry) : DiaryEvent()
     data class DeleteEntry(val entry: DiaryEntry) : DiaryEvent()
     data class ChangeChartEntriesRange(val monthly: Boolean) : DiaryEvent()
-    object ErrorDisplayed: DiaryEvent()
+    data object ErrorDisplayed: DiaryEvent()
+    data object ToggleReadingMode: DiaryEvent()
 }

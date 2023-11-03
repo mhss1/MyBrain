@@ -141,7 +141,7 @@ fun SettingsScreen(
                         Icon(painter = painterResource(id = R.drawable.ic_import_export), contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = stringResource(R.string.import_data),
+                            text = stringResource(R.string.export_import),
                             style = MaterialTheme.typography.h6
                         )
                     }

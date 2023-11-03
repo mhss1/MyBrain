@@ -47,6 +47,7 @@ fun AddTaskBottomSheetContent(
     var dueDateExists by rememberSaveable { mutableStateOf(false) }
     var recurring by rememberSaveable { mutableStateOf(false) }
     var frequency by rememberSaveable { mutableIntStateOf(0) }
+    var frequencyAmount by rememberSaveable { mutableIntStateOf(1) }
     val subTasks = remember { mutableStateListOf<SubTask>() }
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
     val context = LocalContext.current
@@ -200,36 +201,45 @@ fun AddTaskBottomSheetContent(
                 }
                 AnimatedVisibility(recurring) {
                     var expanded by remember { mutableStateOf(false) }
-                    Box {
-                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                            TaskFrequency.values().forEach { f ->
-                                DropdownMenuItem(
-                                    onClick = {
-                                        expanded = false
-                                        frequency = f.ordinal
+                    Column {
+                        Box {
+                            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                TaskFrequency.values().forEach { f ->
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            expanded = false
+                                            frequency = f.ordinal
+                                        }
+                                    ) {
+                                        Text(text = stringResource(f.title))
                                     }
-                                ) {
-                                    Text(text = stringResource(f.title))
                                 }
                             }
-                        }
-                        Row(
-                            Modifier
-                                .clickable { expanded = true }
-                                .padding(8.dp)
-                            ,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(
-                                    frequency.toTaskFrequency().title
+                            Row(
+                                Modifier
+                                    .clickable { expanded = true }
+                                    .padding(8.dp)
+                                ,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(
+                                        frequency.toTaskFrequency().title
+                                    )
                                 )
-                            )
-                            Icon(
-                                imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = stringResource(R.string.recurring),
-                                modifier = Modifier.size(22.dp)
-                            )
+                                Icon(
+                                    imageVector = Icons.Default.ArrowDropDown,
+                                    contentDescription = stringResource(R.string.recurring),
+                                    modifier = Modifier.size(22.dp)
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(8.dp))
+                        NumberPicker(
+                            stringResource(R.string.repeats_every),
+                            frequencyAmount
+                        ) {
+                            if (it > 0) frequencyAmount = it
                         }
                     }
                 }
@@ -253,6 +263,7 @@ fun AddTaskBottomSheetContent(
                         dueDate = if (dueDateExists) dueDate.timeInMillis else 0L,
                         recurring = recurring,
                         frequency = frequency,
+                        frequencyAmount = frequencyAmount,
                         createdDate = System.currentTimeMillis(),
                         updatedDate = System.currentTimeMillis(),
                         subTasks = subTasks.toList()
