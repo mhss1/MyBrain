@@ -50,7 +50,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
+        kotlinCompilerExtensionVersion = "1.5.12"
     }
     packaging {
         resources {
@@ -63,18 +63,18 @@ android {
 }
 
 dependencies {
-    val roomVersion = "2.6.0"
-    val coroutinesVersion = "1.7.3"
-    val lifecycleVersion = "2.6.2"
-    val workVersion = "2.8.1"
-    implementation(platform("androidx.compose:compose-bom:2023.09.01"))
+    val roomVersion = "2.6.1"
+    val coroutinesVersion = "1.8.0"
+    val lifecycleVersion = "2.7.0"
+    val workVersion = "2.9.0"
+    implementation(platform("androidx.compose:compose-bom:2024.04.01"))
 
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.9.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -82,8 +82,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
 
     // Compose navigation
-    implementation("androidx.navigation:navigation-compose:2.7.4")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // Room
     implementation("androidx.room:room-runtime:$roomVersion")
@@ -91,20 +91,20 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 
     //Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    ksp("com.google.dagger:hilt-android-compiler:2.48")
-    ksp("androidx.hilt:hilt-compiler:1.0.0")
-    implementation("androidx.hilt:hilt-work:1.0.0")
+    implementation("com.google.dagger:hilt-android:2.49")
+    ksp("com.google.dagger:hilt-android-compiler:2.49")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
+    implementation("androidx.hilt:hilt-work:1.2.0")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
     // Gson
-    implementation("com.google.code.gson:gson:2.10")
+    implementation("com.google.code.gson:gson:2.10.1")
 
     // Preferences DataStore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.0")
 
     // Accompanist libraries
     implementation("com.google.accompanist:accompanist-flowlayout:0.23.1")
