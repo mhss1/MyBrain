@@ -27,3 +27,57 @@ val MIGRATION_3_4 = object : Migration(3, 4) {
         db.execSQL("ALTER TABLE tasks ADD COLUMN frequency_amount INTEGER NOT NULL DEFAULT 1")
     }
 }
+
+val MIGRATION_4_5 = object : Migration(4, 5) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL("CREATE TABLE note_folders_temp (name TEXT PRIMARY KEY NOT NULL)")
+        db.execSQL("INSERT INTO note_folders_temp (name) SELECT DISTINCT name FROM note_folders")
+
+        db.execSQL(
+            """
+    CREATE TABLE notes_temp (
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        created_date INTEGER NOT NULL,
+        updated_date INTEGER NOT NULL,
+        pinned INTEGER NOT NULL,
+        folder_id TEXT, 
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        FOREIGN KEY (folder_id) REFERENCES note_folders_temp (name) ON UPDATE NO ACTION ON DELETE CASCADE
+    )
+    """
+        )
+
+        db.execSQL(
+            """
+    INSERT INTO notes_temp (title, content, created_date, updated_date, pinned, folder_id, id)
+    SELECT  n.title, n.content, n.created_date, n.updated_date, n.pinned, nf.name, n.id
+    FROM notes n
+    LEFT JOIN note_folders nf ON n.folder_id = nf.id 
+    """
+        )
+
+        db.execSQL("DROP TABLE notes")
+        db.execSQL("DROP TABLE note_folders")
+        db.execSQL("ALTER TABLE note_folders_temp RENAME TO note_folders")
+
+        db.execSQL(
+            """
+    CREATE TABLE notes (
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        created_date INTEGER NOT NULL,
+        updated_date INTEGER NOT NULL,
+        pinned INTEGER NOT NULL,
+        folder_id TEXT, 
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        FOREIGN KEY (folder_id) REFERENCES note_folders (name) ON UPDATE NO ACTION ON DELETE CASCADE
+    )
+    """
+        )
+        db.execSQL("INSERT INTO notes (title, content, created_date, updated_date, pinned, folder_id, id) SELECT * FROM notes_temp")
+
+        db.execSQL("DROP TABLE notes_temp")
+    }
+}

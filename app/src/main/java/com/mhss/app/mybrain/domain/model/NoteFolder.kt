@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
     tableName = "note_folders",
 )
 data class NoteFolder(
-    val name: String,
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    @PrimaryKey(autoGenerate = false)
+    val name: String
 )

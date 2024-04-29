@@ -87,7 +87,7 @@ class NotesViewModel @Inject constructor(
             }
             is NoteEvent.GetNote -> viewModelScope.launch {
                 val note = getNote(event.noteId)
-                val folder = getAllFolders().first().firstOrNull { it.id == note.folderId }
+                val folder = getAllFolders().first().firstOrNull { it.name == note.folderId }
                 notesUiState = notesUiState.copy(note = note, folder = folder)
             }
             is NoteEvent.SearchNotes -> viewModelScope.launch {
@@ -136,22 +136,22 @@ class NotesViewModel @Inject constructor(
                 notesUiState = notesUiState.copy(navigateUp = true)
             }
             is NoteEvent.UpdateFolder -> viewModelScope.launch {
-                if (event.folder.name.isBlank()) {
-                    notesUiState = notesUiState.copy(error = getString(R.string.error_empty_title))
+                notesUiState = if (event.folder.name.isBlank()) {
+                    notesUiState.copy(error = getString(R.string.error_empty_title))
                 } else {
                     if (!notesUiState.folders.contains(event.folder)) {
                         updateFolder(event.folder)
-                        notesUiState = notesUiState.copy(folder = event.folder)
+                        notesUiState.copy(folder = event.folder)
                     } else {
-                        notesUiState = notesUiState.copy(error = getString(R.string.error_folder_exists))
+                        notesUiState.copy(error = getString(R.string.error_folder_exists))
                     }
                 }
             }
             is NoteEvent.GetFolderNotes -> {
-                getNotesFromFolder(event.id, notesUiState.notesOrder)
+                getNotesFromFolder(event.name, notesUiState.notesOrder)
             }
             is NoteEvent.GetFolder -> viewModelScope.launch {
-                val folder = getAllFolders().first().firstOrNull { it.id == event.id }
+                val folder = getAllFolders().first().firstOrNull { it.name == event.name }
                 notesUiState = notesUiState.copy(folder = folder)
             }
         }
@@ -182,11 +182,11 @@ class NotesViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private fun getNotesFromFolder(id: Int, order: Order) {
+    private fun getNotesFromFolder(name: String, order: Order) {
         getFolderNotesJob?.cancel()
-        getFolderNotesJob = getFolderNotes(id, order)
+        getFolderNotesJob = getFolderNotes(name, order)
             .onEach { notes ->
-                val noteFolder = getAllFolders().first().firstOrNull() { it.id == id }
+                val noteFolder = getAllFolders().first().firstOrNull { it.name == name }
                 notesUiState = notesUiState.copy(
                     folderNotes = notes,
                     folder = noteFolder

@@ -19,6 +19,6 @@ sealed class NoteEvent {
     data class CreateFolder(val folder: NoteFolder): NoteEvent()
     data class DeleteFolder(val folder: NoteFolder): NoteEvent()
     data class UpdateFolder(val folder: NoteFolder): NoteEvent()
-    data class GetFolderNotes(val id: Int): NoteEvent()
-    data class GetFolder(val id: Int): NoteEvent()
+    data class GetFolderNotes(val name: String): NoteEvent()
+    data class GetFolder(val name: String): NoteEvent()
 }

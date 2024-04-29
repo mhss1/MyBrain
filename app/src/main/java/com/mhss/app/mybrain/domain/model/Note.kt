@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = NoteFolder::class,
-            parentColumns = ["id"],
+            parentColumns = ["name"],
             childColumns = ["folder_id"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.NO_ACTION
@@ -26,7 +26,7 @@ data class Note(
     val updatedDate: Long = 0L,
     val pinned: Boolean = false,
     @ColumnInfo(name = "folder_id")
-    val folderId: Int? = null,
+    val folderId: String? = null,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 )

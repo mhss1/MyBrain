@@ -17,8 +17,8 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
     suspend fun getNotesByTitle(query: String): List<Note>
 
-    @Query("SELECT * FROM notes WHERE folder_id = :folderId")
-    fun getNotesByFolder(folderId: Int): Flow<List<Note>>
+    @Query("SELECT * FROM notes WHERE folder_id = :folderName")
+    fun getNotesByFolder(folderName: String): Flow<List<Note>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: Note)

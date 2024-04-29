@@ -12,7 +12,7 @@ interface NoteRepository {
 
     suspend fun searchNotes(query: String): List<Note>
 
-    fun getNotesByFolder(folderId: Int): Flow<List<Note>>
+    fun getNotesByFolder(folderName: String): Flow<List<Note>>
 
     suspend fun addNote(note: Note)
 

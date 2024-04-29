@@ -30,8 +30,8 @@ class NoteRepositoryImpl(
         }
     }
 
-    override fun getNotesByFolder(folderId: Int): Flow<List<Note>> {
-        return noteDao.getNotesByFolder(folderId)
+    override fun getNotesByFolder(folderName: String): Flow<List<Note>> {
+        return noteDao.getNotesByFolder(folderName)
     }
 
     override suspend fun addNote(note: Note) {

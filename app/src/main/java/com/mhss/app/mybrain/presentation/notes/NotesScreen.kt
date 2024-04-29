@@ -43,7 +43,7 @@ fun NotesScreen(
 ) {
     val uiState = viewModel.notesUiState
     var orderSettingsVisible by remember { mutableStateOf(false) }
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by remember { mutableIntStateOf(0) }
     var openCreateFolderDialog by remember { mutableStateOf(false) }
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(uiState.error) {
@@ -202,7 +202,7 @@ fun NotesScreen(
                                                 "${note.id}"
                                             ).replace(
                                                 "{${Constants.FOLDER_ID}}",
-                                                "-1"
+                                                ""
                                             )
                                         )
                                     },
@@ -217,7 +217,7 @@ fun NotesScreen(
                     navController.navigate(
                         Screen.NoteFolderDetailsScreen.route.replace(
                             "{${Constants.FOLDER_ID}}",
-                            "${it.id}"
+                            it.name
                         )
                     )
                 }

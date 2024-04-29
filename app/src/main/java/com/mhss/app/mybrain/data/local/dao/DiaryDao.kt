@@ -16,10 +16,10 @@ interface DiaryDao {
     @Query("SELECT * FROM diary WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
     suspend fun getEntriesByTitle(query: String): List<DiaryEntry>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntry(diary: DiaryEntry)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntries(diary: List<DiaryEntry>)
 
     @Update
