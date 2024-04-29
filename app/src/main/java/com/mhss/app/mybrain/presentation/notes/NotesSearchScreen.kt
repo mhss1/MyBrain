@@ -1,6 +1,5 @@
 package com.mhss.app.mybrain.presentation.notes
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,7 +23,6 @@ import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.ItemView
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NotesSearchScreen(
     navController: NavHostController,
