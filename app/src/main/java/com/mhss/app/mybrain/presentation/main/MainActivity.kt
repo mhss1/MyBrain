@@ -51,9 +51,7 @@ import com.mhss.app.mybrain.util.settings.toFontFamily
 import com.mhss.app.mybrain.util.settings.toInt
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
-@Suppress("BlockingMethodInNonBlockingContext")
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -65,12 +63,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val themeMode = viewModel.themeMode.collectAsState(initial = ThemeSettings.AUTO.value)
             val font = viewModel.font.collectAsState(initial = Rubik.toInt())
-            val blockScreenshots = viewModel.blockScreenshots.collectAsState(initial = false)
-            var startUpScreenSettings by remember { mutableStateOf(StartUpScreenSettings.SPACES.value) }
+            val blockScreenshots by viewModel.blockScreenshots.collectAsState(initial = false)
             val systemUiController = rememberSystemUiController()
-            LaunchedEffect(true) {
-                runBlocking {
-                    startUpScreenSettings = viewModel.defaultStartUpScreen.first()
+            var startDestination by remember { mutableStateOf(Screen.SpacesScreen.route) }
+
+            LaunchedEffect(Unit) {
+                if (viewModel.defaultStartUpScreen.first() == StartUpScreenSettings.DASHBOARD.value) {
+                    startDestination = Screen.DashboardScreen.route
                 }
                 if (!isNotificationPermissionGranted())
                     ActivityCompat.requestPermissions(
@@ -79,8 +78,8 @@ class MainActivity : ComponentActivity() {
                         0
                     )
             }
-            LaunchedEffect(blockScreenshots.value) {
-                if (blockScreenshots.value) {
+            LaunchedEffect(blockScreenshots) {
+                if (blockScreenshots) {
                     window.setFlags(
                         LayoutParams.FLAG_SECURE,
                         LayoutParams.FLAG_SECURE
@@ -88,9 +87,6 @@ class MainActivity : ComponentActivity() {
                 } else
                     window.clearFlags(LayoutParams.FLAG_SECURE)
             }
-            val startUpScreen =
-                if (startUpScreenSettings == StartUpScreenSettings.SPACES.value)
-                    Screen.SpacesScreen.route else Screen.DashboardScreen.route
             val isDarkMode = when (themeMode.value) {
                 ThemeSettings.DARK.value -> true
                 ThemeSettings.LIGHT.value -> false
@@ -114,7 +110,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Screen.Main.route) {
                             MainScreen(
-                                startUpScreen = startUpScreen,
+                                startUpScreen = startDestination,
                                 mainNavController = navController
                             )
                         }
