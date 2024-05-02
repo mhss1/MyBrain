@@ -212,7 +212,11 @@ fun NoteDetailsScreen(
                         .weight(1f)
                         .padding(vertical = 6.dp)
                         .border(1.dp, Color.Gray, RoundedCornerShape(20.dp))
-                        .padding(10.dp)
+                        .padding(10.dp),
+                    linkColor = Color.Blue,
+                    style = MaterialTheme.typography.body1.copy(
+                        color = MaterialTheme.colors.onBackground
+                    )
                 )
             else
                 OutlinedTextField(

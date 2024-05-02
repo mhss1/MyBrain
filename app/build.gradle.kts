@@ -115,7 +115,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.23.1")
 
     // Compose MarkDown
-    implementation("com.github.jeziellago:compose-markdown:0.3.4")
+    implementation("com.github.jeziellago:compose-markdown:0.5.0")
 
     // Compose Glance (Widgets)
     implementation("androidx.glance:glance-appwidget:1.1.0-beta02")
