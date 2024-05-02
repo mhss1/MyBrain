@@ -165,4 +165,10 @@
     <string name="password">كلمة السر</string>
     <string name="every_hour">كل ساعة</string>
     <string name="every_minute">كل دقيقة</string>
+    <string name="lock_app">قفل التطبيق</string>
+    <string name="auth_title">فتح القفل لاستخدام التطبيق</string>
+    <string name="auth_button">فتح القفل</string>
+    <string name="auth_no_hardware">لا توجد أجهزة للقياسات الحيوية في الجهاز</string>
+    <string name="auth_failed">فشل المصادقة</string>
+    <string name="no_auth_method">لم يتم تعيين قفل شاشة مدعوم على جهازك</string>
 </resources>

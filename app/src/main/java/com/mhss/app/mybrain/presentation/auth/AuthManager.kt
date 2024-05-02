@@ -1,0 +1,80 @@
+package com.mhss.app.mybrain.presentation.auth
+
+import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
+import androidx.biometric.BiometricPrompt
+import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.app.getString
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+
+class AuthManager(
+    private val activity: AppCompatActivity
+) {
+
+    private val biometricManager = BiometricManager.from(activity)
+
+    private val resultChannel = Channel<AuthResult>()
+    val resultFlow = resultChannel.receiveAsFlow()
+
+    private val authenticators = if (Build.VERSION.SDK_INT >= 30) {
+        BIOMETRIC_WEAK or DEVICE_CREDENTIAL
+    } else BIOMETRIC_WEAK
+
+    fun showAuthPrompt() {
+        val info = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(getString(R.string.auth_title))
+            .setConfirmationRequired(false)
+            .setAllowedAuthenticators(authenticators)
+            .build()
+
+        when (biometricManager.canAuthenticate(authenticators)) {
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+                resultChannel.trySend(AuthResult.NoHardware)
+            }
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
+                resultChannel.trySend(AuthResult.HardwareUnavailable)
+            }
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                resultChannel.trySend(AuthResult.NoneEnrolled)
+            }
+            else -> Unit
+        }
+        val prompt = BiometricPrompt(
+            activity,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    resultChannel.trySend(AuthResult.Error(errString.toString()))
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    resultChannel.trySend(AuthResult.Success)
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    resultChannel.trySend(AuthResult.Failed)
+                }
+            }
+        )
+        prompt.authenticate(info)
+    }
+
+    fun canUseFeature(): Boolean {
+        return biometricManager.canAuthenticate(authenticators) == BiometricManager.BIOMETRIC_SUCCESS
+    }
+
+    sealed interface AuthResult {
+        data object NoneEnrolled: AuthResult
+        data object HardwareUnavailable: AuthResult
+        data object NoHardware: AuthResult
+        data class Error(val message: String): AuthResult
+        data object Success: AuthResult
+        data object Failed: AuthResult
+    }
+}

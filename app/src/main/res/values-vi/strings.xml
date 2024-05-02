@@ -163,4 +163,10 @@
     <string name="password">Mật khẩu</string>
     <string name="every_hour">Mỗi giờ</string>
     <string name="every_minute">Mỗi phút</string>
+    <string name="lock_app">Lock app</string>
+    <string name="auth_title">Unlock to use the App</string>
+    <string name="auth_button">Unlock</string>
+    <string name="auth_no_hardware">No biometric Hardware available</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="no_auth_method">No supported authentication method is set on your device</string>
 </resources>

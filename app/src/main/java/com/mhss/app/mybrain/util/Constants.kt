@@ -21,6 +21,7 @@ object Constants {
     const val EXCLUDED_CALENDARS_KEY = "excluded_calendars"
     const val APP_FONT_KEY = "app_font"
     const val BLOCK_SCREENSHOTS_KEY = "block_screen_shots"
+    const val LOCK_APP_KEY = "lock_app"
 
     // Navigation
     const val TASK_ID_ARG = "task_id"
