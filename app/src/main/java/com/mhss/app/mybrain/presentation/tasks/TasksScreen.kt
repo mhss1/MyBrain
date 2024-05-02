@@ -40,7 +40,7 @@ fun TasksScreen(
     val focusRequester = remember { FocusRequester() }
     val uiState = viewModel.tasksUiState
     val scaffoldState = rememberScaffoldState()
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
     val scope = rememberCoroutineScope()
     BackHandler {
         if (sheetState.isVisible)
@@ -66,21 +66,23 @@ fun TasksScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    scope.launch {
-                        sheetState.show()
-                        focusRequester.requestFocus()
-                    }
-                },
-                backgroundColor = MaterialTheme.colors.primary,
-            ) {
-                Icon(
-                    modifier = Modifier.size(25.dp),
-                    painter = painterResource(R.drawable.ic_add),
-                    contentDescription = stringResource(R.string.add_task),
-                    tint = Color.White
-                )
+            AnimatedVisibility(!sheetState.isVisible){
+                FloatingActionButton(
+                    onClick = {
+                        scope.launch {
+                            sheetState.show()
+                            focusRequester.requestFocus()
+                        }
+                    },
+                    backgroundColor = MaterialTheme.colors.primary,
+                ) {
+                    Icon(
+                        modifier = Modifier.size(25.dp),
+                        painter = painterResource(R.drawable.ic_add),
+                        contentDescription = stringResource(R.string.add_task),
+                        tint = Color.White
+                    )
+                }
             }
         },
     ) {paddingValues ->

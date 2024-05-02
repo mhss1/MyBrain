@@ -78,7 +78,7 @@ enum class ItemView(@StringRes val title: Int, val value: Int) {
 }
 
 fun Int.toNotesView(): ItemView {
-    return ItemView.values().first { it.value == this }
+    return ItemView.entries.first { it.value == this }
 }
 
 
@@ -100,7 +100,7 @@ fun Priority.toInt(): Int {
 }
 
 fun Int.toTaskFrequency(): TaskFrequency {
-    return TaskFrequency.values().firstOrNull { it.value == this } ?: TaskFrequency.DAILY
+    return TaskFrequency.entries.firstOrNull { it.value == this } ?: TaskFrequency.DAILY
 }
 
 fun Int.toOrder(): Order {
