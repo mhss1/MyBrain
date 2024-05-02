@@ -68,10 +68,10 @@ dependencies {
     val coroutinesVersion = "1.8.0"
     val lifecycleVersion = "2.7.0"
     val workVersion = "2.9.0"
-    implementation(platform("androidx.compose:compose-bom:2024.04.01"))
+    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
 
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.core:core-ktx:1.13.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -107,7 +107,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
     // Preferences DataStore
-    implementation("androidx.datastore:datastore-preferences:1.1.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // Accompanist libraries
     implementation("com.google.accompanist:accompanist-flowlayout:0.23.1")
@@ -118,8 +118,8 @@ dependencies {
     implementation("com.github.jeziellago:compose-markdown:0.3.4")
 
     // Compose Glance (Widgets)
-    implementation("androidx.glance:glance-appwidget:1.0.0")
-    implementation("androidx.glance:glance-material:1.0.0")
+    implementation("androidx.glance:glance-appwidget:1.1.0-beta02")
+    implementation("androidx.glance:glance-material:1.1.0-beta02")
 
     //Moshi
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
