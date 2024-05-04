@@ -29,7 +29,8 @@ class AuthManager(
             .setTitle(getString(R.string.auth_title))
             .setConfirmationRequired(false)
             .setAllowedAuthenticators(authenticators)
-            .build()
+
+        if (Build.VERSION.SDK_INT < 30) info.setNegativeButtonText(activity.getString(R.string.cancel))
 
         when (biometricManager.canAuthenticate(authenticators)) {
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
@@ -48,7 +49,9 @@ class AuthManager(
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
-                    resultChannel.trySend(AuthResult.Error(errString.toString()))
+                    if (errorCode != BiometricPrompt.ERROR_USER_CANCELED) {
+                        resultChannel.trySend(AuthResult.Error(errString.toString()))
+                    }
                 }
 
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -62,7 +65,7 @@ class AuthManager(
                 }
             }
         )
-        prompt.authenticate(info)
+        prompt.authenticate(info.build())
     }
 
     fun canUseFeature(): Boolean {

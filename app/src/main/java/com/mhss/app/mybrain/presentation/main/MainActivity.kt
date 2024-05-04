@@ -284,7 +284,6 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 if (viewModel.lockApp.first()) {
                     appUnlocked = false
-                    authManager.showAuthPrompt()
                 }
                 authManager.resultFlow.collectLatest { authResult ->
                     when (authResult) {
@@ -329,5 +328,12 @@ class MainActivity : AppCompatActivity() {
             this,
             Manifest.permission.POST_NOTIFICATIONS
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && !appUnlocked) {
+            authManager.showAuthPrompt()
+        }
     }
 }
