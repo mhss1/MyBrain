@@ -59,9 +59,13 @@ fun LazyItemScope.DiaryEntryItem(
             if (entry.content.isNotBlank()){
                 MarkdownText(
                     markdown = entry.content,
-                    maxLines = 10,
+                    maxLines = 14,
+                    style = MaterialTheme.typography.body2.copy(
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colors.onBackground
+                    ),
                     onClick = {onClick(entry)},
-                    fontSize = 12.sp
+                    onLinkClicked = {onClick(entry)},
                 )
                 Spacer(Modifier.height(8.dp))
             }

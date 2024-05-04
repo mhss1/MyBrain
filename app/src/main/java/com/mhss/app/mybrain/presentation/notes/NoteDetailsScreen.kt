@@ -5,7 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -196,6 +198,7 @@ fun NoteDetailsScreen(
                 .fillMaxSize()
                 .padding(12.dp)
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
         ) {
             OutlinedTextField(
                 value = title,
@@ -206,13 +209,11 @@ fun NoteDetailsScreen(
             )
             if (readingMode)
                 MarkdownText(
-                    markdown = content.ifBlank { stringResource(R.string.note_content) },
+                    markdown = content,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
                         .padding(vertical = 6.dp)
-                        .border(1.dp, Color.Gray, RoundedCornerShape(20.dp))
-                        .padding(10.dp),
+                        .padding(8.dp),
                     linkColor = Color.Blue,
                     style = MaterialTheme.typography.body1.copy(
                         color = MaterialTheme.colors.onBackground
@@ -229,7 +230,7 @@ fun NoteDetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(bottom = 8.dp),
+                        .padding(bottom = 8.dp)
                 )
 
             Row(

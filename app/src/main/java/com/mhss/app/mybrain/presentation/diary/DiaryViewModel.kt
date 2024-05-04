@@ -65,7 +65,8 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.GetEntry -> viewModelScope.launch {
                 val entry = getEntry(event.entryId)
                 uiState = uiState.copy(
-                    entry = entry
+                    entry = entry,
+                    readingMode = true
                 )
             }
             is DiaryEvent.SearchEntries -> viewModelScope.launch {
@@ -102,7 +103,7 @@ class DiaryViewModel @Inject constructor(
         val searchEntries: List<DiaryEntry> = emptyList(),
         val navigateUp: Boolean = false,
         val chartEntries : List<DiaryEntry> = emptyList(),
-        val readingMode: Boolean = true
+        val readingMode: Boolean = false
     )
 
     private fun getEntries(order: Order) {

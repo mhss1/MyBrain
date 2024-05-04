@@ -88,7 +88,7 @@ class NotesViewModel @Inject constructor(
             is NoteEvent.GetNote -> viewModelScope.launch {
                 val note = getNote(event.noteId)
                 val folder = getAllFolders().first().firstOrNull { it.name == note.folderId }
-                notesUiState = notesUiState.copy(note = note, folder = folder)
+                notesUiState = notesUiState.copy(note = note, folder = folder, readingMode = true)
             }
             is NoteEvent.SearchNotes -> viewModelScope.launch {
                 val notes = searchNotes(event.query)
@@ -164,7 +164,7 @@ class NotesViewModel @Inject constructor(
         val error: String? = null,
         val noteView: ItemView = ItemView.LIST,
         val navigateUp: Boolean = false,
-        val readingMode: Boolean = true,
+        val readingMode: Boolean = false,
         val searchNotes: List<Note> = emptyList(),
         val folders: List<NoteFolder> = emptyList(),
         val folderNotes: List<Note> = emptyList(),

@@ -4,10 +4,11 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -166,6 +167,7 @@ fun DiaryEntryDetailsScreen(
                 .fillMaxSize()
                 .padding(12.dp)
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = stringResource(R.string.mood),
@@ -187,13 +189,15 @@ fun DiaryEntryDetailsScreen(
             Spacer(Modifier.height(8.dp))
             if (readingMode) {
                 MarkdownText(
-                    markdown = content.ifBlank { stringResource(R.string.content) },
+                    markdown = content,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
                         .padding(vertical = 6.dp)
-                        .border(1.dp, Color.Gray, RoundedCornerShape(20.dp))
-                        .padding(10.dp)
+                        .padding(10.dp),
+                    linkColor = Color.Blue,
+                    style = MaterialTheme.typography.body1.copy(
+                        color = MaterialTheme.colors.onBackground
+                    )
                 )
             } else {
                 OutlinedTextField(
@@ -201,7 +205,10 @@ fun DiaryEntryDetailsScreen(
                     onValueChange = { content = it },
                     label = { Text(text = stringResource(R.string.content)) },
                     shape = RoundedCornerShape(15.dp),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(bottom = 8.dp)
                 )
             }
         }

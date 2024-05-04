@@ -76,10 +76,9 @@ fun DiaryScreen(
                 )
             }
         }
-    ) {
-        if (uiState.entries.isEmpty())
-            NoEntriesMessage()
-        Column {
+    ) { paddingValues ->
+        if (uiState.entries.isEmpty()) { NoEntriesMessage() }
+        Column(Modifier.padding(paddingValues)) {
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
