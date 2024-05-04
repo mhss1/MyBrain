@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "notes",
@@ -17,6 +18,7 @@ import androidx.room.PrimaryKey
         )
     ]
 )
+@Serializable
 data class Note(
     val title: String = "",
     val content: String = "",

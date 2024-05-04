@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id ("com.google.dagger.hilt.android")
     id ("com.google.devtools.ksp")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -103,9 +104,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
-    // Gson
-    implementation("com.google.code.gson:gson:2.10.1")
-
     // Preferences DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
@@ -135,6 +133,9 @@ dependencies {
 
     // Biometric
     implementation("androidx.biometric:biometric:1.2.0-alpha05")
+
+    // Kotlinx serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 }
 
 ksp {

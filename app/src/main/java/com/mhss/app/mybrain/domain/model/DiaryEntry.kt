@@ -4,8 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mhss.app.mybrain.util.diary.Mood
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "diary")
+@Serializable
 data class DiaryEntry(
     val title: String = "",
     val content: String = "",

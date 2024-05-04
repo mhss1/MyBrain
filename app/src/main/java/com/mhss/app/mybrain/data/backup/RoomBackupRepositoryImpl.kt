@@ -3,7 +3,6 @@ package com.mhss.app.mybrain.data.backup
 import android.content.Context
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
-import com.google.gson.Gson
 import com.mhss.app.mybrain.data.local.dao.BookmarkDao
 import com.mhss.app.mybrain.data.local.dao.DiaryDao
 import com.mhss.app.mybrain.data.local.dao.NoteDao
@@ -17,6 +16,9 @@ import com.mhss.app.mybrain.domain.repository.RoomBackupRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 class RoomBackupRepositoryImpl @Inject constructor(
@@ -38,8 +40,6 @@ class RoomBackupRepositoryImpl @Inject constructor(
                 val pickedDir = DocumentFile.fromTreeUri(context, directoryUri)
                 val destination = pickedDir!!.createFile("application/json", fileName)
 
-                val gson = Gson()
-
                 val notes = notesDao.getAllNotes().first().map {
                     it.copy(id = 0)
                 }
@@ -56,13 +56,15 @@ class RoomBackupRepositoryImpl @Inject constructor(
 
                 val backupData = BackupData(notes, noteFolders, tasks, diary, bookmarks)
 
-                val backupJson = gson.toJson(backupData)
+                val backupJson = Json.encodeToString(backupData)
 
                 val outputStream =
                     destination?.let { context.contentResolver.openOutputStream(it.uri) }
                         ?: return@withContext false
 
-                outputStream.write(backupJson.toByteArray())
+                outputStream.use {
+                    it.write(backupJson.toByteArray())
+                }
 
                 true
             } catch (e: Exception) {
@@ -79,11 +81,10 @@ class RoomBackupRepositoryImpl @Inject constructor(
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val gson = Gson()
                 val inputStream = context.contentResolver.openInputStream(fileUri)
                 val backupJson = inputStream?.bufferedReader().use { it?.readText() }
                     ?: return@withContext false
-                val backupData = gson.fromJson(backupJson, BackupData::class.java)
+                val backupData = Json.decodeFromString<BackupData>(backupJson)
                 notesDao.insertNoteFolders(backupData.noteFolders)
                 notesDao.insertNotes(backupData.notes)
                 tasksDao.insertTasks(backupData.tasks)
@@ -97,6 +98,7 @@ class RoomBackupRepositoryImpl @Inject constructor(
         }
     }
 
+    @Serializable
     private data class BackupData(
         val notes: List<Note>,
         val noteFolders: List<NoteFolder>,

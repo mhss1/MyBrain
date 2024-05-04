@@ -30,14 +30,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.gson.Gson
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Calendar
-import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.*
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -107,11 +107,11 @@ fun CalendarScreen(
                 )
             }
         },
-    ) {
+    ) { paddingValues ->
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(paddingValues)
         ) {
             if (readCalendarPermissionState.hasPermission) {
                 LaunchedEffect(true) {
@@ -157,7 +157,7 @@ fun CalendarScreen(
                                 )
                                 events.forEach { event ->
                                     CalendarEventItem(event = event, onClick = {
-                                        val eventJson = Gson().toJson(event, CalendarEvent::class.java)
+                                        val eventJson = Json.encodeToString(event)
                                         // encoding the string to avoid crashes when the event contains fields that equals a URL
                                         val encodedJson = URLEncoder.encode(eventJson, StandardCharsets.UTF_8.toString())
                                         navController.navigate(
