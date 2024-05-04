@@ -101,7 +101,7 @@
     <string name="go_to_settings">الإنتقال الى الاعدادات</string>
     <string name="add_event">إضافة حدث</string>
     <string name="include_calendars">التقويمات المتضمنة :</string>
-    <string name="added_task">تمت الإضافة اللى المهام</string>
+    <string name="added_task">تمت الإضافة الى المهام</string>
     <string name="diary_chart">ملخص اليوميات</string>
     <string name="mood_during_month">مزاجك على مدار الشهر</string>
     <string name="mood_during_year">مزاجك على مدار السنة</string>
@@ -171,4 +171,5 @@
     <string name="auth_no_hardware">لا توجد أجهزة للقياسات الحيوية في الجهاز</string>
     <string name="auth_failed">فشل المصادقة</string>
     <string name="no_auth_method">لم يتم تعيين قفل شاشة مدعوم على جهازك</string>
+    <string name="added_note">تمت الإضافة الى الملاحظات</string>
 </resources>
