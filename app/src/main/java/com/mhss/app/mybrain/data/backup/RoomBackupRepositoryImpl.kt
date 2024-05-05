@@ -40,7 +40,7 @@ class RoomBackupRepositoryImpl @Inject constructor(
                 val pickedDir = DocumentFile.fromTreeUri(context, directoryUri)
                 val destination = pickedDir!!.createFile("application/json", fileName)
 
-                val notes = notesDao.getAllNotes().first().map {
+                val notes = notesDao.getAllNotes().map {
                     it.copy(id = 0)
                 }
                 val noteFolders = notesDao.getAllNoteFolders().first()
@@ -85,8 +85,18 @@ class RoomBackupRepositoryImpl @Inject constructor(
                 val backupJson = inputStream?.bufferedReader().use { it?.readText() }
                     ?: return@withContext false
                 val backupData = Json.decodeFromString<BackupData>(backupJson)
-                notesDao.insertNoteFolders(backupData.noteFolders)
-                notesDao.insertNotes(backupData.notes)
+                val noteFolders = backupData.noteFolders
+                val oldNoteFolderIds = noteFolders.map { it.id }
+                val newNoteFolderIds = notesDao.insertNoteFolders(noteFolders.map { it.copy(id = 0) })
+                if (newNoteFolderIds.size != oldNoteFolderIds.size) return@withContext false
+                val notes = backupData.notes.map { note ->
+                    if (note.folderId != null) {
+                        note.copy(
+                            folderId = newNoteFolderIds[oldNoteFolderIds.indexOf(note.folderId)].toInt()
+                        )
+                    } else note
+                }
+                notesDao.insertNotes(notes)
                 tasksDao.insertTasks(backupData.tasks)
                 diaryDao.insertEntries(backupData.diary)
                 bookmarksDao.insertBookmarks(backupData.bookmarks)

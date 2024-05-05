@@ -9,7 +9,10 @@ import kotlinx.coroutines.flow.Flow
 interface NoteDao {
 
     @Query("SELECT * FROM notes WHERE folder_id IS NULL")
-    fun getAllNotes(): Flow<List<Note>>
+    fun getAllFolderlessNotes(): Flow<List<Note>>
+
+    @Query("SELECT * FROM notes")
+    suspend fun getAllNotes(): List<Note>
 
     @Query("SELECT * FROM notes WHERE id = :id")
     suspend fun getNote(id: Int): Note

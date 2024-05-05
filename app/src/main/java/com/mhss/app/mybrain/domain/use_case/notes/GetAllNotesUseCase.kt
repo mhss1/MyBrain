@@ -12,7 +12,7 @@ class GetAllNotesUseCase @Inject constructor(
     private val notesRepository: NoteRepository
 ) {
     operator fun invoke(order: Order) : Flow<List<Note>> {
-        return notesRepository.getAllNotes().map { list ->
+        return notesRepository.getAllFolderlessNotes().map { list ->
             when (order.orderType) {
                 is OrderType.ASC -> {
                     when (order) {
