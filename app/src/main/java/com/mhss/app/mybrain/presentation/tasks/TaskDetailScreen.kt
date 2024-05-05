@@ -1,7 +1,11 @@
 package com.mhss.app.mybrain.presentation.tasks
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -43,6 +47,7 @@ import com.mhss.app.mybrain.util.settings.toInt
 import com.mhss.app.mybrain.util.settings.toPriority
 import java.util.*
 
+@SuppressLint("InlinedApi")
 @Composable
 fun TaskDetailScreen(
     navController: NavHostController,
@@ -55,6 +60,7 @@ fun TaskDetailScreen(
     val uiState = viewModel.taskDetailsUiState
     val scaffoldState = rememberScaffoldState()
     var openDialog by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
 
     var title by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
@@ -92,9 +98,17 @@ fun TaskDetailScreen(
             navController.navigateUp()
         }
         if (uiState.error != null) {
-            scaffoldState.snackbarHostState.showSnackbar(
-                uiState.error
+            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                uiState.error,
+                if (uiState.errorAlarm) context.getString(R.string.grant_permission) else null
             )
+            if (snackbarResult == SnackbarResult.ActionPerformed) {
+                Intent().also { intent ->
+                    intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                    intent.data = Uri.parse("package:" + context.applicationContext.packageName)
+                    context.startActivity(intent)
+                }
+            }
             viewModel.onEvent(TaskEvent.ErrorDisplayed)
         }
     }
