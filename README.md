@@ -5,7 +5,6 @@
 
 # My Brain
   
-  
 ### Open-source, All-in-one productivity app for Tasks, Notes, Calendar, Diary and Bookmarks.
 
 <div align="left">
@@ -21,7 +20,7 @@
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/packages/com.mhss.app.mybrain)
-[<img src="https://camo.githubusercontent.com/70bffd8873ab81e1bb0bccc44e488c3a989e3bd5/68747470733a2f2f692e6962622e636f2f71306d6463345a2f6765742d69742d6f6e2d6769746875622e706e67"
+[<img src="https://github.com/mhss1/MyBrain/assets/58703865/94cbf557-b1a9-4339-b6b4-def21dde3c11"
      alt="Get it on GitHub"
      height="80">](https://github.com/mhss1/MyBrain/releases/latest)
       
