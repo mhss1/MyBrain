@@ -25,7 +25,7 @@
      height="80">](https://github.com/mhss1/MyBrain/releases/latest)
       
 ## Features
-- Private with no data collection and no internet permission at all.
+- Private with no data collection at all.
 - Create tasks with priority, sub-tasks, description and due date and reminders.
 - Create Notes that supports markdown which enables you to use Headers, lists, links etc..
 - Record your mood daily and view your mood summary with beautiful graphs.
