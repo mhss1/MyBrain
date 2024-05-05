@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +44,7 @@ fun NotesScreen(
 ) {
     val uiState = viewModel.notesUiState
     var orderSettingsVisible by remember { mutableStateOf(false) }
-    var selectedTab by remember { mutableIntStateOf(0) }
+    var selectedTab by rememberSaveable { mutableIntStateOf(0) }
     var openCreateFolderDialog by remember { mutableStateOf(false) }
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(uiState.error) {
@@ -77,7 +78,7 @@ fun NotesScreen(
                         navController.navigate(
                             Screen.NoteDetailsScreen.route.replace(
                                 "{${Constants.NOTE_ID_ARG}}",
-                                "${-1}"
+                                "-1"
                             ).replace(
                                 "{${Constants.FOLDER_ID}}",
                                 "-1"
@@ -217,7 +218,7 @@ fun NotesScreen(
                     navController.navigate(
                         Screen.NoteFolderDetailsScreen.route.replace(
                             "{${Constants.FOLDER_ID}}",
-                            it.name
+                            "${it.id}"
                         )
                     )
                 }

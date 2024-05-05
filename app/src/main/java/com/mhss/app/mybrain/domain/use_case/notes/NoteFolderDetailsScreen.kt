@@ -37,7 +37,7 @@ import com.mhss.app.mybrain.util.settings.ItemView
 @Composable
 fun NoteFolderDetailsScreen(
     navController: NavHostController,
-    name: String,
+    id: Int,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.notesUiState
@@ -47,7 +47,7 @@ fun NoteFolderDetailsScreen(
     var openEditDialog by remember { mutableStateOf(false) }
 
     val scaffoldState = rememberScaffoldState()
-    LaunchedEffect(true) {viewModel.onEvent(NoteEvent.GetFolderNotes(name)) }
+    LaunchedEffect(true) {viewModel.onEvent(NoteEvent.GetFolderNotes(id)) }
     LaunchedEffect(uiState) {
         if (viewModel.notesUiState.navigateUp) {
             navController.popBackStack(route = Screen.NotesScreen.route, inclusive = false)
@@ -90,7 +90,7 @@ fun NoteFolderDetailsScreen(
                                 "${-1}"
                             ).replace(
                                 "{${Constants.FOLDER_ID}}",
-                                name
+                                "$id"
                             )
                         )
                 },

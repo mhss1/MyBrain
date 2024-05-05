@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 )
 @Serializable
 data class NoteFolder(
-    @PrimaryKey(autoGenerate = false)
-    val name: String
+    val name: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0
 )

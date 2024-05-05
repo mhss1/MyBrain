@@ -36,6 +36,7 @@ class NotesViewModel @Inject constructor(
     private val deleteFolder: DeleteNoteFolderUseCass,
     private val updateFolder: UpdateNoteFolderUseCass,
     private val getFolderNotes: GetNotesByFolderUseCase,
+    private val getNoteFolder: GetNoteFolderUseCase
 ) : ViewModel() {
 
     var notesUiState by mutableStateOf((UiState()))
@@ -87,7 +88,7 @@ class NotesViewModel @Inject constructor(
             }
             is NoteEvent.GetNote -> viewModelScope.launch {
                 val note = getNote(event.noteId)
-                val folder = getAllFolders().first().firstOrNull { it.name == note.folderId }
+                val folder = getAllFolders().first().firstOrNull { it.id == note.folderId }
                 notesUiState = notesUiState.copy(note = note, folder = folder, readingMode = true)
             }
             is NoteEvent.SearchNotes -> viewModelScope.launch {
@@ -148,10 +149,10 @@ class NotesViewModel @Inject constructor(
                 }
             }
             is NoteEvent.GetFolderNotes -> {
-                getNotesFromFolder(event.name, notesUiState.notesOrder)
+                getNotesFromFolder(event.id, notesUiState.notesOrder)
             }
             is NoteEvent.GetFolder -> viewModelScope.launch {
-                val folder = getAllFolders().first().firstOrNull { it.name == event.name }
+                val folder = getNoteFolder(event.id)
                 notesUiState = notesUiState.copy(folder = folder)
             }
         }
@@ -182,11 +183,11 @@ class NotesViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private fun getNotesFromFolder(name: String, order: Order) {
+    private fun getNotesFromFolder(id: Int, order: Order) {
         getFolderNotesJob?.cancel()
-        getFolderNotesJob = getFolderNotes(name, order)
+        getFolderNotesJob = getFolderNotes(id, order)
             .onEach { notes ->
-                val noteFolder = getAllFolders().first().firstOrNull { it.name == name }
+                val noteFolder = getNoteFolder(id)
                 notesUiState = notesUiState.copy(
                     folderNotes = notes,
                     folder = noteFolder

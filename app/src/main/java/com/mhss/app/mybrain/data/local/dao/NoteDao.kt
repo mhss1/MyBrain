@@ -17,8 +17,8 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
     suspend fun getNotesByTitle(query: String): List<Note>
 
-    @Query("SELECT * FROM notes WHERE folder_id = :folderName")
-    fun getNotesByFolder(folderName: String): Flow<List<Note>>
+    @Query("SELECT * FROM notes WHERE folder_id = :folderId")
+    fun getNotesByFolder(folderId: Int): Flow<List<Note>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: Note)
@@ -36,7 +36,7 @@ interface NoteDao {
     suspend fun insertNoteFolder(folder: NoteFolder)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertNoteFolders(folders: List<NoteFolder>)
+    suspend fun insertNoteFolders(folders: List<NoteFolder>): List<Long>
 
     @Update
     suspend fun updateNoteFolder(folder: NoteFolder)
@@ -46,4 +46,7 @@ interface NoteDao {
 
     @Query("SELECT * FROM note_folders")
     fun getAllNoteFolders(): Flow<List<NoteFolder>>
+
+    @Query("SELECT * FROM note_folders WHERE id = :folderId")
+    fun getNoteFolder(folderId: Int): NoteFolder?
 }

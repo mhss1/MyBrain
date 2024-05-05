@@ -33,12 +33,12 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 fun NoteDetailsScreen(
     navController: NavHostController,
     noteId: Int,
-    folderId: String,
+    folderId: Int,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     LaunchedEffect(true) {
         if (noteId != -1) viewModel.onEvent(NoteEvent.GetNote(noteId))
-        if (folderId.isNotBlank()) viewModel.onEvent(NoteEvent.GetFolder(folderId))
+        if (folderId != -1) viewModel.onEvent(NoteEvent.GetFolder(folderId))
     }
     val state = viewModel.notesUiState
     val scaffoldState = rememberScaffoldState()
@@ -85,7 +85,7 @@ fun NoteDetailsScreen(
                 title = title,
                 content = content,
                 pinned = pinned,
-                folderId = folder?.name
+                folderId = folder?.id
             ),
             state.note,
             onNotChanged = {
@@ -101,7 +101,7 @@ fun NoteDetailsScreen(
                             state.note.copy(
                                 title = title,
                                 content = content,
-                                folderId = folder?.name
+                                folderId = folder?.id
                             )
                         )
                     )
@@ -112,7 +112,7 @@ fun NoteDetailsScreen(
                                 title = title,
                                 content = content,
                                 pinned = pinned,
-                                folderId = folder?.name
+                                folderId = folder?.id
                             )
                         )
                     )
@@ -318,7 +318,7 @@ fun NoteDetailsScreen(
                                         folder = it
                                         openFolderDialog = false
                                     }
-                                    .background(if (folder?.name == it.name) MaterialTheme.colors.onBackground else Color.Transparent),
+                                    .background(if (folder?.id == it.id) MaterialTheme.colors.onBackground else Color.Transparent),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
@@ -329,7 +329,7 @@ fun NoteDetailsScreen(
                                         top = 8.dp,
                                         bottom = 8.dp
                                     ),
-                                    tint = if (folder?.name == it.name) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
+                                    tint = if (folder?.id == it.id) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
@@ -340,7 +340,7 @@ fun NoteDetailsScreen(
                                         bottom = 8.dp
                                     ),
                                     style = MaterialTheme.typography.body1,
-                                    color = if (folder?.name == it.name) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
+                                    color = if (folder?.id == it.id) MaterialTheme.colors.background else MaterialTheme.colors.onBackground
                                 )
                             }
                         }

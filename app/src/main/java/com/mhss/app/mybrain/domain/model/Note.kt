@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
     foreignKeys = [
         ForeignKey(
             entity = NoteFolder::class,
-            parentColumns = ["name"],
+            parentColumns = ["id"],
             childColumns = ["folder_id"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.NO_ACTION
@@ -28,7 +28,7 @@ data class Note(
     val updatedDate: Long = 0L,
     val pinned: Boolean = false,
     @ColumnInfo(name = "folder_id")
-    val folderId: String? = null,
+    val folderId: Int? = null,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 )
