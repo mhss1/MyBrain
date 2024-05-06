@@ -1,0 +1,11 @@
+- Added Vietnamese language by @ngocanhtve
+- Added lock app option
+- Added the ability to save text to note from share menu
+- Added subtasks progress in task card
+- Fixed backup problems causing missing data
+- Performance Improvements
+- UX improvements
+- Bug fixes
+### Notes:
+- The backup file format has been changed. You won't be able to import old backups in the new version so please create a new backup as soon as you install the new update to be able to restore it later.
+- Added internet permission for markdown features that require it and other future app features
