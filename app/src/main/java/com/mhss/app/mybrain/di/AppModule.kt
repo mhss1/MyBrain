@@ -92,15 +92,9 @@ object AppModule {
     @Provides
     fun provideBackupRepository(
         @ApplicationContext context: Context,
-        notesDao: NoteDao,
-        tasksDao: TaskDao,
-        diaryDao: DiaryDao,
-        bookmarksDao: BookmarkDao,
+        database: MyBrainDatabase
     ): RoomBackupRepository = RoomBackupRepositoryImpl(
         context,
-        notesDao,
-        tasksDao,
-        diaryDao,
-        bookmarksDao,
+        database
     )
 }

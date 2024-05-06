@@ -3,10 +3,8 @@ package com.mhss.app.mybrain.data.backup
 import android.content.Context
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
-import com.mhss.app.mybrain.data.local.dao.BookmarkDao
-import com.mhss.app.mybrain.data.local.dao.DiaryDao
-import com.mhss.app.mybrain.data.local.dao.NoteDao
-import com.mhss.app.mybrain.data.local.dao.TaskDao
+import androidx.room.withTransaction
+import com.mhss.app.mybrain.data.local.MyBrainDatabase
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.domain.model.DiaryEntry
 import com.mhss.app.mybrain.domain.model.Note
@@ -16,19 +14,19 @@ import com.mhss.app.mybrain.domain.repository.RoomBackupRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.encodeToStream
 import javax.inject.Inject
 
 class RoomBackupRepositoryImpl @Inject constructor(
     private val context: Context,
-    private val notesDao: NoteDao,
-    private val tasksDao: TaskDao,
-    private val diaryDao: DiaryDao,
-    private val bookmarksDao: BookmarkDao,
+    private val database: MyBrainDatabase
 ) : RoomBackupRepository {
 
+    @OptIn(ExperimentalSerializationApi::class)
     override suspend fun exportDatabase(
         directoryUri: Uri,
         encrypted: Boolean, // To be added in a future version
@@ -40,30 +38,28 @@ class RoomBackupRepositoryImpl @Inject constructor(
                 val pickedDir = DocumentFile.fromTreeUri(context, directoryUri)
                 val destination = pickedDir!!.createFile("application/json", fileName)
 
-                val notes = notesDao.getAllNotes().map {
+                val notes = database.noteDao().getAllNotes().map {
                     it.copy(id = 0)
                 }
-                val noteFolders = notesDao.getAllNoteFolders().first()
-                val tasks = tasksDao.getAllTasks().first().map {
+                val noteFolders = database.noteDao().getAllNoteFolders().first()
+                val tasks = database.taskDao().getAllTasks().first().map {
                     it.copy(id = 0)
                 }
-                val diary = diaryDao.getAllEntries().first().map {
+                val diary = database.diaryDao().getAllEntries().first().map {
                     it.copy(id = 0)
                 }
-                val bookmarks = bookmarksDao.getAllBookmarks().first().map {
+                val bookmarks = database.bookmarkDao().getAllBookmarks().first().map {
                     it.copy(id = 0)
                 }
 
                 val backupData = BackupData(notes, noteFolders, tasks, diary, bookmarks)
-
-                val backupJson = Json.encodeToString(backupData)
 
                 val outputStream =
                     destination?.let { context.contentResolver.openOutputStream(it.uri) }
                         ?: return@withContext false
 
                 outputStream.use {
-                    it.write(backupJson.toByteArray())
+                    Json.encodeToStream(backupData, outputStream)
                 }
 
                 true
@@ -74,6 +70,7 @@ class RoomBackupRepositoryImpl @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override suspend fun importDatabase(
         fileUri: Uri,
         encrypted: Boolean, // To be added in a future version
@@ -81,25 +78,28 @@ class RoomBackupRepositoryImpl @Inject constructor(
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val inputStream = context.contentResolver.openInputStream(fileUri)
-                val backupJson = inputStream?.bufferedReader().use { it?.readText() }
-                    ?: return@withContext false
-                val backupData = Json.decodeFromString<BackupData>(backupJson)
-                val noteFolders = backupData.noteFolders
-                val oldNoteFolderIds = noteFolders.map { it.id }
-                val newNoteFolderIds = notesDao.insertNoteFolders(noteFolders.map { it.copy(id = 0) })
-                if (newNoteFolderIds.size != oldNoteFolderIds.size) return@withContext false
-                val notes = backupData.notes.map { note ->
-                    if (note.folderId != null) {
-                        note.copy(
-                            folderId = newNoteFolderIds[oldNoteFolderIds.indexOf(note.folderId)].toInt()
-                        )
-                    } else note
+                val json = Json {
+                    ignoreUnknownKeys = true
                 }
-                notesDao.insertNotes(notes)
-                tasksDao.insertTasks(backupData.tasks)
-                diaryDao.insertEntries(backupData.diary)
-                bookmarksDao.insertBookmarks(backupData.bookmarks)
+                val backupData = context.contentResolver.openInputStream(fileUri)?.use {
+                    json.decodeFromStream<BackupData>(it)
+                } ?: return@withContext false
+                val oldNoteFolderIds = backupData.noteFolders.map { it.id }
+                database.withTransaction {
+                    val newNoteFolderIds = database.noteDao().insertNoteFolders(backupData.noteFolders.map { it.copy(id = 0) })
+                    if (newNoteFolderIds.size != oldNoteFolderIds.size) throw Exception("New folder count does not match old folder count.")
+                    val notes = backupData.notes.map { note ->
+                        if (note.folderId != null) {
+                            note.copy(
+                                folderId = newNoteFolderIds[oldNoteFolderIds.indexOf(note.folderId)].toInt()
+                            )
+                        } else note
+                    }
+                    database.noteDao().insertNotes(notes)
+                    database.taskDao().insertTasks(backupData.tasks)
+                    database.diaryDao().insertEntries(backupData.diary)
+                    database.bookmarkDao().insertBookmarks(backupData.bookmarks)
+                }
                 true
             } catch (e: Exception) {
                 e.printStackTrace()
