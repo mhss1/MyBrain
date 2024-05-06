@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM notes WHERE folder_id IS NULL")
+    @Query("SELECT title, SUBSTR(content, 1, 450) AS content, created_date, updated_date, pinned, folder_id, id FROM notes WHERE folder_id IS NULL")
     fun getAllFolderlessNotes(): Flow<List<Note>>
 
     @Query("SELECT * FROM notes")
@@ -20,7 +20,7 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
     suspend fun getNotesByTitle(query: String): List<Note>
 
-    @Query("SELECT * FROM notes WHERE folder_id = :folderId")
+    @Query("SELECT title, SUBSTR(content, 1, 450) AS content, created_date, updated_date, pinned, folder_id, id FROM notes WHERE folder_id = :folderId")
     fun getNotesByFolder(folderId: Int): Flow<List<Note>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
