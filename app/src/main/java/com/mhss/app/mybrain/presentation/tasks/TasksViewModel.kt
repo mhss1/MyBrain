@@ -73,13 +73,21 @@ class TasksViewModel @Inject constructor(
                 if (event.task.title.isNotBlank()) {
                     viewModelScope.launch {
                         val taskId = addTask(event.task)
-                        if (event.task.dueDate != 0L)
-                            addAlarm(
+                        if (event.task.dueDate != 0L){
+                            val scheduleSuccess = addAlarm(
                                 Alarm(
                                     taskId.toInt(),
                                     event.task.dueDate,
                                 )
                             )
+                            if (!scheduleSuccess) {
+                                tasksUiState = tasksUiState.copy(
+                                    error = getString(R.string.no_alarm_permission),
+                                    errorAlarm = true
+                                )
+                                updateTask(event.task.copy(id = taskId.toInt(), dueDate = 0L))
+                            }
+                        }
                     }
 
                 }else
@@ -89,8 +97,8 @@ class TasksViewModel @Inject constructor(
                 completeTask(event.task.id, event.complete)
             }
             TaskEvent.ErrorDisplayed -> {
-                tasksUiState = tasksUiState.copy(error = null)
-                taskDetailsUiState = taskDetailsUiState.copy(error = null)
+                tasksUiState = tasksUiState.copy(error = null, errorAlarm = false)
+                taskDetailsUiState = taskDetailsUiState.copy(error = null, errorAlarm = false)
             }
             is TaskEvent.UpdateOrder -> viewModelScope.launch {
                 saveSettings(
@@ -115,17 +123,29 @@ class TasksViewModel @Inject constructor(
                 else {
                     updateTask(event.task.copy(updatedDate = System.currentTimeMillis()))
                     if (event.task.dueDate != taskDetailsUiState.task.dueDate){
-                        if (event.task.dueDate != 0L)
-                            addAlarm(
+                        if (event.task.dueDate != 0L) {
+                            val scheduleSuccess = addAlarm(
                                 Alarm(
                                     event.task.id,
                                     event.task.dueDate
                                 )
                             )
-                        else
+                            taskDetailsUiState = if (!scheduleSuccess) {
+                                taskDetailsUiState.copy(
+                                    error = getString(R.string.no_alarm_permission),
+                                    errorAlarm = true
+                                )
+                            } else {
+                                taskDetailsUiState.copy(navigateUp = true)
+                            }
+                        }
+                        else {
                             deleteAlarm(event.task.id)
+                            taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
+                        }
+                    } else {
+                        taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
                     }
-                    taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
                 }
             }
             is TaskEvent.DeleteTask -> viewModelScope.launch {
@@ -147,13 +167,15 @@ class TasksViewModel @Inject constructor(
         val taskOrder: Order = Order.DateModified(OrderType.ASC()),
         val showCompletedTasks: Boolean = false,
         val error: String? = null,
+        val errorAlarm: Boolean = false,
         val searchTasks: List<Task> = emptyList()
     )
 
     data class TaskUiState(
         val task: Task = Task(""),
         val navigateUp: Boolean = false,
-        val error: String? = null
+        val error: String? = null,
+        val errorAlarm: Boolean = false
     )
 
      private fun getTasks(order: Order, showCompleted: Boolean) {

@@ -1,5 +1,8 @@
 package com.mhss.app.mybrain.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CalendarEvent(
     val id: Long,
     val title: String,

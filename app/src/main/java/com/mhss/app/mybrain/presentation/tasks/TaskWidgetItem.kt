@@ -1,6 +1,7 @@
 package com.mhss.app.mybrain.presentation.tasks
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,28 +83,60 @@ fun TaskWidgetItem(
                         )
                     ))
                 )
+
             }
-            if (task.dueDate != 0L) {
-                Spacer(GlanceModifier.height(4.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        modifier = GlanceModifier.size(10.dp),
-                        provider = if (task.dueDate.isDueDateOverdue()) ImageProvider(R.drawable.ic_alarm_red) else ImageProvider(
-                            R.drawable.ic_alarm
-                        ),
-                        contentDescription = "",
-                    )
-                    Spacer(GlanceModifier.width(3.dp))
-                    Text(
-                        text = task.dueDate.formatDateDependingOnDay(),
-                        style = TextStyle(
-                            color = if (task.dueDate.isDueDateOverdue()) ColorProvider(Color.Red) else ColorProvider(
-                                Color.White
-                            ),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp,
+            Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                if (task.subTasks.isNotEmpty()){
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = GlanceModifier.padding(top = 4.dp)
+                    ) {
+                        val completed = remember {
+                            task.subTasks.count { it.isCompleted }
+                        }
+                        val total = task.subTasks.size
+                        Image(
+                            provider = ImageProvider(R.drawable.ic_bullet_list),
+                            modifier = GlanceModifier
+                                .size(12.dp),
+                            contentDescription = null
                         )
-                    )
+                        Spacer(GlanceModifier.width(3.dp))
+                        Text(
+                            text = "$completed/$total",
+                            style = TextStyle(
+                                color = ColorProvider(Color.White.copy(alpha = 0.8f)),
+                                fontSize = 12.sp,
+                                textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
+                            )
+                        )
+                    }
+                    Spacer(GlanceModifier.width(4.dp))
+                }
+                if (task.dueDate != 0L) {
+                    Row(
+                        modifier = GlanceModifier.padding(top = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            modifier = GlanceModifier.size(12.dp),
+                            provider = if (task.dueDate.isDueDateOverdue()) ImageProvider(R.drawable.ic_alarm_red) else ImageProvider(
+                                R.drawable.ic_alarm
+                            ),
+                            contentDescription = "",
+                        )
+                        Spacer(GlanceModifier.width(3.dp))
+                        Text(
+                            text = task.dueDate.formatDateDependingOnDay(),
+                            style = TextStyle(
+                                color = if (task.dueDate.isDueDateOverdue()) ColorProvider(Color.Red) else ColorProvider(
+                                    Color.White.copy(0.8f)
+                                ),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 12.sp,
+                            )
+                        )
+                    }
                 }
             }
         }

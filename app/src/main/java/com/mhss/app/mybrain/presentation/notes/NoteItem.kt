@@ -64,8 +64,12 @@ fun NoteItem(
             MarkdownText(
                 markdown = note.content,
                 maxLines = 14,
+                style = MaterialTheme.typography.body2.copy(
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colors.onBackground
+                ),
                 onClick = {onClick(note)},
-                fontSize = 12.sp
+                onLinkClicked = {onClick(note)},
             )
             Spacer(Modifier.height(8.dp))
             Text(

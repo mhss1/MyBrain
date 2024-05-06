@@ -30,7 +30,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.gson.Gson
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Calendar
 import com.mhss.app.mybrain.domain.model.CalendarEvent
@@ -38,6 +37,7 @@ import com.mhss.app.mybrain.util.calendar.*
 import com.mhss.app.mybrain.util.date.HOUR_IN_MILLIS
 import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.date.formatTime
+import kotlinx.serialization.json.Json
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -56,9 +56,9 @@ fun CalendarEventDetailsScreen(
     val context = LocalContext.current
     val event by remember {
         mutableStateOf(
-            if (eventJson.isNotEmpty()) {
+            if (eventJson.isNotBlank()) {
                 val decodedJson = URLDecoder.decode(eventJson, StandardCharsets.UTF_8.toString())
-                Gson().fromJson(decodedJson, CalendarEvent::class.java)
+               Json.decodeFromString<CalendarEvent>(decodedJson)
             } else
                 null
         )
@@ -66,12 +66,12 @@ fun CalendarEventDetailsScreen(
     var title by rememberSaveable { mutableStateOf(event?.title ?: "") }
     var description by rememberSaveable { mutableStateOf(event?.description ?: "") }
     var startDate by rememberSaveable {
-        mutableStateOf(
+        mutableLongStateOf(
             event?.start ?: (System.currentTimeMillis() + HOUR_IN_MILLIS)
         )
     }
     var endDate by rememberSaveable {
-        mutableStateOf(
+        mutableLongStateOf(
             event?.end ?: (System.currentTimeMillis() + 2 * HOUR_IN_MILLIS)
         )
     }
@@ -158,7 +158,7 @@ fun CalendarEventDetailsScreen(
                     )
                 }
             }
-        ) {
+        ) { paddingValues ->
             DeleteEventDialog(
                 openDeleteDialog,
                 onDelete = { viewModel.onEvent(CalendarViewModelEvent.DeleteEvent(event!!)) },
@@ -168,6 +168,7 @@ fun CalendarEventDetailsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp)
+                    .padding(paddingValues)
                     .verticalScroll(rememberScrollState()),
             ) {
                 OutlinedTextField(

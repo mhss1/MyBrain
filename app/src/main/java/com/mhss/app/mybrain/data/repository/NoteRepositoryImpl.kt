@@ -14,8 +14,8 @@ class NoteRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : NoteRepository {
 
-    override fun getAllNotes(): Flow<List<Note>> {
-        return noteDao.getAllNotes()
+    override fun getAllFolderlessNotes(): Flow<List<Note>> {
+        return noteDao.getAllFolderlessNotes()
     }
 
     override suspend fun getNote(id: Int): Note {
@@ -72,5 +72,11 @@ class NoteRepositoryImpl(
 
     override fun getAllNoteFolders(): Flow<List<NoteFolder>> {
         return noteDao.getAllNoteFolders()
+    }
+
+    override suspend fun getNoteFolder(folderId: Int): NoteFolder? {
+        return withContext(Dispatchers.IO) {
+            noteDao.getNoteFolder(folderId)
+        }
     }
 }

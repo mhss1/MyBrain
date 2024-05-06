@@ -101,7 +101,7 @@
     <string name="go_to_settings">الإنتقال الى الاعدادات</string>
     <string name="add_event">إضافة حدث</string>
     <string name="include_calendars">التقويمات المتضمنة :</string>
-    <string name="added_task">تمت الإضافة اللى المهام</string>
+    <string name="added_task">تمت الإضافة الى المهام</string>
     <string name="diary_chart">ملخص اليوميات</string>
     <string name="mood_during_month">مزاجك على مدار الشهر</string>
     <string name="mood_during_year">مزاجك على مدار السنة</string>
@@ -155,7 +155,7 @@
     <string name="export_success">تم تصدير البيانات</string>
     <string name="export_failed">حدث خطأ أثناء التصدير</string>
     <string name="import_data">استيراد البيانات</string>
-    <string name="import_success">تم تصدير %1$s</string>
+    <string name="import_success">تم تصدير البيانات</string>
     <string name="import_failed">حدث خطأ أثناء الاستيراد. تأكد من عدم تخريب محتوى الملف</string>
     <string name="grant_permission_to_export">منح اذن التخزين للتصدير</string>
     <string name="importing">يتم الاستيراد....</string>
@@ -165,4 +165,12 @@
     <string name="password">كلمة السر</string>
     <string name="every_hour">كل ساعة</string>
     <string name="every_minute">كل دقيقة</string>
+    <string name="lock_app">قفل التطبيق</string>
+    <string name="auth_title">فتح القفل لاستخدام التطبيق</string>
+    <string name="auth_button">فتح القفل</string>
+    <string name="auth_no_hardware">لا توجد أجهزة للقياسات الحيوية في الجهاز</string>
+    <string name="auth_failed">فشل المصادقة</string>
+    <string name="no_auth_method">لم يتم تعيين قفل شاشة مدعوم على جهازك</string>
+    <string name="added_note">تمت الإضافة الى الملاحظات</string>
+    <string name="no_alarm_permission">لرجاء منح اذن المنبات لإضافة وقت</string>
 </resources>

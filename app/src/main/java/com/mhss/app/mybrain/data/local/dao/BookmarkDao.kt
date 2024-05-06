@@ -16,7 +16,7 @@ interface BookmarkDao {
     @Query("SELECT * FROM bookmarks WHERE title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%' OR url LIKE '%' || :query || '%'")
     suspend fun getBookmark(query: String): List<Bookmark>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookmark(bookmark: Bookmark)
 
     @Update
@@ -25,7 +25,7 @@ interface BookmarkDao {
     @Delete
     suspend fun deleteBookmark(bookmark: Bookmark)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookmarks(bookmarks: List<Bookmark>)
 
 }

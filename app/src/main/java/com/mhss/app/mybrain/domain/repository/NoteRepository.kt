@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    fun getAllNotes(): Flow<List<Note>>
+    fun getAllFolderlessNotes(): Flow<List<Note>>
 
     suspend fun getNote(id: Int): Note
 
@@ -27,5 +27,7 @@ interface NoteRepository {
     suspend fun deleteNoteFolder(folder: NoteFolder)
 
     fun getAllNoteFolders(): Flow<List<NoteFolder>>
+
+    suspend fun getNoteFolder(folderId: Int): NoteFolder?
 
 }

@@ -9,6 +9,7 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/inspectionProfiles/Project_Default.xml
 /.idea/deploymentTargetDropDown.xml
 .DS_Store
 /build
@@ -16,3 +17,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/deploymentTargetSelector.xml
+/app/release

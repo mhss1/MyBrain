@@ -11,14 +11,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.google.gson.Gson
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.presentation.calendar.CalendarDashboardWidget
 import com.mhss.app.mybrain.presentation.diary.MoodCircularBar
 import com.mhss.app.mybrain.presentation.tasks.TasksDashboardWidget
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -66,7 +66,7 @@ fun DashboardScreen(
                         )
                     },
                     onEventClicked = {
-                        val eventJson = Gson().toJson(it, CalendarEvent::class.java)
+                        val eventJson = Json.encodeToString(it)
                         // encoding the string to avoid crashes when the event contains fields that equals a URL
                         val encodedJson = URLEncoder.encode(eventJson, StandardCharsets.UTF_8.toString())
                         navController.navigate(

@@ -1,9 +1,5 @@
 package com.mhss.app.mybrain.presentation.settings
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -15,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.main.MainActivity
 
 @Composable
 fun ImportExportScreen(
@@ -34,10 +28,6 @@ fun ImportExportScreen(
     }
     val password by remember {
         mutableStateOf("")
-    }
-    val context = LocalContext.current
-    val activity = remember {
-        context.findActivity()
     }
     val pickFileLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument()
@@ -54,19 +44,6 @@ fun ImportExportScreen(
         }
     }
     val backupResult by viewModel.backupResult.collectAsState()
-
-    LaunchedEffect(backupResult) {
-        if (backupResult == SettingsViewModel.BackupResult.ImportSuccess) {
-            activity?.let {
-                val intent = Intent(it, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
-                it.startActivity(intent)
-                it.finish()
-                Runtime.getRuntime().exit(0)
-            }
-        }
-    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -178,6 +155,16 @@ fun ImportExportScreen(
                     color = MaterialTheme.colors.error
                 )
             }
+            if (backupResult == SettingsViewModel.BackupResult.ImportSuccess) {
+                Text(
+                    text = stringResource(R.string.import_success),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                    textAlign = TextAlign.Center
+                )
+            }
             if (backupResult == SettingsViewModel.BackupResult.Loading) {
                 CircularProgressIndicator(
                     Modifier
@@ -188,13 +175,4 @@ fun ImportExportScreen(
 
         }
     }
-}
-
-fun Context.findActivity(): Activity? {
-    var context = this
-    while (context is ContextWrapper) {
-        if (context is Activity) return context
-        context = context.baseContext
-    }
-    return null
 }

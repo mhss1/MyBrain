@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -103,7 +104,7 @@ fun NoteFolderDetailsScreen(
                 )
             }
         }
-    ) { _ ->
+    ) { contentPadding ->
         if (uiState.noteView == ItemView.LIST) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -112,7 +113,8 @@ fun NoteFolderDetailsScreen(
                     bottom = 24.dp,
                     start = 12.dp,
                     end = 12.dp
-                )
+                ),
+                modifier = Modifier.padding(contentPadding)
             ) {
                 items(uiState.folderNotes, key = { it.id }) { note ->
                     NoteItem(
@@ -199,7 +201,7 @@ fun NoteFolderDetailsScreen(
                 }
             )
         if (openEditDialog){
-            var name by remember { mutableStateOf(folder?.name ?: "") }
+            var folderName by remember { mutableStateOf(folder?.name ?: "") }
             AlertDialog(
                 onDismissRequest = { openEditDialog = false },
                 title = {
@@ -210,8 +212,8 @@ fun NoteFolderDetailsScreen(
                 },
                 text = {
                     TextField(
-                        value = name,
-                        onValueChange = { name = it },
+                        value = folderName,
+                        onValueChange = { folderName = it },
                         label = {
                             Text(
                                 text = stringResource(id = R.string.name),
@@ -224,7 +226,7 @@ fun NoteFolderDetailsScreen(
                     Button(
                         shape = RoundedCornerShape(25.dp),
                         onClick = {
-                            viewModel.onEvent(NoteEvent.UpdateFolder(folder?.copy(name = name)!!))
+                            viewModel.onEvent(NoteEvent.UpdateFolder(folder?.copy(name = folderName)!!))
                             openEditDialog = false
                         },
                     ) {

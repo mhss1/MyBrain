@@ -1,5 +1,9 @@
 package com.mhss.app.mybrain.presentation.tasks
 
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -14,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +34,7 @@ import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.launch
 
+@SuppressLint("InlinedApi")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TasksScreen(
@@ -36,11 +42,12 @@ fun TasksScreen(
     addTask: Boolean = false,
     viewModel: TasksViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     var orderSettingsVisible by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val uiState = viewModel.tasksUiState
     val scaffoldState = rememberScaffoldState()
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
     val scope = rememberCoroutineScope()
     BackHandler {
         if (sheetState.isVisible)
@@ -66,21 +73,23 @@ fun TasksScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    scope.launch {
-                        sheetState.show()
-                        focusRequester.requestFocus()
-                    }
-                },
-                backgroundColor = MaterialTheme.colors.primary,
-            ) {
-                Icon(
-                    modifier = Modifier.size(25.dp),
-                    painter = painterResource(R.drawable.ic_add),
-                    contentDescription = stringResource(R.string.add_task),
-                    tint = Color.White
-                )
+            AnimatedVisibility(!sheetState.isVisible){
+                FloatingActionButton(
+                    onClick = {
+                        scope.launch {
+                            sheetState.show()
+                            focusRequester.requestFocus()
+                        }
+                    },
+                    backgroundColor = MaterialTheme.colors.primary,
+                ) {
+                    Icon(
+                        modifier = Modifier.size(25.dp),
+                        painter = painterResource(R.drawable.ic_add),
+                        contentDescription = stringResource(R.string.add_task),
+                        tint = Color.White
+                    )
+                }
             }
         },
     ) {paddingValues ->
@@ -100,9 +109,17 @@ fun TasksScreen(
             }) {
             LaunchedEffect(uiState.error) {
                 uiState.error?.let {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        uiState.error
+                    val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                        it,
+                        if (uiState.errorAlarm) context.getString(R.string.grant_permission) else null
                     )
+                    if (snackbarResult == SnackbarResult.ActionPerformed) {
+                        Intent().also { intent ->
+                            intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                            intent.data = Uri.parse("package:" + context.applicationContext.packageName)
+                            context.startActivity(intent)
+                        }
+                    }
                     viewModel.onEvent(TaskEvent.ErrorDisplayed)
                 }
             }

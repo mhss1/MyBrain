@@ -36,6 +36,7 @@ class NotesViewModel @Inject constructor(
     private val deleteFolder: DeleteNoteFolderUseCass,
     private val updateFolder: UpdateNoteFolderUseCass,
     private val getFolderNotes: GetNotesByFolderUseCase,
+    private val getNoteFolder: GetNoteFolderUseCase
 ) : ViewModel() {
 
     var notesUiState by mutableStateOf((UiState()))
@@ -88,7 +89,7 @@ class NotesViewModel @Inject constructor(
             is NoteEvent.GetNote -> viewModelScope.launch {
                 val note = getNote(event.noteId)
                 val folder = getAllFolders().first().firstOrNull { it.id == note.folderId }
-                notesUiState = notesUiState.copy(note = note, folder = folder)
+                notesUiState = notesUiState.copy(note = note, folder = folder, readingMode = true)
             }
             is NoteEvent.SearchNotes -> viewModelScope.launch {
                 val notes = searchNotes(event.query)
@@ -136,14 +137,14 @@ class NotesViewModel @Inject constructor(
                 notesUiState = notesUiState.copy(navigateUp = true)
             }
             is NoteEvent.UpdateFolder -> viewModelScope.launch {
-                if (event.folder.name.isBlank()) {
-                    notesUiState = notesUiState.copy(error = getString(R.string.error_empty_title))
+                notesUiState = if (event.folder.name.isBlank()) {
+                    notesUiState.copy(error = getString(R.string.error_empty_title))
                 } else {
                     if (!notesUiState.folders.contains(event.folder)) {
                         updateFolder(event.folder)
-                        notesUiState = notesUiState.copy(folder = event.folder)
+                        notesUiState.copy(folder = event.folder)
                     } else {
-                        notesUiState = notesUiState.copy(error = getString(R.string.error_folder_exists))
+                        notesUiState.copy(error = getString(R.string.error_folder_exists))
                     }
                 }
             }
@@ -151,7 +152,7 @@ class NotesViewModel @Inject constructor(
                 getNotesFromFolder(event.id, notesUiState.notesOrder)
             }
             is NoteEvent.GetFolder -> viewModelScope.launch {
-                val folder = getAllFolders().first().firstOrNull { it.id == event.id }
+                val folder = getNoteFolder(event.id)
                 notesUiState = notesUiState.copy(folder = folder)
             }
         }
@@ -164,7 +165,7 @@ class NotesViewModel @Inject constructor(
         val error: String? = null,
         val noteView: ItemView = ItemView.LIST,
         val navigateUp: Boolean = false,
-        val readingMode: Boolean = true,
+        val readingMode: Boolean = false,
         val searchNotes: List<Note> = emptyList(),
         val folders: List<NoteFolder> = emptyList(),
         val folderNotes: List<Note> = emptyList(),
@@ -186,7 +187,7 @@ class NotesViewModel @Inject constructor(
         getFolderNotesJob?.cancel()
         getFolderNotesJob = getFolderNotes(id, order)
             .onEach { notes ->
-                val noteFolder = getAllFolders().first().firstOrNull() { it.id == id }
+                val noteFolder = getNoteFolder(id)
                 notesUiState = notesUiState.copy(
                     folderNotes = notes,
                     folder = noteFolder

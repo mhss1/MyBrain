@@ -1,25 +1,21 @@
 package com.mhss.app.mybrain.data.local.converters
 
 import androidx.room.TypeConverter
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.mhss.app.mybrain.domain.model.SubTask
 import com.mhss.app.mybrain.util.diary.Mood
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class DBConverters {
 
     @TypeConverter
     fun fromSubTasksList(value: List<SubTask>): String {
-        val gson = Gson()
-        val type = TypeToken.getParameterized(List::class.java, SubTask::class.java).type
-        return gson.toJson(value, type)
+        return Json.encodeToString(value)
     }
 
     @TypeConverter
     fun toSubTasksList(value: String): List<SubTask> {
-        val gson = Gson()
-        val type = TypeToken.getParameterized(List::class.java, SubTask::class.java).type
-        return gson.fromJson(value, type)
+        return Json.decodeFromString<List<SubTask>>(value)
     }
 
     @TypeConverter

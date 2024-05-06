@@ -1,5 +1,9 @@
 package com.mhss.app.mybrain.presentation.main
 
+import android.content.Context
+import android.content.ContextWrapper
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -8,6 +12,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -19,8 +24,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.BuildConfig
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.app.getString
+import com.mhss.app.mybrain.presentation.auth.AuthManager
 import com.mhss.app.mybrain.presentation.settings.SettingsBasicLinkItem
 import com.mhss.app.mybrain.presentation.settings.SettingsItemCard
+import com.mhss.app.mybrain.presentation.settings.SettingsSwitchCard
 import com.mhss.app.mybrain.presentation.settings.SettingsViewModel
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.Rubik
@@ -46,6 +54,12 @@ fun SettingsScreen(
             )
         }
     ) { paddingValues ->
+        val context = LocalContext.current
+        val authManager = remember {
+            context.getActivity()?.let {
+                AuthManager(it)
+            }
+        }
         LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = paddingValues) {
             item {
                 val theme = viewModel
@@ -120,13 +134,39 @@ fun SettingsScreen(
                     ).collectAsState(
                         initial = false
                     )
-                BlockScreenshotsSettingsItem(
+                SettingsSwitchCard(
+                    stringResource(R.string.block_screenshots),
                     block.value
                 ){
                     viewModel.saveSettings(
                         booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY),
                         it
                     )
+                }
+            }
+
+            item {
+                val block = viewModel
+                    .getSettings(
+                        booleanPreferencesKey(Constants.LOCK_APP_KEY),
+                        false
+                    ).collectAsState(
+                        initial = false
+                    )
+                SettingsSwitchCard(
+                    stringResource(R.string.lock_app),
+                    block.value
+                ){
+                    if (authManager?.canUseFeature() == true) {
+                        viewModel.saveSettings(
+                            booleanPreferencesKey(Constants.LOCK_APP_KEY),
+                            it
+                        )
+                    } else {
+                        Toast.makeText(context, getString(
+                            R.string.no_auth_method
+                        ), Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
@@ -362,24 +402,8 @@ fun AppFontSettingsItem(
     }
 }
 
-@Composable
-fun BlockScreenshotsSettingsItem(
-    block: Boolean,
-    onBlockClick: (Boolean) -> Unit = {}
-) {
-    SettingsItemCard(
-        cornerRadius = 16.dp,
-        onClick = {
-            onBlockClick(!block)
-        },
-        vPadding = 10.dp
-    ) {
-        Text(
-            text = stringResource(R.string.block_screenshots),
-            style = MaterialTheme.typography.h6
-        )
-        Switch(checked = block, onCheckedChange = {
-            onBlockClick(it)
-        })
-    }
+fun Context.getActivity(): AppCompatActivity? = when (this) {
+    is AppCompatActivity -> this
+    is ContextWrapper -> baseContext.getActivity()
+    else -> null
 }

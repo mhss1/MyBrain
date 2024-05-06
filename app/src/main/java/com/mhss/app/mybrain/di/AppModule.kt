@@ -91,7 +91,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideBackupRepository(
-        myBrainDatabase: MyBrainDatabase,
-        @ApplicationContext context: Context
-    ): RoomBackupRepository = RoomBackupRepositoryImpl(myBrainDatabase ,context)
+        @ApplicationContext context: Context,
+        database: MyBrainDatabase
+    ): RoomBackupRepository = RoomBackupRepositoryImpl(
+        context,
+        database
+    )
 }
