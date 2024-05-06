@@ -139,8 +139,10 @@ class TasksViewModel @Inject constructor(
                                 taskDetailsUiState.copy(navigateUp = true)
                             }
                         }
-                        else
+                        else {
                             deleteAlarm(event.task.id)
+                            taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
+                        }
                     } else {
                         taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
                     }
