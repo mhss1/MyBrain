@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Brain</string>
-
     <string name="reminders_channel_description">لإرسال الاشعارات المتعلقة بالمهام</string>
     <string name="reminders_channel_name">التذكيرات</string>
     <string name="complete">إكمال</string>
