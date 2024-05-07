@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Brain</string>
-
     <string name="reminders_channel_description">Canal de notificação para enviar lembretes de tarefas</string>
     <string name="reminders_channel_name">Lembretes</string>
     <string name="complete">Concluído</string>
@@ -50,10 +50,10 @@
     <string name="delete_note_confirmation_title">Remover Nota?</string>
     <string name="delete_bookmark_confirmation_title">Remover Favorito?</string>
     <string name="delete_diary_entry_confirmation_title">Remover Entrada?</string>
-    <string name="delete_task_confirmation_message">Você deseja realmente remover a Tarefa: \n \"%1$s\""</string>
-    <string name="delete_note_confirmation_message">Você deseja realmente remover a Nota: \n \"%1$s\""</string>
-    <string name="delete_bookmark_confirmation_message">Você deseja realmente remover este bookmark""</string>
-    <string name="delete_diary_entry_confirmation_message">Você deseja realmente remover esta entrada""</string>
+    <string name="delete_task_confirmation_message">Você deseja realmente remover a Tarefa: \n \"%1$s\"\"</string>
+    <string name="delete_note_confirmation_message">Você deseja realmente remover a Nota: \n \"%1$s\"\"</string>
+    <string name="delete_bookmark_confirmation_message">Você deseja realmente remover este bookmark\"\"</string>
+    <string name="delete_diary_entry_confirmation_message">Você deseja realmente remover esta entrada\"\"</string>
     <string name="cancel">Cancelar</string>
     <string name="no_tasks_message">Você não tem nenhuma tarefa\n Clique no botão + para adicionar uma nova Tarefa\n ou \nuse o atalho no menu das configurações rápidas</string>
     <string name="no_notes_message">Você não tem nenhuma nota\n Clique no botão + para adicionar uma nova Nota</string>
@@ -158,4 +158,18 @@
     <string name="import_failed">Algo deu errado ao importar. Assegure-se que o nome do arquivo e o conteúdo não estão corrompidos</string>
     <string name="grant_permission_to_export">Conceda permissão para exportar</string>
     <string name="importing">Importando....</string>
+    <string name="recurring">Recurring</string>
+    <string name="repeats_every">Repeats every</string>
+    <string name="encrypted">Encrypted</string>
+    <string name="password">Password</string>
+    <string name="every_hour">Every hour</string>
+    <string name="every_minute">Every minute</string>
+    <string name="lock_app">Lock app</string>
+    <string name="auth_title">Unlock to use the App</string>
+    <string name="auth_button">Unlock</string>
+    <string name="auth_no_hardware">No biometric Hardware available</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="no_auth_method">No supported authentication method is set on your device</string>
+    <string name="added_note">Added to notes</string>
+    <string name="no_alarm_permission">Please grant alarms permission to set a due date.</string>
 </resources>

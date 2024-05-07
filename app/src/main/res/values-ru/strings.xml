@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Brain</string>
-
     <string name="reminders_channel_description">Способ уведомления для напоминаний о задачах</string>
     <string name="reminders_channel_name">Напоминания</string>
     <string name="complete">Завершено</string>
@@ -50,10 +50,10 @@
     <string name="delete_note_confirmation_title">Удалить заметку?</string>
     <string name="delete_bookmark_confirmation_title">Удалить закладку?</string>
     <string name="delete_diary_entry_confirmation_title">Удалить запись?</string>
-    <string name="delete_task_confirmation_message">Вы уверены, что хотите удалить задачу \"%1$s\""?</string>
-    <string name="delete_note_confirmation_message">Вы уверены, что хотите удалить заметку \"%1$s\""?</string>
-    <string name="delete_bookmark_confirmation_message">Вы уверены, что хотите удалить эту закладку?""</string>
-    <string name="delete_diary_entry_confirmation_message">Вы уверены, что хотите удалить эту запись?""</string>
+    <string name="delete_task_confirmation_message">Вы уверены, что хотите удалить задачу \"%1$s\"\"?</string>
+    <string name="delete_note_confirmation_message">Вы уверены, что хотите удалить заметку \"%1$s\"\"?</string>
+    <string name="delete_bookmark_confirmation_message">Вы уверены, что хотите удалить эту закладку?\"\"</string>
+    <string name="delete_diary_entry_confirmation_message">Вы уверены, что хотите удалить эту запись?\"\"</string>
     <string name="cancel">Отмена</string>
     <string name="no_tasks_message">У вас нет задач\nНажмите на  +, чтобы добавить новую задачу\nили используйте кнопку\nв меню быстрого доступа</string>
     <string name="no_notes_message">У вас нет заметок\nНажмите на +, чтобы добавить новую заметку</string>
@@ -158,4 +158,18 @@
     <string name="import_failed">Что-то пошло не так при импорте.\nУбедитесь, что имя файла правильное, и содержимое не повреждено</string>
     <string name="grant_permission_to_export">Предоставьте разрешение, чтобы экспортировать</string>
     <string name="importing">Импортирование....</string>
+    <string name="recurring">Recurring</string>
+    <string name="repeats_every">Repeats every</string>
+    <string name="encrypted">Encrypted</string>
+    <string name="password">Password</string>
+    <string name="every_hour">Every hour</string>
+    <string name="every_minute">Every minute</string>
+    <string name="lock_app">Lock app</string>
+    <string name="auth_title">Unlock to use the App</string>
+    <string name="auth_button">Unlock</string>
+    <string name="auth_no_hardware">No biometric Hardware available</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="no_auth_method">No supported authentication method is set on your device</string>
+    <string name="added_note">Added to notes</string>
+    <string name="no_alarm_permission">Please grant alarms permission to set a due date.</string>
 </resources>
