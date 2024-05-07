@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Brain</string>
-
     <string name="reminders_channel_description">Benachrichtigungskanal zum Senden von Aufgabenerinnerungen</string>
     <string name="reminders_channel_name">Erinnerungen</string>
     <string name="complete">Fertig</string>
@@ -50,10 +50,10 @@
     <string name="delete_note_confirmation_title">Notiz löschen?</string>
     <string name="delete_bookmark_confirmation_title">Lesezeichen löschen?</string>
     <string name="delete_diary_entry_confirmation_title">Eintrag löschen?</string>
-    <string name="delete_task_confirmation_message">Diese Aufgabe wirklich löschen? \n \"%1$s\""</string>
-    <string name="delete_note_confirmation_message">Diese Notiz wirklich löschen? \n \"%1$s\""</string>
-    <string name="delete_bookmark_confirmation_message">Dieses Lesezeichen wirklich löschen?""</string>
-    <string name="delete_diary_entry_confirmation_message">Diesen Eintrag wirklich löschen?""</string>
+    <string name="delete_task_confirmation_message">Diese Aufgabe wirklich löschen? \n \"%1$s\"\"</string>
+    <string name="delete_note_confirmation_message">Diese Notiz wirklich löschen? \n \"%1$s\"\"</string>
+    <string name="delete_bookmark_confirmation_message">Dieses Lesezeichen wirklich löschen?\"\"</string>
+    <string name="delete_diary_entry_confirmation_message">Diesen Eintrag wirklich löschen?\"\"</string>
     <string name="cancel">Abbrechen</string>
     <string name="no_tasks_message">Du hast noch keine Aufgaben\n Klicke auf das + Symbol eine neue\n Aufgabe zu erstellen.\n Oder nutze den Shortcut in den\n Schnelleinstellungen</string>
     <string name="no_notes_message">Du hast noch keine Notizen\n Klicke auf das + Symbol eine neue Notiz zu erstellen</string>
@@ -159,4 +159,17 @@
     <string name="grant_permission_to_export">Berechtigung zum Export notwendig</string>
     <string name="importing">Importiere…</string>
     <string name="recurring">Wiederholend</string>
+    <string name="repeats_every">Repeats every</string>
+    <string name="encrypted">Encrypted</string>
+    <string name="password">Password</string>
+    <string name="every_hour">Every hour</string>
+    <string name="every_minute">Every minute</string>
+    <string name="lock_app">Lock app</string>
+    <string name="auth_title">Unlock to use the App</string>
+    <string name="auth_button">Unlock</string>
+    <string name="auth_no_hardware">No biometric Hardware available</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="no_auth_method">No supported authentication method is set on your device</string>
+    <string name="added_note">Added to notes</string>
+    <string name="no_alarm_permission">Please grant alarms permission to set a due date.</string>
 </resources>
