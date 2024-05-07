@@ -1,0 +1,5 @@
+files:
+  - source: app/src/main/res/values/strings.xml
+    translation: '%android_code%'
+    translate_attributes: 0
+    content_segmentation: 0
