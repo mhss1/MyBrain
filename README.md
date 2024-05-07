@@ -50,6 +50,10 @@
  - Jetpack Compose
  - Compose Glance
 
+## Translation
+Project localisation is managed via [Crowdin](https://crowdin.com/project/my-brain-app)
+[![Crowdin](https://badges.crowdin.net/my-brain-app/localized.svg)](https://crowdin.com/project/my-brain-app)
+
 ## Contributing
 To get started, take a look at [CONTRIBUTING.md](CONTRIBUTING.md).
 
