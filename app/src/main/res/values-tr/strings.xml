@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Brain</string>
-
     <string name="reminders_channel_description">Görev hatırlatma bildirimleri için bildirim kanalı</string>
     <string name="reminders_channel_name">Hatırlatıcılar</string>
     <string name="complete">Tamamla</string>
@@ -50,12 +50,12 @@
     <string name="delete_note_confirmation_title">Not Sil</string>
     <string name="delete_bookmark_confirmation_title">Yer İmi Sil</string>
     <string name="delete_diary_entry_confirmation_title">Günlük Girdisi Sil</string>
-    <string name="delete_task_confirmation_message">Bu görevi silmek istediğinize emin misiniz: \n \"%1$s\""?</string>
-    <string name="delete_note_confirmation_message">Bu notu silmek istediğinize emin misiniz: \n \"%1$s\""?</string>
-    <string name="delete_bookmark_confirmation_message">Bu yer imini silmek istediğinize emin misiniz""?</string>
-    <string name="delete_diary_entry_confirmation_message">Bu günlük girdisini silmek istediğinize emin misiniz""?</string>
+    <string name="delete_task_confirmation_message">Bu görevi silmek istediğinize emin misiniz: \n \"%1$s\"\"?</string>
+    <string name="delete_note_confirmation_message">Bu notu silmek istediğinize emin misiniz: \n \"%1$s\"\"?</string>
+    <string name="delete_bookmark_confirmation_message">Bu yer imini silmek istediğinize emin misiniz\"\"?</string>
+    <string name="delete_diary_entry_confirmation_message">Bu günlük girdisini silmek istediğinize emin misiniz\"\"?</string>
     <string name="cancel">İptal</string>
-	<string name="no_tasks_message">Herhangi bir göreviniz yok\n Yeni görev oluşturmak için + butonuna tıklayın\n ya da \n hızlı ayarlar menüsünü kullanarak yeni görev oluşturun</string>
+    <string name="no_tasks_message">Herhangi bir göreviniz yok\n Yeni görev oluşturmak için + butonuna tıklayın\n ya da \n hızlı ayarlar menüsünü kullanarak yeni görev oluşturun</string>
     <string name="no_notes_message">Herhangi bir notunuz yok\n Yeni not oluşturmak için + butonuna tıklayın</string>
     <string name="no_entries_message">Herhangi bir günlük girdiniz yok\n Yeni girdi oluşturmak için + butonuna tıklayın</string>
     <string name="no_bookmarks_message">Herhangi bir yer iminiz yok\n Yeni yer imi oluşturmak için + butonuna tıklayın\n ya da \nherhangi bir tarayıcıdan paylaş seçeneğini kullanın</string>
@@ -158,4 +158,18 @@
     <string name="import_failed">İçe aktarırken bir sorun oluştu. Dosya isimleri veya içerikleri bozuk olabilir</string>
     <string name="grant_permission_to_export">Dışa aktarmak için izin ver</string>
     <string name="importing">İçe aktarılıyor....</string>
+    <string name="recurring">Recurring</string>
+    <string name="repeats_every">Repeats every</string>
+    <string name="encrypted">Encrypted</string>
+    <string name="password">Password</string>
+    <string name="every_hour">Every hour</string>
+    <string name="every_minute">Every minute</string>
+    <string name="lock_app">Lock app</string>
+    <string name="auth_title">Unlock to use the App</string>
+    <string name="auth_button">Unlock</string>
+    <string name="auth_no_hardware">No biometric Hardware available</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="no_auth_method">No supported authentication method is set on your device</string>
+    <string name="added_note">Added to notes</string>
+    <string name="no_alarm_permission">Please grant alarms permission to set a due date.</string>
 </resources>
