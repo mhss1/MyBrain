@@ -159,18 +159,4 @@
     <string name="import_failed">Podczas importowania danych wystąpił błąd. Upewnij się, że plik nie jest uszkodzony, a jego nazwa jest prawidłowa</string>
     <string name="grant_permission_to_export">Udziel zezwolenia, aby wyeksportować dane</string>
     <string name="importing">Importowanie....</string>
-    <string name="recurring">Recurring</string>
-    <string name="repeats_every">Repeats every</string>
-    <string name="encrypted">Encrypted</string>
-    <string name="password">Password</string>
-    <string name="every_hour">Every hour</string>
-    <string name="every_minute">Every minute</string>
-    <string name="lock_app">Lock app</string>
-    <string name="auth_title">Unlock to use the App</string>
-    <string name="auth_button">Unlock</string>
-    <string name="auth_no_hardware">No biometric Hardware available</string>
-    <string name="auth_failed">Authentication failed</string>
-    <string name="no_auth_method">No supported authentication method is set on your device</string>
-    <string name="added_note">Added to notes</string>
-    <string name="no_alarm_permission">Please grant alarms permission to set a due date.</string>
 </resources>

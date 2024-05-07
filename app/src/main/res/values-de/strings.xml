@@ -159,17 +159,4 @@
     <string name="grant_permission_to_export">Berechtigung zum Export notwendig</string>
     <string name="importing">Importiere…</string>
     <string name="recurring">Wiederholend</string>
-    <string name="repeats_every">Repeats every</string>
-    <string name="encrypted">Encrypted</string>
-    <string name="password">Password</string>
-    <string name="every_hour">Every hour</string>
-    <string name="every_minute">Every minute</string>
-    <string name="lock_app">Lock app</string>
-    <string name="auth_title">Unlock to use the App</string>
-    <string name="auth_button">Unlock</string>
-    <string name="auth_no_hardware">No biometric Hardware available</string>
-    <string name="auth_failed">Authentication failed</string>
-    <string name="no_auth_method">No supported authentication method is set on your device</string>
-    <string name="added_note">Added to notes</string>
-    <string name="no_alarm_permission">Please grant alarms permission to set a due date.</string>
 </resources>
