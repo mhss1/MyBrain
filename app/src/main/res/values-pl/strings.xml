@@ -1,7 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Brain</string>
-
     <string name="reminders_channel_description">Kanał powiadomień służący do wysyłania przypomnień wykonania zadań.</string>
     <string name="reminders_channel_name">Przypomnienia</string>
     <string name="complete">Ukończono</string>
@@ -51,10 +50,10 @@
     <string name="delete_note_confirmation_title">Usunąć notatkę?</string>
     <string name="delete_bookmark_confirmation_title">Usunąć zakłądkę?</string>
     <string name="delete_diary_entry_confirmation_title">Usunąć wpis?</string>
-    <string name="delete_task_confirmation_message">Czy na pewno chcesz usunąć zadanie: \n \"%1$s\""</string>
-    <string name="delete_note_confirmation_message">Czy na pewno chcesz usunąć notatkę: \n \"%1$s\""</string>
-    <string name="delete_bookmark_confirmation_message">Czy na pewno chcesz usunąć tą zakładkę""</string>
-    <string name="delete_diary_entry_confirmation_message">Czy na pewno chcesz usunąć ten wpis""</string>
+    <string name="delete_task_confirmation_message">Czy na pewno chcesz usunąć zadanie: \n \"%1$s\"\"</string>
+    <string name="delete_note_confirmation_message">Czy na pewno chcesz usunąć notatkę: \n \"%1$s\"\"</string>
+    <string name="delete_bookmark_confirmation_message">Czy na pewno chcesz usunąć tą zakładkę\"\"</string>
+    <string name="delete_diary_entry_confirmation_message">Czy na pewno chcesz usunąć ten wpis\"\"</string>
     <string name="cancel">Anuluj</string>
     <string name="no_tasks_message">Nie dodano żadnych zadań\n Aby dodać nowe Zadanie kliknij przycisk +\n lub \nużyj skrótu na pasku szybkich ustawień</string>
     <string name="no_notes_message">Nie dodano żadnych notatek\n Aby dodać nową Notatkę kliknij przycisk +</string>

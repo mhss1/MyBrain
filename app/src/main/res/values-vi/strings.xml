@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Brain</string>
     <string name="reminders_channel_description">Kênh thông báo để gửi thông báo nhắc nhở nhiệm vụ</string>
@@ -49,10 +50,10 @@
     <string name="delete_note_confirmation_title">Xóa ghi chú?</string>
     <string name="delete_bookmark_confirmation_title">Xóa dấu trang?</string>
     <string name="delete_diary_entry_confirmation_title">Xóa mục nhập?</string>
-    <string name="delete_task_confirmation_message">Bạn có chắc chắn muốn xóa nhiệm vụ: \n \"%1$s\""?</string>
-    <string name="delete_note_confirmation_message">Bạn có chắc chắn muốn xóa ghi chú: \n \"%1$s\""?</string>
-    <string name="delete_bookmark_confirmation_message">Bạn có chắc chắn muốn xóa dấu trang này""?</string>
-    <string name="delete_diary_entry_confirmation_message">Bạn có chắc chắn muốn xóa mục này""?</string>
+    <string name="delete_task_confirmation_message">Bạn có chắc chắn muốn xóa nhiệm vụ: \n \"%1$s\"\"?</string>
+    <string name="delete_note_confirmation_message">Bạn có chắc chắn muốn xóa ghi chú: \n \"%1$s\"\"?</string>
+    <string name="delete_bookmark_confirmation_message">Bạn có chắc chắn muốn xóa dấu trang này\"\"?</string>
+    <string name="delete_diary_entry_confirmation_message">Bạn có chắc chắn muốn xóa mục này\"\"?</string>
     <string name="cancel">Hủy</string>
     <string name="no_tasks_message">Bạn không có nhiệm vụ nào\n Nhấp vào nút + để thêm Nhiệm vụ mới\n hoặc \nbằng cách sử dụng lối tắt trong menu cài đặt nhanh</string>
     <string name="no_notes_message">Bạn không có ghi chú nào\n Nhấp vào nút + để thêm Ghi chú mới</string>
@@ -150,7 +151,7 @@
     <string name="block_screenshots">Chặn ảnh chụp màn hình</string>
     <string name="export_import">Xuất / Nhập</string>
     <string name="export">Xuất dữ liệu</string>
-    <string name="export_success">Đã xuất dữ liệu thành công"</string>
+    <string name="export_success">Đã xuất dữ liệu thành công\"</string>
     <string name="export_failed">Đã xảy ra lỗi khi xuất</string>
     <string name="import_data">Nhập dữ liệu</string>
     <string name="import_success">Đã nhập thành công %1$s</string>

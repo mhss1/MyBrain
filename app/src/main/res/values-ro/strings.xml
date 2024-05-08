@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Brain</string>
-
     <string name="reminders_channel_description">Canal de notificare pentru trimiterea de notificări de reamintire a sarcinilor</string>
     <string name="reminders_channel_name">Mementouri</string>
     <string name="complete">Complet</string>
@@ -50,10 +50,10 @@
     <string name="delete_note_confirmation_title">Ștergeți nota?</string>
     <string name="delete_bookmark_confirmation_title">Ștergeți marcajul?</string>
     <string name="delete_diary_entry_confirmation_title">Ștergeți intrarea?</string>
-    <string name="delete_task_confirmation_message">Sigur dorești ștergerea sarcinii: \n \"%1$s\""?</string>
-    <string name="delete_note_confirmation_message">Sigur dorești ștergerea notei: \n \"%1$s\""?</string>
-    <string name="delete_bookmark_confirmation_message">Sigur dorești ștergerea marcajului""?</string>
-    <string name="delete_diary_entry_confirmation_message">Sigur dorești ștergerea acestei intrări""?</string>
+    <string name="delete_task_confirmation_message">Sigur dorești ștergerea sarcinii: \n \"%1$s\"\"?</string>
+    <string name="delete_note_confirmation_message">Sigur dorești ștergerea notei: \n \"%1$s\"\"?</string>
+    <string name="delete_bookmark_confirmation_message">Sigur dorești ștergerea marcajului\"\"?</string>
+    <string name="delete_diary_entry_confirmation_message">Sigur dorești ștergerea acestei intrări\"\"?</string>
     <string name="cancel">Anulare</string>
     <string name="no_tasks_message">Nu aveți nicio sarcină\n Faceți clic pe butonul + pentru a adăuga o nouă sarcină\n sau \nprin utilizarea comenzii rapide din meniul de setări rapide</string>
     <string name="no_notes_message">Nu aveți nicio notă\n Faceți clic pe butonul + pentru a adăuga o nouă notă</string>

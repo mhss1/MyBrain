@@ -14,6 +14,7 @@ Fixes # (issue)
 
 ## Checklist:
 
+- [ ] The PR is to the `dev` branch
 - [ ] My code follows the style and architecture of the project
 - [ ] I have performed a self-review of my code
 - [ ] I have tested the app on an actual Android device and everything works as expected
