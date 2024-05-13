@@ -160,16 +160,16 @@
     <string name="importing">Импортирование....</string>
     <string name="recurring">Recurring</string>
     <string name="repeats_every">Repeats every</string>
-    <string name="encrypted">Encrypted</string>
-    <string name="password">Password</string>
-    <string name="every_hour">Every hour</string>
-    <string name="every_minute">Every minute</string>
-    <string name="lock_app">Lock app</string>
+    <string name="encrypted">Зашифровано</string>
+    <string name="password">Пароль</string>
+    <string name="every_hour">Каждый час</string>
+    <string name="every_minute">Каждую минуту</string>
+    <string name="lock_app">Блокировать приложение</string>
     <string name="auth_title">Unlock to use the App</string>
     <string name="auth_button">Unlock</string>
     <string name="auth_no_hardware">No biometric Hardware available</string>
-    <string name="auth_failed">Authentication failed</string>
-    <string name="no_auth_method">No supported authentication method is set on your device</string>
-    <string name="added_note">Added to notes</string>
+    <string name="auth_failed">Ошибка аутентификации</string>
+    <string name="no_auth_method">На вашем устройстве не установлен метод аутентификации</string>
+    <string name="added_note">Добавлено в заметки</string>
     <string name="no_alarm_permission">Please grant alarms permission to set a due date.</string>
 </resources>
