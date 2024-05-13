@@ -8,7 +8,7 @@
     <string name="settings">Настройки</string>
     <string name="spaces">Разделы</string>
     <string name="app_theme">Тема приложения</string>
-    <string name="light_theme">Светлая</string>
+    <string name="light_theme">Светлая тема</string>
     <string name="dark_theme">Тёмная</string>
     <string name="auto_theme">Автоматически</string>
     <string name="start_up_screen">Начальный экран</string>
@@ -34,7 +34,7 @@
     <string name="medium">Средний</string>
     <string name="high">Высокий</string>
     <string name="due_date">Дата окончания</string>
-    <string name="error_empty_title">Название не может быть пустым</string>
+    <string name="error_empty_title">Заголовок не может быть пустым</string>
     <string name="priority">Приоритет</string>
     <string name="order_by">Упорядочить</string>
     <string name="alphabetical">По алфавиту</string>
@@ -73,7 +73,7 @@
     <string name="save_bookmark">Добавить ссылку в закладки</string>
     <string name="add_to_tasks">Добавить в задачи</string>
     <string name="bookmark_saved">Закладка успешно сохранена</string>
-    <string name="invalid_url">Недействительный URL</string>
+    <string name="invalid_url">Недопустимый URL-адрес</string>
     <string name="add_bookmark">Добавить закладку</string>
     <string name="open_link">Перейти по ссылке</string>
     <string name="search_bookmarks">Искать закладки</string>
@@ -81,11 +81,11 @@
     <string name="url">Ссылка</string>
     <string name="cancel_changes">Отменить изменения</string>
     <string name="add_entry">Добавить запись</string>
-    <string name="awesome">Отличное</string>
-    <string name="good">Хорошое</string>
-    <string name="okay">Нормальное</string>
-    <string name="bad">Плохое</string>
-    <string name="terrible">Ужасное</string>
+    <string name="awesome">Великолепно</string>
+    <string name="good">Хорошо</string>
+    <string name="okay">Нормально</string>
+    <string name="bad">Плохо</string>
+    <string name="terrible">Ужасно</string>
     <string name="delete_entry">Удалить запись</string>
     <string name="content">Содержание</string>
     <string name="save_entry">Сохранить запись</string>
@@ -107,7 +107,7 @@
     <string name="percent">%1$d%%</string>
     <string name="mood_flow">Изменение настроения</string>
     <string name="mood_summary">Обзор настроения</string>
-    <string name="your_mood_was">"Ваше настроение "</string>
+    <string name="your_mood_was">"Ваше настроение было "</string>
     <string name="most_of_the_time">" большую часть времени"</string>
     <string name="last_30_days">Последние 30 дней</string>
     <string name="last_year">Последний год</string>
@@ -171,5 +171,5 @@
     <string name="auth_failed">Ошибка аутентификации</string>
     <string name="no_auth_method">На вашем устройстве не установлен метод аутентификации</string>
     <string name="added_note">Добавлено в заметки</string>
-    <string name="no_alarm_permission">Please grant alarms permission to set a due date.</string>
+    <string name="no_alarm_permission">Пожалуйста, предоставьте доступ к будильникам для настройки срока выполнения.</string>
 </resources>
