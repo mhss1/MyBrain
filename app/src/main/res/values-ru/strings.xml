@@ -165,7 +165,7 @@
     <string name="every_hour">Каждый час</string>
     <string name="every_minute">Каждую минуту</string>
     <string name="lock_app">Блокировать приложение</string>
-    <string name="auth_title">Unlock to use the App</string>
+    <string name="auth_title">Разблокируйте, чтобы использовать приложение</string>
     <string name="auth_button">Unlock</string>
     <string name="auth_no_hardware">No biometric Hardware available</string>
     <string name="auth_failed">Ошибка аутентификации</string>
