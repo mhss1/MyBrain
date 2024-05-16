@@ -94,7 +94,7 @@
     <string name="event_time_at">%1$s - %2$s в %3$s</string>
     <string name="event_time">%1$s - %2$s</string>
     <string name="all_day">Весь день</string>
-    <string name="no_read_calendar_permission_message">Необходимо разрешение для чтения калердаря.\nПожалуйста, разрешите приложению использовать календарь</string>
+    <string name="no_read_calendar_permission_message">Необходимо разрешение для чтения календаря.\nПожалуйста, разрешите приложению использовать календарь</string>
     <string name="no_write_calendar_permission_message">Необходимо разрешение для работы с календарём.\nПожалуйста, разрешите приложению использовать календарь</string>
     <string name="grant_permission">Предоставить разрешение</string>
     <string name="go_to_settings">Перейти в настройки</string>
@@ -165,7 +165,7 @@
     <string name="every_hour">Каждый час</string>
     <string name="every_minute">Каждую минуту</string>
     <string name="lock_app">Блокировать приложение</string>
-    <string name="auth_title">Unlock to use the App</string>
+    <string name="auth_title">Разблокируйте, чтобы использовать приложение</string>
     <string name="auth_button">Unlock</string>
     <string name="auth_no_hardware">No biometric Hardware available</string>
     <string name="auth_failed">Ошибка аутентификации</string>
