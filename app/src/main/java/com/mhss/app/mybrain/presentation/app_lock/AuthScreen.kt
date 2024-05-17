@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.presentation.auth
+package com.mhss.app.mybrain.presentation.app_lock
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

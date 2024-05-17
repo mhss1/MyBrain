@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.presentation.auth
+package com.mhss.app.mybrain.presentation.app_lock
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +11,7 @@ import com.mhss.app.mybrain.app.getString
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
-class AuthManager(
+class AppLockManager(
     private val activity: AppCompatActivity
 ) {
 

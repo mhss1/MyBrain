@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.BuildConfig
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
-import com.mhss.app.mybrain.presentation.auth.AuthManager
+import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.mybrain.presentation.settings.SettingsBasicLinkItem
 import com.mhss.app.mybrain.presentation.settings.SettingsItemCard
 import com.mhss.app.mybrain.presentation.settings.SettingsSwitchCard
@@ -55,9 +55,9 @@ fun SettingsScreen(
         }
     ) { paddingValues ->
         val context = LocalContext.current
-        val authManager = remember {
+        val appLockManager = remember {
             context.getActivity()?.let {
-                AuthManager(it)
+                AppLockManager(it)
             }
         }
         LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = paddingValues) {
@@ -157,7 +157,7 @@ fun SettingsScreen(
                     stringResource(R.string.lock_app),
                     block.value
                 ){
-                    if (authManager?.canUseFeature() == true) {
+                    if (appLockManager?.canUseFeature() == true) {
                         viewModel.saveSettings(
                             booleanPreferencesKey(Constants.LOCK_APP_KEY),
                             it

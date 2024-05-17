@@ -30,8 +30,8 @@ import androidx.navigation.navDeepLink
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.use_case.notes.NoteFolderDetailsScreen
-import com.mhss.app.mybrain.presentation.auth.AuthManager
-import com.mhss.app.mybrain.presentation.auth.AuthScreen
+import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
+import com.mhss.app.mybrain.presentation.app_lock.AuthScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkSearchScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarksScreen
@@ -65,8 +65,8 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
-    private val authManager by lazy {
-        AuthManager(this)
+    private val appLockManager by lazy {
+        AppLockManager(this)
     }
     private var appUnlocked by mutableStateOf(true)
 
@@ -274,7 +274,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     if (!appUnlocked) {
                         AuthScreen {
-                            authManager.showAuthPrompt()
+                            appLockManager.showAuthPrompt()
                         }
                     }
                 }
@@ -285,29 +285,29 @@ class MainActivity : AppCompatActivity() {
                 if (viewModel.lockApp.first()) {
                     appUnlocked = false
                 }
-                authManager.resultFlow.collectLatest { authResult ->
+                appLockManager.resultFlow.collectLatest { authResult ->
                     when (authResult) {
-                        is AuthManager.AuthResult.Error -> {
+                        is AppLockManager.AuthResult.Error -> {
                             toast(authResult.message)
                         }
 
-                        AuthManager.AuthResult.Failed -> {
+                        AppLockManager.AuthResult.Failed -> {
                             toast(
                                 this@MainActivity.getString(R.string.auth_failed)
                             )
                         }
 
-                        AuthManager.AuthResult.NoHardware, AuthManager.AuthResult.HardwareUnavailable -> {
+                        AppLockManager.AuthResult.NoHardware, AppLockManager.AuthResult.HardwareUnavailable -> {
                             toast(
                                 this@MainActivity.getString(R.string.auth_no_hardware)
                             )
                         }
 
-                        AuthManager.AuthResult.Success -> {
+                        AppLockManager.AuthResult.Success -> {
                             appUnlocked = true
                         }
 
-                        AuthManager.AuthResult.NoneEnrolled -> {
+                        AppLockManager.AuthResult.NoneEnrolled -> {
                             // User disabled biometric authentication
                             viewModel.disableAppLock()
                             appUnlocked = true
@@ -333,7 +333,7 @@ class MainActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus && !appUnlocked) {
-            authManager.showAuthPrompt()
+            appLockManager.showAuthPrompt()
         }
     }
 }
