@@ -3,7 +3,10 @@ package com.mhss.app.mybrain.app
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -14,6 +17,7 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.util.Constants
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.SETTINGS_PREFERENCES)
 
@@ -36,6 +40,11 @@ class MyBrainApplication : Application(), Configuration.Provider {
         super.onCreate()
         appContext = this
         createRemindersNotificationChannel()
+        Thread.setDefaultUncaughtExceptionHandler { _, e ->
+            "```\n${e.stackTraceToString()}\n```".copyToClipboard()
+            Toast.makeText(this, getString(R.string.exception_stack_trace_copied), Toast.LENGTH_LONG).show()
+            exitProcess(1)
+        }
     }
 
     private fun createRemindersNotificationChannel() {
@@ -48,6 +57,12 @@ class MyBrainApplication : Application(), Configuration.Provider {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
+    }
+
+    private fun String.copyToClipboard() {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("label", this)
+        clipboard.setPrimaryClip(clip)
     }
 }
 

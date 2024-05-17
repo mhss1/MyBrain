@@ -173,4 +173,5 @@
     <string name="no_auth_method">لم يتم تعيين قفل شاشة مدعوم على جهازك</string>
     <string name="added_note">تمت الإضافة الى الملاحظات</string>
     <string name="no_alarm_permission">الرجاء منح اذن المنبات لإضافة وقت</string>
+    <string name="exception_stack_trace_copied">تم نسخ نص الخطأ في الحافظة</string>
 </resources>

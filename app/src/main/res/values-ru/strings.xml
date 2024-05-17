@@ -172,4 +172,5 @@
     <string name="no_auth_method">На вашем устройстве не установлен метод аутентификации</string>
     <string name="added_note">Добавлено в заметки</string>
     <string name="no_alarm_permission">Пожалуйста, предоставьте доступ к будильникам для настройки срока выполнения.</string>
+    <string name="exception_stack_trace_copied">Exception stack trace copied to clipboard</string>
 </resources>
