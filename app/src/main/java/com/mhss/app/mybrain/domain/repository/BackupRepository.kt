@@ -2,7 +2,7 @@ package com.mhss.app.mybrain.domain.repository
 
 import android.net.Uri
 
-interface RoomBackupRepository {
+interface BackupRepository {
 
     suspend fun exportDatabase(directoryUri: Uri, encrypted: Boolean, password: String): Boolean
 

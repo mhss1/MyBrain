@@ -4,8 +4,9 @@ import android.net.Uri
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.mybrain.domain.repository.RoomBackupRepository
+import com.mhss.app.mybrain.domain.use_case.settings.ExportAllDataUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.ImportAllDataUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val saveSettingsUseCase: SaveSettingsUseCase,
     private val getSettingsUseCase: GetSettingsUseCase,
-    private val backupRepository: RoomBackupRepository
+    private val exportData: ExportAllDataUseCase,
+    private val importData: ImportAllDataUseCase
 ) : ViewModel() {
 
     private val _backupResult = MutableStateFlow<BackupResult>(BackupResult.None)
@@ -42,7 +44,7 @@ class SettingsViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             _backupResult.update { BackupResult.Loading }
-            val result = backupRepository.importDatabase(uri, encrypted, password)
+            val result = importData(uri, encrypted, password)
             if (result) {
                 _backupResult.update { BackupResult.ImportSuccess }
             } else {
@@ -58,7 +60,7 @@ class SettingsViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             _backupResult.update { BackupResult.Loading }
-            val result = backupRepository.exportDatabase(uri, encrypted, password)
+            val result = exportData(uri, encrypted, password)
             if (result) {
                 _backupResult.update { BackupResult.ExportSuccess }
             } else {

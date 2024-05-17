@@ -3,7 +3,7 @@ package com.mhss.app.mybrain.di
 import android.content.Context
 import androidx.room.Room
 import com.mhss.app.mybrain.app.dataStore
-import com.mhss.app.mybrain.data.backup.RoomBackupRepositoryImpl
+import com.mhss.app.mybrain.data.backup.BackupRepositoryImpl
 import com.mhss.app.mybrain.data.local.MyBrainDatabase
 import com.mhss.app.mybrain.data.local.dao.*
 import com.mhss.app.mybrain.data.local.migrations.MIGRATION_1_2
@@ -93,7 +93,7 @@ object AppModule {
     fun provideBackupRepository(
         @ApplicationContext context: Context,
         database: MyBrainDatabase
-    ): RoomBackupRepository = RoomBackupRepositoryImpl(
+    ): BackupRepository = BackupRepositoryImpl(
         context,
         database
     )

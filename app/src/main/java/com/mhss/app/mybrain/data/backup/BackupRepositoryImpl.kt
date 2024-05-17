@@ -10,7 +10,7 @@ import com.mhss.app.mybrain.domain.model.DiaryEntry
 import com.mhss.app.mybrain.domain.model.Note
 import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.domain.model.Task
-import com.mhss.app.mybrain.domain.repository.RoomBackupRepository
+import com.mhss.app.mybrain.domain.repository.BackupRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -21,10 +21,10 @@ import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
 import javax.inject.Inject
 
-class RoomBackupRepositoryImpl @Inject constructor(
+class BackupRepositoryImpl @Inject constructor(
     private val context: Context,
     private val database: MyBrainDatabase
-) : RoomBackupRepository {
+) : BackupRepository {
 
     @OptIn(ExperimentalSerializationApi::class)
     override suspend fun exportDatabase(
