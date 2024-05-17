@@ -11,14 +11,17 @@ import com.mhss.app.mybrain.domain.model.Calendar
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.domain.repository.CalendarRepository
 import com.mhss.app.mybrain.util.calendar.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class CalendarRepositoryImpl(private val context: Context) : CalendarRepository {
+class CalendarRepositoryImpl(
+    private val context: Context,
+    private val ioDispatcher: CoroutineDispatcher
+) : CalendarRepository {
 
     override suspend fun getEvents(): List<CalendarEvent> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             val projection: Array<String> = arrayOf(
                 CalendarContract.Events._ID,
                 CalendarContract.Events.TITLE,
@@ -141,7 +144,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
     }
 
     override suspend fun getCalendars() : List<Calendar>{
-        return withContext(Dispatchers.IO){
+        return withContext(ioDispatcher){
             val projection = arrayOf(
                 CalendarContract.Calendars._ID,                     // 0
                 CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,   // 1
@@ -185,7 +188,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
     }
 
     override suspend fun addEvent(event: CalendarEvent) {
-        withContext(Dispatchers.IO){
+        withContext(ioDispatcher){
             val values = ContentValues().apply {
                 put(CalendarContract.Events.CALENDAR_ID, event.calendarId)
                 put(CalendarContract.Events.TITLE, event.title)
@@ -206,7 +209,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
     }
 
     override suspend fun updateEvent(event: CalendarEvent) {
-        withContext(Dispatchers.IO){
+        withContext(ioDispatcher){
             val values = ContentValues().apply {
                 put(CalendarContract.Events.CALENDAR_ID, event.calendarId)
                 put(CalendarContract.Events.TITLE, event.title)
@@ -232,7 +235,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
     }
 
     override suspend fun createCalendar() {
-        withContext(Dispatchers.IO){
+        withContext(ioDispatcher){
             val uri = CalendarContract.Calendars.CONTENT_URI.asSyncAdapter(context.getString(R.string.app_name), CalendarContract.ACCOUNT_TYPE_LOCAL)
             val values = ContentValues().apply {
                 put(CalendarContract.Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
@@ -257,7 +260,7 @@ class CalendarRepositoryImpl(private val context: Context) : CalendarRepository 
 
 
     override suspend fun deleteEvent(event: CalendarEvent) {
-        withContext(Dispatchers.IO){
+        withContext(ioDispatcher){
             val updateUri: Uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.id)
             context.contentResolver.delete(updateUri, null, null)
         }

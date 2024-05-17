@@ -16,6 +16,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -39,7 +40,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideNoteRepository(noteDao: NoteDao): NoteRepository = NoteRepositoryImpl(noteDao)
+    fun provideNoteRepository(
+        noteDao: NoteDao,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): NoteRepository = NoteRepositoryImpl(noteDao, ioDispatcher)
 
     @Singleton
     @Provides
@@ -47,7 +51,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideTaskRepository(taskDao: TaskDao): TaskRepository = TaskRepositoryImpl(taskDao)
+    fun provideTaskRepository(
+        taskDao: TaskDao,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): TaskRepository = TaskRepositoryImpl(taskDao, ioDispatcher)
 
     @Singleton
     @Provides
@@ -55,8 +62,11 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideBookmarkRepository(bookmarkDao: BookmarkDao): BookmarkRepository =
-        BookmarkRepositoryImpl(bookmarkDao)
+    fun provideBookmarkRepository(
+        bookmarkDao: BookmarkDao,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): BookmarkRepository =
+        BookmarkRepositoryImpl(bookmarkDao, ioDispatcher)
 
     @Singleton
     @Provides
@@ -64,12 +74,18 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDiaryRepository(diaryDao: DiaryDao): DiaryRepository = DiaryRepositoryImpl(diaryDao)
+    fun provideDiaryRepository(
+        diaryDao: DiaryDao,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): DiaryRepository = DiaryRepositoryImpl(diaryDao, ioDispatcher)
 
     @Singleton
     @Provides
-    fun provideCalendarRepository(@ApplicationContext context: Context): CalendarRepository =
-        CalendarRepositoryImpl(context)
+    fun provideCalendarRepository(
+        @ApplicationContext context: Context,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    )
+            : CalendarRepository = CalendarRepositoryImpl(context, ioDispatcher)
 
     @Singleton
     @Provides
@@ -77,7 +93,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideAlarmRepository(alarmDao: AlarmDao): AlarmRepository = AlarmRepositoryImpl(alarmDao)
+    fun provideAlarmRepository(
+        alarmDao: AlarmDao,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): AlarmRepository = AlarmRepositoryImpl(alarmDao, ioDispatcher)
 
     @Singleton
     @Provides
@@ -92,9 +111,11 @@ object AppModule {
     @Provides
     fun provideBackupRepository(
         @ApplicationContext context: Context,
-        database: MyBrainDatabase
+        database: MyBrainDatabase,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): BackupRepository = BackupRepositoryImpl(
         context,
-        database
+        database,
+        ioDispatcher
     )
 }

@@ -4,13 +4,12 @@ import com.mhss.app.mybrain.data.local.dao.BookmarkDao
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.domain.repository.BookmarkRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class BookmarkRepositoryImpl(
     private val bookmarkDao: BookmarkDao,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher
 ) : BookmarkRepository {
 
     override fun getAllBookmarks(): Flow<List<Bookmark>> {

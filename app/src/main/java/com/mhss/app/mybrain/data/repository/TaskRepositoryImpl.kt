@@ -4,14 +4,12 @@ import com.mhss.app.mybrain.data.local.dao.TaskDao
 import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.domain.repository.TaskRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 class TaskRepositoryImpl(
     private val taskDao: TaskDao,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher
 ) : TaskRepository {
 
     override fun getAllTasks(): Flow<List<Task>> {

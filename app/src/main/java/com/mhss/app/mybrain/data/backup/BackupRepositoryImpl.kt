@@ -11,7 +11,7 @@ import com.mhss.app.mybrain.domain.model.Note
 import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.domain.repository.BackupRepository
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -19,11 +19,11 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
-import javax.inject.Inject
 
-class BackupRepositoryImpl @Inject constructor(
+class BackupRepositoryImpl(
     private val context: Context,
-    private val database: MyBrainDatabase
+    private val database: MyBrainDatabase,
+    private val ioDispatcher: CoroutineDispatcher
 ) : BackupRepository {
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -32,7 +32,7 @@ class BackupRepositoryImpl @Inject constructor(
         encrypted: Boolean, // To be added in a future version
         password: String // To be added in a future version
     ): Boolean {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 val fileName = "MyBrain_Backup_${System.currentTimeMillis()}.json"
                 val pickedDir = DocumentFile.fromTreeUri(context, directoryUri)
@@ -76,7 +76,7 @@ class BackupRepositoryImpl @Inject constructor(
         encrypted: Boolean, // To be added in a future version
         password: String // To be added in a future version
     ): Boolean {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 val json = Json {
                     ignoreUnknownKeys = true

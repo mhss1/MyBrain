@@ -5,13 +5,12 @@ import com.mhss.app.mybrain.domain.model.Note
 import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.domain.repository.NoteRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class NoteRepositoryImpl(
     private val noteDao: NoteDao,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher
 ) : NoteRepository {
 
     override fun getAllFolderlessNotes(): Flow<List<Note>> {
@@ -75,7 +74,7 @@ class NoteRepositoryImpl(
     }
 
     override suspend fun getNoteFolder(folderId: Int): NoteFolder? {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             noteDao.getNoteFolder(folderId)
         }
     }
