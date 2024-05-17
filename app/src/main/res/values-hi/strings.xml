@@ -172,4 +172,5 @@
     <string name="no_auth_method">No supported authentication method is set on your device</string>
     <string name="added_note">Added to notes</string>
     <string name="no_alarm_permission">Please grant alarms permission to set a due date.</string>
+    <string name="exception_stack_trace_copied">Exception stack trace copied to clipboard</string>
 </resources>
