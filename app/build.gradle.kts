@@ -118,9 +118,6 @@ dependencies {
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material)
 
-    //Moshi
-    implementation(libs.moshi.kotlin)
-
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
 
