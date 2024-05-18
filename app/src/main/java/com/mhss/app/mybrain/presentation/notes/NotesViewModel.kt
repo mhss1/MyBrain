@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
-    private val allNotes: GetAllNotesUseCase,
+    private val folderlessNotes: GetAllFolderlessNotesUseCase,
     private val getNote: GetNoteUseCase,
     private val updateNote: UpdateNoteUseCase,
     private val addNote: AddNoteUseCase,
@@ -59,7 +59,7 @@ class NotesViewModel @Inject constructor(
                 getAllFolders()
             ) { order, view, folders ->
                 notesUiState = notesUiState.copy(notesOrder = order.toOrder(), folders = folders)
-                getNotes(order.toOrder())
+                getFolderlessNotes(order.toOrder())
                 if (notesUiState.noteView.value != view) {
                     notesUiState = notesUiState.copy(noteView = view.toNotesView())
                 }
@@ -172,9 +172,9 @@ class NotesViewModel @Inject constructor(
         val folder: NoteFolder? = null
     )
 
-    private fun getNotes(order: Order) {
+    private fun getFolderlessNotes(order: Order) {
         getNotesJob?.cancel()
-        getNotesJob = allNotes(order)
+        getNotesJob = folderlessNotes(order)
             .onEach { notes ->
                 notesUiState = notesUiState.copy(
                     notes = notes,

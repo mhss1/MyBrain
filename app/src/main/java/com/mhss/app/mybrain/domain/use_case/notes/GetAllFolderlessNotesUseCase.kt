@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetAllNotesUseCase @Inject constructor(
+class GetAllFolderlessNotesUseCase @Inject constructor(
     private val notesRepository: NoteRepository
 ) {
     operator fun invoke(order: Order) : Flow<List<Note>> {
