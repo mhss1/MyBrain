@@ -55,7 +55,7 @@ class MainViewModel @Inject constructor(
                     getCalendarEvents()
             }
             is DashboardEvent.UpdateTask -> viewModelScope.launch {
-                updateTask(event.task)
+                updateTask(event.task, event.task)
             }
             DashboardEvent.InitAll -> collectDashboardData()
         }

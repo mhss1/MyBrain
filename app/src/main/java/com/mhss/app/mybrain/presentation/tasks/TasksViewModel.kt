@@ -9,10 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
-import com.mhss.app.mybrain.domain.model.Alarm
 import com.mhss.app.mybrain.domain.model.Task
-import com.mhss.app.mybrain.domain.use_case.alarm.AddAlarmUseCase
-import com.mhss.app.mybrain.domain.use_case.alarm.DeleteAlarmUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.*
@@ -36,11 +33,9 @@ class TasksViewModel @Inject constructor(
     private val completeTask: UpdateTaskCompletedUseCase,
     getSettings: GetSettingsUseCase,
     private val saveSettings: SaveSettingsUseCase,
-    private val addAlarm: AddAlarmUseCase,
-    private val deleteAlarm: DeleteAlarmUseCase,
     private val deleteTask: DeleteTaskUseCase,
     private val searchTasksUseCase: SearchTasksUseCase
-): ViewModel() {
+) : ViewModel() {
 
     var tasksUiState by mutableStateOf(UiState())
         private set
@@ -61,7 +56,7 @@ class TasksViewModel @Inject constructor(
                     booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
                     false
                 )
-            ){ order, showCompleted ->
+            ) { order, showCompleted ->
                 getTasks(order.toOrder(), showCompleted)
             }.collect()
         }
@@ -72,88 +67,72 @@ class TasksViewModel @Inject constructor(
             is TaskEvent.AddTask -> {
                 if (event.task.title.isNotBlank()) {
                     viewModelScope.launch {
-                        val taskId = addTask(event.task)
-                        if (event.task.dueDate != 0L){
-                            val scheduleSuccess = addAlarm(
-                                Alarm(
-                                    taskId.toInt(),
-                                    event.task.dueDate,
-                                )
+                        val scheduleSuccess = addTask(event.task)
+                        if (!scheduleSuccess) {
+                            tasksUiState = tasksUiState.copy(
+                                error = getString(R.string.no_alarm_permission),
+                                errorAlarm = true
                             )
-                            if (!scheduleSuccess) {
-                                tasksUiState = tasksUiState.copy(
-                                    error = getString(R.string.no_alarm_permission),
-                                    errorAlarm = true
-                                )
-                                updateTask(event.task.copy(id = taskId.toInt(), dueDate = 0L))
-                            }
                         }
                     }
-
-                }else
+                } else
                     tasksUiState = tasksUiState.copy(error = getString(R.string.error_empty_title))
             }
+
             is TaskEvent.CompleteTask -> viewModelScope.launch {
                 completeTask(event.task.id, event.complete)
             }
+
             TaskEvent.ErrorDisplayed -> {
                 tasksUiState = tasksUiState.copy(error = null, errorAlarm = false)
                 taskDetailsUiState = taskDetailsUiState.copy(error = null, errorAlarm = false)
             }
+
             is TaskEvent.UpdateOrder -> viewModelScope.launch {
                 saveSettings(
                     intPreferencesKey(Constants.TASKS_ORDER_KEY),
                     event.order.toInt()
                 )
             }
+
             is TaskEvent.ShowCompletedTasks -> viewModelScope.launch {
                 saveSettings(
                     booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
                     event.showCompleted
                 )
             }
+
             is TaskEvent.SearchTasks -> {
                 viewModelScope.launch {
                     searchTasks(event.query)
                 }
             }
+
             is TaskEvent.UpdateTask -> viewModelScope.launch {
-                 if (event.task.title.isBlank())
-                     taskDetailsUiState = taskDetailsUiState.copy(error = getString(R.string.error_empty_title))
+                if (event.task.title.isBlank())
+                    taskDetailsUiState =
+                        taskDetailsUiState.copy(error = getString(R.string.error_empty_title))
                 else {
-                    updateTask(event.task.copy(updatedDate = System.currentTimeMillis()))
-                    if (event.task.dueDate != taskDetailsUiState.task.dueDate){
-                        if (event.task.dueDate != 0L) {
-                            val scheduleSuccess = addAlarm(
-                                Alarm(
-                                    event.task.id,
-                                    event.task.dueDate
-                                )
-                            )
-                            taskDetailsUiState = if (!scheduleSuccess) {
-                                taskDetailsUiState.copy(
-                                    error = getString(R.string.no_alarm_permission),
-                                    errorAlarm = true
-                                )
-                            } else {
-                                taskDetailsUiState.copy(navigateUp = true)
-                            }
-                        }
-                        else {
-                            deleteAlarm(event.task.id)
-                            taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
-                        }
+                    val scheduleAlarmSuccess = updateTask(
+                        event.task.copy(updatedDate = System.currentTimeMillis()),
+                        taskDetailsUiState.task
+                    )
+                    taskDetailsUiState = if (scheduleAlarmSuccess) {
+                        taskDetailsUiState.copy(navigateUp = true)
                     } else {
-                        taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
+                        taskDetailsUiState.copy(
+                            error = getString(R.string.no_alarm_permission),
+                            errorAlarm = true
+                        )
                     }
                 }
             }
+
             is TaskEvent.DeleteTask -> viewModelScope.launch {
                 deleteTask(event.task)
-                if (event.task.dueDate != 0L)
-                    deleteAlarm(event.task.id)
                 taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
             }
+
             is TaskEvent.GetTask -> viewModelScope.launch {
                 taskDetailsUiState = taskDetailsUiState.copy(
                     task = getTaskUseCase(event.taskId)
@@ -178,7 +157,7 @@ class TasksViewModel @Inject constructor(
         val errorAlarm: Boolean = false
     )
 
-     private fun getTasks(order: Order, showCompleted: Boolean) {
+    private fun getTasks(order: Order, showCompleted: Boolean) {
         getTasksJob?.cancel()
         getTasksJob = getAllTasks(order)
             .map { list ->
@@ -187,14 +166,15 @@ class TasksViewModel @Inject constructor(
                 else
                     list.filter { !it.isCompleted }
             }.onEach { tasks ->
-            tasksUiState = tasksUiState.copy(
-                tasks = tasks,
-                taskOrder = order,
-                showCompletedTasks = showCompleted
-            )
-        }.launchIn(viewModelScope)
+                tasksUiState = tasksUiState.copy(
+                    tasks = tasks,
+                    taskOrder = order,
+                    showCompletedTasks = showCompleted
+                )
+            }.launchIn(viewModelScope)
     }
-    private fun searchTasks(query: String){
+
+    private fun searchTasks(query: String) {
         searchTasksJob?.cancel()
         searchTasksJob = searchTasksUseCase(query).onEach { tasks ->
             tasksUiState = tasksUiState.copy(

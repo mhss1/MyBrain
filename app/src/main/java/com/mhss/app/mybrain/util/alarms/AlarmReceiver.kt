@@ -63,7 +63,7 @@ class AlarmReceiver : BroadcastReceiver() {
                     val newTask = task.copy(
                         dueDate = calendar.timeInMillis,
                     )
-                    updateTaskUseCase(newTask)
+                    updateTaskUseCase(newTask, task)
                     addAlarmUseCase(Alarm(newTask.id, newTask.dueDate))
                 }
             }
