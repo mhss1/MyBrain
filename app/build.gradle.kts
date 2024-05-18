@@ -69,6 +69,7 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
