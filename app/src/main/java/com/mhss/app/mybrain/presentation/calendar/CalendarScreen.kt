@@ -41,6 +41,7 @@ import org.koin.androidx.compose.koinViewModel
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CalendarScreen(
     navController: NavHostController,
@@ -232,7 +233,7 @@ fun MonthDropDownMenu(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            AnimatedContent(targetState = selectedMonth) { month ->
+            AnimatedContent(targetState = selectedMonth, label = "") { month ->
                 Text(
                     text = month,
                     style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)
