@@ -18,14 +18,13 @@ import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import com.mhss.app.mybrain.util.settings.toInt
 import com.mhss.app.mybrain.util.settings.toOrder
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class TasksViewModel @Inject constructor(
+@KoinViewModel
+class TasksViewModel(
     private val addTask: AddTaskUseCase,
     private val getAllTasks: GetAllTasksUseCase,
     private val getTaskUseCase: GetTaskByIdUseCase,

@@ -6,9 +6,10 @@ import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetAllBookmarksUseCase @Inject constructor(
+@Single
+class GetAllBookmarksUseCase(
     private val bookmarksRepository: BookmarkRepository
 ) {
     operator fun invoke(order: Order) : Flow<List<Bookmark>>{

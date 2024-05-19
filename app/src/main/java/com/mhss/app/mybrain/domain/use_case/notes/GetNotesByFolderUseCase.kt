@@ -4,9 +4,10 @@ import com.mhss.app.mybrain.domain.repository.NoteRepository
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetNotesByFolderUseCase @Inject constructor(
+@Single
+class GetNotesByFolderUseCase(
     private val notesRepository: NoteRepository
 ) {
     operator fun invoke(id: Int, order: Order) = notesRepository.getNotesByFolder(id).map { list ->

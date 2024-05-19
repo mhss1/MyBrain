@@ -26,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -38,6 +37,7 @@ import com.mhss.app.mybrain.util.date.HOUR_IN_MILLIS
 import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.date.formatTime
 import kotlinx.serialization.json.Json
+import org.koin.androidx.compose.koinViewModel
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -46,7 +46,7 @@ import java.nio.charset.StandardCharsets
 fun CalendarEventDetailsScreen(
     navController: NavHostController,
     eventJson: String = "",
-    viewModel: CalendarViewModel = hiltViewModel()
+    viewModel: CalendarViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState
     val writeCalendarPermissionState = rememberPermissionState(

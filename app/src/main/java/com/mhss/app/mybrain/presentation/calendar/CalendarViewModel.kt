@@ -18,15 +18,14 @@ import com.mhss.app.mybrain.util.date.monthName
 import com.mhss.app.mybrain.util.settings.addAndToStringSet
 import com.mhss.app.mybrain.util.settings.removeAndToStringSet
 import com.mhss.app.mybrain.util.settings.toIntList
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class CalendarViewModel @Inject constructor(
+@KoinViewModel
+class CalendarViewModel(
     private val getAllEventsUseCase: GetAllEventsUseCase,
     private val getAllCalendarsUseCase: GetAllCalendarsUseCase,
     private val addEvent: AddCalendarEventUseCase,

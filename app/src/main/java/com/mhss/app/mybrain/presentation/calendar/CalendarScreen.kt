@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -38,13 +37,14 @@ import com.mhss.app.mybrain.util.date.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.koin.androidx.compose.koinViewModel
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
 fun CalendarScreen(
     navController: NavHostController,
-    viewModel: CalendarViewModel = hiltViewModel()
+    viewModel: CalendarViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState
     val context = LocalContext.current

@@ -4,15 +4,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskCompletedUseCase
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-@AndroidEntryPoint
-class CompleteTaskWidgetReceiver : BroadcastReceiver() {
+class CompleteTaskWidgetReceiver : BroadcastReceiver(), KoinComponent {
 
-    @Inject
-    lateinit var completeTask: UpdateTaskCompletedUseCase
+    private val completeTask: UpdateTaskCompletedUseCase by inject()
 
     override fun onReceive(context: Context, intent: Intent) {
             val id = intent.getIntExtra("taskId", -1)

@@ -5,9 +5,10 @@ import androidx.glance.appwidget.updateAll
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.domain.repository.CalendarRepository
 import com.mhss.app.mybrain.presentation.glance_widgets.CalendarHomeWidget
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class UpdateCalendarEventUseCase @Inject constructor(
+@Single
+class UpdateCalendarEventUseCase(
     private val calendarRepository: CalendarRepository,
     private val context: Context
 ) {

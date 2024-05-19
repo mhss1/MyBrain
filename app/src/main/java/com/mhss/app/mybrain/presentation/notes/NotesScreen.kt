@@ -27,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
@@ -35,12 +34,13 @@ import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.*
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NotesScreen(
     navController: NavHostController,
-    viewModel: NotesViewModel = hiltViewModel()
+    viewModel: NotesViewModel = koinViewModel()
 ) {
     val uiState = viewModel.notesUiState
     var orderSettingsVisible by remember { mutableStateOf(false) }

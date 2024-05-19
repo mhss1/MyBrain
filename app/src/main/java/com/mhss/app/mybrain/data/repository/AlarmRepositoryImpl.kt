@@ -5,9 +5,8 @@ import com.mhss.app.mybrain.domain.model.Alarm
 import com.mhss.app.mybrain.domain.repository.AlarmRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-class AlarmRepositoryImpl @Inject constructor(
+class AlarmRepositoryImpl(
     private val alarmDao: AlarmDao,
     private val ioDispatcher: CoroutineDispatcher
 ) : AlarmRepository {

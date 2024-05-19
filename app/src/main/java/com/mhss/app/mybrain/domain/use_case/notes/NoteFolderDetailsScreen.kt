@@ -12,10 +12,22 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextField
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +35,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.notes.NoteEvent
@@ -32,13 +43,14 @@ import com.mhss.app.mybrain.presentation.notes.NotesViewModel
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.ItemView
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NoteFolderDetailsScreen(
     navController: NavHostController,
     id: Int,
-    viewModel: NotesViewModel = hiltViewModel()
+    viewModel: NotesViewModel = koinViewModel()
 ) {
     val uiState = viewModel.notesUiState
     val folder = uiState.folder

@@ -6,15 +6,13 @@ import android.content.Context
 import android.content.Intent
 import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskCompletedUseCase
 import com.mhss.app.mybrain.util.Constants
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-@AndroidEntryPoint
-class TaskActionButtonBroadcastReceiver : BroadcastReceiver() {
+class TaskActionButtonBroadcastReceiver : BroadcastReceiver(), KoinComponent {
 
-    @Inject
-    lateinit var updateTaskCompleted: UpdateTaskCompletedUseCase
+    private val updateTaskCompleted: UpdateTaskCompletedUseCase by inject()
 
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action == Constants.ACTION_COMPLETE) {

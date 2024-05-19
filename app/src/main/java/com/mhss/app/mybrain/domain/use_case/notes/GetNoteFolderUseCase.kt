@@ -1,9 +1,10 @@
 package com.mhss.app.mybrain.domain.use_case.notes
 
 import com.mhss.app.mybrain.domain.repository.NoteRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetNoteFolderUseCase @Inject constructor(
+@Single
+class GetNoteFolderUseCase(
     private val repository: NoteRepository
 ) {
     suspend operator fun invoke(folderId: Int) = repository.getNoteFolder(folderId)

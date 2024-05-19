@@ -15,14 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.presentation.tasks.AnimatedTabIndicator
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DiaryChartScreen(
-    viewModel: DiaryViewModel = hiltViewModel()
+    viewModel: DiaryViewModel = koinViewModel()
 ) {
     Column(
         Modifier

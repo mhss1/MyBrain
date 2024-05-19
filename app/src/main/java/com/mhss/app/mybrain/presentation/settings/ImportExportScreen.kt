@@ -16,12 +16,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.mhss.app.mybrain.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ImportExportScreen(
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = koinViewModel()
 ) {
     val encrypted by remember {
         mutableStateOf(false)

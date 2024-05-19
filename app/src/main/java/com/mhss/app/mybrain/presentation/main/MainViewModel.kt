@@ -21,14 +21,13 @@ import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.inTheLastWeek
 import com.mhss.app.mybrain.util.settings.*
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
+@KoinViewModel
+class MainViewModel(
     private val getSettings: GetSettingsUseCase,
     private val saveSettings: SaveSettingsUseCase,
     private val getAllTasks: GetAllTasksUseCase,

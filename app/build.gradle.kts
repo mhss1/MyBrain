@@ -2,7 +2,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinx.serialization)
 }
@@ -60,6 +59,7 @@ android {
         }
     }
     androidResources {
+        @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
     }
     lint {
@@ -87,18 +87,11 @@ dependencies {
 
     // Compose navigation
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.hilt.navigation.compose)
 
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-
-    //Dagger - Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-    ksp(libs.androidx.hilt.compiler)
-    implementation(libs.androidx.hilt.work)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
@@ -133,8 +126,18 @@ dependencies {
 
     // Kotlinx serialization
     implementation(libs.kotlinx.serialization.json)
+
+    // Koin
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.android.workmanager)
+    implementation(libs.koin.annotations)
+    ksp(libs.koin.ksp.compiler)
 }
 
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
+    arg("KOIN_DEFAULT_MODULE","false")
 }

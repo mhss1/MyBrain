@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
@@ -28,13 +27,14 @@ import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.Orange
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NoteDetailsScreen(
     navController: NavHostController,
     noteId: Int,
     folderId: Int,
-    viewModel: NotesViewModel = hiltViewModel()
+    viewModel: NotesViewModel = koinViewModel()
 ) {
     LaunchedEffect(true) {
         if (noteId != -1) viewModel.onEvent(NoteEvent.GetNote(noteId))

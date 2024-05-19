@@ -5,15 +5,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.mhss.app.mybrain.domain.use_case.alarm.GetAllAlarmsUseCase
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-@AndroidEntryPoint
-class BootBroadcastReceiver : BroadcastReceiver() {
+class BootBroadcastReceiver : BroadcastReceiver(), KoinComponent {
 
-    @Inject
-    lateinit var getAllAlarms: GetAllAlarmsUseCase
+    private val getAllAlarms: GetAllAlarmsUseCase by inject()
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {

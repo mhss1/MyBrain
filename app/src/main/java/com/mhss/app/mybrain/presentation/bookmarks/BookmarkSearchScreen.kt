@@ -19,7 +19,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
@@ -27,12 +26,13 @@ import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.ItemView
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BookmarkSearchScreen(
     navController: NavHostController,
-    viewModel: BookmarksViewModel = hiltViewModel()
+    viewModel: BookmarksViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()

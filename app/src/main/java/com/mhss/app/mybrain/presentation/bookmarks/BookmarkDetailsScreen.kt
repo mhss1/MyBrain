@@ -15,18 +15,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun BookmarkDetailsScreen(
     navController: NavHostController,
     bookmarkId: Int,
-    viewModel: BookmarksViewModel = hiltViewModel()
+    viewModel: BookmarksViewModel = koinViewModel()
 ) {
     LaunchedEffect(true) {
         if (bookmarkId != -1) {

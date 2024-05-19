@@ -2,9 +2,10 @@ package com.mhss.app.mybrain.domain.use_case.notes
 
 import com.mhss.app.mybrain.domain.model.Note
 import com.mhss.app.mybrain.domain.repository.NoteRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class AddNoteUseCase @Inject constructor(
+@Single
+class AddNoteUseCase(
     private val notesRepository: NoteRepository
 ) {
     suspend operator fun invoke(note: Note) = notesRepository.addNote(note)

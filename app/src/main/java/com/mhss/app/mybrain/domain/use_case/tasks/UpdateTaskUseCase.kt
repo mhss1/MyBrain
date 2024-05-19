@@ -8,9 +8,10 @@ import com.mhss.app.mybrain.domain.repository.TaskRepository
 import com.mhss.app.mybrain.domain.use_case.alarm.AddAlarmUseCase
 import com.mhss.app.mybrain.domain.use_case.alarm.DeleteAlarmUseCase
 import com.mhss.app.mybrain.presentation.glance_widgets.TasksHomeWidget
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class UpdateTaskUseCase @Inject constructor(
+@Single
+class UpdateTaskUseCase(
     private val tasksRepository: TaskRepository,
     private val addAlarm: AddAlarmUseCase,
     private val deleteAlarm: DeleteAlarmUseCase,

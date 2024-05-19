@@ -2,9 +2,10 @@ package com.mhss.app.mybrain.domain.use_case.calendar
 
 import com.mhss.app.mybrain.domain.model.Calendar
 import com.mhss.app.mybrain.domain.repository.CalendarRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetAllCalendarsUseCase @Inject constructor(
+@Single
+class GetAllCalendarsUseCase(
     private val calendarRepository: CalendarRepository
 ) {
     suspend operator fun invoke(excluded: List<Int>): Map<String, List<Calendar>> {

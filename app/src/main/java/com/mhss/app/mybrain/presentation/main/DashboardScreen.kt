@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.calendar.CalendarDashboardWidget
@@ -19,13 +18,14 @@ import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.koin.androidx.compose.koinViewModel
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
 fun DashboardScreen(
     navController: NavHostController,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = koinViewModel()
 ) {
     Scaffold(
         topBar = {

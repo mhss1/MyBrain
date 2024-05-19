@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.WindowManager.LayoutParams
 import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,15 +55,14 @@ import com.mhss.app.mybrain.util.settings.StartUpScreenSettings
 import com.mhss.app.mybrain.util.settings.ThemeSettings
 import com.mhss.app.mybrain.util.settings.toFontFamily
 import com.mhss.app.mybrain.util.settings.toInt
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModel()
     private val appLockManager by lazy {
         AppLockManager(this)
     }

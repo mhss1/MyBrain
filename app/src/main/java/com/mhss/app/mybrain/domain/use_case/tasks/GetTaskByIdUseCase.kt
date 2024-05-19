@@ -1,9 +1,10 @@
 package com.mhss.app.mybrain.domain.use_case.tasks
 
 import com.mhss.app.mybrain.domain.repository.TaskRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetTaskByIdUseCase @Inject constructor(
+@Single
+class GetTaskByIdUseCase(
     private val tasksRepository: TaskRepository
 ) {
     suspend operator fun invoke(id: Int) = tasksRepository.getTaskById(id)

@@ -3,9 +3,10 @@ package com.mhss.app.mybrain.domain.use_case.calendar
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.domain.repository.CalendarRepository
 import com.mhss.app.mybrain.util.date.formatDateForMapping
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetAllEventsUseCase @Inject constructor(
+@Single
+class GetAllEventsUseCase(
     private val calendarRepository: CalendarRepository
 ) {
     suspend operator fun invoke(excluded: List<Int>, fromWidget: Boolean = false): Map<String, List<CalendarEvent>> {

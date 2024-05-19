@@ -5,14 +5,13 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.mhss.app.mybrain.domain.repository.SettingsRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class SettingsRepositoryImpl(
     private val preferences: DataStore<Preferences>,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher
 ) : SettingsRepository {
 
     override suspend fun <T> saveSettings(key: Preferences.Key<T>, value: T) {

@@ -11,34 +11,35 @@ import androidx.annotation.StringRes
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.di.UseCasesModule
+import com.mhss.app.mybrain.di.ViewModelsModule
+import com.mhss.app.mybrain.di.appModule
 import com.mhss.app.mybrain.util.Constants
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.workmanager.koin.workManagerFactory
+import org.koin.core.context.startKoin
+import org.koin.ksp.generated.module
 import kotlin.system.exitProcess
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.SETTINGS_PREFERENCES)
 
-@HiltAndroidApp
-class MyBrainApplication : Application(), Configuration.Provider {
+class MyBrainApplication : Application() {
 
     companion object {
         lateinit var appContext: Context
     }
 
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
-
     override fun onCreate() {
         super.onCreate()
         appContext = this
+        startKoin {
+            androidContext(this@MyBrainApplication)
+            androidLogger()
+            modules(appModule, UseCasesModule().module, ViewModelsModule().module)
+            workManagerFactory()
+        }
         createRemindersNotificationChannel()
         Thread.setDefaultUncaughtExceptionHandler { _, e ->
             "```\n${e.stackTraceToString()}\n```".copyToClipboard()

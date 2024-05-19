@@ -6,9 +6,10 @@ import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetAllTasksUseCase @Inject constructor(
+@Single
+class GetAllTasksUseCase(
     private val tasksRepository: TaskRepository
 ) {
     operator fun invoke(order: Order, showCompleted: Boolean = true): Flow<List<Task>> {

@@ -2,9 +2,10 @@ package com.mhss.app.mybrain.domain.use_case.notes
 
 import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.domain.repository.NoteRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class DeleteNoteFolderUseCass @Inject constructor(
+@Single
+class DeleteNoteFolderUseCase(
     private val noteRepository: NoteRepository
 ) {
     suspend operator fun invoke(folder: NoteFolder) = noteRepository.deleteNoteFolder(folder)

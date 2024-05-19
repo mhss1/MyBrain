@@ -20,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.BuildConfig
 import com.mhss.app.mybrain.R
@@ -34,11 +33,12 @@ import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.*
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = koinViewModel()
 ) {
     Scaffold(
         topBar = {

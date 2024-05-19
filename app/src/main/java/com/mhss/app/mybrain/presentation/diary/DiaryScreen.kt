@@ -16,7 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
@@ -24,11 +23,12 @@ import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DiaryScreen(
     navController: NavHostController,
-    viewModel: DiaryViewModel = hiltViewModel()
+    viewModel: DiaryViewModel = koinViewModel()
 ) {
     val uiState = viewModel.uiState
     var orderSettingsVisible by remember { mutableStateOf(false) }

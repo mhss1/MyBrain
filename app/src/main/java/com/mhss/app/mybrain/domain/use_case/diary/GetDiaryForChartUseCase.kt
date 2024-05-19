@@ -5,9 +5,10 @@ import com.mhss.app.mybrain.domain.repository.DiaryRepository
 import com.mhss.app.mybrain.util.date.inTheLast30Days
 import com.mhss.app.mybrain.util.date.inTheLastYear
 import kotlinx.coroutines.flow.first
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetDiaryForChartUseCase @Inject constructor(
+@Single
+class GetDiaryForChartUseCase(
     private val diaryRepository: DiaryRepository
 ) {
     suspend operator fun invoke(monthly: Boolean) : List<DiaryEntry>{

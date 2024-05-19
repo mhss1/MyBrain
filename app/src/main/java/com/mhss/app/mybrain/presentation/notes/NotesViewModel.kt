@@ -15,14 +15,13 @@ import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.*
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class NotesViewModel @Inject constructor(
+@KoinViewModel
+class NotesViewModel(
     private val folderlessNotes: GetAllFolderlessNotesUseCase,
     private val getNote: GetNoteUseCase,
     private val updateNote: UpdateNoteUseCase,
@@ -32,9 +31,9 @@ class NotesViewModel @Inject constructor(
     private val getSettings: GetSettingsUseCase,
     private val saveSettings: SaveSettingsUseCase,
     private val getAllFolders: GetAllNoteFoldersUseCase,
-    private val createFolder: AddNoteFolderUseCass,
-    private val deleteFolder: DeleteNoteFolderUseCass,
-    private val updateFolder: UpdateNoteFolderUseCass,
+    private val createFolder: AddNoteFolderUseCase,
+    private val deleteFolder: DeleteNoteFolderUseCase,
+    private val updateFolder: UpdateNoteFolderUseCase,
     private val getFolderNotes: GetNotesByFolderUseCase,
     private val getNoteFolder: GetNoteFolderUseCase
 ) : ViewModel() {

@@ -1,9 +1,10 @@
 package com.mhss.app.mybrain.domain.use_case.notes
 
 import com.mhss.app.mybrain.domain.repository.NoteRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class SearchNotesUseCase @Inject constructor(
+@Single
+class SearchNotesUseCase(
     private val notesRepository: NoteRepository
 ) {
     suspend operator fun invoke(query: String) = notesRepository.searchNotes(query)

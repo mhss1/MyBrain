@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
@@ -31,12 +30,13 @@ import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.launch
 import com.mhss.app.mybrain.app.getString
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BookmarksScreen(
     navController: NavHostController,
-    viewModel: BookmarksViewModel = hiltViewModel()
+    viewModel: BookmarksViewModel = koinViewModel()
 ) {
     val uiState = viewModel.uiState
     val scope = rememberCoroutineScope()

@@ -15,17 +15,16 @@ import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 import com.mhss.app.mybrain.util.settings.*
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class BookmarksViewModel @Inject constructor(
+@KoinViewModel
+class BookmarksViewModel(
     private val addBookmark: AddBookmarkUseCase,
     private val updateBookmark: UpdateBookmarkUseCase,
     private val deleteBookmark: DeleteBookmarkUseCase,

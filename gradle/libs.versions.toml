@@ -11,9 +11,6 @@ datastorePreferences = "1.1.1"
 documentfile = "1.0.1"
 espressoCore = "3.5.1"
 glanceAppwidget = "1.1.0-rc01"
-hiltAndroid = "2.49"
-hiltAndroidCompiler = "2.49"
-hiltNavigationCompose = "1.2.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 kotlinxSerializationJson = "1.6.3"
@@ -23,9 +20,9 @@ room = "2.6.1"
 workManager = "2.9.0"
 androidGradlePlugin = "8.4.0"
 kotlin = "1.9.23"
-hilt = "2.49"
 ksp = "1.9.23-1.0.20"
-
+koinBOM = "3.5.6"
+koinKSP = "1.3.1"
 
 [libraries]
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayout" }
@@ -41,9 +38,6 @@ androidx-documentfile = { module = "androidx.documentfile:documentfile", version
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppwidget" }
 androidx-glance-material = { module = "androidx.glance:glance-material", version.ref = "glanceAppwidget" }
-androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigationCompose" }
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
-androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNavigationCompose" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleVersion" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleVersion" }
@@ -59,17 +53,22 @@ androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
 compose-markdown = { module = "com.github.jeziellago:compose-markdown", version.ref = "composeMarkdown" }
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBOM" }
+koin-android-workmanager = { module = "io.insert-koin:koin-androidx-workmanager" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose"}
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinKSP" }
+koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKSP" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 

@@ -4,16 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.viewModels
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class SaveBookmarkActivity : ComponentActivity() {
 
-    private val viewModel: BookmarksViewModel by viewModels()
+    private val viewModel: BookmarksViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (intent != null) {

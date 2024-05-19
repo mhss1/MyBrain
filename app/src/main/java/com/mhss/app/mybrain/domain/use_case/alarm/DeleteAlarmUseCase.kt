@@ -4,9 +4,10 @@ import android.app.AlarmManager
 import android.content.Context
 import com.mhss.app.mybrain.domain.repository.AlarmRepository
 import com.mhss.app.mybrain.util.alarms.cancelAlarm
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class DeleteAlarmUseCase @Inject constructor(
+@Single
+class DeleteAlarmUseCase(
     private val alarmRepository: AlarmRepository,
     private val context: Context
 ) {

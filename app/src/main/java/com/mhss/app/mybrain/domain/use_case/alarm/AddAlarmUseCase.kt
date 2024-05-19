@@ -6,9 +6,10 @@ import android.os.Build
 import com.mhss.app.mybrain.domain.model.Alarm
 import com.mhss.app.mybrain.domain.repository.AlarmRepository
 import com.mhss.app.mybrain.util.alarms.scheduleAlarm
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class AddAlarmUseCase @Inject constructor(
+@Single
+class AddAlarmUseCase(
     private val alarmRepository: AlarmRepository,
     private val context: Context
 ) {

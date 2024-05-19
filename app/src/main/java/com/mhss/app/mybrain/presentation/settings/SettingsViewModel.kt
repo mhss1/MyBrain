@@ -8,16 +8,15 @@ import com.mhss.app.mybrain.domain.use_case.settings.ExportAllDataUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.ImportAllDataUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class SettingsViewModel @Inject constructor(
+@KoinViewModel
+class SettingsViewModel(
     private val saveSettingsUseCase: SaveSettingsUseCase,
     private val getSettingsUseCase: GetSettingsUseCase,
     private val exportData: ExportAllDataUseCase,

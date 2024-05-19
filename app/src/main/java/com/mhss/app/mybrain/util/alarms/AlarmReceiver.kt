@@ -11,25 +11,19 @@ import com.mhss.app.mybrain.domain.use_case.tasks.GetTaskByIdUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskUseCase
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.TaskFrequency
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.Calendar
-import javax.inject.Inject
 
-@AndroidEntryPoint
-class AlarmReceiver : BroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver(), KoinComponent {
 
-    @Inject
-    lateinit var deleteAlarmUseCase: DeleteAlarmUseCase
-    @Inject
-    lateinit var addAlarmUseCase: AddAlarmUseCase
-
-    @Inject
-    lateinit var getTaskByIdUseCase: GetTaskByIdUseCase
-    @Inject
-    lateinit var updateTaskUseCase: UpdateTaskUseCase
+    private val deleteAlarmUseCase: DeleteAlarmUseCase by inject()
+    private val addAlarmUseCase: AddAlarmUseCase by inject()
+    private val getTaskByIdUseCase: GetTaskByIdUseCase by inject()
+    private val updateTaskUseCase: UpdateTaskUseCase by inject()
 
     private val scope = CoroutineScope(Dispatchers.Default)
 

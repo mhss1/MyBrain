@@ -6,9 +6,10 @@ import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetAllEntriesUseCase @Inject constructor(
+@Single
+class GetAllEntriesUseCase(
     private val diaryRepository: DiaryRepository
 ) {
     operator fun invoke(order: Order) : Flow<List<DiaryEntry>> {

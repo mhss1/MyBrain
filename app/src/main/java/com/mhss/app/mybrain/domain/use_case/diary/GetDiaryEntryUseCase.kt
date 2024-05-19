@@ -1,9 +1,10 @@
 package com.mhss.app.mybrain.domain.use_case.diary
 
 import com.mhss.app.mybrain.domain.repository.DiaryRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetDiaryEntryUseCase @Inject constructor(
+@Single
+class GetDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository
 ) {
     suspend operator fun invoke(id: Int) = diaryRepository.getEntry(id)

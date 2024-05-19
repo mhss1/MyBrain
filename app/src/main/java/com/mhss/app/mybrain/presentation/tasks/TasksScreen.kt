@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
@@ -33,6 +32,7 @@ import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("InlinedApi")
 @OptIn(ExperimentalMaterialApi::class)
@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 fun TasksScreen(
     navController: NavHostController,
     addTask: Boolean = false,
-    viewModel: TasksViewModel = hiltViewModel()
+    viewModel: TasksViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     var orderSettingsVisible by remember { mutableStateOf(false) }

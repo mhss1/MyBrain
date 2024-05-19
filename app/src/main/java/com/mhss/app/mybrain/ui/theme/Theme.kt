@@ -7,6 +7,7 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import org.koin.compose.KoinContext
 
 private val DarkColorPalette = darkColors(
     primary = PrimaryColor,
@@ -36,10 +37,12 @@ fun MyBrainTheme(
         LightColorPalette
     }
     val typography = getTypography(fontFamily)
-    MaterialTheme(
-        colors = colors,
-        typography = typography,
-        shapes = Shapes,
-        content = content
-    )
+    KoinContext {
+        MaterialTheme(
+            colors = colors,
+            typography = typography,
+            shapes = Shapes,
+            content = content
+        )
+    }
 }

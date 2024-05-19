@@ -2,9 +2,10 @@ package com.mhss.app.mybrain.domain.use_case.tasks
 
 import com.mhss.app.mybrain.domain.repository.TaskRepository
 import com.mhss.app.mybrain.domain.use_case.alarm.DeleteAlarmUseCase
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class UpdateTaskCompletedUseCase @Inject constructor(
+@Single
+class UpdateTaskCompletedUseCase(
     private val tasksRepository: TaskRepository,
     private val deleteAlarm: DeleteAlarmUseCase,
     ) {

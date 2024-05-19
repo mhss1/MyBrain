@@ -21,7 +21,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.domain.model.DiaryEntry
 import com.mhss.app.mybrain.presentation.util.Screen
@@ -29,13 +28,14 @@ import com.mhss.app.mybrain.util.diary.Mood
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.util.date.fullDate
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
 @Composable
 fun DiaryEntryDetailsScreen(
     navController: NavHostController,
     entryId: Int,
-    viewModel: DiaryViewModel = hiltViewModel()
+    viewModel: DiaryViewModel = koinViewModel()
 ) {
     LaunchedEffect(true) {
         if (entryId != -1) {

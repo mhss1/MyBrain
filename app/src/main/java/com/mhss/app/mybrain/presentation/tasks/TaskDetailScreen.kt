@@ -33,7 +33,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.SubTask
@@ -45,6 +44,7 @@ import com.mhss.app.mybrain.util.settings.Priority
 import com.mhss.app.mybrain.util.settings.toTaskFrequency
 import com.mhss.app.mybrain.util.settings.toInt
 import com.mhss.app.mybrain.util.settings.toPriority
+import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
 @SuppressLint("InlinedApi")
@@ -52,7 +52,7 @@ import java.util.*
 fun TaskDetailScreen(
     navController: NavHostController,
     taskId: Int,
-    viewModel: TasksViewModel = hiltViewModel()
+    viewModel: TasksViewModel = koinViewModel()
 ) {
     LaunchedEffect(true) {
         viewModel.onEvent(TaskEvent.GetTask(taskId))

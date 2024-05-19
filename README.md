@@ -42,7 +42,7 @@
 - Following MVVM Architectural Design Pattern.
 ### Used in the app :
  - Room DB
- - Hilt
+ - Koin
  - Preferences DataStore
  - Kotlin coroutines
  - Kotlin Flows

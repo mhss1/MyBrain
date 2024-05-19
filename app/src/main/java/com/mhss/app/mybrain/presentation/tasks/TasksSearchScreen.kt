@@ -15,16 +15,16 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.util.Screen
 import com.mhss.app.mybrain.util.Constants
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TasksSearchScreen(
     navController: NavHostController,
-    viewModel: TasksViewModel = hiltViewModel()
+    viewModel: TasksViewModel = koinViewModel()
 ) {
     val state = viewModel.tasksUiState
     Column(
