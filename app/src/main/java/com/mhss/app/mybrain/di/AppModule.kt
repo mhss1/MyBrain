@@ -1,53 +1,55 @@
 package com.mhss.app.mybrain.di
 
+import android.content.Context
 import androidx.room.Room
 import com.mhss.app.mybrain.app.dataStore
-import com.mhss.app.mybrain.data.backup.BackupRepositoryImpl
 import com.mhss.app.mybrain.data.local.MyBrainDatabase
 import com.mhss.app.mybrain.data.local.migrations.MIGRATION_1_2
 import com.mhss.app.mybrain.data.local.migrations.MIGRATION_2_3
 import com.mhss.app.mybrain.data.local.migrations.MIGRATION_3_4
-import com.mhss.app.mybrain.data.repository.*
-import com.mhss.app.mybrain.domain.repository.*
-import org.koin.android.ext.koin.androidApplication
-import org.koin.dsl.module
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
-import org.koin.core.qualifier.named
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Single
 
 
-val appModule = module {
+const val namedIoDispatcher = "ioDispatcher"
 
-    single(named("ioDispatcher")) {
-        Dispatchers.IO
-    }
+@Module
+@ComponentScan("com.mhss.app.mybrain.data")
+class DataModule {
+    @Single
+    fun room(context: Context) = Room.databaseBuilder(
+        context,
+        MyBrainDatabase::class.java,
+        MyBrainDatabase.DATABASE_NAME
+    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+        .build()
 
-    single {
-        Room.databaseBuilder(
-            androidApplication(),
-            MyBrainDatabase::class.java,
-            MyBrainDatabase.DATABASE_NAME
-        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
-            .build()
-    }
-    single { get<MyBrainDatabase>().noteDao() }
-    single { get<MyBrainDatabase>().taskDao() }
-    single { get<MyBrainDatabase>().diaryDao() }
-    single { get<MyBrainDatabase>().bookmarkDao() }
-    single { get<MyBrainDatabase>().alarmDao() }
+    @Single
+    fun noteDao(db: MyBrainDatabase) = db.noteDao()
 
-    single { androidApplication().dataStore }
+    @Single
+    fun taskDao(db: MyBrainDatabase) = db.taskDao()
 
-    single<NoteRepository> { NoteRepositoryImpl(get(), get(named("ioDispatcher"))) }
-    single<TaskRepository> { TaskRepositoryImpl(get(), get(named("ioDispatcher"))) }
-    single<BookmarkRepository> { BookmarkRepositoryImpl(get(), get(named("ioDispatcher"))) }
-    single<DiaryRepository> { DiaryRepositoryImpl(get(), get(named("ioDispatcher"))) }
-    single<CalendarRepository> { CalendarRepositoryImpl(get(), get(named("ioDispatcher"))) }
-    single<AlarmRepository> { AlarmRepositoryImpl(get(), get(named("ioDispatcher"))) }
-    single<SettingsRepository> { SettingsRepositoryImpl(get(), get(named("ioDispatcher"))) }
-    single<BackupRepository> { BackupRepositoryImpl(get(), get(), get(named("ioDispatcher"))) }
+    @Single
+    fun diaryDao(db: MyBrainDatabase) = db.diaryDao()
+
+    @Single
+    fun bookmarkDao(db: MyBrainDatabase) = db.bookmarkDao()
+
+    @Single
+    fun alarmDao(db: MyBrainDatabase) = db.alarmDao()
+
+    @Single
+    @Named(namedIoDispatcher)
+    fun ioDispatcher() = Dispatchers.IO
+
+    @Single
+    fun datastore(context: Context) = context.dataStore
 }
+
 @Module
 @ComponentScan("com.mhss.app.mybrain.domain.use_case")
 class UseCasesModule

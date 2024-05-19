@@ -12,9 +12,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.di.DataModule
 import com.mhss.app.mybrain.di.UseCasesModule
 import com.mhss.app.mybrain.di.ViewModelsModule
-import com.mhss.app.mybrain.di.appModule
 import com.mhss.app.mybrain.util.Constants
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -37,7 +37,7 @@ class MyBrainApplication : Application() {
         startKoin {
             androidContext(this@MyBrainApplication)
             androidLogger()
-            modules(appModule, UseCasesModule().module, ViewModelsModule().module)
+            modules(DataModule().module, UseCasesModule().module, ViewModelsModule().module)
             workManagerFactory()
         }
         createRemindersNotificationChannel()

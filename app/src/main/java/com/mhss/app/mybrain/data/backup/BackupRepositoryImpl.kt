@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import androidx.room.withTransaction
 import com.mhss.app.mybrain.data.local.MyBrainDatabase
+import com.mhss.app.mybrain.di.namedIoDispatcher
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.domain.model.DiaryEntry
 import com.mhss.app.mybrain.domain.model.Note
@@ -19,11 +20,14 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Single
 
+@Single
 class BackupRepositoryImpl(
     private val context: Context,
     private val database: MyBrainDatabase,
-    private val ioDispatcher: CoroutineDispatcher
+    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
 ) : BackupRepository {
 
     @OptIn(ExperimentalSerializationApi::class)

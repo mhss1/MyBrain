@@ -7,17 +7,21 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.di.namedIoDispatcher
 import com.mhss.app.mybrain.domain.model.Calendar
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.domain.repository.CalendarRepository
 import com.mhss.app.mybrain.util.calendar.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Single
 import java.util.*
 
+@Single
 class CalendarRepositoryImpl(
     private val context: Context,
-    private val ioDispatcher: CoroutineDispatcher
+    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
 ) : CalendarRepository {
 
     override suspend fun getEvents(): List<CalendarEvent> {

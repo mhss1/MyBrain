@@ -1,16 +1,20 @@
 package com.mhss.app.mybrain.data.repository
 
 import com.mhss.app.mybrain.data.local.dao.NoteDao
+import com.mhss.app.mybrain.di.namedIoDispatcher
 import com.mhss.app.mybrain.domain.model.Note
 import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.domain.repository.NoteRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Single
 
+@Single
 class NoteRepositoryImpl(
     private val noteDao: NoteDao,
-    private val ioDispatcher: CoroutineDispatcher
+    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
 ) : NoteRepository {
 
     override fun getAllFolderlessNotes(): Flow<List<Note>> {

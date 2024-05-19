@@ -1,15 +1,19 @@
 package com.mhss.app.mybrain.data.repository
 
 import com.mhss.app.mybrain.data.local.dao.DiaryDao
+import com.mhss.app.mybrain.di.namedIoDispatcher
 import com.mhss.app.mybrain.domain.model.DiaryEntry
 import com.mhss.app.mybrain.domain.repository.DiaryRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Single
 
+@Single
 class DiaryRepositoryImpl(
     private val diaryDao: DiaryDao,
-    private val ioDispatcher: CoroutineDispatcher
+    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
 ) : DiaryRepository {
 
     override fun getAllEntries(): Flow<List<DiaryEntry>> {
