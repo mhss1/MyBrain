@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -261,7 +262,9 @@ fun EntryMoodSection(
 ) {
     val moods = listOf(Mood.AWESOME, Mood.GOOD, Mood.OKAY, Mood.BAD, Mood.TERRIBLE)
     Row(
-        Modifier.fillMaxWidth(),
+        Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -290,7 +293,7 @@ private fun MoodItem(mood: Mood, chosen: Boolean, onMoodChange: () -> Unit) {
                 tint = if (chosen) mood.color else Color.Gray,
                 modifier = Modifier.size(48.dp)
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(6.dp))
             Text(
                 text = stringResource(mood.title),
                 color = if (chosen) mood.color else Color.Gray,
