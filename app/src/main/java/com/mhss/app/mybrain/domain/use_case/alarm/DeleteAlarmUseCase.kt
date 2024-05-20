@@ -1,19 +1,16 @@
 package com.mhss.app.mybrain.domain.use_case.alarm
 
-import android.app.AlarmManager
-import android.content.Context
 import com.mhss.app.mybrain.domain.repository.AlarmRepository
-import com.mhss.app.mybrain.util.alarms.cancelAlarm
+import com.mhss.app.mybrain.domain.repository.AlarmScheduler
 import org.koin.core.annotation.Single
 
 @Single
 class DeleteAlarmUseCase(
     private val alarmRepository: AlarmRepository,
-    private val context: Context
+    private val alarmScheduler: AlarmScheduler
 ) {
     suspend operator fun invoke(alarmId: Int) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.cancelAlarm(alarmId, context)
+        alarmScheduler.cancelAlarm(alarmId)
         alarmRepository.deleteAlarm(alarmId)
     }
 }
