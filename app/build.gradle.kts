@@ -135,6 +135,9 @@ dependencies {
     implementation(libs.koin.android.workmanager)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp.compiler)
+
+    // UUID
+    implementation(libs.uuid)
 }
 
 ksp {
