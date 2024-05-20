@@ -5,9 +5,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.domain.use_case.settings.ExportAllDataUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.ImportAllDataUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +17,8 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class SettingsViewModel(
-    private val saveSettingsUseCase: SaveSettingsUseCase,
-    private val getSettingsUseCase: GetSettingsUseCase,
+    private val savePreference: SavePreferenceUseCase,
+    private val getPreference: GetPreferenceUseCase,
     private val exportData: ExportAllDataUseCase,
     private val importData: ImportAllDataUseCase
 ) : ViewModel() {
@@ -27,12 +27,12 @@ class SettingsViewModel(
     val backupResult: StateFlow<BackupResult> = _backupResult
 
     fun <T> getSettings(key: Preferences.Key<T>, defaultValue: T): Flow<T> {
-        return getSettingsUseCase(key, defaultValue)
+        return getPreference(key, defaultValue)
     }
 
     fun <T> saveSettings(key: Preferences.Key<T>, value: T) {
         viewModelScope.launch {
-            saveSettingsUseCase(key, value)
+            savePreference(key, value)
         }
     }
 

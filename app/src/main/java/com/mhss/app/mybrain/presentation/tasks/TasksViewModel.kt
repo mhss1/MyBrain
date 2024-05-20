@@ -10,8 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.Task
-import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.*
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.Order
@@ -30,8 +30,8 @@ class TasksViewModel(
     private val getTaskUseCase: GetTaskByIdUseCase,
     private val updateTask: UpdateTaskUseCase,
     private val completeTask: UpdateTaskCompletedUseCase,
-    getSettings: GetSettingsUseCase,
-    private val saveSettings: SaveSettingsUseCase,
+    getPreference: GetPreferenceUseCase,
+    private val savePreference: SavePreferenceUseCase,
     private val deleteTask: DeleteTaskUseCase,
     private val searchTasksUseCase: SearchTasksUseCase
 ) : ViewModel() {
@@ -47,11 +47,11 @@ class TasksViewModel(
     init {
         viewModelScope.launch {
             combine(
-                getSettings(
+                getPreference(
                     intPreferencesKey(Constants.TASKS_ORDER_KEY),
                     Order.DateModified(OrderType.ASC()).toInt()
                 ),
-                getSettings(
+                getPreference(
                     booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
                     false
                 )
@@ -88,14 +88,14 @@ class TasksViewModel(
             }
 
             is TaskEvent.UpdateOrder -> viewModelScope.launch {
-                saveSettings(
+                savePreference(
                     intPreferencesKey(Constants.TASKS_ORDER_KEY),
                     event.order.toInt()
                 )
             }
 
             is TaskEvent.ShowCompletedTasks -> viewModelScope.launch {
-                saveSettings(
+                savePreference(
                     booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
                     event.showCompleted
                 )

@@ -8,7 +8,7 @@ import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
-import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetAllTasksUseCase
 import com.mhss.app.mybrain.presentation.tasks.TasksHomeScreenWidget
 import com.mhss.app.mybrain.util.Constants
@@ -18,7 +18,7 @@ import org.koin.core.component.inject
 
 class TasksHomeWidget : GlanceAppWidget(), KoinComponent {
 
-    private val getSettings: GetSettingsUseCase by inject()
+    private val getSettings: GetPreferenceUseCase by inject()
     private val getAllTasks: GetAllTasksUseCase by inject()
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {

@@ -11,8 +11,8 @@ import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.Calendar
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.domain.use_case.calendar.*
-import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.monthName
 import com.mhss.app.mybrain.util.settings.addAndToStringSet
@@ -31,8 +31,8 @@ class CalendarViewModel(
     private val addEvent: AddCalendarEventUseCase,
     private val editEvent: UpdateCalendarEventUseCase,
     private val deleteEvent: DeleteCalendarEventUseCase,
-    private val saveSettings: SaveSettingsUseCase,
-    private val getSettings: GetSettingsUseCase
+    private val savePreference: SavePreferenceUseCase,
+    private val getPreference: GetPreferenceUseCase
 ) : ViewModel() {
 
     var uiState by mutableStateOf(UiState())
@@ -85,7 +85,7 @@ class CalendarViewModel(
 
     private fun updateExcludedCalendars(id: Int, add: Boolean) {
         viewModelScope.launch {
-            saveSettings(
+            savePreference(
                 stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
                 if (add) uiState.excludedCalendars.addAndToStringSet(id)
                 else uiState.excludedCalendars.removeAndToStringSet(id)
@@ -94,7 +94,7 @@ class CalendarViewModel(
     }
 
     private fun collectSettings() {
-            updateEventsJob = getSettings(
+            updateEventsJob = getPreference(
                 stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
                 emptySet()
             ).onEach { calendarsSet ->

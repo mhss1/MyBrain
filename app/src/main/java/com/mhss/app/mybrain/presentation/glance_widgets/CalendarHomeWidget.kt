@@ -11,7 +11,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
 import com.mhss.app.mybrain.domain.use_case.calendar.GetAllEventsUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.presentation.calendar.CalendarHomeScreenWidget
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.toIntList
@@ -21,7 +21,7 @@ import org.koin.core.component.inject
 
 class CalendarHomeWidget : GlanceAppWidget(), KoinComponent {
 
-    private val getSettings: GetSettingsUseCase by inject()
+    private val getSettings: GetPreferenceUseCase by inject()
     private val getAllEvents: GetAllEventsUseCase by inject()
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {

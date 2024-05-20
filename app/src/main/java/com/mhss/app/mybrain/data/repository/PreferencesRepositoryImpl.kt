@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.mhss.app.mybrain.di.namedIoDispatcher
-import com.mhss.app.mybrain.domain.repository.SettingsRepository
+import com.mhss.app.mybrain.domain.repository.PreferenceRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,12 +13,12 @@ import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 
 @Single
-class SettingsRepositoryImpl(
+class PreferenceRepositoryImpl(
     private val preferences: DataStore<Preferences>,
     @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
-) : SettingsRepository {
+) : PreferenceRepository {
 
-    override suspend fun <T> saveSettings(key: Preferences.Key<T>, value: T) {
+    override suspend fun <T> savePreference(key: Preferences.Key<T>, value: T) {
         withContext(ioDispatcher) {
             preferences.edit { settings ->
                 if (settings[key] != value)
@@ -27,7 +27,7 @@ class SettingsRepositoryImpl(
         }
     }
 
-    override fun <T> getSettings(key: Preferences.Key<T>, defaultValue: T): Flow<T> {
+    override fun <T> getPreference(key: Preferences.Key<T>, defaultValue: T): Flow<T> {
         return preferences.data.map { preferences -> preferences[key] ?: defaultValue }
     }
 }

@@ -10,8 +10,8 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.Bookmark
 import com.mhss.app.mybrain.domain.use_case.bookmarks.*
-import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 import com.mhss.app.mybrain.util.settings.*
@@ -31,8 +31,8 @@ class BookmarksViewModel(
     private val getAlBookmarks: GetAllBookmarksUseCase,
     private val searchBookmarks: SearchBookmarksUseCase,
     private val getBookmark: GetBookmarkUseCase,
-    getSettings: GetSettingsUseCase,
-    private val saveSettings: SaveSettingsUseCase
+    getPreference: GetPreferenceUseCase,
+    private val savePreference: SavePreferenceUseCase
 ) : ViewModel() {
 
 
@@ -44,11 +44,11 @@ class BookmarksViewModel(
     init {
         viewModelScope.launch {
             combine(
-                getSettings(
+                getPreference(
                     intPreferencesKey(Constants.BOOKMARK_ORDER_KEY),
                     Order.DateModified(OrderType.ASC()).toInt()
                 ),
-                getSettings(
+                getPreference(
                     intPreferencesKey(Constants.BOOKMARK_VIEW_KEY),
                     ItemView.LIST.value
                 )
@@ -100,13 +100,13 @@ class BookmarksViewModel(
                 }
             }
             is BookmarkEvent.UpdateOrder -> viewModelScope.launch {
-                saveSettings(
+                savePreference(
                     intPreferencesKey(Constants.BOOKMARK_ORDER_KEY),
                     event.order.toInt()
                 )
             }
             is BookmarkEvent.UpdateView -> viewModelScope.launch {
-                saveSettings(
+                savePreference(
                     intPreferencesKey(Constants.BOOKMARK_VIEW_KEY),
                     event.view.value
                 )

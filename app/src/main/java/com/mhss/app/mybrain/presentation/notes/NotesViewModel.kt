@@ -11,8 +11,8 @@ import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.Note
 import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.domain.use_case.notes.*
-import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
@@ -28,8 +28,8 @@ class NotesViewModel(
     private val addNote: AddNoteUseCase,
     private val searchNotes: SearchNotesUseCase,
     private val deleteNote: DeleteNoteUseCase,
-    private val getSettings: GetSettingsUseCase,
-    private val saveSettings: SaveSettingsUseCase,
+    private val getPreference: GetPreferenceUseCase,
+    private val savePreference: SavePreferenceUseCase,
     private val getAllFolders: GetAllNoteFoldersUseCase,
     private val createFolder: AddNoteFolderUseCase,
     private val deleteFolder: DeleteNoteFolderUseCase,
@@ -47,11 +47,11 @@ class NotesViewModel(
     init {
         viewModelScope.launch {
             combine(
-                getSettings(
+                getPreference(
                     intPreferencesKey(Constants.NOTES_ORDER_KEY),
                     Order.DateModified(OrderType.ASC()).toInt()
                 ),
-                getSettings(
+                getPreference(
                     intPreferencesKey(Constants.NOTE_VIEW_KEY),
                     ItemView.LIST.value
                 ),
@@ -103,7 +103,7 @@ class NotesViewModel(
                 }
             }
             is NoteEvent.UpdateOrder -> viewModelScope.launch {
-                saveSettings(
+                savePreference(
                     intPreferencesKey(Constants.NOTES_ORDER_KEY),
                     event.order.toInt()
                 )
@@ -115,7 +115,7 @@ class NotesViewModel(
                 updateNote(notesUiState.note?.copy(pinned = !notesUiState.note?.pinned!!)!!)
             }
             is NoteEvent.UpdateView -> viewModelScope.launch {
-                saveSettings(
+                savePreference(
                     intPreferencesKey(Constants.NOTE_VIEW_KEY),
                     event.view.value
                 )

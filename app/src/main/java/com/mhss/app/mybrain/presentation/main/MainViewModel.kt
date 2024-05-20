@@ -13,8 +13,8 @@ import com.mhss.app.mybrain.domain.model.DiaryEntry
 import com.mhss.app.mybrain.domain.model.Task
 import com.mhss.app.mybrain.domain.use_case.calendar.GetAllEventsUseCase
 import com.mhss.app.mybrain.domain.use_case.diary.GetAllEntriesUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetAllTasksUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskUseCase
 import com.mhss.app.mybrain.ui.theme.Rubik
@@ -28,8 +28,8 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class MainViewModel(
-    private val getSettings: GetSettingsUseCase,
-    private val saveSettings: SaveSettingsUseCase,
+    private val getPreference: GetPreferenceUseCase,
+    private val savePreference: SavePreferenceUseCase,
     private val getAllTasks: GetAllTasksUseCase,
     private val getAllEntriesUseCase: GetAllEntriesUseCase,
     private val updateTask: UpdateTaskUseCase,
@@ -41,11 +41,11 @@ class MainViewModel(
 
     private var refreshTasksJob : Job? = null
 
-    val lockApp = getSettings(booleanPreferencesKey(Constants.LOCK_APP_KEY), false)
-    val themeMode = getSettings(intPreferencesKey(Constants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value)
-    val defaultStartUpScreen = getSettings(intPreferencesKey(Constants.DEFAULT_START_UP_SCREEN_KEY), StartUpScreenSettings.SPACES.value)
-    val font = getSettings(intPreferencesKey(Constants.APP_FONT_KEY), Rubik.toInt())
-    val blockScreenshots = getSettings(booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY), false)
+    val lockApp = getPreference(booleanPreferencesKey(Constants.LOCK_APP_KEY), false)
+    val themeMode = getPreference(intPreferencesKey(Constants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value)
+    val defaultStartUpScreen = getPreference(intPreferencesKey(Constants.DEFAULT_START_UP_SCREEN_KEY), StartUpScreenSettings.SPACES.value)
+    val font = getPreference(intPreferencesKey(Constants.APP_FONT_KEY), Rubik.toInt())
+    val blockScreenshots = getPreference(booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY), false)
 
     fun onDashboardEvent(event: DashboardEvent) {
         when(event) {
@@ -68,7 +68,7 @@ class MainViewModel(
     )
 
     private fun getCalendarEvents() = viewModelScope.launch {
-        val excluded = getSettings(
+        val excluded = getPreference(
             stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
             emptySet()
         ).first()
@@ -80,11 +80,11 @@ class MainViewModel(
 
     private fun collectDashboardData() = viewModelScope.launch {
         combine(
-            getSettings(
+            getPreference(
                 intPreferencesKey(Constants.TASKS_ORDER_KEY),
                 Order.DateModified(OrderType.ASC()).toInt()
             ),
-            getSettings(
+            getPreference(
                 booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
                 false
             ),
@@ -108,7 +108,7 @@ class MainViewModel(
     }
 
     fun disableAppLock() = viewModelScope.launch {
-        saveSettings(booleanPreferencesKey(Constants.LOCK_APP_KEY), false)
+        savePreference(booleanPreferencesKey(Constants.LOCK_APP_KEY), false)
     }
 
 }

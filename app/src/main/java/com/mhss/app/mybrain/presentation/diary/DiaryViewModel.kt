@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.domain.model.DiaryEntry
 import com.mhss.app.mybrain.domain.use_case.diary.*
-import com.mhss.app.mybrain.domain.use_case.settings.GetSettingsUseCase
-import com.mhss.app.mybrain.domain.use_case.settings.SaveSettingsUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
+import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
@@ -26,8 +26,8 @@ class DiaryViewModel(
     private val getAlEntries: GetAllEntriesUseCase,
     private val searchEntries: SearchEntriesUseCase,
     private val getEntry: GetDiaryEntryUseCase,
-    private val getSettings: GetSettingsUseCase,
-    private val saveSettings: SaveSettingsUseCase,
+    private val getPreference: GetPreferenceUseCase,
+    private val savePreference: SavePreferenceUseCase,
     private val getEntriesForChart: GetDiaryForChartUseCase
 ) : ViewModel() {
 
@@ -38,7 +38,7 @@ class DiaryViewModel(
 
     init {
         viewModelScope.launch {
-            getSettings(
+            getPreference(
                 intPreferencesKey(Constants.DIARY_ORDER_KEY),
                 Order.DateModified(OrderType.ASC()).toInt()
             ).collect {
@@ -81,7 +81,7 @@ class DiaryViewModel(
                 )
             }
             is DiaryEvent.UpdateOrder -> viewModelScope.launch {
-                saveSettings(
+                savePreference(
                     intPreferencesKey(Constants.DIARY_ORDER_KEY),
                     event.order.toInt()
                 )
