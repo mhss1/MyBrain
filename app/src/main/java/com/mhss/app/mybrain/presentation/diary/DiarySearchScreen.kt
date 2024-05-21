@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -53,9 +52,8 @@ fun DiarySearchScreen(
                     entry = entry,
                     onClick = {
                         navController.navigate(
-                            Screen.DiaryDetailScreen.route.replace(
-                                "{${Constants.DIARY_ID_ARG}}",
-                                "${entry.id}"
+                            Screen.DiaryDetailScreen(
+                                entry.id
                             )
                         )
                     }

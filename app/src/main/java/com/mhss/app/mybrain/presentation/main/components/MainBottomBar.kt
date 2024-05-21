@@ -21,16 +21,15 @@ fun MainBottomBar(
         items.forEach {
             BottomNavigationItem(
                 icon = { Icon(
-                    if (currentDestination?.route == it.route)
-                            painterResource(it.iconSelected)
-                        else
-                            painterResource(it.icon)
-                    ,
+                    if (currentDestination?.route == it.screen::class.qualifiedName)
+                        painterResource(it.iconSelected)
+                    else
+                        painterResource(it.icon),
                     contentDescription = stringResource(it.title),
                 ) },
-                selected = currentDestination?.route == it.route,
+                selected = currentDestination?.route == it.screen::class.qualifiedName,
                 onClick = {
-                    navController.navigate(it.route) {
+                    navController.navigate(it.screen) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }

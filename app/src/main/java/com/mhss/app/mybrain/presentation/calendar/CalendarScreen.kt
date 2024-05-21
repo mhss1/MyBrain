@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalPermissionsApi::class, ExperimentalAnimationApi::class)
+@file:OptIn(ExperimentalPermissionsApi::class)
 
 package com.mhss.app.mybrain.presentation.calendar
 
@@ -8,7 +8,6 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,14 +31,11 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.Calendar
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -92,9 +88,8 @@ fun CalendarScreen(
             if (readCalendarPermissionState.hasPermission) FloatingActionButton(
                 onClick = {
                     navController.navigate(
-                        Screen.CalendarEventDetailsScreen.route.replace(
-                            "{${Constants.CALENDAR_EVENT_ARG}}",
-                            " "
+                        Screen.CalendarEventDetailsScreen(
+                            null
                         )
                     )
                 },
@@ -158,13 +153,9 @@ fun CalendarScreen(
                                 )
                                 events.forEach { event ->
                                     CalendarEventItem(event = event, onClick = {
-                                        val eventJson = Json.encodeToString(event)
-                                        // encoding the string to avoid crashes when the event contains fields that equals a URL
-                                        val encodedJson = URLEncoder.encode(eventJson, StandardCharsets.UTF_8.toString())
                                         navController.navigate(
-                                            Screen.CalendarEventDetailsScreen.route.replace(
-                                                "{${Constants.CALENDAR_EVENT_ARG}}",
-                                                encodedJson
+                                            Screen.CalendarEventDetailsScreen(
+                                                Json.encodeToString(event)
                                             )
                                         )
                                     })

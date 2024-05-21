@@ -1,6 +1,5 @@
 package com.mhss.app.mybrain.domain.use_case.notes
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
@@ -41,11 +40,9 @@ import com.mhss.app.mybrain.presentation.notes.NoteEvent
 import com.mhss.app.mybrain.presentation.notes.NoteItem
 import com.mhss.app.mybrain.presentation.notes.NotesViewModel
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.ItemView
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NoteFolderDetailsScreen(
     navController: NavHostController,
@@ -59,10 +56,10 @@ fun NoteFolderDetailsScreen(
     var openEditDialog by remember { mutableStateOf(false) }
 
     val scaffoldState = rememberScaffoldState()
-    LaunchedEffect(true) {viewModel.onEvent(NoteEvent.GetFolderNotes(id)) }
+    LaunchedEffect(true) { viewModel.onEvent(NoteEvent.GetFolderNotes(id)) }
     LaunchedEffect(uiState) {
         if (viewModel.notesUiState.navigateUp) {
-            navController.popBackStack(route = Screen.NotesScreen.route, inclusive = false)
+            navController.popBackStack<Screen.NotesScreen>(inclusive = false)
         }
         if (uiState.error != null) {
             scaffoldState.snackbarHostState.showSnackbar(
@@ -96,15 +93,9 @@ fun NoteFolderDetailsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                        navController.navigate(
-                            Screen.NoteDetailsScreen.route.replace(
-                                "{${Constants.NOTE_ID_ARG}}",
-                                "${-1}"
-                            ).replace(
-                                "{${Constants.FOLDER_ID}}",
-                                "$id"
-                            )
-                        )
+                    navController.navigate(
+                        Screen.NoteDetailsScreen(folderId = id)
+                    )
                 },
                 backgroundColor = MaterialTheme.colors.primary,
             ) {
@@ -133,12 +124,8 @@ fun NoteFolderDetailsScreen(
                         note = note,
                         onClick = {
                             navController.navigate(
-                                Screen.NoteDetailsScreen.route.replace(
-                                    "{${Constants.NOTE_ID_ARG}}",
-                                    "${note.id}"
-                                ).replace(
-                                    "{${Constants.FOLDER_ID}}",
-                                    "-1"
+                                Screen.NoteDetailsScreen(
+                                    noteId = note.id
                                 )
                             )
                         }
@@ -163,16 +150,14 @@ fun NoteFolderDetailsScreen(
                             note = note,
                             onClick = {
                                 navController.navigate(
-                                    Screen.NoteDetailsScreen.route.replace(
-                                        "{${Constants.NOTE_ID_ARG}}",
-                                        "${note.id}"
-                                    ).replace(
-                                        "{${Constants.FOLDER_ID}}",
-                                        "-1"
+                                    Screen.NoteDetailsScreen(
+                                        noteId = note.id
                                     )
                                 )
                             },
-                            modifier = Modifier.animateItemPlacement().height(220.dp)
+                            modifier = Modifier
+                                .animateItem()
+                                .height(220.dp)
                         )
                     }
                 }
@@ -212,7 +197,7 @@ fun NoteFolderDetailsScreen(
                     }
                 }
             )
-        if (openEditDialog){
+        if (openEditDialog) {
             var folderName by remember { mutableStateOf(folder?.name ?: "") }
             AlertDialog(
                 onDismissRequest = { openEditDialog = false },

@@ -38,14 +38,12 @@ import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.date.formatTime
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CalendarEventDetailsScreen(
     navController: NavHostController,
-    eventJson: String = "",
+    eventJson: String?,
     viewModel: CalendarViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState
@@ -56,11 +54,9 @@ fun CalendarEventDetailsScreen(
     val context = LocalContext.current
     val event by remember {
         mutableStateOf(
-            if (eventJson.isNotBlank()) {
-                val decodedJson = URLDecoder.decode(eventJson, StandardCharsets.UTF_8.toString())
-               Json.decodeFromString<CalendarEvent>(decodedJson)
-            } else
-                null
+            eventJson?.let {
+                Json.decodeFromString<CalendarEvent>(it)
+            }
         )
     }
     var title by rememberSaveable { mutableStateOf(event?.title ?: "") }
@@ -118,7 +114,7 @@ fun CalendarEventDetailsScreen(
         Scaffold(
             scaffoldState = scaffoldState,
             topBar = {
-                if (eventJson.isNotBlank()) TopAppBar(
+                if (event != null) TopAppBar(
                     title = {},
                     backgroundColor = MaterialTheme.colors.background,
                     elevation = 0.dp,
@@ -162,7 +158,7 @@ fun CalendarEventDetailsScreen(
             DeleteEventDialog(
                 openDeleteDialog,
                 onDelete = { viewModel.onEvent(CalendarViewModelEvent.DeleteEvent(event!!)) },
-                onDismiss = {openDeleteDialog = false}
+                onDismiss = { openDeleteDialog = false }
             )
             Column(
                 modifier = Modifier

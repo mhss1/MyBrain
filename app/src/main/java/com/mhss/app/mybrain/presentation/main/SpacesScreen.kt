@@ -48,7 +48,7 @@ fun SpacesScreen(
                         image = R.drawable.notes_img,
                         backgroundColor = Blue
                     ){
-                        navController.navigate(Screen.NotesScreen.route)
+                        navController.navigate(Screen.NotesScreen)
                     }
                     SpaceRegularCard(
                         modifier = Modifier.weight(1f, fill = true),
@@ -57,7 +57,7 @@ fun SpacesScreen(
                         backgroundColor = Red
                     ){
                         navController.navigate(
-                            Screen.TasksScreen.route
+                            Screen.TasksScreen()
                         )
                     }
                 }
@@ -70,7 +70,7 @@ fun SpacesScreen(
                         image = R.drawable.diary_img,
                         backgroundColor = Green
                     ){
-                        navController.navigate(Screen.DiaryScreen.route)
+                        navController.navigate(Screen.DiaryScreen)
                     }
                     SpaceRegularCard(
                         modifier = Modifier.weight(1f, fill = true),
@@ -78,7 +78,7 @@ fun SpacesScreen(
                         image = R.drawable.bookmarks_img,
                         backgroundColor = Orange
                     ){
-                        navController.navigate(Screen.BookmarksScreen.route)
+                        navController.navigate(Screen.BookmarksScreen)
                     }
                 }
             }
@@ -88,7 +88,7 @@ fun SpacesScreen(
                     image = R.drawable.calendar_img,
                     backgroundColor = Purple
                 ){
-                    navController.navigate(Screen.CalendarScreen.route)
+                    navController.navigate(Screen.CalendarScreen)
                 }
             }
             item { Spacer(Modifier.height(60.dp)) }

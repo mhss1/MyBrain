@@ -8,11 +8,12 @@ import androidx.navigation.compose.rememberNavController
 import com.mhss.app.mybrain.presentation.main.components.MainBottomBar
 import com.mhss.app.mybrain.presentation.main.components.NavigationGraph
 import com.mhss.app.mybrain.presentation.util.BottomNavItem
+import com.mhss.app.mybrain.presentation.util.Screen
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
-    startUpScreen: String,
+    startUpScreen: Screen,
     mainNavController: NavHostController
 ) {
     val navController = rememberNavController()

@@ -13,17 +13,17 @@ import com.mhss.app.mybrain.presentation.util.Screen
 fun NavigationGraph(
     navController: NavHostController,
     mainNavController: NavHostController,
-    startUpScreen: String
+    startUpScreen: Screen
 ) {
     NavHost(navController = navController, startDestination = startUpScreen){
 
-        composable(Screen.DashboardScreen.route){
+        composable<Screen.DashboardScreen> {
             DashboardScreen(mainNavController)
         }
-        composable(Screen.SpacesScreen.route){
+        composable<Screen.SpacesScreen> {
             SpacesScreen(mainNavController)
         }
-        composable(Screen.SettingsScreen.route){
+        composable<Screen.SettingsScreen> {
             SettingsScreen(mainNavController)
         }
     }

@@ -42,6 +42,7 @@ class MyBrainApplication : Application() {
         }
         createRemindersNotificationChannel()
         Thread.setDefaultUncaughtExceptionHandler { _, e ->
+            e.printStackTrace()
             "```\n${e.stackTraceToString()}\n```".copyToClipboard()
             Toast.makeText(this, getString(R.string.exception_stack_trace_copied), Toast.LENGTH_LONG).show()
             exitProcess(1)

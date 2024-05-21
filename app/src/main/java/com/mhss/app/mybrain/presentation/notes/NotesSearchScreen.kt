@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.ItemView
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,12 +34,12 @@ fun NotesSearchScreen(
         var query by rememberSaveable {
             mutableStateOf("")
         }
-        LaunchedEffect(query){viewModel.onEvent(NoteEvent.SearchNotes(query))}
+        LaunchedEffect(query) { viewModel.onEvent(NoteEvent.SearchNotes(query)) }
         val focusRequester = remember { FocusRequester() }
-        LaunchedEffect(true){focusRequester.requestFocus()}
+        LaunchedEffect(true) { focusRequester.requestFocus() }
         OutlinedTextField(
             value = query,
-            onValueChange = {query = it},
+            onValueChange = { query = it },
             label = { Text(stringResource(R.string.search_notes)) },
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
@@ -48,22 +47,18 @@ fun NotesSearchScreen(
                 .padding(16.dp)
                 .focusRequester(focusRequester)
         )
-        if (state.noteView == ItemView.LIST){
+        if (state.noteView == ItemView.LIST) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(12.dp)
             ) {
-                items(state.searchNotes, key = {it.id}) { note ->
+                items(state.searchNotes, key = { it.id }) { note ->
                     NoteItem(
                         note = note,
                         onClick = {
                             navController.navigate(
-                                Screen.NoteDetailsScreen.route.replace(
-                                    "{${Constants.NOTE_ID_ARG}}",
-                                    "${note.id}"
-                                ).replace(
-                                    "{${Constants.FOLDER_ID}}",
-                                    ""
+                                Screen.NoteDetailsScreen(
+                                    noteId = note.id
                                 )
                             )
                         }
@@ -75,19 +70,15 @@ fun NotesSearchScreen(
                 columns = StaggeredGridCells.Adaptive(150.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(12.dp)
-            ){
-                items(state.searchNotes){ note ->
+            ) {
+                items(state.searchNotes) { note ->
                     key(note.id) {
                         NoteItem(
                             note = note,
                             onClick = {
                                 navController.navigate(
-                                    Screen.NoteDetailsScreen.route.replace(
-                                        "{${Constants.NOTE_ID_ARG}}",
-                                        "${note.id}"
-                                    ).replace(
-                                        "{${Constants.FOLDER_ID}}",
-                                        ""
+                                    Screen.NoteDetailsScreen(
+                                        noteId = note.id
                                     )
                                 )
                             },

@@ -69,7 +69,7 @@ fun NoteDetailsScreen(
     LaunchedEffect(state) {
         if (state.navigateUp) {
             openDeleteDialog = false
-            navController.popBackStack(route = Screen.NotesScreen.route, inclusive = false)
+            navController.popBackStack<Screen.NotesScreen>(inclusive = false)
         }
         if (state.error != null) {
             scaffoldState.snackbarHostState.showSnackbar(
@@ -89,8 +89,7 @@ fun NoteDetailsScreen(
             ),
             state.note,
             onNotChanged = {
-                navController.popBackStack(
-                    route = Screen.NotesScreen.route,
+                navController.popBackStack<Screen.NotesScreen>(
                     inclusive = false
                 )
             },

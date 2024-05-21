@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -63,9 +62,8 @@ fun TasksSearchScreen(
                     },
                     onClick = {
                         navController.navigate(
-                            Screen.TaskDetailScreen.route.replace(
-                                "{${Constants.TASK_ID_ARG}}",
-                                "${task.id}"
+                            Screen.TaskDetailScreen(
+                                taskId = task.id
                             )
                         )
                     },

@@ -69,7 +69,7 @@ fun DiaryEntryDetailsScreen(
     LaunchedEffect(state) {
         if (state.navigateUp) {
             openDialog = false
-            navController.popBackStack(route = Screen.DiaryScreen.route, inclusive = false)
+            navController.popBackStack<Screen.DiaryScreen>(inclusive = false)
         }
         if (state.error != null) {
             scaffoldState.snackbarHostState.showSnackbar(
@@ -92,9 +92,9 @@ fun DiaryEntryDetailsScreen(
                     entry
                 )
             ) viewModel.onEvent(DiaryEvent.UpdateEntry(entry))
-            else navController.popBackStack(route = Screen.DiaryScreen.route, inclusive = false)
+            else navController.popBackStack<Screen.DiaryScreen>(inclusive = false)
         } else
-            navController.popBackStack(route = Screen.DiaryScreen.route, inclusive = false)
+            navController.popBackStack<Screen.DiaryScreen>(inclusive = false)
     }
     Scaffold(
         scaffoldState = scaffoldState,

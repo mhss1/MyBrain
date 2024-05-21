@@ -1,7 +1,6 @@
 package com.mhss.app.mybrain.presentation.notes
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,11 +31,9 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.NoteFolder
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.*
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NotesScreen(
     navController: NavHostController,
@@ -76,13 +73,7 @@ fun NotesScreen(
                 onClick = {
                     if (selectedTab == 0) {
                         navController.navigate(
-                            Screen.NoteDetailsScreen.route.replace(
-                                "{${Constants.NOTE_ID_ARG}}",
-                                "-1"
-                            ).replace(
-                                "{${Constants.FOLDER_ID}}",
-                                "-1"
-                            )
+                            Screen.NoteDetailsScreen()
                         )
                     } else {
                         openCreateFolderDialog = true
@@ -137,7 +128,7 @@ fun NotesScreen(
                         )
                     }
                     IconButton(onClick = {
-                        navController.navigate(Screen.NoteSearchScreen.route)
+                        navController.navigate(Screen.NoteSearchScreen)
                     }) {
                         Icon(
                             modifier = Modifier.size(25.dp),
@@ -173,16 +164,12 @@ fun NotesScreen(
                                 note = note,
                                 onClick = {
                                     navController.navigate(
-                                        Screen.NoteDetailsScreen.route.replace(
-                                            "{${Constants.NOTE_ID_ARG}}",
-                                            "${note.id}"
-                                        ).replace(
-                                            "{${Constants.FOLDER_ID}}",
-                                            "-1"
+                                        Screen.NoteDetailsScreen(
+                                            noteId = note.id,
                                         )
                                     )
                                 },
-                                modifier = Modifier.animateItemPlacement()
+                                modifier = Modifier.animateItem()
                             )
                         }
                     }
@@ -198,12 +185,8 @@ fun NotesScreen(
                                     note = note,
                                     onClick = {
                                         navController.navigate(
-                                            Screen.NoteDetailsScreen.route.replace(
-                                                "{${Constants.NOTE_ID_ARG}}",
-                                                "${note.id}"
-                                            ).replace(
-                                                "{${Constants.FOLDER_ID}}",
-                                                ""
+                                            Screen.NoteDetailsScreen(
+                                                noteId = note.id
                                             )
                                         )
                                     },
@@ -216,9 +199,8 @@ fun NotesScreen(
             } else {
                 FoldersTab(uiState.folders) {
                     navController.navigate(
-                        Screen.NoteFolderDetailsScreen.route.replace(
-                            "{${Constants.FOLDER_ID}}",
-                            "${it.id}"
+                        Screen.NoteFolderDetailsScreen(
+                            folderId = it.id
                         )
                     )
                 }

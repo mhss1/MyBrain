@@ -52,7 +52,7 @@ fun BookmarkDetailsScreen(
     LaunchedEffect(state) {
         if (state.navigateUp) {
             openDialog = false
-            navController.popBackStack(route = Screen.BookmarksScreen.route, inclusive = false)
+            navController.popBackStack<Screen.BookmarksScreen>(inclusive = false)
         }
         if (state.error != null) {
             scaffoldState.snackbarHostState.showSnackbar(
@@ -70,8 +70,7 @@ fun BookmarkDetailsScreen(
             ),
             state.bookmark,
             onNotChanged = {
-                navController.popBackStack(
-                    route = Screen.BookmarksScreen.route,
+                navController.popBackStack<Screen.BookmarksScreen>(
                     inclusive = false
                 )
             },
@@ -165,8 +164,7 @@ fun BookmarkDetailsScreen(
                 onClick = {
                     if (state.bookmark != null)
                         url = state.bookmark.url
-                    else navController.popBackStack(
-                        route = Screen.BookmarksScreen.route,
+                    else navController.popBackStack<Screen.BookmarksScreen>(
                         inclusive = false
                     )
                 },

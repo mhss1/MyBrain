@@ -174,7 +174,7 @@ fun SettingsScreen(
                 SettingsItemCard(
                     cornerRadius = 16.dp,
                     onClick = {
-                        navController.navigate(Screen.ImportExportScreen.route)
+                        navController.navigate(Screen.ImportExportScreen)
                     }
                 ) {
                     Row {

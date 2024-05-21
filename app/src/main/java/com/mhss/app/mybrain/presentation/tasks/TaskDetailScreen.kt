@@ -94,7 +94,7 @@ fun TaskDetailScreen(
     LaunchedEffect(uiState) {
         if (uiState.navigateUp) {
             openDialog = false
-            navController.popBackStack(Screen.TaskSearchScreen.route, false)
+            navController.popBackStack<Screen.TaskSearchScreen>( false)
             navController.navigateUp()
         }
         if (uiState.error != null) {
@@ -126,7 +126,7 @@ fun TaskDetailScreen(
                 frequencyAmount = frequencyAmount
             ),
             {
-                navController.popBackStack(Screen.TaskSearchScreen.route, false)
+                navController.popBackStack(Screen.TaskSearchScreen, false)
                 navController.navigateUp()
             }
         ) {

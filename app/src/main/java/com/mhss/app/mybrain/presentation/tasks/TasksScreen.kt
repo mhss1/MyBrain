@@ -28,7 +28,6 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.launch
@@ -47,7 +46,10 @@ fun TasksScreen(
     val focusRequester = remember { FocusRequester() }
     val uiState = viewModel.tasksUiState
     val scaffoldState = rememberScaffoldState()
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
+    )
     val scope = rememberCoroutineScope()
     BackHandler {
         if (sheetState.isVisible)
@@ -73,7 +75,7 @@ fun TasksScreen(
             )
         },
         floatingActionButton = {
-            AnimatedVisibility(!sheetState.isVisible){
+            AnimatedVisibility(!sheetState.isVisible) {
                 FloatingActionButton(
                     onClick = {
                         scope.launch {
@@ -92,7 +94,7 @@ fun TasksScreen(
                 }
             }
         },
-    ) {paddingValues ->
+    ) { paddingValues ->
         ModalBottomSheetLayout(
             modifier = Modifier.padding(paddingValues),
             sheetState = sheetState,
@@ -116,14 +118,15 @@ fun TasksScreen(
                     if (snackbarResult == SnackbarResult.ActionPerformed) {
                         Intent().also { intent ->
                             intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-                            intent.data = Uri.parse("package:" + context.applicationContext.packageName)
+                            intent.data =
+                                Uri.parse("package:" + context.applicationContext.packageName)
                             context.startActivity(intent)
                         }
                     }
                     viewModel.onEvent(TaskEvent.ErrorDisplayed)
                 }
             }
-            LaunchedEffect(true){
+            LaunchedEffect(true) {
                 if (addTask) scope.launch {
                     sheetState.show()
                     focusRequester.requestFocus()
@@ -152,7 +155,7 @@ fun TasksScreen(
                                 )
                             }
                             IconButton(onClick = {
-                                navController.navigate(Screen.TaskSearchScreen.route)
+                                navController.navigate(Screen.TaskSearchScreen)
                             }) {
                                 Icon(
                                     modifier = Modifier.size(25.dp),
@@ -192,9 +195,8 @@ fun TasksScreen(
                         },
                         onClick = {
                             navController.navigate(
-                                Screen.TaskDetailScreen.route.replace(
-                                    "{${Constants.TASK_ID_ARG}}",
-                                    "${task.id}"
+                                Screen.TaskDetailScreen(
+                                    taskId = task.id
                                 )
                             )
                         },
@@ -206,7 +208,7 @@ fun TasksScreen(
 }
 
 @Composable
-fun NoTasksMessage(){
+fun NoTasksMessage() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -227,6 +229,7 @@ fun NoTasksMessage(){
         )
     }
 }
+
 @Composable
 fun TasksSettingsSection(
     order: Order,

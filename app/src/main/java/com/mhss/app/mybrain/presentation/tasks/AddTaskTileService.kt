@@ -9,6 +9,7 @@ import androidx.core.net.toUri
 import com.mhss.app.mybrain.presentation.main.MainActivity
 import com.mhss.app.mybrain.util.Constants
 
+@Suppress("DEPRECATION")
 class AddTaskTileService: TileService() {
 
     @SuppressLint("StartActivityAndCollapseDeprecated")
@@ -16,7 +17,7 @@ class AddTaskTileService: TileService() {
         super.onClick()
         val intent = Intent(
             Intent.ACTION_VIEW,
-            "${Constants.TASKS_SCREEN_URI}/true".toUri(),
+            "${Constants.TASKS_SCREEN_URI}?${Constants.ADD_TASK_ARG}=true".toUri(),
             this,
             MainActivity::class.java
         ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

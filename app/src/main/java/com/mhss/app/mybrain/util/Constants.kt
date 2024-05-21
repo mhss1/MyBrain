@@ -24,17 +24,13 @@ object Constants {
     const val LOCK_APP_KEY = "lock_app"
 
     // Navigation
-    const val TASK_ID_ARG = "task_id"
-    const val TASK_DETAILS_URI = "app://com.mhss.app.mybrain/task_details"
-    const val ADD_TASK_ARG = "add_task"
-    const val TASKS_SCREEN_URI = "app://com.mhss.app.mybrain/tasks"
-    const val CALENDAR_SCREEN_URI = "app://com.mhss.app.mybrain/calendar"
-    const val CALENDAR_DETAILS_SCREEN_URI = "app://com.mhss.app.mybrain/calendar_event_details"
-    const val NOTE_ID_ARG = "note_id"
-    const val BOOKMARK_ID_ARG = "bookmark_id"
-    const val DIARY_ID_ARG = "diary_id"
-    const val CALENDAR_EVENT_ARG = "calendar_event"
-    const val FOLDER_ID = "folder_id"
+    const val TASK_ID_ARG = "taskId"
+    const val TASK_DETAILS_URI = "app://com.mhss.app.mybrain.task_details"
+    const val ADD_TASK_ARG = "addTask"
+    const val TASKS_SCREEN_URI = "app://com.mhss.app.mybrain.tasks"
+    const val CALENDAR_SCREEN_URI = "app://com.mhss.app.mybrain.calendar"
+    const val CALENDAR_DETAILS_SCREEN_URI = "app://com.mhss.app.mybrain.calendar_event_details"
+    const val CALENDAR_EVENT_ARG = "eventJson"
 
     // lINKS
     const val PROJECT_GITHUB_LINK = "https://github.com/mhss1/ByBrain"
@@ -42,12 +38,4 @@ object Constants {
     const val PRIVACY_POLICY_LINK = "https://github.com/mhss1/ByBrain/blob/master/privacy-policy.md"
     const val GITHUB_ISSUES_LINK = "https://github.com/mhss1/ByBrain/issues"
     const val GITHUB_RELEASES_LINK = "https://github.com/mhss1/ByBrain/releases"
-
-    // Backup
-    const val EXPORT_DIR = "MyBrain Export"
-    const val BACKUP_NOTES_FILE_NAME = "mybrain_notes.txt"
-    const val BACKUP_TASKS_FILE_NAME = "mybrain_tasks.txt"
-    const val BACKUP_DIARY_FILE_NAME = "mybrain_diary.txt"
-    const val BACKUP_BOOKMARKS_FILE_NAME = "mybrain_bookmarks.txt"
-
 }

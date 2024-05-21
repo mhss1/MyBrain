@@ -15,12 +15,9 @@ import com.mhss.app.mybrain.presentation.calendar.CalendarDashboardWidget
 import com.mhss.app.mybrain.presentation.diary.MoodCircularBar
 import com.mhss.app.mybrain.presentation.tasks.TasksDashboardWidget
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Composable
 fun DashboardScreen(
@@ -51,7 +48,7 @@ fun DashboardScreen(
                     events = viewModel.uiState.dashBoardEvents,
                     onClick = {
                         navController.navigate(
-                            Screen.CalendarScreen.route
+                            Screen.CalendarScreen
                         )
                     },
                     onPermission = {
@@ -59,20 +56,13 @@ fun DashboardScreen(
                     },
                     onAddEventClicked = {
                         navController.navigate(
-                            Screen.CalendarEventDetailsScreen.route.replace(
-                                "{${Constants.CALENDAR_EVENT_ARG}}",
-                                " "
-                            )
+                            Screen.CalendarEventDetailsScreen()
                         )
                     },
                     onEventClicked = {
-                        val eventJson = Json.encodeToString(it)
-                        // encoding the string to avoid crashes when the event contains fields that equals a URL
-                        val encodedJson = URLEncoder.encode(eventJson, StandardCharsets.UTF_8.toString())
                         navController.navigate(
-                            Screen.CalendarEventDetailsScreen.route.replace(
-                                "{${Constants.CALENDAR_EVENT_ARG}}",
-                                encodedJson
+                            Screen.CalendarEventDetailsScreen(
+                                Json.encodeToString(it)
                             )
                         )
                     }
@@ -89,26 +79,17 @@ fun DashboardScreen(
                     },
                     onTaskClick = {
                         navController.navigate(
-                            Screen.TaskDetailScreen.route
-                                .replace(
-                                    "{${Constants.TASK_ID_ARG}}",
-                                    it.id.toString()
-                                )
+                            Screen.TaskDetailScreen(it.id)
                         )
                     },
                     onAddClick = {
                         navController.navigate(
-                            Screen.TasksScreen
-                                .route
-                                .replace(
-                                    "{${Constants.ADD_TASK_ARG}}",
-                                    "true"
-                                )
+                            Screen.TasksScreen(addTask = true)
                         )
                     },
                     onClick = {
                         navController.navigate(
-                            Screen.TasksScreen.route
+                            Screen.TasksScreen()
                         )
                     }
                 )
@@ -121,7 +102,7 @@ fun DashboardScreen(
                         modifier = Modifier.weight(1f, fill = true),
                         onClick = {
                             navController.navigate(
-                                Screen.DiaryChartScreen.route
+                                Screen.DiaryChartScreen
                             )
                         }
                     )

@@ -23,7 +23,6 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.ItemView
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -39,17 +38,19 @@ fun BookmarkSearchScreen(
     val scaffoldState = rememberScaffoldState()
     Scaffold(scaffoldState = scaffoldState) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
         ) {
             var query by rememberSaveable {
                 mutableStateOf("")
             }
-            LaunchedEffect(query){viewModel.onEvent(BookmarkEvent.SearchBookmarks(query))}
+            LaunchedEffect(query) { viewModel.onEvent(BookmarkEvent.SearchBookmarks(query)) }
             val focusRequester = remember { FocusRequester() }
-            LaunchedEffect(true){focusRequester.requestFocus()}
+            LaunchedEffect(true) { focusRequester.requestFocus() }
             OutlinedTextField(
                 value = query,
-                onValueChange = {query = it},
+                onValueChange = { query = it },
                 label = { Text(stringResource(R.string.search_bookmarks)) },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier
@@ -57,19 +58,18 @@ fun BookmarkSearchScreen(
                     .padding(16.dp)
                     .focusRequester(focusRequester)
             )
-            if (state.bookmarksView == ItemView.LIST){
+            if (state.bookmarksView == ItemView.LIST) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    items(state.searchBookmarks, key = {it.id}) { bookmark ->
+                    items(state.searchBookmarks, key = { it.id }) { bookmark ->
                         BookmarkItem(
                             bookmark = bookmark,
                             onClick = {
                                 navController.navigate(
-                                    Screen.BookmarkDetailScreen.route.replace(
-                                        "{${Constants.BOOKMARK_ID_ARG}}",
-                                        "${bookmark.id}"
+                                    Screen.BookmarkDetailScreen(
+                                        bookmarkId = bookmark.id
                                     )
                                 )
                             },
@@ -89,16 +89,15 @@ fun BookmarkSearchScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(12.dp)
-                ){
-                    items(state.searchBookmarks){ bookmark ->
+                ) {
+                    items(state.searchBookmarks) { bookmark ->
                         key(bookmark.id) {
                             BookmarkItem(
                                 bookmark = bookmark,
                                 onClick = {
                                     navController.navigate(
-                                        Screen.BookmarkDetailScreen.route.replace(
-                                            "{${Constants.BOOKMARK_ID_ARG}}",
-                                            "${bookmark.id}"
+                                        Screen.BookmarkDetailScreen(
+                                            bookmarkId = bookmark.id
                                         )
                                     )
                                 },
@@ -109,7 +108,7 @@ fun BookmarkSearchScreen(
                                         )
                                     }
                                 },
-                                modifier = Modifier.animateItemPlacement()
+                                modifier = Modifier.animateItem()
                             )
                         }
                     }

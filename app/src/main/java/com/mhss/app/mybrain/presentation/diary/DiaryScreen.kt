@@ -20,7 +20,6 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import org.koin.androidx.compose.koinViewModel
@@ -45,7 +44,7 @@ fun DiaryScreen(
                 elevation = 0.dp,
                 actions = {
                     IconButton(onClick = {
-                        navController.navigate(Screen.DiaryChartScreen.route)
+                        navController.navigate(Screen.DiaryChartScreen)
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_chart),
@@ -60,10 +59,7 @@ fun DiaryScreen(
             FloatingActionButton(
                 onClick = {
                     navController.navigate(
-                        Screen.DiaryDetailScreen.route.replace(
-                            "{${Constants.DIARY_ID_ARG}}",
-                            "${-1}"
-                        )
+                        Screen.DiaryDetailScreen()
                     )
                 },
                 backgroundColor = MaterialTheme.colors.primary,
@@ -92,7 +88,7 @@ fun DiaryScreen(
                     )
                 }
                 IconButton(onClick = {
-                    navController.navigate(Screen.DiarySearchScreen.route)
+                    navController.navigate(Screen.DiarySearchScreen)
                 }) {
                     Icon(
                         modifier = Modifier.size(25.dp),
@@ -118,9 +114,8 @@ fun DiaryScreen(
                         entry = entry,
                         onClick = {
                             navController.navigate(
-                                Screen.DiaryDetailScreen.route.replace(
-                                    "{${Constants.DIARY_ID_ARG}}",
-                                    "${entry.id}"
+                                Screen.DiaryDetailScreen(
+                                    entry.id
                                 )
                             )
                         }

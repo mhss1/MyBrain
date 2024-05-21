@@ -1,6 +1,5 @@
 package com.mhss.app.mybrain.presentation.calendar
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.domain.model.CalendarEvent
 import com.mhss.app.mybrain.util.date.formatEventStartEnd
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.CalendarEventItem(
     event: CalendarEvent,
@@ -29,7 +27,7 @@ fun LazyItemScope.CalendarEventItem(
 ) {
     Card(
         modifier = modifier
-            .animateItemPlacement(),
+            .animateItem(),
         shape = RoundedCornerShape(20.dp),
         elevation = 8.dp
     ) {

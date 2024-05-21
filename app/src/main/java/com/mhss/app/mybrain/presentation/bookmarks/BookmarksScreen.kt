@@ -1,7 +1,6 @@
 package com.mhss.app.mybrain.presentation.bookmarks
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,7 +23,6 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.ItemView
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
@@ -32,7 +30,6 @@ import kotlinx.coroutines.launch
 import com.mhss.app.mybrain.app.getString
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BookmarksScreen(
     navController: NavHostController,
@@ -60,10 +57,7 @@ fun BookmarksScreen(
             FloatingActionButton(
                 onClick = {
                     navController.navigate(
-                        Screen.BookmarkDetailScreen.route.replace(
-                            "{${Constants.BOOKMARK_ID_ARG}}",
-                            "${-1}"
-                        )
+                        Screen.BookmarkDetailScreen()
                     )
                 },
                 backgroundColor = MaterialTheme.colors.primary,
@@ -93,7 +87,7 @@ fun BookmarksScreen(
                     )
                 }
                 IconButton(onClick = {
-                    navController.navigate(Screen.BookmarkSearchScreen.route)
+                    navController.navigate(Screen.BookmarkSearchScreen)
                 }) {
                     Icon(
                         modifier = Modifier.size(25.dp),
@@ -124,9 +118,8 @@ fun BookmarksScreen(
                             bookmark = bookmark,
                             onClick = {
                                 navController.navigate(
-                                    Screen.BookmarkDetailScreen.route.replace(
-                                        "{${Constants.BOOKMARK_ID_ARG}}",
-                                        "${bookmark.id}"
+                                    Screen.BookmarkDetailScreen(
+                                        bookmarkId = bookmark.id
                                     )
                                 )
                             },
@@ -137,7 +130,7 @@ fun BookmarksScreen(
                                     )
                                 }
                             },
-                            modifier = Modifier.animateItemPlacement()
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -154,9 +147,8 @@ fun BookmarksScreen(
                                 bookmark = bookmark,
                                 onClick = {
                                     navController.navigate(
-                                        Screen.BookmarkDetailScreen.route.replace(
-                                            "{${Constants.BOOKMARK_ID_ARG}}",
-                                            "${bookmark.id}"
+                                        Screen.BookmarkDetailScreen(
+                                            bookmarkId = bookmark.id
                                         )
                                     )
                                 },
@@ -167,7 +159,7 @@ fun BookmarksScreen(
                                         )
                                     }
                                 },
-                                modifier = Modifier.animateItemPlacement().height(220.dp)
+                                modifier = Modifier.animateItem().height(220.dp)
                             )
                         }
                     }

@@ -16,7 +16,7 @@ class AddEventAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val intent = Intent(
             Intent.ACTION_VIEW,
-            "${Constants.CALENDAR_DETAILS_SCREEN_URI}/ ".toUri(),
+            Constants.CALENDAR_DETAILS_SCREEN_URI.toUri(),
             context,
             MainActivity::class.java
         ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -41,7 +41,7 @@ class CalendarWidgetItemClick : ActionCallback {
         parameters[eventJson]?.let {
             val intent = Intent(
                 Intent.ACTION_VIEW,
-                "${Constants.CALENDAR_DETAILS_SCREEN_URI}/$it".toUri(),
+                "${Constants.CALENDAR_DETAILS_SCREEN_URI}?${Constants.CALENDAR_EVENT_ARG}=$it".toUri(),
                 context,
                 MainActivity::class.java
             ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

@@ -20,12 +20,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.use_case.notes.NoteFolderDetailsScreen
@@ -75,11 +74,11 @@ class MainActivity : AppCompatActivity() {
             val font = viewModel.font.collectAsState(initial = Rubik.toInt())
             val blockScreenshots by viewModel.blockScreenshots.collectAsState(initial = false)
             val systemUiController = rememberSystemUiController()
-            var startDestination by remember { mutableStateOf(Screen.SpacesScreen.route) }
+            var startDestination: Screen by remember { mutableStateOf(Screen.SpacesScreen) }
 
             LaunchedEffect(Unit) {
                 if (viewModel.defaultStartUpScreen.first() == StartUpScreenSettings.DASHBOARD.value) {
-                    startDestination = Screen.DashboardScreen.route
+                    startDestination = Screen.DashboardScreen
                 }
                 if (!isNotificationPermissionGranted())
                     ActivityCompat.requestPermissions(
@@ -116,40 +115,32 @@ class MainActivity : AppCompatActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     NavHost(
-                        startDestination = Screen.Main.route,
+                        startDestination = Screen.Main,
                         navController = navController
                     ) {
-                        composable(Screen.Main.route) {
+                        composable<Screen.Main> {
                             MainScreen(
                                 startUpScreen = startDestination,
                                 mainNavController = navController
                             )
                         }
-                        composable(
-                            Screen.TasksScreen.route,
-                            arguments = listOf(navArgument(Constants.ADD_TASK_ARG) {
-                                type = NavType.BoolType
-                                defaultValue = false
-                            }),
+                        composable<Screen.TasksScreen>(
                             deepLinks =
                             listOf(
                                 navDeepLink {
                                     uriPattern =
-                                        "${Constants.TASKS_SCREEN_URI}/{${Constants.ADD_TASK_ARG}}"
+                                        "${Constants.TASKS_SCREEN_URI}?${Constants.ADD_TASK_ARG}={${Constants.ADD_TASK_ARG}}"
                                 }
                             )
                         ) {
+                            println(it.arguments.toString())
+                            val args = it.toRoute<Screen.TasksScreen>()
                             TasksScreen(
                                 navController = navController,
-                                addTask = it.arguments?.getBoolean(Constants.ADD_TASK_ARG)
-                                    ?: false
+                                addTask = args.addTask
                             )
                         }
-                        composable(
-                            Screen.TaskDetailScreen.route,
-                            arguments = listOf(navArgument(Constants.TASK_ID_ARG) {
-                                type = NavType.IntType
-                            }),
+                        composable<Screen.TaskDetailScreen>(
                             deepLinks =
                             listOf(
                                 navDeepLink {
@@ -158,77 +149,59 @@ class MainActivity : AppCompatActivity() {
                                 }
                             )
                         ) {
+                            val args = it.toRoute<Screen.TaskDetailScreen>()
                             TaskDetailScreen(
                                 navController = navController,
-                                it.arguments?.getInt(Constants.TASK_ID_ARG)!!
+                                args.taskId
                             )
                         }
-                        composable(Screen.TaskSearchScreen.route) {
+                        composable<Screen.TaskSearchScreen> {
                             TasksSearchScreen(navController = navController)
                         }
-                        composable(
-                            Screen.NotesScreen.route
-                        ) {
+                        composable<Screen.NotesScreen> {
                             NotesScreen(navController = navController)
                         }
-                        composable(
-                            Screen.NoteDetailsScreen.route,
-                            arguments = listOf(navArgument(Constants.NOTE_ID_ARG) {
-                                type = NavType.IntType
-                            },
-                                navArgument(Constants.FOLDER_ID) {
-                                    type = NavType.IntType
-                                }
-                            ),
-                        ) {
+                        composable<Screen.NoteDetailsScreen> {
+                            val args = it.toRoute<Screen.NoteDetailsScreen>()
                             NoteDetailsScreen(
                                 navController,
-                                it.arguments?.getInt(Constants.NOTE_ID_ARG) ?: -1,
-                                it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
+                                args.noteId,
+                                args.folderId
                             )
                         }
-                        composable(Screen.NoteSearchScreen.route) {
+                        composable<Screen.NoteSearchScreen> {
                             NotesSearchScreen(navController = navController)
                         }
-                        composable(Screen.DiaryScreen.route) {
+                        composable<Screen.DiaryScreen> {
                             DiaryScreen(navController = navController)
                         }
-                        composable(Screen.DiaryChartScreen.route) {
+                        composable<Screen.DiaryChartScreen> {
                             DiaryChartScreen()
                         }
-                        composable(Screen.DiarySearchScreen.route) {
+                        composable<Screen.DiarySearchScreen> {
                             DiarySearchScreen(navController = navController)
                         }
-                        composable(
-                            Screen.DiaryDetailScreen.route,
-                            arguments = listOf(navArgument(Constants.DIARY_ID_ARG) {
-                                type = NavType.IntType
-                            })
-                        ) {
+                        composable<Screen.DiaryDetailScreen> {
+                            val args = it.toRoute<Screen.DiaryDetailScreen>()
                             DiaryEntryDetailsScreen(
                                 navController = navController,
-                                it.arguments?.getInt(Constants.DIARY_ID_ARG)!!
+                                args.entryId
                             )
                         }
-                        composable(Screen.BookmarksScreen.route) {
+                        composable<Screen.BookmarksScreen> {
                             BookmarksScreen(navController = navController)
                         }
-                        composable(
-                            Screen.BookmarkDetailScreen.route,
-                            arguments = listOf(navArgument(Constants.BOOKMARK_ID_ARG) {
-                                type = NavType.IntType
-                            })
-                        ) {
+                        composable<Screen.BookmarkDetailScreen> {
+                            val args = it.toRoute<Screen.BookmarkDetailScreen>()
                             BookmarkDetailsScreen(
                                 navController = navController,
-                                it.arguments?.getInt(Constants.BOOKMARK_ID_ARG)!!
+                                args.bookmarkId
                             )
                         }
-                        composable(Screen.BookmarkSearchScreen.route) {
+                        composable<Screen.BookmarkSearchScreen> {
                             BookmarkSearchScreen(navController = navController)
                         }
-                        composable(
-                            Screen.CalendarScreen.route,
+                        composable<Screen.CalendarScreen>(
                             deepLinks = listOf(
                                 navDeepLink {
                                     uriPattern = Constants.CALENDAR_SCREEN_URI
@@ -237,36 +210,28 @@ class MainActivity : AppCompatActivity() {
                         ) {
                             CalendarScreen(navController = navController)
                         }
-                        composable(
-                            Screen.CalendarEventDetailsScreen.route,
-                            arguments = listOf(navArgument(Constants.CALENDAR_EVENT_ARG) {
-                                type = NavType.StringType
-                            }),
+                        composable<Screen.CalendarEventDetailsScreen>(
                             deepLinks = listOf(
                                 navDeepLink {
                                     uriPattern =
-                                        "${Constants.CALENDAR_DETAILS_SCREEN_URI}/{${Constants.CALENDAR_EVENT_ARG}}"
+                                        "${Constants.CALENDAR_DETAILS_SCREEN_URI}?${Constants.CALENDAR_EVENT_ARG}={${Constants.CALENDAR_EVENT_ARG}}"
                                 }
                             )
                         ) {
+                            val args = it.toRoute<Screen.CalendarEventDetailsScreen>()
                             CalendarEventDetailsScreen(
                                 navController = navController,
-                                eventJson = it.arguments?.getString(Constants.CALENDAR_EVENT_ARG)
-                                    ?: ""
+                                eventJson = args.eventJson
                             )
                         }
-                        composable(
-                            Screen.NoteFolderDetailsScreen.route,
-                            arguments = listOf(navArgument(Constants.FOLDER_ID) {
-                                type = NavType.IntType
-                            })
-                        ) {
+                        composable<Screen.NoteFolderDetailsScreen> {
+                            val args = it.toRoute<Screen.NoteFolderDetailsScreen>()
                             NoteFolderDetailsScreen(
                                 navController = navController,
-                                it.arguments?.getInt(Constants.FOLDER_ID) ?: -1
+                                args.folderId
                             )
                         }
-                        composable(Screen.ImportExportScreen.route) {
+                        composable<Screen.ImportExportScreen> {
                             ImportExportScreen()
                         }
                     }
