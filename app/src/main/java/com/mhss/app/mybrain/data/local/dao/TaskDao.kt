@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.data.local.dao
 
 import androidx.room.*
-import com.mhss.app.mybrain.domain.model.Task
+import com.mhss.app.mybrain.domain.model.tasks.Task
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -8,9 +8,9 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.mybrain.domain.model.CalendarEvent
-import com.mhss.app.mybrain.domain.model.DiaryEntry
-import com.mhss.app.mybrain.domain.model.Task
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.domain.use_case.calendar.GetAllEventsUseCase
 import com.mhss.app.mybrain.domain.use_case.diary.GetAllEntriesUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase

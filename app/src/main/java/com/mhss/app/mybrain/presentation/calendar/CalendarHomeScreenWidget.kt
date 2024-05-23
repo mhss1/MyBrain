@@ -17,11 +17,11 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
-import com.mhss.app.mybrain.domain.model.CalendarEvent
-import com.mhss.app.mybrain.presentation.glance_widgets.AddEventAction
-import com.mhss.app.mybrain.presentation.glance_widgets.GoToSettingsAction
-import com.mhss.app.mybrain.presentation.glance_widgets.NavigateToCalendarAction
-import com.mhss.app.mybrain.presentation.glance_widgets.RefreshCalendarAction
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
+import com.mhss.app.mybrain.presentation.glance_widgets.calendar.AddEventAction
+import com.mhss.app.mybrain.presentation.glance_widgets.calendar.GoToSettingsAction
+import com.mhss.app.mybrain.presentation.glance_widgets.calendar.NavigateToCalendarAction
+import com.mhss.app.mybrain.presentation.glance_widgets.calendar.RefreshCalendarAction
 
 @Composable
 fun CalendarHomeScreenWidget(

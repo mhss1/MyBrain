@@ -1,6 +1,6 @@
 package com.mhss.app.mybrain.domain.use_case.tasks
 
-import com.mhss.app.mybrain.domain.repository.TaskRepository
+import com.mhss.app.mybrain.domain.repository.tasks.TaskRepository
 import org.koin.core.annotation.Single
 
 @Single

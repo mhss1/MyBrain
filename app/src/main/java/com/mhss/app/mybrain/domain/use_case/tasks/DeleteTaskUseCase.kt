@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.domain.use_case.tasks
 
-import com.mhss.app.mybrain.domain.model.Task
-import com.mhss.app.mybrain.domain.repository.TaskRepository
+import com.mhss.app.mybrain.domain.model.tasks.Task
+import com.mhss.app.mybrain.domain.repository.tasks.TaskRepository
 import com.mhss.app.mybrain.domain.use_case.alarm.DeleteAlarmUseCase
 import org.koin.core.annotation.Single
 

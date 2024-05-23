@@ -4,7 +4,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.mhss.app.mybrain.domain.model.Alarm
+import com.mhss.app.mybrain.domain.model.alarm.Alarm
 import com.mhss.app.mybrain.domain.use_case.alarm.AddAlarmUseCase
 import com.mhss.app.mybrain.domain.use_case.alarm.DeleteAlarmUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetTaskByIdUseCase

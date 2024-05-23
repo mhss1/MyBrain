@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.domain.use_case.alarm
 
-import com.mhss.app.mybrain.domain.repository.AlarmRepository
-import com.mhss.app.mybrain.domain.repository.AlarmScheduler
+import com.mhss.app.mybrain.domain.repository.alarms.AlarmRepository
+import com.mhss.app.mybrain.domain.repository.alarms.AlarmScheduler
 import org.koin.core.annotation.Single
 
 @Single

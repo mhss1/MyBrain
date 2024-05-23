@@ -1,8 +1,8 @@
 package com.mhss.app.mybrain.data.local.dao
 
 import androidx.room.*
-import com.mhss.app.mybrain.domain.model.Note
-import com.mhss.app.mybrain.domain.model.NoteFolder
+import com.mhss.app.mybrain.domain.model.notes.Note
+import com.mhss.app.mybrain.domain.model.notes.NoteFolder
 import kotlinx.coroutines.flow.Flow
 
 @Dao

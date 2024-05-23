@@ -2,7 +2,7 @@ package com.mhss.app.mybrain.util.calendar
 
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
-import com.mhss.app.mybrain.domain.model.CalendarEvent
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 
 const val CALENDAR_FREQ_DAILY = "DAILY"
 const val CALENDAR_FREQ_WEEKLY = "WEEKLY"

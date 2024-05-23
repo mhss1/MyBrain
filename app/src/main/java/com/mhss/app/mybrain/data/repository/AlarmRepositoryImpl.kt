@@ -2,8 +2,8 @@ package com.mhss.app.mybrain.data.repository
 
 import com.mhss.app.mybrain.data.local.dao.AlarmDao
 import com.mhss.app.mybrain.di.namedIoDispatcher
-import com.mhss.app.mybrain.domain.model.Alarm
-import com.mhss.app.mybrain.domain.repository.AlarmRepository
+import com.mhss.app.mybrain.domain.model.alarm.Alarm
+import com.mhss.app.mybrain.domain.repository.alarms.AlarmRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Named

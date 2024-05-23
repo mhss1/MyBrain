@@ -2,9 +2,9 @@ package com.mhss.app.mybrain.data.repository
 
 import android.content.Context
 import androidx.glance.appwidget.updateAll
-import com.mhss.app.mybrain.domain.repository.WidgetUpdater
-import com.mhss.app.mybrain.presentation.glance_widgets.CalendarHomeWidget
-import com.mhss.app.mybrain.presentation.glance_widgets.TasksHomeWidget
+import com.mhss.app.mybrain.domain.repository.widget.WidgetUpdater
+import com.mhss.app.mybrain.presentation.glance_widgets.calendar.CalendarHomeWidget
+import com.mhss.app.mybrain.presentation.glance_widgets.tasks.TasksHomeWidget
 import org.koin.core.annotation.Single
 
 @Single

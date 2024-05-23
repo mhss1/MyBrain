@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.CalendarEvent
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.ui.theme.LightGray
 
 @OptIn(ExperimentalPermissionsApi::class)

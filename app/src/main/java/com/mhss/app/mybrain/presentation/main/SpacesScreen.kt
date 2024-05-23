@@ -18,7 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.main.components.SpaceRegularCard
 import com.mhss.app.mybrain.presentation.main.components.SpaceWideCard
-import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.ui.theme.*
 
 @Composable

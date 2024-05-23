@@ -2,8 +2,8 @@ package com.mhss.app.mybrain.data.repository
 
 import com.mhss.app.mybrain.data.local.dao.BookmarkDao
 import com.mhss.app.mybrain.di.namedIoDispatcher
-import com.mhss.app.mybrain.domain.model.Bookmark
-import com.mhss.app.mybrain.domain.repository.BookmarkRepository
+import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
+import com.mhss.app.mybrain.domain.repository.bookmarks.BookmarkRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

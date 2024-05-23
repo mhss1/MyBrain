@@ -17,9 +17,9 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.CalendarEvent
-import com.mhss.app.mybrain.presentation.glance_widgets.CalendarWidgetItemClick
-import com.mhss.app.mybrain.presentation.glance_widgets.eventJson
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
+import com.mhss.app.mybrain.presentation.glance_widgets.calendar.CalendarWidgetItemClick
+import com.mhss.app.mybrain.presentation.glance_widgets.calendar.eventJson
 import com.mhss.app.mybrain.util.date.formatEventStartEnd
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

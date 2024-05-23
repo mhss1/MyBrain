@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.Note
+import com.mhss.app.mybrain.domain.model.notes.Note
 import com.mhss.app.mybrain.ui.theme.Orange
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText

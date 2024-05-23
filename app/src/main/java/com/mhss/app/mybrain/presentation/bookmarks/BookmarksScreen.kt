@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.settings.ItemView
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType

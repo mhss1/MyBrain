@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.mhss.app.mybrain.di.namedIoDispatcher
-import com.mhss.app.mybrain.domain.repository.PreferenceRepository
+import com.mhss.app.mybrain.domain.repository.preferences.PreferenceRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

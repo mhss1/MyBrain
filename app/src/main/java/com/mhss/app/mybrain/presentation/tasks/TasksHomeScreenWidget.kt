@@ -18,9 +18,9 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
-import com.mhss.app.mybrain.domain.model.Task
-import com.mhss.app.mybrain.presentation.glance_widgets.AddTaskAction
-import com.mhss.app.mybrain.presentation.glance_widgets.NavigateToTasksAction
+import com.mhss.app.mybrain.domain.model.tasks.Task
+import com.mhss.app.mybrain.presentation.glance_widgets.tasks.AddTaskAction
+import com.mhss.app.mybrain.presentation.glance_widgets.tasks.NavigateToTasksAction
 
 @Composable
 fun TasksHomeScreenWidget(

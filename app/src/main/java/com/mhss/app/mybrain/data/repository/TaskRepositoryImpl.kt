@@ -2,8 +2,8 @@ package com.mhss.app.mybrain.data.repository
 
 import com.mhss.app.mybrain.data.local.dao.TaskDao
 import com.mhss.app.mybrain.di.namedIoDispatcher
-import com.mhss.app.mybrain.domain.model.Task
-import com.mhss.app.mybrain.domain.repository.TaskRepository
+import com.mhss.app.mybrain.domain.model.tasks.Task
+import com.mhss.app.mybrain.domain.repository.tasks.TaskRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

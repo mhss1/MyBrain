@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.Bookmark
+import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

@@ -8,9 +8,9 @@ import android.net.Uri
 import android.provider.CalendarContract
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.di.namedIoDispatcher
-import com.mhss.app.mybrain.domain.model.Calendar
-import com.mhss.app.mybrain.domain.model.CalendarEvent
-import com.mhss.app.mybrain.domain.repository.CalendarRepository
+import com.mhss.app.mybrain.domain.model.calendar.Calendar
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
+import com.mhss.app.mybrain.domain.repository.calendar.CalendarRepository
 import com.mhss.app.mybrain.util.calendar.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -77,7 +77,7 @@ class CalendarRepositoryImpl(
                     val end: Long = if (duration.isNotBlank()) duration.extractEndFromDuration(start) else cur.getLong(END_INDEX)
                     val location: String? = cur.getString(LOCATION_INDEX)
                     val allDay: Boolean = cur.getInt(ALL_DAY_INDEX) == 1
-                    val color: Int = cur.getInt(COlOR_INDEX)
+                    val color: Int = cur.getInt(COLOR_INDEX)
                     val calendarColor: Int = cur.getInt(CALENDAR_COLOR_INDEX)
                     val calendarId: Long = cur.getLong(EVENT_CALENDAR_ID_INDEX)
                     val rrule: String = cur.getString(EVENT_RRULE_INDEX) ?: ""
@@ -85,7 +85,8 @@ class CalendarRepositoryImpl(
 //                    val frequency: String = rrule.extractFrequency()
 
                     if (!recurring)
-                        events.add(CalendarEvent(
+                        events.add(
+                            CalendarEvent(
                         id = eventId ,
                         title = title,
                         description = description,
@@ -95,7 +96,8 @@ class CalendarRepositoryImpl(
                         allDay = allDay,
                         color = if (color != 0) color else calendarColor,
                         calendarId = calendarId,
-                    ))
+                    )
+                        )
                 }
                 cur.close()
             }
@@ -121,13 +123,14 @@ class CalendarRepositoryImpl(
                     val end: Long = if (duration.isNotBlank()) duration.extractEndFromDuration(start) else curI.getLong(END_INDEX)
                     val location: String? = curI.getString(LOCATION_INDEX)
                     val allDay: Boolean = curI.getInt(ALL_DAY_INDEX) == 1
-                    val color: Int = curI.getInt(COlOR_INDEX)
+                    val color: Int = curI.getInt(COLOR_INDEX)
                     val calendarColor: Int = curI.getInt(CALENDAR_COLOR_INDEX)
                     val calendarId: Long = curI.getLong(EVENT_CALENDAR_ID_INDEX)
                     val rrule: String = curI.getString(EVENT_RRULE_INDEX) ?: ""
                     val recurring: Boolean = rrule.isNotBlank()
                     val frequency: String = rrule.extractFrequency()
-                    if (recurring) events.add(CalendarEvent(
+                    if (recurring) events.add(
+                        CalendarEvent(
                         id = eventId,
                         title = title,
                         description = description,
@@ -139,7 +142,8 @@ class CalendarRepositoryImpl(
                         calendarId = calendarId,
                         frequency = frequency,
                         recurring = true,
-                    ))
+                    )
+                    )
                 }
                 curI.close()
             }
@@ -255,7 +259,7 @@ class CalendarRepositoryImpl(
         }
     }
 
-    fun Uri.asSyncAdapter(account: String, accountType: String): Uri {
+    private fun Uri.asSyncAdapter(account: String, accountType: String): Uri {
         return buildUpon()
             .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
             .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account)
@@ -278,7 +282,7 @@ class CalendarRepositoryImpl(
         private const val END_INDEX = 4
         private const val LOCATION_INDEX = 5
         private const val ALL_DAY_INDEX = 6
-        private const val COlOR_INDEX = 7
+        private const val COLOR_INDEX = 7
         private const val EVENT_CALENDAR_ID_INDEX = 8
         private const val EVENT_RRULE_INDEX = 9
         private const val EVENT_DURATION_INDEX = 10

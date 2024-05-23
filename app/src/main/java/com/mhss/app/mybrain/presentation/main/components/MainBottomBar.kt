@@ -8,7 +8,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.mhss.app.mybrain.presentation.util.BottomNavItem
 
 @Composable
 fun MainBottomBar(

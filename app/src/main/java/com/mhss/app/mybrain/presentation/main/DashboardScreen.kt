@@ -14,7 +14,7 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.calendar.CalendarDashboardWidget
 import com.mhss.app.mybrain.presentation.diary.MoodCircularBar
 import com.mhss.app.mybrain.presentation.tasks.TasksDashboardWidget
-import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.presentation.navigation.Screen
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel

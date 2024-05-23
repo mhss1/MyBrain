@@ -23,8 +23,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.DiaryEntry
-import com.mhss.app.mybrain.util.diary.Mood
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.model.diary.Mood
+import com.mhss.app.mybrain.util.diary.color
+import com.mhss.app.mybrain.util.diary.iconRes
+import com.mhss.app.mybrain.util.diary.titleRes
 
 @Composable
 fun MoodCircularBar(
@@ -113,8 +116,8 @@ fun MoodCircularBar(
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Icon(
-                                    painter = painterResource(mood.icon),
-                                    contentDescription = stringResource(mood.title),
+                                    painter = painterResource(mood.iconRes),
+                                    contentDescription = stringResource(mood.titleRes),
                                     tint = mood.color,
                                     modifier = Modifier.size(strokeWidth.dp / 3)
                                 )
@@ -131,7 +134,7 @@ fun MoodCircularBar(
                                 color = mostFrequentMood.color
                             )
                         ) {
-                            append(stringResource(mostFrequentMood.title))
+                            append(stringResource(mostFrequentMood.titleRes))
                         }
                         append(stringResource(R.string.most_of_the_time))
                     },

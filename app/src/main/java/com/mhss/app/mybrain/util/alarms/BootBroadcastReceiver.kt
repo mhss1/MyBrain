@@ -3,7 +3,7 @@ package com.mhss.app.mybrain.util.alarms
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.mhss.app.mybrain.domain.repository.AlarmScheduler
+import com.mhss.app.mybrain.domain.repository.alarms.AlarmScheduler
 import com.mhss.app.mybrain.domain.use_case.alarm.GetAllAlarmsUseCase
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent

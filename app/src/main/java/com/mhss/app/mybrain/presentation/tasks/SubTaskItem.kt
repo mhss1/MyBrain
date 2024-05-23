@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.SubTask
+import com.mhss.app.mybrain.domain.model.tasks.SubTask
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.mybrain.domain.model.DiaryEntry
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
 import com.mhss.app.mybrain.domain.use_case.diary.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase

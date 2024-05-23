@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.Task
+import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.ui.theme.LightGray
 
 @OptIn(ExperimentalFoundationApi::class)

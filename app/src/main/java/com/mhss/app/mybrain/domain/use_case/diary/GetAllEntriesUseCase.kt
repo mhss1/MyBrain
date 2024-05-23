@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.domain.use_case.diary
 
-import com.mhss.app.mybrain.domain.model.DiaryEntry
-import com.mhss.app.mybrain.domain.repository.DiaryRepository
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.repository.diary.DiaryRepository
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.flow.Flow

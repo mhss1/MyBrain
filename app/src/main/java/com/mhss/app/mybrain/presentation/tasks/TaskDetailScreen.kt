@@ -35,9 +35,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.SubTask
-import com.mhss.app.mybrain.domain.model.Task
-import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.domain.model.tasks.SubTask
+import com.mhss.app.mybrain.domain.model.tasks.Task
+import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.settings.TaskFrequency
 import com.mhss.app.mybrain.util.settings.Priority

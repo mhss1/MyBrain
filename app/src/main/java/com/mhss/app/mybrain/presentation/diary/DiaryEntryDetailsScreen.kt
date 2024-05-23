@@ -23,11 +23,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.mhss.app.mybrain.domain.model.DiaryEntry
-import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.diary.Mood
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.presentation.navigation.Screen
+import com.mhss.app.mybrain.domain.model.diary.Mood
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.util.date.fullDate
+import com.mhss.app.mybrain.util.diary.color
+import com.mhss.app.mybrain.util.diary.iconRes
+import com.mhss.app.mybrain.util.diary.titleRes
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import org.koin.androidx.compose.koinViewModel
 import java.util.*
@@ -288,14 +291,14 @@ private fun MoodItem(mood: Mood, chosen: Boolean, onMoodChange: () -> Unit) {
                 .padding(6.dp)
         ) {
             Icon(
-                painter = painterResource(id = mood.icon),
-                contentDescription = stringResource(mood.title),
+                painter = painterResource(id = mood.iconRes),
+                contentDescription = stringResource(mood.titleRes),
                 tint = if (chosen) mood.color else Color.Gray,
                 modifier = Modifier.size(48.dp)
             )
             Spacer(Modifier.height(6.dp))
             Text(
-                text = stringResource(mood.title),
+                text = stringResource(mood.titleRes),
                 color = if (chosen) mood.color else Color.Gray,
                 style = MaterialTheme.typography.body2
             )

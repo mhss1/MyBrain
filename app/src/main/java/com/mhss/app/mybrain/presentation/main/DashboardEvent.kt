@@ -1,6 +1,6 @@
 package com.mhss.app.mybrain.presentation.main
 
-import com.mhss.app.mybrain.domain.model.Task
+import com.mhss.app.mybrain.domain.model.tasks.Task
 
 
 sealed class DashboardEvent {

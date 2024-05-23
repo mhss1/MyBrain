@@ -6,8 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.AlarmManagerCompat
-import com.mhss.app.mybrain.domain.model.Alarm
-import com.mhss.app.mybrain.domain.repository.AlarmScheduler
+import com.mhss.app.mybrain.domain.model.alarm.Alarm
+import com.mhss.app.mybrain.domain.repository.alarms.AlarmScheduler
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.alarms.AlarmReceiver
 import org.koin.core.annotation.Single

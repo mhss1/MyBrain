@@ -1,6 +1,5 @@
 package com.mhss.app.mybrain.presentation.diary
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
@@ -18,11 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mhss.app.mybrain.domain.model.DiaryEntry
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
 import com.mhss.app.mybrain.util.date.fullDate
+import com.mhss.app.mybrain.util.diary.color
+import com.mhss.app.mybrain.util.diary.iconRes
+import com.mhss.app.mybrain.util.diary.titleRes
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.DiaryEntryItem(
     modifier: Modifier = Modifier,
@@ -31,7 +32,7 @@ fun LazyItemScope.DiaryEntryItem(
 ) {
     Card(
         modifier = modifier
-            .animateItemPlacement(),
+            .animateItem(),
         shape = RoundedCornerShape(20.dp),
         elevation = 8.dp
     ) {
@@ -43,8 +44,8 @@ fun LazyItemScope.DiaryEntryItem(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    painterResource(entry.mood.icon),
-                    stringResource(entry.mood.title),
+                    painterResource(entry.mood.iconRes),
+                    stringResource(entry.mood.titleRes),
                     tint = entry.mood.color,
                     modifier = Modifier.size(30.dp)
                 )

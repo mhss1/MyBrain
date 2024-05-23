@@ -16,8 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.SubTask
-import com.mhss.app.mybrain.domain.model.Task
+import com.mhss.app.mybrain.domain.model.tasks.SubTask
+import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.settings.TaskFrequency
 import com.mhss.app.mybrain.util.settings.Priority

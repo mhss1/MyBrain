@@ -1,6 +1,6 @@
 package com.mhss.app.mybrain.domain.use_case.notes
 
-import com.mhss.app.mybrain.domain.repository.NoteRepository
+import com.mhss.app.mybrain.domain.repository.notes.NoteRepository
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.flow.map

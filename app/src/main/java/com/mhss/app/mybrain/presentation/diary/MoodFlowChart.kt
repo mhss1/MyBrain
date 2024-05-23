@@ -21,9 +21,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mhss.app.mybrain.domain.model.DiaryEntry
-import com.mhss.app.mybrain.util.diary.Mood
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.model.diary.Mood
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.util.diary.color
+import com.mhss.app.mybrain.util.diary.iconRes
+import com.mhss.app.mybrain.util.diary.titleRes
 
 @Composable
 fun MoodFlowChart(
@@ -77,9 +80,9 @@ fun MoodFlowChart(
                 ) {
                     moods.forEach { mood ->
                         Icon(
-                            painter = painterResource(mood.icon),
+                            painter = painterResource(mood.iconRes),
                             tint = mood.color,
-                            contentDescription = stringResource(mood.title),
+                            contentDescription = stringResource(mood.titleRes),
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -98,7 +101,7 @@ fun MoodFlowChart(
 
                         val offsets = entries.mapIndexed { index, entry ->
                             Offset(
-                                w * ((if (index == 0) index.toFloat() else index + 1f) / count),
+                                w * ((if (index == 0) 0f else index + 1f) / count),
                                 h * (1 - entry.mood.value.toFloat() / max.toFloat())
                             )
                         }
@@ -155,11 +158,11 @@ fun MoodFlowChart(
 }
 
 fun Path.quadTo(point1: Offset, point2: Offset) {
-    quadraticBezierTo(
+    quadraticTo(
         point1.x,
         point1.y,
         (point1.x + point2.x) / 2f,
-        (point1.y + point2.y) / 2f,
+        (point1.y + point2.y) / 2f
     )
 }
 

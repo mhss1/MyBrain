@@ -2,9 +2,9 @@ package com.mhss.app.mybrain.data.repository
 
 import com.mhss.app.mybrain.data.local.dao.NoteDao
 import com.mhss.app.mybrain.di.namedIoDispatcher
-import com.mhss.app.mybrain.domain.model.Note
-import com.mhss.app.mybrain.domain.model.NoteFolder
-import com.mhss.app.mybrain.domain.repository.NoteRepository
+import com.mhss.app.mybrain.domain.model.notes.Note
+import com.mhss.app.mybrain.domain.model.notes.NoteFolder
+import com.mhss.app.mybrain.domain.repository.notes.NoteRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

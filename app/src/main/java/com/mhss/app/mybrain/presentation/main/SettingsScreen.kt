@@ -29,7 +29,7 @@ import com.mhss.app.mybrain.presentation.settings.SettingsBasicLinkItem
 import com.mhss.app.mybrain.presentation.settings.SettingsItemCard
 import com.mhss.app.mybrain.presentation.settings.SettingsSwitchCard
 import com.mhss.app.mybrain.presentation.settings.SettingsViewModel
-import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.*

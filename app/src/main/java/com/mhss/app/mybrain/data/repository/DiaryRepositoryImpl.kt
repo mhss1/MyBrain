@@ -2,8 +2,8 @@ package com.mhss.app.mybrain.data.repository
 
 import com.mhss.app.mybrain.data.local.dao.DiaryDao
 import com.mhss.app.mybrain.di.namedIoDispatcher
-import com.mhss.app.mybrain.domain.model.DiaryEntry
-import com.mhss.app.mybrain.domain.repository.DiaryRepository
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.repository.diary.DiaryRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

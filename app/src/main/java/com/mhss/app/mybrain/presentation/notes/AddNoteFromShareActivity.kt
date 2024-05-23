@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.Note
+import com.mhss.app.mybrain.domain.model.notes.Note
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddNoteFromShareActivity : ComponentActivity() {

@@ -29,8 +29,8 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.Calendar
-import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.domain.model.calendar.Calendar
+import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.date.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString

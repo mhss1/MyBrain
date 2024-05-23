@@ -1,6 +1,6 @@
 package com.mhss.app.mybrain.presentation.tasks
 
-import com.mhss.app.mybrain.domain.model.Task
+import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.util.settings.Order
 
 sealed class TaskEvent {

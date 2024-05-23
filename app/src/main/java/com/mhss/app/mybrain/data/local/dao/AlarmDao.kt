@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.data.local.dao
 
 import androidx.room.*
-import com.mhss.app.mybrain.domain.model.Alarm
+import com.mhss.app.mybrain.domain.model.alarm.Alarm
 
 @Dao
 interface AlarmDao {

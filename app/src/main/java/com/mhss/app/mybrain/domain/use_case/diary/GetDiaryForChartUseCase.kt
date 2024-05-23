@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.domain.use_case.diary
 
-import com.mhss.app.mybrain.domain.model.DiaryEntry
-import com.mhss.app.mybrain.domain.repository.DiaryRepository
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.repository.diary.DiaryRepository
 import com.mhss.app.mybrain.util.date.inTheLast30Days
 import com.mhss.app.mybrain.util.date.inTheLastYear
 import kotlinx.coroutines.flow.first

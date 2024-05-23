@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.domain.use_case.settings
 
 import android.net.Uri
-import com.mhss.app.mybrain.domain.repository.BackupRepository
+import com.mhss.app.mybrain.domain.repository.backup.BackupRepository
 import org.koin.core.annotation.Single
 
 @Single

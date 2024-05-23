@@ -5,7 +5,12 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mhss.app.mybrain.data.local.converters.DBConverters
 import com.mhss.app.mybrain.data.local.dao.*
-import com.mhss.app.mybrain.domain.model.*
+import com.mhss.app.mybrain.domain.model.alarm.Alarm
+import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
+import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.model.notes.Note
+import com.mhss.app.mybrain.domain.model.notes.NoteFolder
+import com.mhss.app.mybrain.domain.model.tasks.Task
 
 @Database(
     entities = [Note::class, Task::class, DiaryEntry::class, Bookmark::class, Alarm::class, NoteFolder::class],

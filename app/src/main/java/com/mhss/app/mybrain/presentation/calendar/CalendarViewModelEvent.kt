@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.presentation.calendar
 
-import com.mhss.app.mybrain.domain.model.Calendar
-import com.mhss.app.mybrain.domain.model.CalendarEvent
+import com.mhss.app.mybrain.domain.model.calendar.Calendar
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 
 sealed class CalendarViewModelEvent {
     data class IncludeCalendar(val calendar: Calendar) : CalendarViewModelEvent()

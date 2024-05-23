@@ -1,6 +1,6 @@
 package com.mhss.app.mybrain.presentation.bookmarks
 
-import com.mhss.app.mybrain.domain.model.Bookmark
+import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
 import com.mhss.app.mybrain.util.settings.ItemView
 import com.mhss.app.mybrain.util.settings.Order
 

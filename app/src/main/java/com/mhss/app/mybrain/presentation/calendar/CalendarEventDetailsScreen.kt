@@ -30,8 +30,8 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.model.Calendar
-import com.mhss.app.mybrain.domain.model.CalendarEvent
+import com.mhss.app.mybrain.domain.model.calendar.Calendar
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.util.calendar.*
 import com.mhss.app.mybrain.util.date.HOUR_IN_MILLIS
 import com.mhss.app.mybrain.util.date.formatDate

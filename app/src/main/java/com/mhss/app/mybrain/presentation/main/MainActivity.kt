@@ -27,7 +27,7 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.domain.use_case.notes.NoteFolderDetailsScreen
+import com.mhss.app.mybrain.presentation.notes.NoteFolderDetailsScreen
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.mybrain.presentation.app_lock.AuthScreen
 import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
@@ -46,7 +46,7 @@ import com.mhss.app.mybrain.presentation.settings.ImportExportScreen
 import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
-import com.mhss.app.mybrain.presentation.util.Screen
+import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.ui.theme.MyBrainTheme
 import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants

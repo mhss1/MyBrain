@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.domain.use_case.calendar
 
-import com.mhss.app.mybrain.domain.model.Calendar
-import com.mhss.app.mybrain.domain.repository.CalendarRepository
+import com.mhss.app.mybrain.domain.model.calendar.Calendar
+import com.mhss.app.mybrain.domain.repository.calendar.CalendarRepository
 import org.koin.core.annotation.Single
 
 @Single
