@@ -101,8 +101,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     // Accompanist libraries
-    implementation(libs.accompanist.flowlayout)
-    implementation(libs.accompanist.systemuicontroller)
     implementation(libs.accompanist.permissions)
 
     // Compose MarkDown

@@ -6,15 +6,19 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -25,7 +29,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.notes.NoteFolderDetailsScreen
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
@@ -73,7 +76,6 @@ class MainActivity : AppCompatActivity() {
             val themeMode = viewModel.themeMode.collectAsState(initial = ThemeSettings.AUTO.value)
             val font = viewModel.font.collectAsState(initial = Rubik.toInt())
             val blockScreenshots by viewModel.blockScreenshots.collectAsState(initial = false)
-            val systemUiController = rememberSystemUiController()
             var startDestination: Screen by remember { mutableStateOf(Screen.SpacesScreen) }
 
             LaunchedEffect(Unit) {
@@ -102,10 +104,22 @@ class MainActivity : AppCompatActivity() {
                 ThemeSettings.LIGHT.value -> false
                 else -> isSystemInDarkTheme()
             }
-            SideEffect {
-                systemUiController.setSystemBarsColor(
-                    if (isDarkMode) Color.Black else Color.White,
-                    darkIcons = !isDarkMode
+            LaunchedEffect(isDarkMode) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(
+                        Color.Transparent.toArgb(),
+                        Color.Transparent.toArgb(),
+                        detectDarkMode = {
+                            isDarkMode
+                        }
+                    ),
+                    navigationBarStyle = SystemBarStyle.auto(
+                        Color.Transparent.toArgb(),
+                        Color.Transparent.toArgb(),
+                        detectDarkMode = {
+                            isDarkMode
+                        }
+                    ),
                 )
             }
             MyBrainTheme(darkTheme = isDarkMode, fontFamily = font.value.toFontFamily()) {
@@ -116,7 +130,8 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     NavHost(
                         startDestination = Screen.Main,
-                        navController = navController
+                        navController = navController,
+                        modifier = Modifier.systemBarsPadding()
                     ) {
                         composable<Screen.Main> {
                             MainScreen(
