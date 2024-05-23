@@ -113,9 +113,6 @@ dependencies {
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
 
-    // Compose live data
-    implementation(libs.androidx.runtime.livedata)
-
     // DocumentFile
     implementation(libs.androidx.documentfile)
 
