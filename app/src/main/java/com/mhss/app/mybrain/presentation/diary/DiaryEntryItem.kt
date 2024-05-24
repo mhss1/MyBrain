@@ -19,9 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
 import com.mhss.app.mybrain.util.date.fullDate
-import com.mhss.app.mybrain.util.diary.color
-import com.mhss.app.mybrain.util.diary.iconRes
-import com.mhss.app.mybrain.util.diary.titleRes
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable

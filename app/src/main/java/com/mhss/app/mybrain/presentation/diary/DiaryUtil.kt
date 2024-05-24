@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.util.diary
+package com.mhss.app.mybrain.presentation.diary
 
 import androidx.compose.ui.graphics.Color
 import com.mhss.app.mybrain.R

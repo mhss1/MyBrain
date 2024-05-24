@@ -29,9 +29,6 @@ import com.mhss.app.mybrain.domain.model.diary.Mood
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.util.date.fullDate
 import com.mhss.app.mybrain.util.date.now
-import com.mhss.app.mybrain.util.diary.color
-import com.mhss.app.mybrain.util.diary.iconRes
-import com.mhss.app.mybrain.util.diary.titleRes
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import org.koin.androidx.compose.koinViewModel
 import java.util.*
