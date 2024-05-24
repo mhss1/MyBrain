@@ -18,8 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
+import com.mhss.app.mybrain.domain.model.preferences.booleanPreferencesKey
+import com.mhss.app.mybrain.domain.model.preferences.intPreferencesKey
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.BuildConfig
 import com.mhss.app.mybrain.R

@@ -3,11 +3,12 @@ package com.mhss.app.mybrain.presentation.glance_widgets.tasks
 import android.content.Context
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.datastore.preferences.core.*
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
+import com.mhss.app.mybrain.domain.model.preferences.booleanPreferencesKey
+import com.mhss.app.mybrain.domain.model.preferences.intPreferencesKey
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetAllTasksUseCase
 import com.mhss.app.mybrain.presentation.tasks.TasksHomeScreenWidget

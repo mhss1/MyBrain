@@ -1,6 +1,7 @@
 package com.mhss.app.mybrain.domain.use_case.settings
 
 import androidx.datastore.preferences.core.Preferences
+import com.mhss.app.mybrain.domain.model.preferences.PrefsKey
 import com.mhss.app.mybrain.domain.repository.preferences.PreferenceRepository
 import org.koin.core.annotation.Single
 
@@ -8,5 +9,5 @@ import org.koin.core.annotation.Single
 class SavePreferenceUseCase(
   private val preferenceRepository: PreferenceRepository
 ) {
-    suspend operator fun <T> invoke(key: Preferences.Key<T>, value: T) = preferenceRepository.savePreference(key, value)
+    suspend operator fun <T> invoke(key: PrefsKey<T>, value: T) = preferenceRepository.savePreference(key, value)
 }

@@ -3,8 +3,8 @@ package com.mhss.app.mybrain.presentation.tasks
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
+import com.mhss.app.mybrain.domain.model.preferences.booleanPreferencesKey
+import com.mhss.app.mybrain.domain.model.preferences.intPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.R

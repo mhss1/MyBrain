@@ -1,9 +1,9 @@
 package com.mhss.app.mybrain.presentation.settings
 
 import android.net.Uri
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mhss.app.mybrain.domain.model.preferences.PrefsKey
 import com.mhss.app.mybrain.domain.use_case.settings.ExportAllDataUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.ImportAllDataUseCase
@@ -26,11 +26,11 @@ class SettingsViewModel(
     private val _backupResult = MutableStateFlow<BackupResult>(BackupResult.None)
     val backupResult: StateFlow<BackupResult> = _backupResult
 
-    fun <T> getSettings(key: Preferences.Key<T>, defaultValue: T): Flow<T> {
+    fun <T> getSettings(key: PrefsKey<T>, defaultValue: T): Flow<T> {
         return getPreference(key, defaultValue)
     }
 
-    fun <T> saveSettings(key: Preferences.Key<T>, value: T) {
+    fun <T> saveSettings(key: PrefsKey<T>, value: T) {
         viewModelScope.launch {
             savePreference(key, value)
         }

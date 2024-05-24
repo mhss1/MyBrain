@@ -1,12 +1,12 @@
 package com.mhss.app.mybrain.domain.repository.preferences
 
-import androidx.datastore.preferences.core.Preferences
+import com.mhss.app.mybrain.domain.model.preferences.PrefsKey
 import kotlinx.coroutines.flow.Flow
 
 interface PreferenceRepository {
 
-    suspend fun <T> savePreference(key: Preferences.Key<T>, value: T)
+    suspend fun <T> savePreference(key: PrefsKey<T>, value: T)
 
-    fun <T> getPreference(key: Preferences.Key<T>, defaultValue: T): Flow<T>
+    fun <T> getPreference(key: PrefsKey<T>, defaultValue: T): Flow<T>
 
 }

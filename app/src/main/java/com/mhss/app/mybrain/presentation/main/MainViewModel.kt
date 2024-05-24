@@ -3,13 +3,13 @@ package com.mhss.app.mybrain.presentation.main
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
+import com.mhss.app.mybrain.domain.model.preferences.booleanPreferencesKey
+import com.mhss.app.mybrain.domain.model.preferences.stringSetPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.model.preferences.intPreferencesKey
 import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.domain.use_case.calendar.GetAllEventsUseCase
 import com.mhss.app.mybrain.domain.use_case.diary.GetAllEntriesUseCase
