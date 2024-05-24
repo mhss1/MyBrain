@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.data.backup
 
 import android.content.Context
-import android.net.Uri
+import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.room.withTransaction
 import com.mhss.app.mybrain.data.local.MyBrainDatabase
@@ -33,14 +33,14 @@ class BackupRepositoryImpl(
 
     @OptIn(ExperimentalSerializationApi::class)
     override suspend fun exportDatabase(
-        directoryUri: Uri,
+        directoryUri: String,
         encrypted: Boolean, // To be added in a future version
         password: String // To be added in a future version
     ): Boolean {
         return withContext(ioDispatcher) {
             try {
                 val fileName = "MyBrain_Backup_${now()}.json"
-                val pickedDir = DocumentFile.fromTreeUri(context, directoryUri)
+                val pickedDir = DocumentFile.fromTreeUri(context, directoryUri.toUri())
                 val destination = pickedDir!!.createFile("application/json", fileName)
 
                 val notes = database.noteDao().getAllNotes().map {
@@ -77,7 +77,7 @@ class BackupRepositoryImpl(
 
     @OptIn(ExperimentalSerializationApi::class)
     override suspend fun importDatabase(
-        fileUri: Uri,
+        fileUri: String,
         encrypted: Boolean, // To be added in a future version
         password: String // To be added in a future version
     ): Boolean {
@@ -86,7 +86,7 @@ class BackupRepositoryImpl(
                 val json = Json {
                     ignoreUnknownKeys = true
                 }
-                val backupData = context.contentResolver.openInputStream(fileUri)?.use {
+                val backupData = context.contentResolver.openInputStream(fileUri.toUri())?.use {
                     json.decodeFromStream<BackupData>(it)
                 } ?: return@withContext false
                 val oldNoteFolderIds = backupData.noteFolders.map { it.id }

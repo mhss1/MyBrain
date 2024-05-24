@@ -1,6 +1,5 @@
 package com.mhss.app.mybrain.presentation.settings
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.domain.model.preferences.PrefsKey
@@ -36,8 +35,15 @@ class SettingsViewModel(
         }
     }
 
-    fun importDatabase(
-        uri: Uri,
+    fun onEvent(event: SettingsEvent) {
+        when (event) {
+            is SettingsEvent.ImportData -> importDatabase(event.fileUri, event.encrypted, event.password)
+            is SettingsEvent.ExportData -> exportDatabase(event.directoryUri, event.encrypted, event.password)
+        }
+    }
+
+    private fun importDatabase(
+        uri: String,
         encrypted: Boolean,
         password: String
     ) {
@@ -52,8 +58,8 @@ class SettingsViewModel(
         }
     }
 
-    fun exportDatabase(
-        uri: Uri,
+    private fun exportDatabase(
+        uri: String,
         encrypted: Boolean,
         password: String
     ) {

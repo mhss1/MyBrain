@@ -33,14 +33,14 @@ fun ImportExportScreen(
         ActivityResultContracts.OpenDocument()
     ) { uri ->
         uri?.let {
-            viewModel.importDatabase(it, encrypted, password)
+            viewModel.onEvent(SettingsEvent.ImportData(it.toString(), encrypted, password))
         }
     }
     val chooseDirectoryLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocumentTree()
     ) { uri ->
         uri?.let {
-            viewModel.exportDatabase(it, encrypted, password)
+            viewModel.onEvent(SettingsEvent.ExportData(it.toString(), encrypted, password))
         }
     }
     val backupResult by viewModel.backupResult.collectAsState()
