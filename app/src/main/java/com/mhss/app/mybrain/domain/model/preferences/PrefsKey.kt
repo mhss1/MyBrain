@@ -1,11 +1,10 @@
 package com.mhss.app.mybrain.domain.model.preferences
 
-import kotlin.reflect.KClass
-
-data class PrefsKey<T> internal constructor(val name: String, val type: KClass<*>)
-
-fun intPreferencesKey(name: String) = PrefsKey<Int>(name, Int::class)
-
-fun booleanPreferencesKey(name: String) = PrefsKey<Boolean>(name, Boolean::class)
-
-fun stringSetPreferencesKey(name: String) = PrefsKey<Set<String>>(name, Set::class)
+sealed class PrefsKey<T>(val name: String) {
+    class IntKey(name: String): PrefsKey<Int>(name)
+    class BooleanKey(name: String): PrefsKey<Boolean>(name)
+    class StringSetKey(name: String): PrefsKey<Set<String>>(name)
+}
+fun intPreferencesKey(name: String) = PrefsKey.IntKey(name)
+fun booleanPreferencesKey(name: String) = PrefsKey.BooleanKey(name)
+fun stringSetPreferencesKey(name: String) = PrefsKey.StringSetKey(name)

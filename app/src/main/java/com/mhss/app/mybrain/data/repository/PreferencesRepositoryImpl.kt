@@ -25,9 +25,9 @@ class PreferenceRepositoryImpl(
     override suspend fun <T> savePreference(key: PrefsKey<T>, value: T) {
         withContext(ioDispatcher) {
             preferences.edit { settings ->
-                val k = key.toDatastoreKey()
-                if (settings[k] != value)
-                    settings[k] = value
+                val dataStoreKey = key.toDatastoreKey()
+                if (settings[dataStoreKey] != value)
+                    settings[dataStoreKey] = value
             }
         }
     }
@@ -39,11 +39,10 @@ class PreferenceRepositoryImpl(
 
 @Suppress("UNCHECKED_CAST")
 fun <T> PrefsKey<T>.toDatastoreKey(): Preferences.Key<T> {
-    return when (type) {
-        Int::class -> intPreferencesKey(name)
-        Boolean::class -> booleanPreferencesKey(name)
-        Set::class -> stringSetPreferencesKey(name)
-        else -> throw IllegalArgumentException("Unsupported type")
+    return when (this) {
+        is PrefsKey.IntKey -> intPreferencesKey(name)
+        is PrefsKey.BooleanKey -> booleanPreferencesKey(name)
+        is PrefsKey.StringSetKey -> stringSetPreferencesKey(name)
     } as Preferences.Key<T>
 }
 
