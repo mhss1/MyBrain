@@ -14,6 +14,7 @@ import com.mhss.app.mybrain.domain.use_case.calendar.GetAllEventsUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.presentation.calendar.CalendarHomeScreenWidget
 import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.mybrain.util.date.formatDateForMapping
 import com.mhss.app.mybrain.util.settings.toIntList
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
@@ -30,7 +31,9 @@ class CalendarHomeWidget : GlanceAppWidget(), KoinComponent {
             stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
             emptySet()
         ).first()
-        val events  = getAllEvents(includedCalendars.toIntList(), true)
+        val events  = getAllEvents(includedCalendars.toIntList(), true) {
+            it.start.formatDateForMapping()
+        }
 
         provideContent {
             val hasPermission by remember {

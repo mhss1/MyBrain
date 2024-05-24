@@ -14,6 +14,7 @@ import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.*
 import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.mybrain.util.date.now
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import com.mhss.app.mybrain.util.settings.toInt
@@ -113,7 +114,7 @@ class TasksViewModel(
                         taskDetailsUiState.copy(error = getString(R.string.error_empty_title))
                 else {
                     val scheduleAlarmSuccess = updateTask(
-                        event.task.copy(updatedDate = System.currentTimeMillis()),
+                        event.task.copy(updatedDate = now()),
                         taskDetailsUiState.task
                     )
                     taskDetailsUiState = if (scheduleAlarmSuccess) {

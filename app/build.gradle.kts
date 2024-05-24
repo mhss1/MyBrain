@@ -133,6 +133,9 @@ dependencies {
 
     // UUID
     implementation(libs.uuid)
+
+    //Kotlinx datetime
+    implementation(libs.kotlinx.datetime)
 }
 
 ksp {

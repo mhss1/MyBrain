@@ -11,6 +11,8 @@ import com.mhss.app.mybrain.domain.use_case.diary.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.mybrain.util.date.inTheLast30Days
+import com.mhss.app.mybrain.util.date.inTheLastYear
 import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -88,7 +90,10 @@ class DiaryViewModel(
             }
             DiaryEvent.ErrorDisplayed -> uiState = uiState.copy(error = null)
             is DiaryEvent.ChangeChartEntriesRange -> viewModelScope.launch {
-                uiState = uiState.copy(chartEntries = getEntriesForChart(event.monthly))
+                uiState = uiState.copy(chartEntries = getEntriesForChart {
+                    if (event.monthly) it.createdDate.inTheLast30Days()
+                    else it.createdDate.inTheLastYear()
+                })
             }
             is DiaryEvent.ToggleReadingMode -> uiState = uiState.copy(readingMode = !uiState.readingMode)
         }

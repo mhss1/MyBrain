@@ -12,6 +12,7 @@ import com.mhss.app.mybrain.domain.model.calendar.Calendar
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.domain.repository.calendar.CalendarRepository
 import com.mhss.app.mybrain.util.calendar.*
+import com.mhss.app.mybrain.util.date.now
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Named
@@ -63,7 +64,7 @@ class CalendarRepositoryImpl(
                 projection,
                 "${CalendarContract.Events.DTSTART} > ? AND ${CalendarContract.Events.DELETED} = 0",
                 // events today or in the future only
-                arrayOf(System.currentTimeMillis().toString()),
+                arrayOf(now().toString()),
                 null
             )
 

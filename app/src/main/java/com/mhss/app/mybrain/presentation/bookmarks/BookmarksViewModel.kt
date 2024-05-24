@@ -14,6 +14,7 @@ import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
+import com.mhss.app.mybrain.util.date.now
 import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -95,7 +96,7 @@ class BookmarksViewModel(
                 uiState = if (!event.bookmark.url.isValidUrl()) {
                     uiState.copy(error = getString(R.string.invalid_url))
                 } else {
-                    updateBookmark(event.bookmark.copy(updatedDate = System.currentTimeMillis()))
+                    updateBookmark(event.bookmark.copy(updatedDate = now()))
                     uiState.copy(navigateUp = true)
                 }
             }

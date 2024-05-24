@@ -28,6 +28,7 @@ import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.domain.model.diary.Mood
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.util.date.fullDate
+import com.mhss.app.mybrain.util.date.now
 import com.mhss.app.mybrain.util.diary.color
 import com.mhss.app.mybrain.util.diary.iconRes
 import com.mhss.app.mybrain.util.diary.titleRes
@@ -56,7 +57,7 @@ fun DiaryEntryDetailsScreen(
     var mood by rememberSaveable { mutableStateOf(state.entry?.mood ?: Mood.OKAY) }
     var date by rememberSaveable {
         mutableLongStateOf(
-            state.entry?.createdDate ?: System.currentTimeMillis()
+            state.entry?.createdDate ?: now()
         )
     }
     val readingMode = state.readingMode
@@ -88,7 +89,7 @@ fun DiaryEntryDetailsScreen(
                 content = content,
                 mood = mood,
                 createdDate = date,
-                updatedDate = System.currentTimeMillis()
+                updatedDate = now()
             )
             if (entryChanged(
                     state.entry,
@@ -150,7 +151,7 @@ fun DiaryEntryDetailsScreen(
                             content = content,
                             mood = mood,
                             createdDate = date,
-                            updatedDate = System.currentTimeMillis()
+                            updatedDate = now()
                         )
                         viewModel.onEvent(DiaryEvent.AddEntry(entry))
 

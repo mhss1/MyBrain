@@ -14,7 +14,9 @@ import com.mhss.app.mybrain.domain.use_case.calendar.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.mybrain.util.date.formatDateForMapping
 import com.mhss.app.mybrain.util.date.monthName
+import com.mhss.app.mybrain.util.date.now
 import com.mhss.app.mybrain.util.settings.addAndToStringSet
 import com.mhss.app.mybrain.util.settings.removeAndToStringSet
 import com.mhss.app.mybrain.util.settings.toIntList
@@ -49,7 +51,7 @@ class CalendarViewModel(
             }
             is CalendarViewModelEvent.AddEvent -> viewModelScope.launch {
                 uiState = if (event.event.title.isNotBlank()) {
-                    if (event.event.start > System.currentTimeMillis()) {
+                    if (event.event.start > now()) {
                         addEvent(event.event)
                         uiState.copy(navigateUp = true)
                     } else {
@@ -67,7 +69,7 @@ class CalendarViewModel(
             }
             is CalendarViewModelEvent.EditEvent -> viewModelScope.launch {
                 uiState = if (event.event.title.isNotBlank()) {
-                    if (event.event.start > System.currentTimeMillis()) {
+                    if (event.event.start > now()) {
                         editEvent(event.event)
                         uiState.copy(navigateUp = true)
                     } else {
@@ -98,7 +100,9 @@ class CalendarViewModel(
                 stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
                 emptySet()
             ).onEach { calendarsSet ->
-                val events = getAllEventsUseCase(calendarsSet.toIntList())
+                val events = getAllEventsUseCase(calendarsSet.toIntList()) {
+                    it.start.formatDateForMapping()
+                }
                 val calendars = getAllCalendarsUseCase(calendarsSet.toIntList())
                 val allCalendars = getAllCalendarsUseCase(emptyList())
                 val months = events.map {

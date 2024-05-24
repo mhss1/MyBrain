@@ -12,6 +12,7 @@ import com.mhss.app.mybrain.domain.model.notes.Note
 import com.mhss.app.mybrain.domain.model.notes.NoteFolder
 import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.domain.repository.backup.BackupRepository
+import com.mhss.app.mybrain.util.date.now
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -38,7 +39,7 @@ class BackupRepositoryImpl(
     ): Boolean {
         return withContext(ioDispatcher) {
             try {
-                val fileName = "MyBrain_Backup_${System.currentTimeMillis()}.json"
+                val fileName = "MyBrain_Backup_${now()}.json"
                 val pickedDir = DocumentFile.fromTreeUri(context, directoryUri)
                 val destination = pickedDir!!.createFile("application/json", fileName)
 

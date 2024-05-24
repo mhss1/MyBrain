@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
+import com.mhss.app.mybrain.util.date.now
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SaveBookmarkActivity : ComponentActivity() {
@@ -23,8 +24,8 @@ class SaveBookmarkActivity : ComponentActivity() {
                             BookmarkEvent.AddBookmark(
                                 Bookmark(
                                     url = url.trim(),
-                                    createdDate = System.currentTimeMillis(),
-                                    updatedDate = System.currentTimeMillis()
+                                    createdDate = now(),
+                                    updatedDate = now()
                                 )
                             )
                         )

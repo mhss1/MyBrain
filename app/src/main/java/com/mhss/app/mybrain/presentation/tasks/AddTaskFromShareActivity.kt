@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.tasks.Task
+import com.mhss.app.mybrain.util.date.now
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddTaskFromShareActivity : ComponentActivity() {
@@ -22,8 +23,8 @@ class AddTaskFromShareActivity : ComponentActivity() {
                         TaskEvent.AddTask(
                             Task(
                                 title = title,
-                                createdDate = System.currentTimeMillis(),
-                                updatedDate = System.currentTimeMillis()
+                                createdDate = now(),
+                                updatedDate = now()
                             )
                         )
                     )

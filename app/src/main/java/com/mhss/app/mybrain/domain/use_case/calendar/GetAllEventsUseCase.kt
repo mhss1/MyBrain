@@ -2,14 +2,13 @@ package com.mhss.app.mybrain.domain.use_case.calendar
 
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.domain.repository.calendar.CalendarRepository
-import com.mhss.app.mybrain.util.date.formatDateForMapping
 import org.koin.core.annotation.Single
 
 @Single
 class GetAllEventsUseCase(
     private val calendarRepository: CalendarRepository
 ) {
-    suspend operator fun invoke(excluded: List<Int>, fromWidget: Boolean = false): Map<String, List<CalendarEvent>> {
+    suspend operator fun invoke(excluded: List<Int>, fromWidget: Boolean = false, groupBySelector: (CalendarEvent) -> String): Map<String, List<CalendarEvent>> {
         val events = try {
             calendarRepository.getEvents()
                 .filter { it.calendarId.toInt() !in excluded }
@@ -17,13 +16,9 @@ class GetAllEventsUseCase(
              return emptyMap()
         }
         return if (fromWidget)
-            events.take(30).groupBy { event ->
-                event.start.formatDateForMapping()
-            }
+            events.take(30).groupBy(groupBySelector)
         else
-            events.groupBy { event ->
-                event.start.formatDateForMapping()
-            }
+            events.groupBy(groupBySelector)
 
     }
 }

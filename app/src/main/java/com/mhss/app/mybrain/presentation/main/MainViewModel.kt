@@ -19,6 +19,7 @@ import com.mhss.app.mybrain.domain.use_case.tasks.GetAllTasksUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskUseCase
 import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.mybrain.util.date.formatDateForMapping
 import com.mhss.app.mybrain.util.date.inTheLastWeek
 import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
@@ -72,7 +73,9 @@ class MainViewModel(
             stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
             emptySet()
         ).first()
-        val events = getAllEventsUseCase(excluded.toIntList())
+        val events = getAllEventsUseCase(excluded.toIntList()) {
+            it.start.formatDateForMapping()
+        }
         uiState = uiState.copy(
             dashBoardEvents = events
         )

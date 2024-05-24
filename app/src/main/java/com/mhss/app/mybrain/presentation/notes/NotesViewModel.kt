@@ -14,6 +14,7 @@ import com.mhss.app.mybrain.domain.use_case.notes.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.mybrain.util.date.now
 import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -74,8 +75,8 @@ class NotesViewModel(
                 } else {
                     addNote(
                         event.note.copy(
-                            createdDate = System.currentTimeMillis(),
-                            updatedDate = System.currentTimeMillis()
+                            createdDate = now(),
+                            updatedDate = now()
                         )
                     )
                     notesUiState.copy(navigateUp = true)
@@ -98,7 +99,7 @@ class NotesViewModel(
                 notesUiState = if (event.note.title.isBlank() && event.note.content.isBlank())
                     notesUiState.copy(error = getString(R.string.error_empty_note))
                 else {
-                    updateNote(event.note.copy(updatedDate = System.currentTimeMillis()))
+                    updateNote(event.note.copy(updatedDate = now()))
                     notesUiState.copy(navigateUp = true)
                 }
             }

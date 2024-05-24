@@ -33,9 +33,10 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.Calendar
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.util.calendar.*
-import com.mhss.app.mybrain.util.date.HOUR_IN_MILLIS
+import com.mhss.app.mybrain.util.date.HOUR_MILLIS
 import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.date.formatTime
+import com.mhss.app.mybrain.util.date.now
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
@@ -63,12 +64,12 @@ fun CalendarEventDetailsScreen(
     var description by rememberSaveable { mutableStateOf(event?.description ?: "") }
     var startDate by rememberSaveable {
         mutableLongStateOf(
-            event?.start ?: (System.currentTimeMillis() + HOUR_IN_MILLIS)
+            event?.start ?: (now() + HOUR_MILLIS)
         )
     }
     var endDate by rememberSaveable {
         mutableLongStateOf(
-            event?.end ?: (System.currentTimeMillis() + 2 * HOUR_IN_MILLIS)
+            event?.end ?: (now() + 2 * HOUR_MILLIS)
         )
     }
     var frequency by rememberSaveable { mutableStateOf(event?.frequency ?: CALENDAR_FREQ_NEVER) }
@@ -399,7 +400,7 @@ fun EventTimeSection(
                                 newEvent
                             )
                             if (newEvent.timeInMillis > end.timeInMillis) {
-                                onEndDateSelected(newEvent.apply { timeInMillis += HOUR_IN_MILLIS })
+                                onEndDateSelected(newEvent.apply { timeInMillis += HOUR_MILLIS })
                             }
                         }
                     }
@@ -430,7 +431,7 @@ fun EventTimeSection(
                                 newEvent
                             )
                             if (newEvent.timeInMillis > end.timeInMillis) {
-                                onEndDateSelected(newEvent.apply { timeInMillis += HOUR_IN_MILLIS })
+                                onEndDateSelected(newEvent.apply { timeInMillis += HOUR_MILLIS })
                             }
                         }
                     }
@@ -467,7 +468,7 @@ fun EventTimeSection(
                                 newEvent
                             )
                             if (newEvent.timeInMillis < start.timeInMillis) {
-                                onStartDateSelected(newEvent.apply { timeInMillis -= HOUR_IN_MILLIS })
+                                onStartDateSelected(newEvent.apply { timeInMillis -= HOUR_MILLIS })
                             }
                         }
                     }
@@ -498,7 +499,7 @@ fun EventTimeSection(
                                 newEvent
                             )
                             if (newEvent.timeInMillis < start.timeInMillis) {
-                                onStartDateSelected(newEvent.apply { timeInMillis -= HOUR_IN_MILLIS })
+                                onStartDateSelected(newEvent.apply { timeInMillis -= HOUR_MILLIS })
                             }
                         }
                     }

@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.notes.Note
+import com.mhss.app.mybrain.util.date.now
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddNoteFromShareActivity : ComponentActivity() {
@@ -24,8 +25,8 @@ class AddNoteFromShareActivity : ComponentActivity() {
                             Note(
                                 title = title ?: "",
                                 content = content,
-                                createdDate = System.currentTimeMillis(),
-                                updatedDate = System.currentTimeMillis()
+                                createdDate = now(),
+                                updatedDate = now()
                             )
                         )
                     )
