@@ -5,9 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +30,9 @@ fun LazyItemScope.CalendarEventItem(
         modifier = modifier
             .animateItem(),
         shape = RoundedCornerShape(20.dp),
-        elevation = 8.dp
+        elevation = CardDefaults.elevatedCardElevation(
+            8.dp
+        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -51,7 +54,7 @@ fun LazyItemScope.CalendarEventItem(
             ) {
                 Text(
                     event.title,
-                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -63,7 +66,7 @@ fun LazyItemScope.CalendarEventItem(
                         location = event.location,
                         allDay = event.allDay,
                     ),
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
 
             }

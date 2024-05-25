@@ -3,10 +3,11 @@ package com.mhss.app.mybrain.presentation.diary
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -32,7 +33,9 @@ fun MoodFlowChart(
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
-        elevation = 8.dp,
+        elevation = CardDefaults.elevatedCardElevation(
+            8.dp
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -42,7 +45,7 @@ fun MoodFlowChart(
         ) {
             Text(
                 text = stringResource(R.string.mood_flow),
-                style = MaterialTheme.typography.h5,
+                style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
@@ -147,7 +150,7 @@ fun MoodFlowChart(
             Text(
                 text = if (monthly) stringResource(R.string.mood_during_month)
                 else stringResource(R.string.mood_during_year),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
         }

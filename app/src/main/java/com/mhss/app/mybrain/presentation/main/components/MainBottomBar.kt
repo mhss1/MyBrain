@@ -1,6 +1,9 @@
 package com.mhss.app.mybrain.presentation.main.components
 
-import androidx.compose.material.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
@@ -14,11 +17,12 @@ fun MainBottomBar(
     navController: NavHostController,
     items: List<BottomNavItem>,
 ) {
-    BottomNavigation (backgroundColor = MaterialTheme.colors.background) {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.background) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         items.forEach {
-            BottomNavigationItem(
+            NavigationBarItem(
                 icon = { Icon(
                     if (currentDestination?.route == it.screen::class.qualifiedName)
                         painterResource(it.iconSelected)

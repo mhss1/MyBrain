@@ -6,9 +6,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +35,7 @@ import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.*
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
@@ -46,11 +47,12 @@ fun SettingsScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.settings),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                )
             )
         }
     ) { paddingValues ->
@@ -74,10 +76,12 @@ fun SettingsScreen(
                             intPreferencesKey(Constants.SETTINGS_THEME_KEY),
                             ThemeSettings.LIGHT.value
                         )
+
                         ThemeSettings.LIGHT.value -> viewModel.saveSettings(
                             intPreferencesKey(Constants.SETTINGS_THEME_KEY),
                             ThemeSettings.DARK.value
                         )
+
                         ThemeSettings.DARK.value -> viewModel.saveSettings(
                             intPreferencesKey(Constants.SETTINGS_THEME_KEY),
                             ThemeSettings.AUTO.value
@@ -137,7 +141,7 @@ fun SettingsScreen(
                 SettingsSwitchCard(
                     stringResource(R.string.block_screenshots),
                     block.value
-                ){
+                ) {
                     viewModel.saveSettings(
                         booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY),
                         it
@@ -156,16 +160,18 @@ fun SettingsScreen(
                 SettingsSwitchCard(
                     stringResource(R.string.lock_app),
                     block.value
-                ){
+                ) {
                     if (appLockManager?.canUseFeature() == true) {
                         viewModel.saveSettings(
                             booleanPreferencesKey(Constants.LOCK_APP_KEY),
                             it
                         )
                     } else {
-                        Toast.makeText(context, getString(
-                            R.string.no_auth_method
-                        ), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context, getString(
+                                R.string.no_auth_method
+                            ), Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
@@ -178,11 +184,14 @@ fun SettingsScreen(
                     }
                 ) {
                     Row {
-                        Icon(painter = painterResource(id = R.drawable.ic_import_export), contentDescription = null)
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_import_export),
+                            contentDescription = null
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = stringResource(R.string.export_import),
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.titleLarge
                         )
                     }
                 }
@@ -191,7 +200,7 @@ fun SettingsScreen(
             item {
                 Text(
                     text = stringResource(R.string.about),
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier
                         .padding(vertical = 16.dp, horizontal = 12.dp)
                 )
@@ -224,7 +233,7 @@ fun SettingsScreen(
             item {
                 Text(
                     text = stringResource(R.string.product),
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier
                         .padding(vertical = 16.dp, horizontal = 12.dp)
                 )
@@ -258,7 +267,7 @@ fun ThemeSettingsItem(theme: Int = 0, onClick: () -> Unit = {}) {
     ) {
         Text(
             text = stringResource(R.string.app_theme),
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.titleLarge
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -267,7 +276,7 @@ fun ThemeSettingsItem(theme: Int = 0, onClick: () -> Unit = {}) {
                     ThemeSettings.DARK.value -> stringResource(R.string.dark_theme)
                     else -> stringResource(R.string.auto_theme)
                 },
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
@@ -297,7 +306,7 @@ fun StartUpScreenSettingsItem(
     ) {
         Text(
             text = stringResource(R.string.start_up_screen),
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.titleLarge
         )
         Box(
             modifier = Modifier
@@ -313,7 +322,7 @@ fun StartUpScreenSettingsItem(
                         StartUpScreenSettings.DASHBOARD.value -> stringResource(R.string.dashboard)
                         else -> stringResource(R.string.spaces)
                     },
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
@@ -325,21 +334,23 @@ fun StartUpScreenSettingsItem(
                 DropdownMenuItem(onClick = {
                     onSpacesClick()
                     expanded = false
-                }) {
-                    Text(
-                        text = stringResource(id = R.string.spaces),
-                        style = MaterialTheme.typography.body1
-                    )
-                }
+                },
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.spaces),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    })
                 DropdownMenuItem(onClick = {
                     onDashboardClick()
                     expanded = false
-                }) {
-                    Text(
-                        text = stringResource(id = R.string.dashboard),
-                        style = MaterialTheme.typography.body1
-                    )
-                }
+                },
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.dashboard),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    })
             }
         }
     }
@@ -365,7 +376,7 @@ fun AppFontSettingsItem(
     ) {
         Text(
             text = stringResource(R.string.app_font),
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.titleLarge
         )
         Box(
             modifier = Modifier
@@ -377,7 +388,7 @@ fun AppFontSettingsItem(
             ) {
                 Text(
                     selectedFont.toFontFamily().getName(),
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
@@ -390,12 +401,13 @@ fun AppFontSettingsItem(
                     DropdownMenuItem(onClick = {
                         onFontChange(it.toInt())
                         expanded = false
-                    }) {
-                        Text(
-                            text = it.getName(),
-                            style = MaterialTheme.typography.body1
-                        )
-                    }
+                    },
+                        text = {
+                            Text(
+                                text = it.getName(),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        })
                 }
             }
         }

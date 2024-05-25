@@ -4,10 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +32,9 @@ fun LazyItemScope.DiaryEntryItem(
         modifier = modifier
             .animateItem(),
         shape = RoundedCornerShape(20.dp),
-        elevation = 8.dp
+        elevation = CardDefaults.elevatedCardElevation(
+            8.dp
+        )
     ) {
         Column(
             modifier = Modifier
@@ -49,7 +52,7 @@ fun LazyItemScope.DiaryEntryItem(
                 Spacer(Modifier.width(8.dp))
                 Text(
                     entry.title,
-                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -58,9 +61,9 @@ fun LazyItemScope.DiaryEntryItem(
                 MarkdownText(
                     markdown = entry.content,
                     maxLines = 14,
-                    style = MaterialTheme.typography.body2.copy(
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.sp,
-                        color = MaterialTheme.colors.onBackground
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                     onClick = {onClick(entry)},
                     onLinkClicked = {onClick(entry)},
@@ -70,7 +73,7 @@ fun LazyItemScope.DiaryEntryItem(
             Spacer(Modifier.height(8.dp))
             Text(
                 text = entry.createdDate.fullDate(),
-                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.align(Alignment.End)
             )
         }

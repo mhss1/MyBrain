@@ -3,10 +3,11 @@ package com.mhss.app.mybrain.presentation.notes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +33,9 @@ fun NoteItem(
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
-        elevation = 4.dp
+        elevation = CardDefaults.elevatedCardElevation(
+            8.dp
+        ),
     ) {
         Column(
             modifier = Modifier
@@ -55,7 +58,7 @@ fun NoteItem(
                 }
                 Text(
                     note.title,
-                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -64,9 +67,9 @@ fun NoteItem(
             MarkdownText(
                 markdown = note.content,
                 maxLines = 14,
-                style = MaterialTheme.typography.body2.copy(
+                style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 14.sp,
-                    color = MaterialTheme.colors.onBackground
+                    color = MaterialTheme.colorScheme.onBackground
                 ),
                 onClick = {onClick(note)},
                 onLinkClicked = {onClick(note)},
@@ -74,7 +77,7 @@ fun NoteItem(
             Spacer(Modifier.height(8.dp))
             Text(
                 text = note.updatedDate.formatDateDependingOnDay(),
-                style = MaterialTheme.typography.caption.copy(color = Color.Gray),
+                style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray),
                 modifier = Modifier.align(Alignment.End)
             )
         }

@@ -1,12 +1,13 @@
-
 package com.mhss.app.mybrain.presentation.main
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,6 +22,7 @@ import com.mhss.app.mybrain.presentation.main.components.SpaceWideCard
 import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.ui.theme.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpacesScreen(
     navController: NavHostController
@@ -31,11 +33,12 @@ fun SpacesScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.spaces),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                )
             )
         }
     ) { paddingValues ->
@@ -47,7 +50,7 @@ fun SpacesScreen(
                         title = stringResource(R.string.notes),
                         image = R.drawable.notes_img,
                         backgroundColor = Blue
-                    ){
+                    ) {
                         navController.navigate(Screen.NotesScreen)
                     }
                     SpaceRegularCard(
@@ -55,7 +58,7 @@ fun SpacesScreen(
                         title = stringResource(R.string.tasks),
                         image = R.drawable.tasks_img,
                         backgroundColor = Red
-                    ){
+                    ) {
                         navController.navigate(
                             Screen.TasksScreen()
                         )
@@ -69,7 +72,7 @@ fun SpacesScreen(
                         title = stringResource(R.string.diary),
                         image = R.drawable.diary_img,
                         backgroundColor = Green
-                    ){
+                    ) {
                         navController.navigate(Screen.DiaryScreen)
                     }
                     SpaceRegularCard(
@@ -77,7 +80,7 @@ fun SpacesScreen(
                         title = stringResource(R.string.bookmarks),
                         image = R.drawable.bookmarks_img,
                         backgroundColor = Orange
-                    ){
+                    ) {
                         navController.navigate(Screen.BookmarksScreen)
                     }
                 }
@@ -87,7 +90,7 @@ fun SpacesScreen(
                     title = stringResource(R.string.calendar),
                     image = R.drawable.calendar_img,
                     backgroundColor = Purple
-                ){
+                ) {
                     navController.navigate(Screen.CalendarScreen)
                 }
             }

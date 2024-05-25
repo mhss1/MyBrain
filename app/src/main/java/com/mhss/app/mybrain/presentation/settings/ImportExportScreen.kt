@@ -7,10 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImportExportScreen(
     viewModel: SettingsViewModel = koinViewModel()
@@ -50,11 +52,12 @@ fun ImportExportScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.export_import),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                )
             )
         }
     ) { paddingValues ->
@@ -70,7 +73,7 @@ fun ImportExportScreen(
 //                Checkbox(checked = encrypted, onCheckedChange = { encrypted = it })
 //                Text(
 //                    text = stringResource(R.string.encrypted),
-//                    style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
+//                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
 //                    modifier = Modifier.padding(12.dp)
 //                )
 //            }
@@ -97,13 +100,18 @@ fun ImportExportScreen(
                     .padding(12.dp),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Icon(painterResource(id = R.drawable.ic_export), null)
+                Icon(
+                    painterResource(id = R.drawable.ic_export),
+                    null,
+                    tint = Color.White
+                )
                 Text(
                     text = stringResource(
                         R.string.export
                     ),
-                    style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.padding(12.dp)
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(12.dp),
+                    color = Color.White
                 )
             }
 
@@ -111,16 +119,16 @@ fun ImportExportScreen(
                 Text(
                     text = stringResource(R.string.export_failed),
                     modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.error
+                    color = MaterialTheme.colorScheme.error
                 )
             }
             if (backupResult == SettingsViewModel.BackupResult.ExportSuccess) {
                 Text(
                     text = stringResource(R.string.export_success),
                     modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center
                 )
             }
@@ -135,11 +143,16 @@ fun ImportExportScreen(
                     .padding(12.dp),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Icon(painterResource(id = R.drawable.ic_import), null)
+                Icon(
+                    painterResource(id = R.drawable.ic_import),
+                    null,
+                    tint = Color.White
+                )
                 Text(
                     text = stringResource(R.string.import_data),
-                    style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.padding(12.dp)
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(12.dp),
+                    color = Color.White
                 )
             }
 
@@ -150,9 +163,9 @@ fun ImportExportScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
-                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.error
+                    color = MaterialTheme.colorScheme.error
                 )
             }
             if (backupResult == SettingsViewModel.BackupResult.ImportSuccess) {
@@ -161,7 +174,7 @@ fun ImportExportScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
-                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center
                 )
             }

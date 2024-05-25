@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -33,6 +33,7 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryEntryDetailsScreen(
     navController: NavHostController,
@@ -45,7 +46,7 @@ fun DiaryEntryDetailsScreen(
         }
     }
     val state = viewModel.uiState
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     var openDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -73,7 +74,7 @@ fun DiaryEntryDetailsScreen(
             navController.popBackStack<Screen.DiaryScreen>(inclusive = false)
         }
         if (state.error != null) {
-            scaffoldState.snackbarHostState.showSnackbar(
+            snackbarHostState.showSnackbar(
                 state.error
             )
             viewModel.onEvent(DiaryEvent.ErrorDisplayed)
@@ -98,7 +99,7 @@ fun DiaryEntryDetailsScreen(
             navController.popBackStack<Screen.DiaryScreen>(inclusive = false)
     }
     Scaffold(
-        scaffoldState = scaffoldState,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {},
@@ -130,13 +131,14 @@ fun DiaryEntryDetailsScreen(
                     }) {
                         Text(
                             text = date.fullDate(),
-                            color = MaterialTheme.colors.onBackground,
+                            color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                )
             )
         },
         floatingActionButton = {
@@ -153,7 +155,7 @@ fun DiaryEntryDetailsScreen(
                         viewModel.onEvent(DiaryEvent.AddEntry(entry))
 
                     },
-                    backgroundColor = MaterialTheme.colors.primary,
+                    containerColor = MaterialTheme.colorScheme.primary,
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_save),
@@ -173,7 +175,7 @@ fun DiaryEntryDetailsScreen(
         ) {
             Text(
                 text = stringResource(R.string.mood),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = 10.dp)
             )
             Spacer(Modifier.height(8.dp))
@@ -197,8 +199,8 @@ fun DiaryEntryDetailsScreen(
                         .padding(vertical = 6.dp)
                         .padding(10.dp),
                     linkColor = Color.Blue,
-                    style = MaterialTheme.typography.body1.copy(
-                        color = MaterialTheme.colors.onBackground
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
             } else {
@@ -228,7 +230,7 @@ fun DiaryEntryDetailsScreen(
                 },
                 confirmButton = {
                     Button(
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         shape = RoundedCornerShape(25.dp),
                         onClick = {
                             viewModel.onEvent(DiaryEvent.DeleteEntry(state.entry!!))
@@ -298,7 +300,7 @@ private fun MoodItem(mood: Mood, chosen: Boolean, onMoodChange: () -> Unit) {
             Text(
                 text = stringResource(mood.titleRes),
                 color = if (chosen) mood.color else Color.Gray,
-                style = MaterialTheme.typography.body2
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }

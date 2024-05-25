@@ -8,7 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +25,7 @@ import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryScreen(
     navController: NavHostController,
@@ -38,11 +39,12 @@ fun DiaryScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.diary),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                ),
                 actions = {
                     IconButton(onClick = {
                         navController.navigate(Screen.DiaryChartScreen)
@@ -63,7 +65,7 @@ fun DiaryScreen(
                         Screen.DiaryDetailScreen()
                     )
                 },
-                backgroundColor = MaterialTheme.colors.primary,
+                containerColor = MaterialTheme.colorScheme.primary,
             ) {
                 Icon(
                     modifier = Modifier.size(25.dp),
@@ -139,11 +141,11 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
         OrderType.DESC()
     )
     Column(
-        Modifier.background(color = MaterialTheme.colors.background)
+        Modifier.background(color = MaterialTheme.colorScheme.background)
     ) {
         Text(
             text = stringResource(R.string.order_by),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 8.dp)
         )
         FlowRow(
@@ -160,11 +162,11 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
                                 )
                         }
                     )
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.body1)
+                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
-        Divider()
+        HorizontalDivider()
         FlowRow {
             orderTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -178,7 +180,7 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.body1)
+                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
@@ -195,7 +197,7 @@ fun NoEntriesMessage() {
     ) {
         Text(
             text = stringResource(R.string.no_entries_message),
-            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
             color = Color.Gray,
             textAlign = TextAlign.Center
         )

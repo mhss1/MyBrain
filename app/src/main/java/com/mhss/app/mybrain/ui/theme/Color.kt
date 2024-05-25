@@ -3,9 +3,9 @@ package com.mhss.app.mybrain.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val PrimaryColor = Color(0xFF2DD1E7)
-val PrimaryDarkColor = Color(0xFF00B0B0)
-val SecondaryColor = Color(0xFF5939CE)
-val DarkGray = Color(0xFF090909)
+val SecondaryColor = Color(0xFF00B0B0)
+val TertiaryColor = SecondaryColor
+val DarkGray = Color(0xFF131313)
 
 //val SurfaceGray = Color(0xFF121212)
 val Red = Color(0xFFD53A2F)

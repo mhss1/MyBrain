@@ -13,8 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,11 +30,13 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
+import com.mohamedrejeb.calf.ui.sheet.AdaptiveBottomSheet
+import com.mohamedrejeb.calf.ui.sheet.rememberAdaptiveSheetState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("InlinedApi")
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TasksScreen(
     navController: NavHostController,
@@ -46,45 +47,42 @@ fun TasksScreen(
     var orderSettingsVisible by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val uiState = viewModel.tasksUiState
-    val scaffoldState = rememberScaffoldState()
-    val sheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
+    val snackbarHostState = remember { SnackbarHostState() }
+    val sheetState = rememberAdaptiveSheetState(
+        skipPartiallyExpanded = true
     )
+    var openSheet by remember {
+        mutableStateOf(false)
+    }
     val scope = rememberCoroutineScope()
     BackHandler {
-        if (sheetState.isVisible)
-            scope.launch {
-                sheetState.hide()
-
-            }
+        if (openSheet)
+            openSheet = false
         else
             navController.popBackStack()
     }
     Scaffold(
-        scaffoldState = scaffoldState,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.tasks),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         },
         floatingActionButton = {
             AnimatedVisibility(!sheetState.isVisible) {
                 FloatingActionButton(
                     onClick = {
-                        scope.launch {
-                            sheetState.show()
-                            focusRequester.requestFocus()
-                        }
+                        openSheet = true
                     },
-                    backgroundColor = MaterialTheme.colors.primary,
+                    containerColor = MaterialTheme.colorScheme.primary,
                 ) {
                     Icon(
                         modifier = Modifier.size(25.dp),
@@ -96,93 +94,96 @@ fun TasksScreen(
             }
         },
     ) { paddingValues ->
-        ModalBottomSheetLayout(
-            modifier = Modifier.padding(paddingValues),
-            sheetState = sheetState,
-            sheetShape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
-            sheetContent = {
-                AddTaskBottomSheetContent(
-                    onAddTask = {
-                        viewModel.onEvent(TaskEvent.AddTask(it))
-                        scope.launch { sheetState.hide() }
-                        focusRequester.freeFocus()
-                    },
-                    focusRequester
-                )
-            }) {
-            LaunchedEffect(uiState.error) {
-                uiState.error?.let {
-                    val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                        it,
-                        if (uiState.errorAlarm) context.getString(R.string.grant_permission) else null
-                    )
-                    if (snackbarResult == SnackbarResult.ActionPerformed) {
-                        Intent().also { intent ->
-                            intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-                            intent.data =
-                                Uri.parse("package:" + context.applicationContext.packageName)
-                            context.startActivity(intent)
+        if (openSheet) AdaptiveBottomSheet(
+            adaptiveSheetState = sheetState,
+            onDismissRequest = { openSheet = false }
+        ) {
+            AddTaskBottomSheetContent(
+                onAddTask = {
+                    viewModel.onEvent(TaskEvent.AddTask(it))
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            openSheet = false
                         }
                     }
-                    viewModel.onEvent(TaskEvent.ErrorDisplayed)
+                    focusRequester.freeFocus()
+                },
+                focusRequester
+            )
+        }
+        LaunchedEffect(uiState.error) {
+            uiState.error?.let {
+                val snackbarResult = snackbarHostState.showSnackbar(
+                    it,
+                    if (uiState.errorAlarm) context.getString(R.string.grant_permission) else null
+                )
+                if (snackbarResult == SnackbarResult.ActionPerformed) {
+                    Intent().also { intent ->
+                        intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                        intent.data =
+                            Uri.parse("package:" + context.applicationContext.packageName)
+                        context.startActivity(intent)
+                    }
+                }
+                viewModel.onEvent(TaskEvent.ErrorDisplayed)
+            }
+        }
+        LaunchedEffect(true) {
+            if (addTask) {
+                sheetState.show()
+                focusRequester.requestFocus()
+            }
+        }
+        if (uiState.tasks.isEmpty()) NoTasksMessage()
+        Column(
+            Modifier.fillMaxSize().padding(paddingValues)
+        ) {
+            Column(
+                Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(onClick = { orderSettingsVisible = !orderSettingsVisible }) {
+                        Icon(
+                            modifier = Modifier.size(25.dp),
+                            painter = painterResource(R.drawable.ic_settings_sliders),
+                            contentDescription = stringResource(R.string.order_by)
+                        )
+                    }
+                    IconButton(onClick = {
+                        navController.navigate(Screen.TaskSearchScreen)
+                    }) {
+                        Icon(
+                            modifier = Modifier.size(25.dp),
+                            painter = painterResource(id = R.drawable.ic_search),
+                            contentDescription = stringResource(R.string.search)
+                        )
+                    }
+                }
+                AnimatedVisibility(visible = orderSettingsVisible) {
+                    TasksSettingsSection(
+                        uiState.taskOrder,
+                        uiState.showCompletedTasks,
+                        onShowCompletedChange = {
+                            viewModel.onEvent(
+                                TaskEvent.ShowCompletedTasks(
+                                    it
+                                )
+                            )
+                        },
+                        onOrderChange = {
+                            viewModel.onEvent(TaskEvent.UpdateOrder(it))
+                        }
+                    )
                 }
             }
-            LaunchedEffect(true) {
-                if (addTask) scope.launch {
-                    sheetState.show()
-                    focusRequester.requestFocus()
-                }
-            }
-            if (uiState.tasks.isEmpty())
-                NoTasksMessage()
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
             ) {
-                item {
-                    Column(
-                        Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            IconButton(onClick = { orderSettingsVisible = !orderSettingsVisible }) {
-                                Icon(
-                                    modifier = Modifier.size(25.dp),
-                                    painter = painterResource(R.drawable.ic_settings_sliders),
-                                    contentDescription = stringResource(R.string.order_by)
-                                )
-                            }
-                            IconButton(onClick = {
-                                navController.navigate(Screen.TaskSearchScreen)
-                            }) {
-                                Icon(
-                                    modifier = Modifier.size(25.dp),
-                                    painter = painterResource(id = R.drawable.ic_search),
-                                    contentDescription = stringResource(R.string.search)
-                                )
-                            }
-                        }
-                        AnimatedVisibility(visible = orderSettingsVisible) {
-                            TasksSettingsSection(
-                                uiState.taskOrder,
-                                uiState.showCompletedTasks,
-                                onShowCompletedChange = {
-                                    viewModel.onEvent(
-                                        TaskEvent.ShowCompletedTasks(
-                                            it
-                                        )
-                                    )
-                                },
-                                onOrderChange = {
-                                    viewModel.onEvent(TaskEvent.UpdateOrder(it))
-                                }
-                            )
-                        }
-                    }
-                }
                 items(uiState.tasks, key = { it.id }) { task ->
                     TaskItem(
                         task = task,
@@ -217,7 +218,7 @@ fun NoTasksMessage() {
     ) {
         Text(
             text = stringResource(R.string.no_tasks_message),
-            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
             color = Color.Gray,
             textAlign = TextAlign.Center
         )
@@ -250,11 +251,11 @@ fun TasksSettingsSection(
         OrderType.DESC()
     )
     Column(
-        Modifier.background(color = MaterialTheme.colors.background)
+        Modifier.background(color = MaterialTheme.colorScheme.background)
     ) {
         Text(
             text = stringResource(R.string.order_by),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 8.dp)
         )
         FlowRow(
@@ -271,11 +272,11 @@ fun TasksSettingsSection(
                                 )
                         }
                     )
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.body1)
+                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
-        Divider()
+        HorizontalDivider()
         FlowRow {
             orderTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -289,16 +290,16 @@ fun TasksSettingsSection(
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.body1)
+                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
-        Divider()
+        HorizontalDivider()
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(checked = showCompleted, onCheckedChange = { onShowCompletedChange(it) })
             Text(
                 text = stringResource(R.string.show_completed_tasks),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = 8.dp)
             )
         }

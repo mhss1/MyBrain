@@ -2,17 +2,17 @@ package com.mhss.app.mybrain.presentation.tasks
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -36,7 +36,6 @@ import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.date.isDueDateOverdue
 import com.mhss.app.mybrain.util.settings.toPriority
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.TaskItem(
     modifier: Modifier = Modifier,
@@ -47,9 +46,11 @@ fun LazyItemScope.TaskItem(
     Card(
         modifier = modifier
             .padding(horizontal = 8.dp)
-            .animateItemPlacement(),
+            .animateItem(),
         shape = RoundedCornerShape(16.dp),
-        elevation = 8.dp
+        elevation = CardDefaults.elevatedCardElevation(
+            8.dp
+        ),
     ) {
         Column(
             Modifier
@@ -67,7 +68,7 @@ fun LazyItemScope.TaskItem(
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = task.title,
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
@@ -90,15 +91,15 @@ fun LazyItemScope.TaskItem(
                             modifier = Modifier.size(13.dp),
                             painter = painterResource(R.drawable.ic_alarm),
                             contentDescription = stringResource(R.string.due_date),
-                            tint = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colors.onBackground.copy(
+                            tint = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colorScheme.onBackground.copy(
                                 alpha = 0.8f
                             )
                         )
                         Spacer(Modifier.width(4.dp))
                         Text(
                             text = task.dueDate.formatDateDependingOnDay(),
-                            style = MaterialTheme.typography.body2,
-                            color = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colors.onBackground.copy(
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colorScheme.onBackground.copy(
                                 alpha = 0.8f
                             )
                         )
@@ -149,8 +150,8 @@ fun SubTasksProgressBar(modifier: Modifier = Modifier, subTasks: List<SubTask>) 
                 completed.toFloat() / total.toFloat()
             }
         }
-        val circleColor = MaterialTheme.colors.onBackground.copy(alpha = 0.2f)
-        val progressColor = MaterialTheme.colors.onBackground.copy(alpha = 0.8f)
+        val circleColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f)
+        val progressColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
         Canvas(
             modifier = Modifier.size(16.dp)
         ) {
@@ -170,7 +171,7 @@ fun SubTasksProgressBar(modifier: Modifier = Modifier, subTasks: List<SubTask>) 
         Spacer(Modifier.width(8.dp))
         Text(
             text = "$completed/$total",
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.bodyMedium,
             color = progressColor,
         )
     }

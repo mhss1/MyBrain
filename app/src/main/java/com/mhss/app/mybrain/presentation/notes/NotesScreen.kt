@@ -16,7 +16,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -35,6 +35,7 @@ import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.settings.*
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesScreen(
     navController: NavHostController,
@@ -44,17 +45,19 @@ fun NotesScreen(
     var orderSettingsVisible by remember { mutableStateOf(false) }
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
     var openCreateFolderDialog by remember { mutableStateOf(false) }
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(uiState.error) {
         uiState.error?.let {
-            scaffoldState.snackbarHostState.showSnackbar(
+            snackbarHostState.showSnackbar(
                 it
             )
             viewModel.onEvent(NoteEvent.ErrorDisplayed)
         }
     }
     Scaffold(
-        scaffoldState = scaffoldState,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -62,11 +65,12 @@ fun NotesScreen(
                         text = if (selectedTab == 0) stringResource(R.string.notes) else stringResource(
                             R.string.folders
                         ),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                )
             )
         },
         floatingActionButton = {
@@ -80,7 +84,7 @@ fun NotesScreen(
                         openCreateFolderDialog = true
                     }
                 },
-                backgroundColor = MaterialTheme.colors.primary,
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
                     modifier = Modifier.size(25.dp),
@@ -96,21 +100,33 @@ fun NotesScreen(
         Column(modifier = Modifier.padding(paddingValues)) {
             TabRow(
                 selectedTabIndex = selectedTab,
-                backgroundColor = MaterialTheme.colors.background
+                containerColor = MaterialTheme.colorScheme.background
             ) {
                 Tab(
-                    text = { Text(stringResource(R.string.notes)) },
+                    text = {
+                        Text(
+                            stringResource(R.string.notes),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
                     selected = selectedTab == 0,
                     onClick = {
                         selectedTab = 0
-                    }
+                    },
+                    unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                 )
                 Tab(
-                    text = { Text(stringResource(R.string.folders)) },
+                    text = {
+                        Text(
+                            stringResource(R.string.folders),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
                     selected = selectedTab == 1,
                     onClick = {
                         selectedTab = 1
-                    }
+                    },
+                    unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                 )
             }
             if (selectedTab == 0) {
@@ -240,7 +256,9 @@ fun FoldersTab(
             Card(
                 modifier = Modifier.height(180.dp),
                 shape = RoundedCornerShape(20.dp),
-                elevation = 8.dp
+                elevation = CardDefaults.elevatedCardElevation(
+                    8.dp
+                )
             ) {
                 Column(
                     Modifier
@@ -256,7 +274,7 @@ fun FoldersTab(
                     )
                     Text(
                         text = folder.name,
-                        style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.fillMaxWidth(),
@@ -268,6 +286,7 @@ fun FoldersTab(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun NotesSettingsSection(
     order: Order,
@@ -289,11 +308,11 @@ fun NotesSettingsSection(
         ItemView.GRID
     )
     Column(
-        Modifier.background(color = MaterialTheme.colors.background)
+        Modifier.background(color = MaterialTheme.colorScheme.background)
     ) {
         Text(
             text = stringResource(R.string.order_by),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 8.dp)
         )
         FlowRow(
@@ -310,11 +329,11 @@ fun NotesSettingsSection(
                                 )
                         }
                     )
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.body1)
+                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
-        Divider()
+        HorizontalDivider()
         FlowRow {
             orderTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -328,14 +347,14 @@ fun NotesSettingsSection(
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.body1)
+                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
-        Divider()
+        HorizontalDivider()
         Text(
             text = stringResource(R.string.view_as),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 8.dp, top = 8.dp)
         )
         FlowRow {
@@ -351,7 +370,10 @@ fun NotesSettingsSection(
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = stringResource(it.title), style = MaterialTheme.typography.body1)
+                    Text(
+                        text = stringResource(it.title),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         }
@@ -368,7 +390,7 @@ fun NoNotesMessage() {
     ) {
         Text(
             text = stringResource(R.string.no_notes_message),
-            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
             color = Color.Gray,
             textAlign = TextAlign.Center
         )
@@ -393,7 +415,7 @@ fun CreateFolderDialog(
         title = {
             Text(
                 text = stringResource(id = R.string.create_folder),
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.titleLarge
             )
         },
         text = {
@@ -403,7 +425,7 @@ fun CreateFolderDialog(
                 label = {
                     Text(
                         text = stringResource(id = R.string.name),
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 },
             )

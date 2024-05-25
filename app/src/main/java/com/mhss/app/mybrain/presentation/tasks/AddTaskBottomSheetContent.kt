@@ -1,14 +1,11 @@
 package com.mhss.app.mybrain.presentation.tasks
 
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -50,15 +47,13 @@ fun AddTaskBottomSheetContent(
 
     Column(
         modifier = Modifier
-            .defaultMinSize(minHeight = 1.dp)
             .padding(horizontal = 16.dp)
     ) {
-        SheetHandle(Modifier.align(Alignment.CenterHorizontally))
         Text(
             text = stringResource(R.string.add_task),
-            style = MaterialTheme.typography.h5
+            style = MaterialTheme.typography.headlineSmall
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(8.dp))
         TaskDetailsContent(
             modifier = Modifier.weight(1f),
             completed = completed,
@@ -82,55 +77,45 @@ fun AddTaskBottomSheetContent(
             onRecurringChange = { recurring = it },
             onFrequencyChange = { frequency = it },
             onFrequencyAmountChange = { frequencyAmount = it },
-            onComplete = { completed = it }
-        )
-        Button(
-            onClick = {
-                onAddTask(
-                    Task(
-                        title = title,
-                        description = description,
-                        isCompleted = completed,
-                        priority = priority.toInt(),
-                        dueDate = if (dueDateExists) dueDate.timeInMillis else 0L,
-                        recurring = recurring,
-                        frequency = frequency.value,
-                        frequencyAmount = frequencyAmount,
-                        createdDate = now(),
-                        updatedDate = now(),
-                        subTasks = subTasks.toList()
+            onComplete = { completed = it },
+            optionalContent = {
+                Button(
+                    onClick = {
+                        onAddTask(
+                            Task(
+                                title = title,
+                                description = description,
+                                isCompleted = completed,
+                                priority = priority.toInt(),
+                                dueDate = if (dueDateExists) dueDate.timeInMillis else 0L,
+                                recurring = recurring,
+                                frequency = frequency.value,
+                                frequencyAmount = frequencyAmount,
+                                createdDate = now(),
+                                updatedDate = now(),
+                                subTasks = subTasks.toList()
+                            )
+                        )
+                        title = ""
+                        description = ""
+                        priority = Priority.LOW
+                        dueDate = Calendar.getInstance()
+                        dueDateExists = false
+                        subTasks.clear()
+                        keyboardController?.hide()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    shape = RoundedCornerShape(25.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.add_task),
+                        style = MaterialTheme.typography.titleLarge.copy(Color.White)
                     )
-                )
-                title = ""
-                description = ""
-                priority = Priority.LOW
-                dueDate = Calendar.getInstance()
-                dueDateExists = false
-                subTasks.clear()
-                keyboardController?.hide()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            shape = RoundedCornerShape(25.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.add_task),
-                style = MaterialTheme.typography.h6.copy(Color.White)
-            )
-        }
+                }
+            })
     }
-}
-
-@Composable
-fun SheetHandle(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
-            .size(width = 60.dp, height = 4.dp)
-            .background(Color.Gray)
-            .padding(5.dp)
-    )
 }
 
 @Preview(showBackground = true)

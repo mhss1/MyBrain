@@ -1,6 +1,6 @@
 package com.mhss.app.mybrain.ui.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -14,59 +14,59 @@ val Rubik = FontFamily(
 )
 // Set of Material typography styles to start with
 fun getTypography(font: FontFamily) = Typography(
-    defaultFontFamily = font,
-    body1 = TextStyle(
+    bodyLarge = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        fontFamily = font
     ),
-    body2 = TextStyle(
+    bodyMedium = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp
+        fontSize = 14.sp,
+        fontFamily = font
     ),
-    button = TextStyle(
+    labelLarge = TextStyle(
         fontWeight = FontWeight.W500,
-        fontSize = 14.sp
+        fontSize = 14.sp,
+        fontFamily = font
     ),
-    h1 = TextStyle(
+    displayLarge = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 96.sp
+        fontSize = 96.sp,
+        fontFamily = font
     ),
-    h2 = TextStyle(
+    displayMedium = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 60.sp
+        fontSize = 60.sp,
+        fontFamily = font
     ),
-    h3 = TextStyle(
+    displaySmall = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 48.sp
+        fontSize = 48.sp,
+        fontFamily = font
     ),
-    h4 = TextStyle(
+    headlineMedium = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 34.sp
+        fontSize = 34.sp,
+        fontFamily = font
     ),
-    h5 = TextStyle(
+    headlineSmall = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp
+        fontSize = 24.sp,
+        fontFamily = font
     ),
-    h6 = TextStyle(
+    titleLarge = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 20.sp
+        fontSize = 20.sp,
+        fontFamily = font
     ),
-    subtitle1 = TextStyle(
+    titleMedium = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        fontFamily = font
     ),
-    subtitle2 = TextStyle(
+    titleSmall = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
+        fontSize = 12.sp,
+        fontFamily = font
     )
-    /* Other default text styles to override
-    button = TextStyle(
-        fontWeight = FontWeight.W500,
-        fontSize = 14.sp
-    ),
-    caption = TextStyle(
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
-    )
-    */
 )

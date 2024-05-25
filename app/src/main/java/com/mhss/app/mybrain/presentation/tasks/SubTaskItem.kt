@@ -1,16 +1,16 @@
 package com.mhss.app.mybrain.presentation.tasks
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.*
-import androidx.compose.material.TextFieldDefaults.indicatorLine
+import androidx.compose.material3.*
+import androidx.compose.material3.TextFieldDefaults.indicatorLine
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.tasks.SubTask
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubTaskItem(
     subTask: SubTask,
@@ -52,38 +52,41 @@ fun SubTaskItem(
                 onChange(subTask.copy(title = it))
             },
             textStyle =
-            MaterialTheme.typography.body1.copy(
+            MaterialTheme.typography.bodyLarge.copy(
                 textDecoration = if (subTask.isCompleted) TextDecoration.LineThrough else null,
-                color = MaterialTheme.colors.onBackground
+                color = MaterialTheme.colorScheme.onBackground
             ),
             modifier = Modifier
-                .padding(top = 4.dp)
                 .weight(1f)
-                .background(
-                    MaterialTheme.colors.onBackground.copy(alpha = 0.1f),
-                    shape = RoundedCornerShape(8.dp)
-                )
+                .padding(top = 4.dp)
+                .clip(RoundedCornerShape(8.dp))
                 .indicatorLine(
                     enabled = true,
                     isError = false,
                     interactionSource,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.onBackground.copy(alpha = 0.1f),
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent
                     )
                 ),
-            cursorBrush = SolidColor(MaterialTheme.colors.primary)
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         ) {
-            TextFieldDefaults.TextFieldDecorationBox(
+            TextFieldDefaults.DecorationBox(
                 contentPadding = PaddingValues(8.dp),
                 visualTransformation = VisualTransformation.None,
                 enabled = true,
                 singleLine = false,
                 value = subTask.title,
                 interactionSource = interactionSource,
-                innerTextField = it
+                innerTextField = it,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
+                    unfocusedContainerColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
             )
         }
 

@@ -1,29 +1,33 @@
 package com.mhss.app.mybrain.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import org.koin.compose.KoinContext
 
-private val DarkColorPalette = darkColors(
+private val DarkColorPalette = darkColorScheme(
     primary = PrimaryColor,
-    primaryVariant = PrimaryDarkColor,
     secondary = SecondaryColor,
+    tertiary = TertiaryColor,
     surface = DarkGray,
     background = Color.Black,
     onSurface = Color.White,
-    onBackground = Color.White
+    onBackground = Color.White,
+    surfaceTint = Color.Transparent,
+    surfaceVariant = DarkGray
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorPalette = lightColorScheme(
     primary = PrimaryColor,
-    primaryVariant = PrimaryDarkColor,
     secondary = SecondaryColor,
+    tertiary = TertiaryColor,
     background = Color.White,
+    surfaceTint = Color.Transparent,
+    surfaceVariant = Color.White
 )
 
 @Composable
@@ -39,7 +43,7 @@ fun MyBrainTheme(
     val typography = getTypography(fontFamily)
     KoinContext {
         MaterialTheme(
-            colors = colors,
+            colorScheme = colors,
             typography = typography,
             shapes = Shapes,
             content = content

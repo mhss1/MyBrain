@@ -3,7 +3,8 @@ package com.mhss.app.mybrain.presentation.settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +25,9 @@ fun SettingsItemCard(
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 12.dp),
         shape = RoundedCornerShape(cornerRadius),
-        elevation = 6.dp,
+        elevation = CardDefaults.elevatedCardElevation(
+            6.dp
+        )
     ) {
         Row(
             Modifier

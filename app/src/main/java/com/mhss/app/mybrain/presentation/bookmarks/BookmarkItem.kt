@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +30,9 @@ fun BookmarkItem(
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
-        elevation = 8.dp
+        elevation = CardDefaults.elevatedCardElevation(
+            8.dp
+        )
     ) {
         val context = LocalContext.current
         Column(
@@ -42,7 +44,7 @@ fun BookmarkItem(
             if (bookmark.title.isNotBlank()){
                 Text(
                     bookmark.title,
-                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -53,7 +55,7 @@ fun BookmarkItem(
             }
             Text(
                 bookmark.url,
-                style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                 color = Color.Gray
             )
             IconButton(

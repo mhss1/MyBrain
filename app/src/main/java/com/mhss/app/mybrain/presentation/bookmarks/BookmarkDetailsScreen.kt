@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -22,6 +22,7 @@ import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookmarkDetailsScreen(
     navController: NavHostController,
@@ -34,7 +35,7 @@ fun BookmarkDetailsScreen(
         }
     }
     val state = viewModel.uiState
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     var openDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -55,7 +56,7 @@ fun BookmarkDetailsScreen(
             navController.popBackStack<Screen.BookmarksScreen>(inclusive = false)
         }
         if (state.error != null) {
-            scaffoldState.snackbarHostState.showSnackbar(
+            snackbarHostState.showSnackbar(
                 state.error
             )
             viewModel.onEvent(BookmarkEvent.ErrorDisplayed)
@@ -101,7 +102,7 @@ fun BookmarkDetailsScreen(
         )
     }
     Scaffold(
-        scaffoldState = scaffoldState,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {},
@@ -125,8 +126,9 @@ fun BookmarkDetailsScreen(
                             )
                         }
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                )
             )
         },
     ) { paddingValues ->
@@ -190,7 +192,7 @@ fun BookmarkDetailsScreen(
                 },
                 confirmButton = {
                     Button(
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         shape = RoundedCornerShape(25.dp),
                         onClick = {
                             viewModel.onEvent(BookmarkEvent.DeleteBookmark(state.bookmark!!))

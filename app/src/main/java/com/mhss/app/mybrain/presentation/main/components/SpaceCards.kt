@@ -4,9 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,8 +29,12 @@ fun SpaceRegularCard(
     Card(
         modifier = modifier.padding(8.dp),
         shape = RoundedCornerShape(25.dp),
-        backgroundColor = backgroundColor,
-        elevation = 12.dp
+        elevation = CardDefaults.elevatedCardElevation(
+            12.dp
+        ),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = backgroundColor
+        )
     ) {
         Column(
             Modifier
@@ -38,7 +43,7 @@ fun SpaceRegularCard(
                 .padding(18.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = title, style = MaterialTheme.typography.h5.copy(color = Color.White))
+            Text(text = title, style = MaterialTheme.typography.headlineSmall.copy(color = Color.White))
             Image(
                 modifier = Modifier
                     .size(70.dp)
@@ -60,8 +65,12 @@ fun SpaceWideCard(
     Card(
         modifier = Modifier.padding(8.dp),
         shape = RoundedCornerShape(25.dp),
-        backgroundColor = backgroundColor,
-        elevation = 12.dp
+        elevation = CardDefaults.elevatedCardElevation(
+            12.dp
+        ),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = backgroundColor
+        )
     ) {
         Column(
             Modifier
@@ -71,7 +80,7 @@ fun SpaceWideCard(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.h4.copy(color = Color.White),
+                style = MaterialTheme.typography.headlineMedium.copy(color = Color.White),
             )
             Spacer(Modifier.height(12.dp))
             Image(

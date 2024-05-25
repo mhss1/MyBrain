@@ -11,22 +11,25 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +43,7 @@ import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.settings.ItemView
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteFolderDetailsScreen(
     navController: NavHostController,
@@ -52,31 +56,29 @@ fun NoteFolderDetailsScreen(
     var openDeleteDialog by remember { mutableStateOf(false) }
     var openEditDialog by remember { mutableStateOf(false) }
 
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(true) { viewModel.onEvent(NoteEvent.GetFolderNotes(id)) }
     LaunchedEffect(uiState) {
         if (viewModel.notesUiState.navigateUp) {
             navController.popBackStack<Screen.NotesScreen>(inclusive = false)
         }
         if (uiState.error != null) {
-            scaffoldState.snackbarHostState.showSnackbar(
+            snackbarHostState.showSnackbar(
                 uiState.error
             )
             viewModel.onEvent(NoteEvent.ErrorDisplayed)
         }
     }
     Scaffold(
-        scaffoldState = scaffoldState,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = folder?.name ?: "",
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
                 actions = {
                     IconButton(onClick = { openDeleteDialog = true }) {
                         Icon(Icons.Default.Delete, stringResource(R.string.delete_folder))
@@ -84,7 +86,10 @@ fun NoteFolderDetailsScreen(
                     IconButton(onClick = { openEditDialog = true }) {
                         Icon(Icons.Default.Edit, stringResource(R.string.delete_folder))
                     }
-                }
+                },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         },
         floatingActionButton = {
@@ -94,7 +99,7 @@ fun NoteFolderDetailsScreen(
                         Screen.NoteDetailsScreen(folderId = id)
                     )
                 },
-                backgroundColor = MaterialTheme.colors.primary,
+                containerColor = MaterialTheme.colorScheme.primary,
             ) {
                 Icon(
                     modifier = Modifier.size(25.dp),
@@ -174,7 +179,7 @@ fun NoteFolderDetailsScreen(
                 },
                 confirmButton = {
                     Button(
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         shape = RoundedCornerShape(25.dp),
                         onClick = {
                             viewModel.onEvent(NoteEvent.DeleteFolder(folder!!))
@@ -201,7 +206,7 @@ fun NoteFolderDetailsScreen(
                 title = {
                     Text(
                         text = stringResource(id = R.string.edit_folder),
-                        style = MaterialTheme.typography.h6
+                        style = MaterialTheme.typography.titleLarge
                     )
                 },
                 text = {
@@ -211,7 +216,7 @@ fun NoteFolderDetailsScreen(
                         label = {
                             Text(
                                 text = stringResource(id = R.string.name),
-                                style = MaterialTheme.typography.body1
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         },
                     )

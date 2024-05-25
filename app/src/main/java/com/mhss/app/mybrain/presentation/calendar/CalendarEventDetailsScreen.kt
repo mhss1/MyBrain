@@ -13,7 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -40,7 +40,7 @@ import com.mhss.app.mybrain.util.date.now
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarEventDetailsScreen(
     navController: NavHostController,
@@ -97,7 +97,7 @@ fun CalendarEventDetailsScreen(
 
     var allDay by rememberSaveable { mutableStateOf(event?.allDay ?: false) }
     var location by rememberSaveable { mutableStateOf(event?.location ?: "") }
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     if (writeCalendarPermissionState.hasPermission) {
         LaunchedEffect(true) { viewModel.onEvent(CalendarViewModelEvent.ReadPermissionChanged(true)) }
         LaunchedEffect(state) {
@@ -106,19 +106,19 @@ fun CalendarEventDetailsScreen(
                 navController.navigateUp()
             }
             if (state.error != null) {
-                scaffoldState.snackbarHostState.showSnackbar(
+                snackbarHostState.showSnackbar(
                     state.error
                 )
                 viewModel.onEvent(CalendarViewModelEvent.ErrorDisplayed)
             }
         }
         Scaffold(
-            scaffoldState = scaffoldState,
             topBar = {
                 if (event != null) TopAppBar(
                     title = {},
-                    backgroundColor = MaterialTheme.colors.background,
-                    elevation = 0.dp,
+                    colors = TopAppBarDefaults.mediumTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                    ),
                     actions = {
                         IconButton(onClick = { openDeleteDialog = true }) {
                             Icon(
@@ -241,7 +241,7 @@ fun NoWriteCalendarPermissionMessage(
     ) {
         Text(
             text = stringResource(R.string.no_write_calendar_permission_message),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(12.dp))
@@ -288,12 +288,12 @@ fun CalendarChoiceSection(
             Column {
                 Text(
                     text = selectedCalendar.name,
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = selectedCalendar.account,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }
@@ -309,27 +309,27 @@ fun CalendarChoiceSection(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    Box(
-                        Modifier
-                            .size(20.dp)
-                            .clip(CircleShape)
-                            .background(Color(calendar.color))
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Column {
-                        Text(
-                            text = calendar.name,
-                            style = MaterialTheme.typography.body1
+                        .padding(8.dp),
+                    text = {
+                        Box(
+                            Modifier
+                                .size(20.dp)
+                                .clip(CircleShape)
+                                .background(Color(calendar.color))
                         )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = calendar.account,
-                            style = MaterialTheme.typography.body2
-                        )
-                    }
-                }
+                        Spacer(Modifier.width(8.dp))
+                        Column {
+                            Text(
+                                text = calendar.name,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = calendar.account,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    })
                 Spacer(Modifier.height(4.dp))
             }
         }
@@ -363,7 +363,7 @@ fun EventTimeSection(
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = stringResource(R.string.all_day),
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
             Switch(
@@ -378,7 +378,7 @@ fun EventTimeSection(
         ) {
             Text(
                 text = start.timeInMillis.formatDate(),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
                         showDatePicker(start, context) {
@@ -408,7 +408,7 @@ fun EventTimeSection(
             )
             Text(
                 text = start.timeInMillis.formatTime(),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
                         showTimePicker(start, context) {
@@ -446,7 +446,7 @@ fun EventTimeSection(
         ) {
             Text(
                 text = end.timeInMillis.formatDate(),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
                         showDatePicker(end, context) {
@@ -476,7 +476,7 @@ fun EventTimeSection(
             )
             Text(
                 text = end.timeInMillis.formatTime(),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
                         showTimePicker(end, context) {
@@ -516,7 +516,7 @@ fun EventTimeSection(
         ) {
             Icon(painter = painterResource(id = R.drawable.ic_refresh), null)
             Spacer(Modifier.width(8.dp))
-            Text(frequency.toUIFrequency(), style = MaterialTheme.typography.body1)
+            Text(frequency.toUIFrequency(), style = MaterialTheme.typography.bodyLarge)
             FrequencyDialog(
                 selectedFrequency = frequency,
                 onFrequencySelected = {
@@ -571,6 +571,7 @@ fun showTimePicker(
     timePicker.show()
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FrequencyDialog(
     selectedFrequency: String,
@@ -585,10 +586,9 @@ fun FrequencyDialog(
         CALENDAR_FREQ_MONTHLY,
         CALENDAR_FREQ_YEARLY
     )
-    if (open) AlertDialog(
+    if (open) BasicAlertDialog(
         onDismissRequest = { onClose() },
-        title = {},
-        text = {
+        content = {
             Column(
                 modifier = Modifier.padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -601,7 +601,7 @@ fun FrequencyDialog(
                     ) {
                         Text(
                             text = frequency.toUIFrequency(),
-                            style = MaterialTheme.typography.body1
+                            style = MaterialTheme.typography.bodyLarge
                         )
                         RadioButton(
                             selected = frequency == selectedFrequency,
@@ -610,8 +610,7 @@ fun FrequencyDialog(
                     }
                 }
             }
-        },
-        buttons = {}
+        }
     )
 }
 
@@ -634,7 +633,7 @@ fun DeleteEventDialog(
         },
         confirmButton = {
             Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                 shape = RoundedCornerShape(25.dp),
                 onClick = {
                     onDelete()

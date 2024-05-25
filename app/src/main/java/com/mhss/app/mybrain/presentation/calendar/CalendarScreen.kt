@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalPermissionsApi::class)
+@file:OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 
 package com.mhss.app.mybrain.presentation.calendar
 
@@ -12,9 +12,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +37,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CalendarScreen(
     navController: NavHostController,
@@ -52,7 +51,8 @@ fun CalendarScreen(
     )
     val month by remember(state.events) {
         derivedStateOf {
-            state.events.values.elementAt(lazyListState.firstVisibleItemIndex).first().start.monthName()
+            state.events.values.elementAt(lazyListState.firstVisibleItemIndex)
+                .first().start.monthName()
         }
     }
     val scope = rememberCoroutineScope()
@@ -62,7 +62,7 @@ fun CalendarScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.calendar),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
                 actions = {
@@ -80,8 +80,9 @@ fun CalendarScreen(
                         }
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         },
         floatingActionButton = {
@@ -93,7 +94,7 @@ fun CalendarScreen(
                         )
                     )
                 },
-                backgroundColor = MaterialTheme.colors.primary,
+                containerColor = MaterialTheme.colorScheme.primary,
             ) {
                 Icon(
                     modifier = Modifier.size(25.dp),
@@ -107,7 +108,9 @@ fun CalendarScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().padding(paddingValues)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
             if (readCalendarPermissionState.hasPermission) {
                 LaunchedEffect(true) {
@@ -149,7 +152,7 @@ fun CalendarScreen(
                             ) {
                                 Text(
                                     text = day.substring(0, day.indexOf(",")),
-                                    style = MaterialTheme.typography.h5
+                                    style = MaterialTheme.typography.headlineSmall
                                 )
                                 events.forEach { event ->
                                     CalendarEventItem(event = event, onClick = {
@@ -188,7 +191,7 @@ fun NoReadCalendarPermissionMessage(
     ) {
         Text(
             text = stringResource(R.string.no_read_calendar_permission_message),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(12.dp))
@@ -227,7 +230,7 @@ fun MonthDropDownMenu(
             AnimatedContent(targetState = selectedMonth, label = "") { month ->
                 Text(
                     text = month,
-                    style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
             }
             Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
@@ -241,10 +244,10 @@ fun MonthDropDownMenu(
                     onClick = {
                         onMonthSelected(it)
                         expanded = false
-                    }
-                ) {
-                    Text(text = it)
-                }
+                    },
+                    text = {
+                        Text(text = it)
+                    })
             }
         }
     }
@@ -256,13 +259,13 @@ fun CalendarSettingsSection(
     onCalendarClicked: (Calendar) -> Unit
 ) {
     Column {
-        Divider()
+        HorizontalDivider()
         Text(
             text = stringResource(R.string.include_calendars),
-            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(8.dp)
         )
-        Divider()
+        HorizontalDivider()
         calendars.keys.forEach { calendar ->
             var expanded by remember { mutableStateOf(false) }
             Box(
@@ -275,7 +278,7 @@ fun CalendarSettingsSection(
                 ) {
                     Text(
                         text = calendar,
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
                 }
@@ -287,23 +290,23 @@ fun CalendarSettingsSection(
                         DropdownMenuItem(
                             onClick = {
                                 onCalendarClicked(subCalendar)
-                            }
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Checkbox(
-                                    checked = subCalendar.included,
-                                    onCheckedChange = { onCalendarClicked(subCalendar) },
-                                    colors = CheckboxDefaults.colors(
-                                        uncheckedColor = Color(subCalendar.color),
-                                        checkedColor = Color(subCalendar.color)
+                            },
+                            text = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Checkbox(
+                                        checked = subCalendar.included,
+                                        onCheckedChange = { onCalendarClicked(subCalendar) },
+                                        colors = CheckboxDefaults.colors(
+                                            uncheckedColor = Color(subCalendar.color),
+                                            checkedColor = Color(subCalendar.color)
+                                        )
                                     )
-                                )
-                                Text(
-                                    text = subCalendar.name,
-                                    style = MaterialTheme.typography.body2
-                                )
-                            }
-                        }
+                                    Text(
+                                        text = subCalendar.name,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            })
                     }
                 }
             }

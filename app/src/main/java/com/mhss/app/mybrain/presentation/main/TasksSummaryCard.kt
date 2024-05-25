@@ -3,9 +3,10 @@ package com.mhss.app.mybrain.presentation.main
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +32,9 @@ fun TasksSummaryCard(
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
-        elevation = 8.dp,
+        elevation = CardDefaults.elevatedCardElevation(
+            8.dp
+        ),
         modifier = modifier
             .fillMaxWidth()
             .padding(6.dp)
@@ -44,7 +47,7 @@ fun TasksSummaryCard(
         Column {
             Text(
                 text = stringResource(R.string.tasks_summary),
-                style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
@@ -94,7 +97,7 @@ fun TasksSummaryCard(
                         append(" ")
                         append(stringResource(R.string.of_last_week_tasks))
                     },
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
@@ -103,7 +106,7 @@ fun TasksSummaryCard(
             } else {
                 Text(
                     text = stringResource(R.string.no_tasks_yet),
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),

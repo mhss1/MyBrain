@@ -16,10 +16,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -47,6 +47,7 @@ import com.mhss.app.mybrain.util.settings.toPriority
 import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("InlinedApi")
 @Composable
 fun TaskDetailScreen(
@@ -58,7 +59,9 @@ fun TaskDetailScreen(
         viewModel.onEvent(TaskEvent.GetTask(taskId))
     }
     val uiState = viewModel.taskDetailsUiState
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
     var openDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -94,11 +97,11 @@ fun TaskDetailScreen(
     LaunchedEffect(uiState) {
         if (uiState.navigateUp) {
             openDialog = false
-            navController.popBackStack<Screen.TaskSearchScreen>( false)
+            navController.popBackStack<Screen.TaskSearchScreen>(false)
             navController.navigateUp()
         }
         if (uiState.error != null) {
-            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+            val snackbarResult = snackbarHostState.showSnackbar(
                 uiState.error,
                 if (uiState.errorAlarm) context.getString(R.string.grant_permission) else null
             )
@@ -134,7 +137,7 @@ fun TaskDetailScreen(
         }
     }
     Scaffold(
-        scaffoldState = scaffoldState,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {},
@@ -146,8 +149,9 @@ fun TaskDetailScreen(
                         )
                     }
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                ),
             )
         }
     ) { paddingValues ->
@@ -202,7 +206,7 @@ fun TaskDetailScreen(
             },
             confirmButton = {
                 Button(
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     shape = RoundedCornerShape(25.dp),
                     onClick = {
                         viewModel.onEvent(TaskEvent.DeleteTask(uiState.task))
@@ -248,13 +252,14 @@ fun TaskDetailsContent(
     onFrequencyChange: (TaskFrequency) -> Unit,
     onFrequencyAmountChange: (Int) -> Unit,
     onComplete: (Boolean) -> Unit,
+    optionalContent: @Composable ColumnScope.() -> Unit = {}
 ) {
     val context = LocalContext.current
     Column(
         modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
             .padding(12.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -279,6 +284,9 @@ fun TaskDetailsContent(
                         else Modifier
                     )
             )
+            LaunchedEffect(focusRequester) {
+                focusRequester?.requestFocus()
+            }
         }
         Spacer(Modifier.height(12.dp))
         Column {
@@ -319,7 +327,7 @@ fun TaskDetailsContent(
         Spacer(Modifier.height(12.dp))
         Text(
             text = stringResource(R.string.priority),
-            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(Modifier.height(12.dp))
         PriorityTabRow(
@@ -338,7 +346,7 @@ fun TaskDetailsContent(
             Spacer(Modifier.width(4.dp))
             Text(
                 text = stringResource(R.string.due_date),
-                style = MaterialTheme.typography.body2
+                style = MaterialTheme.typography.bodyMedium
             )
         }
         AnimatedVisibility(dueDateExists) {
@@ -386,12 +394,12 @@ fun TaskDetailsContent(
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = stringResource(R.string.due_date),
-                            style = MaterialTheme.typography.body1
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
                     Text(
                         text = formattedDate,
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 Row(
@@ -404,7 +412,7 @@ fun TaskDetailsContent(
                     Spacer(Modifier.width(4.dp))
                     Text(
                         text = stringResource(R.string.recurring),
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 AnimatedVisibility(recurring) {
@@ -453,6 +461,7 @@ fun TaskDetailsContent(
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier.fillMaxWidth()
         )
+        optionalContent()
     }
 }
 
@@ -477,7 +486,9 @@ fun PriorityTabRow(
                 onClick = {
                     onChange(index.toPriority())
                 },
-                modifier = Modifier.background(it.color)
+                modifier = Modifier.background(it.color),
+                unselectedContentColor = Color.White.copy(alpha = 0.7f),
+                selectedContentColor = Color.White
             )
         }
     }
@@ -538,10 +549,11 @@ fun <T> DropDownItem(
                     onClick = {
                         onDismissRequest()
                         onItemSelected(item)
+                    },
+                    text = {
+                        Text(text = getText(item))
                     }
-                ) {
-                    Text(text = getText(item))
-                }
+                )
             }
         }
         Row(

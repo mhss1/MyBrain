@@ -8,10 +8,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -35,8 +36,10 @@ fun BookmarkSearchScreen(
 ) {
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
-    Scaffold(scaffoldState = scaffoldState) { paddingValues ->
+    val snackbarHostState = remember { SnackbarHostState() }
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -75,7 +78,7 @@ fun BookmarkSearchScreen(
                             },
                             onInvalidUrl = {
                                 scope.launch {
-                                    scaffoldState.snackbarHostState.showSnackbar(
+                                    snackbarHostState.showSnackbar(
                                         getString(R.string.invalid_url)
                                     )
                                 }
@@ -103,7 +106,7 @@ fun BookmarkSearchScreen(
                                 },
                                 onInvalidUrl = {
                                     scope.launch {
-                                        scaffoldState.snackbarHostState.showSnackbar(
+                                        snackbarHostState.showSnackbar(
                                             getString(R.string.invalid_url)
                                         )
                                     }

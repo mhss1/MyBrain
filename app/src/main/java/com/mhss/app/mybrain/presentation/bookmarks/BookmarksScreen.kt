@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import com.mhss.app.mybrain.app.getString
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookmarksScreen(
     navController: NavHostController,
@@ -38,20 +39,21 @@ fun BookmarksScreen(
 ) {
     val uiState = viewModel.uiState
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     var orderSettingsVisible by remember { mutableStateOf(false) }
     Scaffold(
-        scaffoldState = scaffoldState,
+        snackbarHost = { SnackbarHost(snackbarHostState)},
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.bookmarks),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         },
         floatingActionButton = {
@@ -61,7 +63,7 @@ fun BookmarksScreen(
                         Screen.BookmarkDetailScreen()
                     )
                 },
-                backgroundColor = MaterialTheme.colors.primary,
+                containerColor = MaterialTheme.colorScheme.primary,
             ) {
                 Icon(
                     modifier = Modifier.size(25.dp),
@@ -76,7 +78,9 @@ fun BookmarksScreen(
             NoBookmarksMessage()
         Column {
             Row(
-                Modifier.fillMaxWidth().padding(paddingValues),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(paddingValues),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -126,7 +130,7 @@ fun BookmarksScreen(
                             },
                             onInvalidUrl = {
                                 scope.launch {
-                                    scaffoldState.snackbarHostState.showSnackbar(
+                                    snackbarHostState.showSnackbar(
                                         getString(R.string.invalid_url)
                                     )
                                 }
@@ -155,12 +159,14 @@ fun BookmarksScreen(
                                 },
                                 onInvalidUrl = {
                                     scope.launch {
-                                        scaffoldState.snackbarHostState.showSnackbar(
+                                        snackbarHostState.showSnackbar(
                                             getString(R.string.invalid_url)
                                         )
                                     }
                                 },
-                                modifier = Modifier.animateItem().height(220.dp)
+                                modifier = Modifier
+                                    .animateItem()
+                                    .height(220.dp)
                             )
                         }
                     }
@@ -191,11 +197,11 @@ fun BookmarksSettingsSection(
         ItemView.GRID
     )
     Column(
-        Modifier.background(color = MaterialTheme.colors.background)
+        Modifier.background(color = MaterialTheme.colorScheme.background)
     ) {
         Text(
             text = stringResource(R.string.order_by),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 8.dp)
         )
         FlowRow(
@@ -212,11 +218,11 @@ fun BookmarksSettingsSection(
                                 )
                         }
                     )
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.body1)
+                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
-        Divider()
+        HorizontalDivider()
         FlowRow {
             orderTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -230,14 +236,14 @@ fun BookmarksSettingsSection(
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.body1)
+                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
-        Divider()
+        HorizontalDivider()
         Text(
             text = stringResource(R.string.view_as),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 8.dp, top = 8.dp)
         )
         FlowRow {
@@ -253,7 +259,7 @@ fun BookmarksSettingsSection(
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = stringResource(it.title), style = MaterialTheme.typography.body1)
+                    Text(text = stringResource(it.title), style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
@@ -270,7 +276,7 @@ fun NoBookmarksMessage() {
     ) {
         Text(
             text = stringResource(R.string.no_bookmarks_message),
-            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
             color = Color.Gray,
             textAlign = TextAlign.Center
         )

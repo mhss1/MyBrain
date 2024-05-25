@@ -7,15 +7,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -36,12 +38,15 @@ fun TasksDashboardWidget(
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
-        elevation = 8.dp,
+        elevation = CardDefaults.elevatedCardElevation(
+            8.dp
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        val isDark = !MaterialTheme.colors.isLight
+        // Workaround replacement to Material2 `isLight`
+        val isDark = MaterialTheme.colorScheme.background.luminance() <= 0.5
         Column(
             modifier = modifier
                 .clickable { onClick() }
@@ -54,7 +59,7 @@ fun TasksDashboardWidget(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(R.string.tasks), style = MaterialTheme.typography.body1)
+                Text(stringResource(R.string.tasks), style = MaterialTheme.typography.bodyLarge)
                 Icon(
                     painterResource(R.drawable.ic_add),
                     stringResource(R.string.add_event),
@@ -78,7 +83,7 @@ fun TasksDashboardWidget(
                     item {
                         Text(
                             text = stringResource(R.string.no_tasks_message),
-                            style = MaterialTheme.typography.body2,
+                            style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center
                         )
@@ -88,7 +93,7 @@ fun TasksDashboardWidget(
                         task = it,
                         onClick = { onTaskClick(it) },
                         onComplete = { onCheck(it.copy(isCompleted = !it.isCompleted)) },
-                        modifier = Modifier.animateItemPlacement()
+                        modifier = Modifier.animateItem()
                     )
                 }
             }
