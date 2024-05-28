@@ -1,7 +1,5 @@
 package com.mhss.app.mybrain.presentation.calendar
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -32,6 +30,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.Calendar
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
+import com.mhss.app.mybrain.presentation.common.DateTimeDialog
 import com.mhss.app.mybrain.util.calendar.*
 import com.mhss.app.mybrain.util.date.HOUR_MILLIS
 import com.mhss.app.mybrain.util.date.formatDate
@@ -183,10 +182,10 @@ fun CalendarEventDetailsScreen(
                 )
                 Spacer(Modifier.height(8.dp))
                 EventTimeSection(
-                    start = java.util.Calendar.getInstance().apply { timeInMillis = startDate },
-                    end = java.util.Calendar.getInstance().apply { timeInMillis = endDate },
-                    onStartDateSelected = { startDate = it.timeInMillis },
-                    onEndDateSelected = { endDate = it.timeInMillis },
+                    startMillis = startDate,
+                    endMillis = endDate,
+                    onStartDateSelected = { startDate = it },
+                    onEndDateSelected = { endDate = it },
                     allDay = allDay,
                     onAllDayChange = { allDay = it },
                     frequency = frequency,
@@ -338,16 +337,21 @@ fun CalendarChoiceSection(
 
 @Composable
 fun EventTimeSection(
-    start: java.util.Calendar,
-    end: java.util.Calendar,
-    onStartDateSelected: (java.util.Calendar) -> Unit,
-    onEndDateSelected: (java.util.Calendar) -> Unit,
+    startMillis: Long,
+    endMillis: Long,
+    onStartDateSelected: (Long) -> Unit,
+    onEndDateSelected: (Long) -> Unit,
     allDay: Boolean,
     onAllDayChange: (Boolean) -> Unit,
     frequency: String,
     onFrequencySelected: (String) -> Unit
 ) {
-    val context = LocalContext.current
+    var showStartDateDialog by remember {
+        mutableStateOf(false)
+    }
+    var showEndDateDialog by remember {
+        mutableStateOf(false)
+    }
     Column {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -377,66 +381,22 @@ fun EventTimeSection(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = start.timeInMillis.formatDate(),
+                text = startMillis.formatDate(),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
-                        showDatePicker(start, context) {
-                            val newEvent = java.util.Calendar
-                                .getInstance()
-                                .apply {
-                                    this[java.util.Calendar.YEAR] = it[java.util.Calendar.YEAR]
-                                    this[java.util.Calendar.MONTH] =
-                                        it[java.util.Calendar.MONTH]
-                                    this[java.util.Calendar.DAY_OF_MONTH] =
-                                        it[java.util.Calendar.DAY_OF_MONTH]
-
-                                    this[java.util.Calendar.HOUR_OF_DAY] =
-                                        start[java.util.Calendar.HOUR_OF_DAY]
-                                    this[java.util.Calendar.MINUTE] =
-                                        start[java.util.Calendar.MINUTE]
-                                }
-                            onStartDateSelected(
-                                newEvent
-                            )
-                            if (newEvent.timeInMillis > end.timeInMillis) {
-                                onEndDateSelected(newEvent.apply { timeInMillis += HOUR_MILLIS })
-                            }
-                        }
+                        showStartDateDialog = true
                     }
                     .padding(horizontal = 28.dp, vertical = 16.dp)
             )
             Text(
-                text = start.timeInMillis.formatTime(),
+                text = startMillis.formatTime(),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
-                        showTimePicker(start, context) {
-                            val newEvent = java.util.Calendar
-                                .getInstance()
-                                .apply {
-                                    this[java.util.Calendar.HOUR_OF_DAY] =
-                                        it[java.util.Calendar.HOUR_OF_DAY]
-                                    this[java.util.Calendar.MINUTE] =
-                                        it[java.util.Calendar.MINUTE]
-
-                                    this[java.util.Calendar.YEAR] =
-                                        start[java.util.Calendar.YEAR]
-                                    this[java.util.Calendar.MONTH] =
-                                        start[java.util.Calendar.MONTH]
-                                    this[java.util.Calendar.DAY_OF_MONTH] =
-                                        start[java.util.Calendar.DAY_OF_MONTH]
-                                }
-                            onStartDateSelected(
-                                newEvent
-                            )
-                            if (newEvent.timeInMillis > end.timeInMillis) {
-                                onEndDateSelected(newEvent.apply { timeInMillis += HOUR_MILLIS })
-                            }
-                        }
+                        showStartDateDialog = true
                     }
                     .padding(horizontal = 18.dp, vertical = 16.dp)
-
             )
         }
         Row(
@@ -445,66 +405,47 @@ fun EventTimeSection(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = end.timeInMillis.formatDate(),
+                text = endMillis.formatDate(),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
-                        showDatePicker(end, context) {
-                            val newEvent = java.util.Calendar
-                                .getInstance()
-                                .apply {
-                                    this[java.util.Calendar.YEAR] = it[java.util.Calendar.YEAR]
-                                    this[java.util.Calendar.MONTH] =
-                                        it[java.util.Calendar.MONTH]
-                                    this[java.util.Calendar.DAY_OF_MONTH] =
-                                        it[java.util.Calendar.DAY_OF_MONTH]
-
-                                    this[java.util.Calendar.HOUR_OF_DAY] =
-                                        end[java.util.Calendar.HOUR_OF_DAY]
-                                    this[java.util.Calendar.MINUTE] =
-                                        end[java.util.Calendar.MINUTE]
-                                }
-                            onEndDateSelected(
-                                newEvent
-                            )
-                            if (newEvent.timeInMillis < start.timeInMillis) {
-                                onStartDateSelected(newEvent.apply { timeInMillis -= HOUR_MILLIS })
-                            }
-                        }
+                        showEndDateDialog = true
                     }
                     .padding(horizontal = 28.dp, vertical = 16.dp)
             )
             Text(
-                text = end.timeInMillis.formatTime(),
+                text = endMillis.formatTime(),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
-                        showTimePicker(end, context) {
-                            val newEvent = java.util.Calendar
-                                .getInstance()
-                                .apply {
-                                    this[java.util.Calendar.HOUR_OF_DAY] =
-                                        it[java.util.Calendar.HOUR_OF_DAY]
-                                    this[java.util.Calendar.MINUTE] =
-                                        it[java.util.Calendar.MINUTE]
-
-                                    this[java.util.Calendar.YEAR] =
-                                        end[java.util.Calendar.YEAR]
-                                    this[java.util.Calendar.MONTH] =
-                                        end[java.util.Calendar.MONTH]
-                                    this[java.util.Calendar.DAY_OF_MONTH] =
-                                        end[java.util.Calendar.DAY_OF_MONTH]
-                                }
-                            onEndDateSelected(
-                                newEvent
-                            )
-                            if (newEvent.timeInMillis < start.timeInMillis) {
-                                onStartDateSelected(newEvent.apply { timeInMillis -= HOUR_MILLIS })
-                            }
-                        }
+                        showEndDateDialog = true
                     }
                     .padding(horizontal = 18.dp, vertical = 16.dp)
             )
+        }
+        if (showStartDateDialog) DateTimeDialog(
+            onDismissRequest = { showStartDateDialog = false },
+            initialDate = startMillis
+        ) {
+            onStartDateSelected(
+                it
+            )
+            if (it > endMillis) {
+                onEndDateSelected(endMillis + HOUR_MILLIS)
+            }
+            showStartDateDialog = false
+        }
+        if (showEndDateDialog) DateTimeDialog(
+            onDismissRequest = { showEndDateDialog = false },
+            initialDate = endMillis
+        ) {
+            onEndDateSelected(
+                it
+            )
+            if (it < startMillis) {
+                onStartDateSelected(it - HOUR_MILLIS)
+            }
+            showEndDateDialog = false
         }
         var openDialog by remember { mutableStateOf(false) }
         Row(
@@ -528,47 +469,6 @@ fun EventTimeSection(
             )
         }
     }
-}
-
-fun showDatePicker(
-    initialDate: java.util.Calendar,
-    context: Context,
-    onDateSelected: (java.util.Calendar) -> Unit
-) {
-    val tempDate = java.util.Calendar.getInstance()
-    val datePicker = DatePickerDialog(
-        context,
-        { _, year, month, day ->
-            tempDate[java.util.Calendar.YEAR] = year
-            tempDate[java.util.Calendar.MONTH] = month
-            tempDate[java.util.Calendar.DAY_OF_MONTH] = day
-            onDateSelected(tempDate)
-        },
-        initialDate[java.util.Calendar.YEAR],
-        initialDate[java.util.Calendar.MONTH],
-        initialDate[java.util.Calendar.DAY_OF_MONTH]
-    )
-    datePicker.show()
-}
-
-fun showTimePicker(
-    initialDate: java.util.Calendar,
-    context: Context,
-    onTimeSelected: (java.util.Calendar) -> Unit
-) {
-    val tempDate = java.util.Calendar.getInstance()
-    val timePicker = TimePickerDialog(
-        context,
-        { _, hour, minute ->
-            tempDate[java.util.Calendar.HOUR_OF_DAY] = hour
-            tempDate[java.util.Calendar.MINUTE] = minute
-            onTimeSelected(tempDate)
-        },
-        initialDate[java.util.Calendar.HOUR_OF_DAY],
-        initialDate[java.util.Calendar.MINUTE],
-        false
-    )
-    timePicker.show()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

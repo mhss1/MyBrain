@@ -1,8 +1,5 @@
 package com.mhss.app.mybrain.presentation.diary
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -17,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,11 +23,11 @@ import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
 import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.domain.model.diary.Mood
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.presentation.common.DateTimeDialog
 import com.mhss.app.mybrain.util.date.fullDate
 import com.mhss.app.mybrain.util.date.now
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import org.koin.androidx.compose.koinViewModel
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +44,6 @@ fun DiaryEntryDetailsScreen(
     val state = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
     var openDialog by rememberSaveable { mutableStateOf(false) }
-    val context = LocalContext.current
 
     var title by rememberSaveable { mutableStateOf(state.entry?.title ?: "") }
     var content by rememberSaveable { mutableStateOf(state.entry?.content ?: "") }
@@ -59,6 +54,9 @@ fun DiaryEntryDetailsScreen(
         )
     }
     val readingMode = state.readingMode
+    var showDateDialog by remember {
+        mutableStateOf(false)
+    }
 
     LaunchedEffect(state.entry) {
         if (state.entry != null && title.isBlank() && content.isBlank()) {
@@ -121,13 +119,7 @@ fun DiaryEntryDetailsScreen(
                         )
                     }
                     TextButton(onClick = {
-                        showDatePicker(
-                            Calendar.getInstance().apply { timeInMillis = date },
-                            context,
-                            onDateSelected = {
-                                date = it
-                            }
-                        )
+                        showDateDialog = true
                     }) {
                         Text(
                             text = date.fullDate(),
@@ -215,6 +207,13 @@ fun DiaryEntryDetailsScreen(
                         .padding(bottom = 8.dp)
                 )
             }
+        }
+        if (showDateDialog) DateTimeDialog(
+            onDismissRequest = { showDateDialog = false },
+            initialDate = date
+        ) {
+            date = it
+            showDateDialog = false
         }
         if (openDialog)
             AlertDialog(
@@ -314,34 +313,4 @@ private fun entryChanged(
             entry.content != newEntry.content ||
             entry.mood != newEntry.mood ||
             entry.createdDate != newEntry.createdDate
-}
-
-private fun showDatePicker(
-    date: Calendar,
-    context: Context,
-    onDateSelected: (Long) -> Unit
-) {
-
-    val tempDate = Calendar.getInstance()
-    val timePicker = TimePickerDialog(
-        context,
-        { _, hour, minute ->
-            tempDate[Calendar.HOUR_OF_DAY] = hour
-            tempDate[Calendar.MINUTE] = minute
-            onDateSelected(tempDate.timeInMillis)
-        }, date[Calendar.HOUR_OF_DAY], date[Calendar.MINUTE], false
-    )
-    val datePicker = DatePickerDialog(
-        context,
-        { _, year, month, day ->
-            tempDate[Calendar.YEAR] = year
-            tempDate[Calendar.MONTH] = month
-            tempDate[Calendar.DAY_OF_MONTH] = day
-            timePicker.show()
-        },
-        date[Calendar.YEAR],
-        date[Calendar.MONTH],
-        date[Calendar.DAY_OF_MONTH]
-    )
-    datePicker.show()
 }
