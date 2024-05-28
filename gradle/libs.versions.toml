@@ -3,6 +3,7 @@ accompanist = "0.23.1"
 activityCompose = "1.9.0"
 appcompat = "1.6.1"
 biometric = "1.2.0-alpha05"
+calf = "0.4.0"
 composeBom = "2024.05.00"
 composeMarkdown = "0.5.0"
 coreKtx = "1.13.1"
@@ -65,6 +66,7 @@ koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKSP" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uui" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime"}
+calf-file-picker = { module = "com.mohamedrejeb.calf:calf-file-picker", version.ref = "calf" }
 
 
 [plugins]

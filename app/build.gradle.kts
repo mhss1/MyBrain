@@ -136,6 +136,9 @@ dependencies {
 
     //Kotlinx datetime
     implementation(libs.kotlinx.datetime)
+
+    //Calf
+    implementation(libs.calf.file.picker)
 }
 
 ksp {

@@ -1,7 +1,5 @@
 package com.mhss.app.mybrain.presentation.settings
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
+import com.mohamedrejeb.calf.core.LocalPlatformContext
+import com.mohamedrejeb.calf.io.getPath
+import com.mohamedrejeb.calf.picker.FilePickerFileType
+import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
+import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,18 +34,23 @@ fun ImportExportScreen(
     val password by remember {
         mutableStateOf("")
     }
-    val pickFileLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.OpenDocument()
-    ) { uri ->
-        uri?.let {
-            viewModel.onEvent(SettingsEvent.ImportData(it.toString(), encrypted, password))
+    val kmpContext = LocalPlatformContext.current
+    val pickFileLauncher = rememberFilePickerLauncher(
+        FilePickerFileType.Custom(
+            listOf("application/json")
+        ),
+        selectionMode = FilePickerSelectionMode.Single
+    ) { files ->
+        files.firstOrNull()?.getPath(kmpContext)?.let {
+            viewModel.onEvent(SettingsEvent.ImportData(it, encrypted, password))
         }
     }
-    val chooseDirectoryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.OpenDocumentTree()
-    ) { uri ->
-        uri?.let {
-            viewModel.onEvent(SettingsEvent.ExportData(it.toString(), encrypted, password))
+    val chooseDirectoryLauncher = rememberFilePickerLauncher(
+        FilePickerFileType.Folder,
+        selectionMode = FilePickerSelectionMode.Single
+    ) { files ->
+        files.firstOrNull()?.getPath(kmpContext)?.let {
+            viewModel.onEvent(SettingsEvent.ExportData(it, encrypted, password))
         }
     }
     val backupResult by viewModel.backupResult.collectAsState()
@@ -92,7 +100,7 @@ fun ImportExportScreen(
 //            }
             Button(
                 onClick = {
-                    chooseDirectoryLauncher.launch(null)
+                    chooseDirectoryLauncher.launch()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -135,7 +143,7 @@ fun ImportExportScreen(
 
             Button(
                 onClick = {
-                    pickFileLauncher.launch(arrayOf("application/*"))
+                    pickFileLauncher.launch()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
