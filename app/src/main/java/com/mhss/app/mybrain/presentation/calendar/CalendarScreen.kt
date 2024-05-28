@@ -27,7 +27,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.Calendar
 import com.mhss.app.mybrain.presentation.navigation.Screen
@@ -86,7 +88,7 @@ fun CalendarScreen(
             )
         },
         floatingActionButton = {
-            if (readCalendarPermissionState.hasPermission) FloatingActionButton(
+            if (readCalendarPermissionState.status.isGranted) FloatingActionButton(
                 onClick = {
                     navController.navigate(
                         Screen.CalendarEventDetailsScreen(
@@ -112,11 +114,11 @@ fun CalendarScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (readCalendarPermissionState.hasPermission) {
+            if (readCalendarPermissionState.status.isGranted) {
                 LaunchedEffect(true) {
                     viewModel.onEvent(
                         CalendarViewModelEvent
-                            .ReadPermissionChanged(readCalendarPermissionState.hasPermission)
+                            .ReadPermissionChanged(readCalendarPermissionState.status.isGranted)
                     )
                 }
                 Row(
@@ -169,7 +171,7 @@ fun CalendarScreen(
                 }
             } else {
                 NoReadCalendarPermissionMessage(
-                    shouldShowRationale = readCalendarPermissionState.shouldShowRationale,
+                    shouldShowRationale = readCalendarPermissionState.status.shouldShowRationale,
                     context
                 ) {
                     readCalendarPermissionState.launchPermissionRequest()

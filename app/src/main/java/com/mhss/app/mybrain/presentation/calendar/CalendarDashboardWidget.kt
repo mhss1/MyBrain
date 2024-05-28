@@ -19,7 +19,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.ui.theme.LightGray
@@ -82,7 +84,7 @@ fun CalendarDashboardWidget(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (readCalendarPermissionState.hasPermission) {
+                if (readCalendarPermissionState.status.isGranted) {
                     if (events.isEmpty()) {
                         item {
                             LaunchedEffect(true) { onPermission(true) }
@@ -116,7 +118,7 @@ fun CalendarDashboardWidget(
                     item {
                         LaunchedEffect(true) { onPermission(false) }
                         NoReadCalendarPermissionMessage(
-                            shouldShowRationale = readCalendarPermissionState.shouldShowRationale,
+                            shouldShowRationale = readCalendarPermissionState.status.shouldShowRationale,
                             context
                         ) {
                             readCalendarPermissionState.launchPermissionRequest()

@@ -26,7 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.Calendar
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
@@ -97,7 +99,7 @@ fun CalendarEventDetailsScreen(
     var allDay by rememberSaveable { mutableStateOf(event?.allDay ?: false) }
     var location by rememberSaveable { mutableStateOf(event?.location ?: "") }
     val snackbarHostState = remember { SnackbarHostState() }
-    if (writeCalendarPermissionState.hasPermission) {
+    if (writeCalendarPermissionState.status.isGranted) {
         LaunchedEffect(true) { viewModel.onEvent(CalendarViewModelEvent.ReadPermissionChanged(true)) }
         LaunchedEffect(state) {
             if (state.navigateUp) {
@@ -219,7 +221,7 @@ fun CalendarEventDetailsScreen(
     } else {
         LaunchedEffect(true) { viewModel.onEvent(CalendarViewModelEvent.ReadPermissionChanged(false)) }
         NoWriteCalendarPermissionMessage(
-            shouldShowRationale = writeCalendarPermissionState.shouldShowRationale,
+            shouldShowRationale = writeCalendarPermissionState.status.shouldShowRationale,
             context = context
         ) {
             writeCalendarPermissionState.launchPermissionRequest()

@@ -1,5 +1,5 @@
 [versions]
-accompanist = "0.23.1"
+accompanist = "0.34.0"
 activityCompose = "1.9.0"
 appcompat = "1.6.1"
 biometric = "1.2.0-alpha05"
