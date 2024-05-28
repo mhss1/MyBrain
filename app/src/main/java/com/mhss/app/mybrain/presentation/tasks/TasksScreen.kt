@@ -30,8 +30,6 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
-import com.mohamedrejeb.calf.ui.sheet.AdaptiveBottomSheet
-import com.mohamedrejeb.calf.ui.sheet.rememberAdaptiveSheetState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -48,7 +46,7 @@ fun TasksScreen(
     val focusRequester = remember { FocusRequester() }
     val uiState = viewModel.tasksUiState
     val snackbarHostState = remember { SnackbarHostState() }
-    val sheetState = rememberAdaptiveSheetState(
+    val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
     var openSheet by remember {
@@ -94,8 +92,8 @@ fun TasksScreen(
             }
         },
     ) { paddingValues ->
-        if (openSheet) AdaptiveBottomSheet(
-            adaptiveSheetState = sheetState,
+        if (openSheet) ModalBottomSheet(
+            sheetState = sheetState,
             onDismissRequest = { openSheet = false }
         ) {
             AddTaskBottomSheetContent(

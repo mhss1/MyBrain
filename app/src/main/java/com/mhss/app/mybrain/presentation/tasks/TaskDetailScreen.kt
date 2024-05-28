@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.tasks.SubTask
 import com.mhss.app.mybrain.domain.model.tasks.Task
+import com.mhss.app.mybrain.presentation.common.DateTimeDialog
 import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.settings.TaskFrequency
@@ -254,7 +255,6 @@ fun TaskDetailsContent(
     onComplete: (Boolean) -> Unit,
     optionalContent: @Composable ColumnScope.() -> Unit = {}
 ) {
-    val context = LocalContext.current
     Column(
         modifier
             .fillMaxWidth()
@@ -349,38 +349,23 @@ fun TaskDetailsContent(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
+        var showDateDialog by remember {
+            mutableStateOf(false)
+        }
         AnimatedVisibility(dueDateExists) {
+            if (showDateDialog) DateTimeDialog(
+                onDismissRequest = { showDateDialog = false },
+                initialDate = dueDate
+            ) {
+                onDueDateChange(it)
+                showDateDialog = false
+            }
             Column {
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .clickable {
-                            val date =
-                                if (dueDate == 0L) Calendar.getInstance() else Calendar
-                                    .getInstance()
-                                    .apply { timeInMillis = dueDate }
-                            val tempDate = Calendar.getInstance()
-                            val timePicker = TimePickerDialog(
-                                context,
-                                { _, hour, minute ->
-                                    tempDate[Calendar.HOUR_OF_DAY] = hour
-                                    tempDate[Calendar.MINUTE] = minute
-                                    onDueDateChange(tempDate.timeInMillis)
-                                }, date[Calendar.HOUR_OF_DAY], date[Calendar.MINUTE], false
-                            )
-                            val datePicker = DatePickerDialog(
-                                context,
-                                { _, year, month, day ->
-                                    tempDate[Calendar.YEAR] = year
-                                    tempDate[Calendar.MONTH] = month
-                                    tempDate[Calendar.DAY_OF_MONTH] = day
-                                    timePicker.show()
-                                },
-                                date[Calendar.YEAR],
-                                date[Calendar.MONTH],
-                                date[Calendar.DAY_OF_MONTH]
-                            )
-                            datePicker.show()
+                            showDateDialog = true
                         }
                         .padding(vertical = 8.dp, horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
