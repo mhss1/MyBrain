@@ -203,7 +203,7 @@ fun NotesScreen(
                                                 "${note.id}"
                                             ).replace(
                                                 "{${Constants.FOLDER_ID}}",
-                                                ""
+                                                "-1"
                                             )
                                         )
                                     },
