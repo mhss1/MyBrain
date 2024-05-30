@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.mybrain.presentation.main.components.MainBottomBar
 import com.mhss.app.mybrain.presentation.main.components.NavigationGraph
 import com.mhss.app.mybrain.presentation.main.components.BottomNavItem
@@ -16,7 +17,8 @@ import com.mhss.app.mybrain.presentation.navigation.Screen
 @Composable
 fun MainScreen(
     startUpScreen: Screen,
-    mainNavController: NavHostController
+    mainNavController: NavHostController,
+    appLockManager: AppLockManager
 ) {
     val navController = rememberNavController()
     val bottomNavItems =
@@ -30,7 +32,8 @@ fun MainScreen(
             modifier = Modifier.padding(paddingValues),
             navController = navController,
             mainNavController = mainNavController,
-            startUpScreen = startUpScreen
+            startUpScreen = startUpScreen,
+            appLockManager
         )
     }
 }
