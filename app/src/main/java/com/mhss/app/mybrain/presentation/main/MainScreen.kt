@@ -1,8 +1,10 @@
 package com.mhss.app.mybrain.presentation.main
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mhss.app.mybrain.presentation.main.components.MainBottomBar
@@ -23,8 +25,9 @@ fun MainScreen(
         bottomBar = {
             MainBottomBar(navController = navController, items = bottomNavItems)
         }
-    ) {  _ ->
+    ) {  paddingValues ->
         NavigationGraph(
+            modifier = Modifier.padding(paddingValues),
             navController = navController,
             mainNavController = mainNavController,
             startUpScreen = startUpScreen

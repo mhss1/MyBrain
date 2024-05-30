@@ -2,7 +2,6 @@ package com.mhss.app.mybrain.presentation.main
 
 import android.content.Context
 import android.content.ContextWrapper
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,6 +32,7 @@ import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.*
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +41,12 @@ fun SettingsScreen(
     navController: NavHostController,
     viewModel: SettingsViewModel = koinViewModel()
 ) {
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+    val scope = rememberCoroutineScope()
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -167,11 +172,11 @@ fun SettingsScreen(
                             it
                         )
                     } else {
-                        Toast.makeText(
-                            context, getString(
-                                R.string.no_auth_method
-                            ), Toast.LENGTH_SHORT
-                        ).show()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                getString(R.string.no_auth_method)
+                            )
+                        }
                     }
                 }
             }
