@@ -1,7 +1,5 @@
 package com.mhss.app.mybrain.presentation.bookmarks
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +25,7 @@ fun BookmarkItem(
     onClick: (Bookmark) -> Unit,
     onInvalidUrl: () -> Unit
 ) {
+    val uriHandler = LocalUriHandler.current
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
@@ -34,7 +33,6 @@ fun BookmarkItem(
             8.dp
         )
     ) {
-        val context = LocalContext.current
         Column(
             modifier = Modifier
                 .clickable { onClick(bookmark) }
@@ -61,9 +59,9 @@ fun BookmarkItem(
             IconButton(
                 onClick = {
                     if (bookmark.url.isValidUrl()){
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(if (!bookmark.url.startsWith("http://") && !bookmark.url.startsWith("https://")) "http://${bookmark.url}" else bookmark.url)
-                        context.startActivity(intent)
+                        uriHandler.openUri(
+                            if (!bookmark.url.startsWith("https://") && !bookmark.url.startsWith("http://")) "http://${bookmark.url}" else bookmark.url
+                        )
                     } else
                         onInvalidUrl()
                 },

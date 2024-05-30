@@ -1,7 +1,5 @@
 package com.mhss.app.mybrain.presentation.settings
 
-import android.content.Intent
-import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
@@ -14,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,13 +28,12 @@ fun SettingsBasicLinkItem(
     onClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
     SettingsItemCard(
         cornerRadius = 16.dp,
         onClick = {
             if (link.isNotBlank()) {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(link)
-                context.startActivity(intent)
+                uriHandler.openUri(link)
             } else onClick()
         }
     ) {

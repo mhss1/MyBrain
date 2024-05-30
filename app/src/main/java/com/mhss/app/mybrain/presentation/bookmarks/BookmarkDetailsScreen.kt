@@ -1,7 +1,5 @@
 package com.mhss.app.mybrain.presentation.bookmarks
 
-import android.content.Intent
-import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,10 +32,10 @@ fun BookmarkDetailsScreen(
             viewModel.onEvent(BookmarkEvent.GetBookmark(bookmarkId))
         }
     }
+    val uriHandler = LocalUriHandler.current
     val state = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
     var openDialog by rememberSaveable { mutableStateOf(false) }
-    val context = LocalContext.current
 
     var title by rememberSaveable { mutableStateOf(state.bookmark?.title ?: "") }
     var description by rememberSaveable { mutableStateOf(state.bookmark?.description ?: "") }
@@ -115,9 +113,7 @@ fun BookmarkDetailsScreen(
                     }
                     if (url.isValidUrl())
                         IconButton(onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW)
-                            intent.data = Uri.parse(if (!url.startsWith("http://") && !url.startsWith("https://")) "http://$url" else url)
-                            context.startActivity(intent)
+                            uriHandler.openUri(if (!url.startsWith("https://") && !url.startsWith("http://")) "http://$url" else url)
                         }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_open_link),
