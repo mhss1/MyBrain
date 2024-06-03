@@ -22,7 +22,7 @@ val Long.localDateTime
 
 fun Long.formatDateDependingOnDay(): String {
     val localDT = localDateTime
-    val hourPatternString = if (is24Hour()) "H:mm" else "h:mm a"
+    val hourPatternString = if (is24Hour) "H:mm" else "h:mm a"
     val datePattern = if (localDT.isToday()) {
         hourPatternString
     } else "MMM dd,yyyy $hourPatternString"
@@ -34,7 +34,7 @@ fun Long.formatDateDependingOnDay(): String {
 
 fun Long.fullDate(): String {
     val localDT = localDateTime
-    val hourPattern = if (is24Hour()) "H:mm" else "h:mm a"
+    val hourPattern = if (is24Hour) "H:mm" else "h:mm a"
     return DateTimeFormatter
         .ofPattern("MMM dd,yyyy $hourPattern", Locale.getDefault())
         .format(localDT.toJavaLocalDateTime())
@@ -47,9 +47,8 @@ fun Long.formatDateForMapping(): String {
 }
 
 fun Long.formatTime(): String {
-    val is24 = is24Hour()
     val minutes = this % HOUR_MILLIS
-    val pattern = if (is24) {
+    val pattern = if (is24Hour) {
         "H:mm"
     } else {
         if (minutes == 0L) "h a" else "h:mm a"
@@ -127,6 +126,8 @@ fun LocalDateTime.isToday(): Boolean {
             && today.dayOfMonth == dayOfMonth
 }
 
-fun is24Hour() = DateFormat.is24HourFormat(appContext)
+private val is24Hour by lazy {
+    DateFormat.is24HourFormat(appContext)
+}
 
 const val HOUR_MILLIS = 60 * 60 * 1000L
