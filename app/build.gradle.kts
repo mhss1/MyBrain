@@ -100,9 +100,6 @@ dependencies {
     // Preferences DataStore
     implementation(libs.androidx.datastore.preferences)
 
-    // Accompanist libraries
-    implementation(libs.accompanist.permissions)
-
     // Compose MarkDown
     implementation(libs.compose.markdown)
 

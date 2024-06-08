@@ -25,10 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.Calendar
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
@@ -38,10 +34,12 @@ import com.mhss.app.mybrain.util.date.HOUR_MILLIS
 import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.date.formatTime
 import com.mhss.app.mybrain.util.date.now
+import com.mhss.app.mybrain.util.permissions.Permission
+import com.mhss.app.mybrain.util.permissions.rememberPermissionState
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarEventDetailsScreen(
     navController: NavHostController,
@@ -50,7 +48,7 @@ fun CalendarEventDetailsScreen(
 ) {
     val state = viewModel.uiState
     val writeCalendarPermissionState = rememberPermissionState(
-        permission = android.Manifest.permission.WRITE_CALENDAR
+        Permission.WRITE_CALENDAR
     )
     var openDeleteDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
@@ -99,7 +97,7 @@ fun CalendarEventDetailsScreen(
     var allDay by rememberSaveable { mutableStateOf(event?.allDay ?: false) }
     var location by rememberSaveable { mutableStateOf(event?.location ?: "") }
     val snackbarHostState = remember { SnackbarHostState() }
-    if (writeCalendarPermissionState.status.isGranted) {
+    if (writeCalendarPermissionState.isGranted) {
         LaunchedEffect(true) { viewModel.onEvent(CalendarViewModelEvent.ReadPermissionChanged(true)) }
         LaunchedEffect(state) {
             if (state.navigateUp) {
@@ -221,10 +219,10 @@ fun CalendarEventDetailsScreen(
     } else {
         LaunchedEffect(true) { viewModel.onEvent(CalendarViewModelEvent.ReadPermissionChanged(false)) }
         NoWriteCalendarPermissionMessage(
-            shouldShowRationale = writeCalendarPermissionState.status.shouldShowRationale,
+            shouldShowRationale = writeCalendarPermissionState.shouldShowRationale,
             context = context
         ) {
-            writeCalendarPermissionState.launchPermissionRequest()
+            writeCalendarPermissionState.launchRequest()
         }
     }
 }

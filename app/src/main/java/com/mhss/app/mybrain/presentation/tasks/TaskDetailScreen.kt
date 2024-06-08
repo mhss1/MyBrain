@@ -1,9 +1,6 @@
 package com.mhss.app.mybrain.presentation.tasks
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -38,6 +35,8 @@ import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.presentation.common.DateTimeDialog
 import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
+import com.mhss.app.mybrain.util.permissions.Permission
+import com.mhss.app.mybrain.util.permissions.rememberPermissionState
 import com.mhss.app.mybrain.util.settings.TaskFrequency
 import com.mhss.app.mybrain.util.settings.Priority
 import com.mhss.app.mybrain.util.settings.toTaskFrequency
@@ -57,6 +56,7 @@ fun TaskDetailScreen(
     LaunchedEffect(true) {
         viewModel.onEvent(TaskEvent.GetTask(taskId))
     }
+    val alarmPermissionState = rememberPermissionState(Permission.SCHEDULE_ALARMS)
     val uiState = viewModel.taskDetailsUiState
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -105,11 +105,7 @@ fun TaskDetailScreen(
                 if (uiState.errorAlarm) context.getString(R.string.grant_permission) else null
             )
             if (snackbarResult == SnackbarResult.ActionPerformed) {
-                Intent().also { intent ->
-                    intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-                    intent.data = Uri.parse("package:" + context.applicationContext.packageName)
-                    context.startActivity(intent)
-                }
+                alarmPermissionState.launchRequest()
             }
             viewModel.onEvent(TaskEvent.ErrorDisplayed)
         }

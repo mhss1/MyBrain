@@ -3,9 +3,6 @@
 package com.mhss.app.mybrain.presentation.tasks
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -28,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.navigation.Screen
+import com.mhss.app.mybrain.util.permissions.Permission
+import com.mhss.app.mybrain.util.permissions.rememberPermissionState
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
 import kotlinx.coroutines.launch
@@ -52,6 +51,7 @@ fun TasksScreen(
     var openSheet by remember {
         mutableStateOf(false)
     }
+    val alarmPermissionState = rememberPermissionState(Permission.SCHEDULE_ALARMS)
     val scope = rememberCoroutineScope()
     BackHandler {
         if (openSheet)
@@ -116,12 +116,7 @@ fun TasksScreen(
                     if (uiState.errorAlarm) context.getString(R.string.grant_permission) else null
                 )
                 if (snackbarResult == SnackbarResult.ActionPerformed) {
-                    Intent().also { intent ->
-                        intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-                        intent.data =
-                            Uri.parse("package:" + context.applicationContext.packageName)
-                        context.startActivity(intent)
-                    }
+                    alarmPermissionState.launchRequest()
                 }
                 viewModel.onEvent(TaskEvent.ErrorDisplayed)
             }

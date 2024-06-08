@@ -1,11 +1,7 @@
-@file:OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.mhss.app.mybrain.presentation.calendar
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -19,21 +15,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.Calendar
 import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.date.*
+import com.mhss.app.mybrain.util.permissions.Permission
+import com.mhss.app.mybrain.util.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -45,11 +38,10 @@ fun CalendarScreen(
     viewModel: CalendarViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState
-    val context = LocalContext.current
     val lazyListState = rememberLazyListState()
     var settingsVisible by remember { mutableStateOf(false) }
     val readCalendarPermissionState = rememberPermissionState(
-        android.Manifest.permission.READ_CALENDAR
+        permission = Permission.READ_CALENDAR
     )
     val month by remember(state.events) {
         derivedStateOf {
@@ -88,7 +80,7 @@ fun CalendarScreen(
             )
         },
         floatingActionButton = {
-            if (readCalendarPermissionState.status.isGranted) FloatingActionButton(
+            if (readCalendarPermissionState.isGranted) FloatingActionButton(
                 onClick = {
                     navController.navigate(
                         Screen.CalendarEventDetailsScreen(
@@ -114,11 +106,11 @@ fun CalendarScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (readCalendarPermissionState.status.isGranted) {
+            if (readCalendarPermissionState.isGranted) {
                 LaunchedEffect(true) {
                     viewModel.onEvent(
                         CalendarViewModelEvent
-                            .ReadPermissionChanged(readCalendarPermissionState.status.isGranted)
+                            .ReadPermissionChanged(readCalendarPermissionState.isGranted)
                     )
                 }
                 Row(
@@ -171,11 +163,14 @@ fun CalendarScreen(
                 }
             } else {
                 NoReadCalendarPermissionMessage(
-                    shouldShowRationale = readCalendarPermissionState.status.shouldShowRationale,
-                    context
-                ) {
-                    readCalendarPermissionState.launchPermissionRequest()
-                }
+                    shouldShowRationale = readCalendarPermissionState.shouldShowRationale,
+                    onOpenSettings = {
+                        readCalendarPermissionState.openAppSettings()
+                    },
+                    onRequest = {
+                        readCalendarPermissionState.launchRequest()
+                    }
+                )
             }
         }
     }
@@ -185,7 +180,7 @@ fun CalendarScreen(
 @Composable
 fun NoReadCalendarPermissionMessage(
     shouldShowRationale: Boolean,
-    context: Context,
+    onOpenSettings: () -> Unit,
     onRequest: () -> Unit
 ) {
     Column(
@@ -198,11 +193,7 @@ fun NoReadCalendarPermissionMessage(
         )
         Spacer(Modifier.height(12.dp))
         if (shouldShowRationale) {
-            TextButton(onClick = {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                intent.data = Uri.fromParts("package", context.packageName, null)
-                context.startActivity(intent)
-            }) {
+            TextButton(onClick = onOpenSettings) {
                 Text(text = stringResource(R.string.go_to_settings))
             }
 
