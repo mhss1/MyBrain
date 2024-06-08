@@ -1,9 +1,5 @@
 package com.mhss.app.mybrain.presentation.calendar
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -51,7 +46,6 @@ fun CalendarEventDetailsScreen(
         Permission.WRITE_CALENDAR
     )
     var openDeleteDialog by rememberSaveable { mutableStateOf(false) }
-    val context = LocalContext.current
     val event by remember {
         mutableStateOf(
             eventJson?.let {
@@ -220,18 +214,21 @@ fun CalendarEventDetailsScreen(
         LaunchedEffect(true) { viewModel.onEvent(CalendarViewModelEvent.ReadPermissionChanged(false)) }
         NoWriteCalendarPermissionMessage(
             shouldShowRationale = writeCalendarPermissionState.shouldShowRationale,
-            context = context
-        ) {
-            writeCalendarPermissionState.launchRequest()
-        }
+            onOpenSettings = {
+                writeCalendarPermissionState.openAppSettings()
+            },
+            onRequest = {
+                writeCalendarPermissionState.launchRequest()
+            }
+        )
     }
 }
 
 @Composable
 fun NoWriteCalendarPermissionMessage(
     shouldShowRationale: Boolean,
-    context: Context,
-    onRequest: () -> Unit
+    onRequest: () -> Unit,
+    onOpenSettings: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -245,11 +242,7 @@ fun NoWriteCalendarPermissionMessage(
         )
         Spacer(Modifier.height(12.dp))
         if (shouldShowRationale) {
-            TextButton(onClick = {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                intent.data = Uri.fromParts("package", context.packageName, null)
-                context.startActivity(intent)
-            }) {
+            TextButton(onClick = onOpenSettings) {
                 Text(text = stringResource(R.string.go_to_settings))
             }
 

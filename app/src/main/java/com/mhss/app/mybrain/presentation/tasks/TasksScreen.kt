@@ -2,7 +2,6 @@
 
 package com.mhss.app.mybrain.presentation.tasks
 
-import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -33,7 +32,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("InlinedApi")
 @Composable
 fun TasksScreen(
     navController: NavHostController,

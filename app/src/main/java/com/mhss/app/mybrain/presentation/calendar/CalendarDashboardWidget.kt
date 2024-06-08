@@ -114,10 +114,10 @@ fun CalendarDashboardWidget(
                         NoReadCalendarPermissionMessage(
                             shouldShowRationale = false,
                             onOpenSettings = {
-//                                readCalPermissionState.openAppSettings()
+                                readCalendarPermissionState.openAppSettings()
                             },
                             onRequest = {
-//                                readCalPermissionState.launchRequest()
+                                readCalendarPermissionState.launchRequest()
                             }
                         )
                     }

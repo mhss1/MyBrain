@@ -1,6 +1,5 @@
 package com.mhss.app.mybrain.presentation.tasks
 
-import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -46,7 +45,6 @@ import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("InlinedApi")
 @Composable
 fun TaskDetailScreen(
     navController: NavHostController,
