@@ -1,8 +1,9 @@
 package com.mhss.app.mybrain.presentation.main
 
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -127,7 +128,9 @@ fun MyBrainApp(
             NavHost(
                 startDestination = Screen.Main,
                 navController = navController,
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(
+                    top = paddingValues.calculateTopPadding()
+                ).consumeWindowInsets(paddingValues)
             ) {
                 composable<Screen.Main> {
                     MainScreen(

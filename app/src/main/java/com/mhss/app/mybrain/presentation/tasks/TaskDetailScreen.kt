@@ -32,7 +32,6 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.tasks.SubTask
 import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.presentation.common.DateTimeDialog
-import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.permissions.Permission
 import com.mhss.app.mybrain.util.permissions.rememberPermissionState
@@ -91,7 +90,7 @@ fun TaskDetailScreen(
     LaunchedEffect(uiState) {
         if (uiState.navigateUp) {
             openDialog = false
-            navController.popBackStack<Screen.TaskSearchScreen>(false)
+            navController.navigateUp()
             navController.navigateUp()
         }
         if (uiState.error != null) {
@@ -119,7 +118,7 @@ fun TaskDetailScreen(
                 frequencyAmount = frequencyAmount
             ),
             {
-                navController.popBackStack(Screen.TaskSearchScreen, false)
+                navController.navigateUp()
                 navController.navigateUp()
             }
         ) {
@@ -139,7 +138,7 @@ fun TaskDetailScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
             )

@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.mhss.app.mybrain.domain.model.notes.Note
-import com.mhss.app.mybrain.domain.model.notes.NoteFolder
 import kotlinx.serialization.Serializable
 
 @Entity(

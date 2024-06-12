@@ -55,7 +55,7 @@ fun TasksScreen(
         if (openSheet)
             openSheet = false
         else
-            navController.popBackStack()
+            navController.navigateUp()
     }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -67,7 +67,7 @@ fun TasksScreen(
                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 )
             )

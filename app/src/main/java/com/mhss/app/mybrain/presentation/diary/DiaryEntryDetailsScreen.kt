@@ -20,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
-import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.domain.model.diary.Mood
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.common.DateTimeDialog
@@ -69,7 +68,7 @@ fun DiaryEntryDetailsScreen(
     LaunchedEffect(state) {
         if (state.navigateUp) {
             openDialog = false
-            navController.popBackStack<Screen.DiaryScreen>(inclusive = false)
+            navController.navigateUp()
         }
         if (state.error != null) {
             snackbarHostState.showSnackbar(
@@ -92,9 +91,9 @@ fun DiaryEntryDetailsScreen(
                     entry
                 )
             ) viewModel.onEvent(DiaryEvent.UpdateEntry(entry))
-            else navController.popBackStack<Screen.DiaryScreen>(inclusive = false)
+            else navController.navigateUp()
         } else
-            navController.popBackStack<Screen.DiaryScreen>(inclusive = false)
+            navController.navigateUp()
     }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -128,7 +127,7 @@ fun DiaryEntryDetailsScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
                 )
             )

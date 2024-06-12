@@ -109,7 +109,7 @@ fun CalendarEventDetailsScreen(
             topBar = {
                 if (event != null) TopAppBar(
                     title = {},
-                    colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.background,
                     ),
                     actions = {

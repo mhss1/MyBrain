@@ -60,7 +60,7 @@ fun NoteFolderDetailsScreen(
     LaunchedEffect(true) { viewModel.onEvent(NoteEvent.GetFolderNotes(id)) }
     LaunchedEffect(uiState) {
         if (viewModel.notesUiState.navigateUp) {
-            navController.popBackStack<Screen.NotesScreen>(inclusive = false)
+            navController.navigateUp()
         }
         if (uiState.error != null) {
             snackbarHostState.showSnackbar(
@@ -87,7 +87,7 @@ fun NoteFolderDetailsScreen(
                         Icon(Icons.Default.Edit, stringResource(R.string.delete_folder))
                     }
                 },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 )
             )

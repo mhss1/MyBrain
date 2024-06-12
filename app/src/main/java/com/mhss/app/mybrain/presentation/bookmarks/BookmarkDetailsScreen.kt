@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
-import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 import org.koin.androidx.compose.koinViewModel
 
@@ -51,7 +50,7 @@ fun BookmarkDetailsScreen(
     LaunchedEffect(state) {
         if (state.navigateUp) {
             openDialog = false
-            navController.popBackStack<Screen.BookmarksScreen>(inclusive = false)
+            navController.navigateUp()
         }
         if (state.error != null) {
             snackbarHostState.showSnackbar(
@@ -69,9 +68,7 @@ fun BookmarkDetailsScreen(
             ),
             state.bookmark,
             onNotChanged = {
-                navController.popBackStack<Screen.BookmarksScreen>(
-                    inclusive = false
-                )
+                navController.navigateUp()
             },
             onUpdate = {
                 if (state.bookmark != null) {
@@ -122,7 +119,7 @@ fun BookmarkDetailsScreen(
                             )
                         }
                 },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
                 )
             )
@@ -162,9 +159,7 @@ fun BookmarkDetailsScreen(
                 onClick = {
                     if (state.bookmark != null)
                         url = state.bookmark.url
-                    else navController.popBackStack<Screen.BookmarksScreen>(
-                        inclusive = false
-                    )
+                    else navController.navigateUp()
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {
