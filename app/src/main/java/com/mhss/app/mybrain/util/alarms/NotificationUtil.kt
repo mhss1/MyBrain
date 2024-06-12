@@ -13,7 +13,6 @@ import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.presentation.main.MainActivity
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.settings.Priority
-import com.mhss.app.mybrain.util.settings.toInt
 
 fun NotificationManager.sendNotification(task: Task, context: Context, id: Int) {
     val completeIntent = Intent(context, TaskActionButtonBroadcastReceiver::class.java).apply {
@@ -46,10 +45,9 @@ fun NotificationManager.sendNotification(task: Task, context: Context, id: Int) 
         .setContentIntent(taskDetailsPendingIntent)
         .setPriority(
             when (task.priority) {
-                Priority.LOW.toInt() -> NotificationCompat.PRIORITY_DEFAULT
-                Priority.MEDIUM.toInt() -> NotificationCompat.PRIORITY_HIGH
-                Priority.HIGH.toInt() -> NotificationCompat.PRIORITY_MAX
-                else -> NotificationCompat.PRIORITY_DEFAULT
+                Priority.LOW -> NotificationCompat.PRIORITY_DEFAULT
+                Priority.MEDIUM -> NotificationCompat.PRIORITY_HIGH
+                Priority.HIGH -> NotificationCompat.PRIORITY_MAX
             }
         )
         .addAction(R.drawable.ic_check, getString(R.string.complete), completePendingIntent)

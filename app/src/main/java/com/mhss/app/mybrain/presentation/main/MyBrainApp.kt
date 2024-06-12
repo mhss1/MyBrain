@@ -127,9 +127,7 @@ fun MyBrainApp(
             NavHost(
                 startDestination = Screen.Main,
                 navController = navController,
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(paddingValues)
+                modifier = Modifier.padding(paddingValues)
             ) {
                 composable<Screen.Main> {
                     MainScreen(

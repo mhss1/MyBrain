@@ -1,16 +1,21 @@
 package com.mhss.app.mybrain.domain.use_case.tasks
 
+import com.mhss.app.mybrain.di.namedDefaultDispatcher
 import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.domain.repository.tasks.TaskRepository
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 
 @Single
 class GetAllTasksUseCase(
-    private val tasksRepository: TaskRepository
+    private val tasksRepository: TaskRepository,
+    @Named(namedDefaultDispatcher) private val defaultDispatcher: CoroutineDispatcher
 ) {
     operator fun invoke(order: Order, showCompleted: Boolean = true): Flow<List<Task>> {
         return tasksRepository.getAllTasks().map { tasks ->
@@ -39,6 +44,6 @@ class GetAllTasksUseCase(
                 list
             else
                 list.filter { !it.isCompleted }
-        }
+        }.flowOn(defaultDispatcher)
     }
 }

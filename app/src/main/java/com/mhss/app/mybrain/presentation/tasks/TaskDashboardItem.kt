@@ -26,7 +26,7 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.date.isDueDateOverdue
-import com.mhss.app.mybrain.util.settings.toPriority
+import com.mhss.app.mybrain.util.settings.Priority
 
 @Composable
 fun TaskDashboardItem(
@@ -53,7 +53,7 @@ fun TaskDashboardItem(
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 TaskDashboardCheckBox(
                     isComplete = task.isCompleted,
-                    task.priority.toPriority().color,
+                    task.priority.color,
                     onComplete = { onComplete() }
                 )
                 Spacer(Modifier.width(6.dp))
@@ -118,7 +118,7 @@ fun TaskDashboardItemPreview() {
             title = "Task 1",
             description = "Task 1 description",
             dueDate = 1666999999999L,
-            priority = 1,
+            priority = Priority.MEDIUM,
             isCompleted = false
         ),
         onComplete = {},

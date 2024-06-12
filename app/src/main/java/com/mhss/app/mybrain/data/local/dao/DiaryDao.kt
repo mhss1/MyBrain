@@ -1,31 +1,31 @@
 package com.mhss.app.mybrain.data.local.dao
 
 import androidx.room.*
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.data.local.entity.DiaryEntryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DiaryDao {
 
     @Query("SELECT * FROM diary")
-    fun getAllEntries(): Flow<List<DiaryEntry>>
+    fun getAllEntries(): Flow<List<DiaryEntryEntity>>
 
     @Query("SELECT * FROM diary WHERE id = :id")
-    suspend fun getEntry(id: Int): DiaryEntry
+    suspend fun getEntry(id: Int): DiaryEntryEntity
 
     @Query("SELECT * FROM diary WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
-    suspend fun getEntriesByTitle(query: String): List<DiaryEntry>
+    suspend fun getEntriesByTitle(query: String): List<DiaryEntryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEntry(diary: DiaryEntry)
+    suspend fun insertEntry(diary: DiaryEntryEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEntries(diary: List<DiaryEntry>)
+    suspend fun insertEntries(diary: List<DiaryEntryEntity>)
 
     @Update
-    suspend fun updateEntry(diary: DiaryEntry)
+    suspend fun updateEntry(diary: DiaryEntryEntity)
 
     @Delete
-    suspend fun deleteEntry(diary: DiaryEntry)
+    suspend fun deleteEntry(diary: DiaryEntryEntity)
 
 }

@@ -29,7 +29,6 @@ import com.mhss.app.mybrain.presentation.glance_widgets.tasks.taskId
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.date.isDueDateOverdue
 import com.mhss.app.mybrain.util.settings.Priority
-import com.mhss.app.mybrain.util.settings.toPriority
 
 @Composable
 fun TaskWidgetItem(
@@ -61,7 +60,7 @@ fun TaskWidgetItem(
                 , verticalAlignment = Alignment.CenterVertically) {
                 TaskWidgetCheckBox(
                     isComplete = task.isCompleted,
-                    task.priority.toPriority().color,
+                    task.priority.color,
                     onComplete = actionRunCallback<CompleteTaskAction>(
                         parameters = actionParametersOf(
                             taskId to task.id,

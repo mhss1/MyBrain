@@ -15,6 +15,7 @@ import org.koin.core.annotation.Single
 
 
 const val namedIoDispatcher = "ioDispatcher"
+const val namedDefaultDispatcher = "defaultDispatcher"
 
 @Module
 @ComponentScan("com.mhss.app.mybrain.data")
@@ -45,6 +46,10 @@ class DataModule {
     @Single
     @Named(namedIoDispatcher)
     fun ioDispatcher() = Dispatchers.IO
+
+    @Single
+    @Named(namedDefaultDispatcher)
+    fun defaultDispatcher() = Dispatchers.Default
 
     @Single
     fun datastore(context: Context) = context.dataStore

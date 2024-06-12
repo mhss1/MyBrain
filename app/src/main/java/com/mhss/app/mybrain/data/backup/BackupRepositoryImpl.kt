@@ -5,12 +5,12 @@ import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.room.withTransaction
 import com.mhss.app.mybrain.data.local.MyBrainDatabase
+import com.mhss.app.mybrain.data.local.entity.BookmarkEntity
+import com.mhss.app.mybrain.data.local.entity.DiaryEntryEntity
+import com.mhss.app.mybrain.data.local.entity.NoteEntity
+import com.mhss.app.mybrain.data.local.entity.NoteFolderEntity
+import com.mhss.app.mybrain.data.local.entity.TaskEntity
 import com.mhss.app.mybrain.di.namedIoDispatcher
-import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
-import com.mhss.app.mybrain.domain.model.notes.Note
-import com.mhss.app.mybrain.domain.model.notes.NoteFolder
-import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.domain.repository.backup.BackupRepository
 import com.mhss.app.mybrain.util.date.now
 import kotlinx.coroutines.CoroutineDispatcher
@@ -115,10 +115,10 @@ class BackupRepositoryImpl(
 
     @Serializable
     private data class BackupData(
-        val notes: List<Note>,
-        val noteFolders: List<NoteFolder>,
-        val tasks: List<Task>,
-        val diary: List<DiaryEntry>,
-        val bookmarks: List<Bookmark>
+        val notes: List<NoteEntity>,
+        val noteFolders: List<NoteFolderEntity>,
+        val tasks: List<TaskEntity>,
+        val diary: List<DiaryEntryEntity>,
+        val bookmarks: List<BookmarkEntity>
     )
 }

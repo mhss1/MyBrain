@@ -66,10 +66,10 @@ enum class TaskFrequency(@StringRes val title: Int, val value: Int) {
     MONTHLY(R.string.every_month, 4),
     ANNUAL(R.string.every_year, 5)
 }
-enum class Priority( @StringRes val title: Int, val color: Color) {
-    LOW(R.string.low, Green),
-    MEDIUM(R.string.medium, Orange),
-    HIGH(R.string.high, Red)
+enum class Priority(@StringRes val title: Int, val color: Color, val value: Int) {
+    LOW(R.string.low, Green, 0),
+    MEDIUM(R.string.medium, Orange, 1),
+    HIGH(R.string.high, Red, 2)
 }
 
 enum class ItemView(@StringRes val title: Int, val value: Int) {
@@ -79,28 +79,6 @@ enum class ItemView(@StringRes val title: Int, val value: Int) {
 
 fun Int.toNotesView(): ItemView {
     return ItemView.entries.first { it.value == this }
-}
-
-
-fun Int.toPriority(): Priority {
-    return when (this) {
-        0 -> Priority.LOW
-        1 -> Priority.MEDIUM
-        2 -> Priority.HIGH
-        else -> Priority.LOW
-    }
-}
-
-fun Priority.toInt(): Int {
-    return when (this) {
-        Priority.LOW -> 0
-        Priority.MEDIUM -> 1
-        Priority.HIGH -> 2
-    }
-}
-
-fun Int.toTaskFrequency(): TaskFrequency {
-    return TaskFrequency.entries.firstOrNull { it.value == this } ?: TaskFrequency.DAILY
 }
 
 fun Int.toOrder(): Order {

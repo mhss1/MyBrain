@@ -46,13 +46,12 @@ class AlarmReceiver : BroadcastReceiver(), KoinComponent {
                 if (task.recurring) {
                     val calendar = Calendar.getInstance().apply { timeInMillis = task.dueDate }
                     when (task.frequency) {
-                        TaskFrequency.EVERY_MINUTES.value -> calendar.add(Calendar.MINUTE, task.frequencyAmount)
-                        TaskFrequency.HOURLY.value -> calendar.add(Calendar.HOUR, task.frequencyAmount)
-                        TaskFrequency.DAILY.value -> calendar.add(Calendar.DAY_OF_YEAR, task.frequencyAmount)
-                        TaskFrequency.WEEKLY.value -> calendar.add(Calendar.WEEK_OF_YEAR, task.frequencyAmount)
-                        TaskFrequency.MONTHLY.value -> calendar.add(Calendar.MONTH, task.frequencyAmount)
-                        TaskFrequency.ANNUAL.value -> calendar.add(Calendar.YEAR, task.frequencyAmount)
-                        else -> calendar.add(Calendar.DAY_OF_YEAR, task.frequencyAmount)
+                        TaskFrequency.EVERY_MINUTES -> calendar.add(Calendar.MINUTE, task.frequencyAmount)
+                        TaskFrequency.HOURLY -> calendar.add(Calendar.HOUR, task.frequencyAmount)
+                        TaskFrequency.DAILY -> calendar.add(Calendar.DAY_OF_YEAR, task.frequencyAmount)
+                        TaskFrequency.WEEKLY -> calendar.add(Calendar.WEEK_OF_YEAR, task.frequencyAmount)
+                        TaskFrequency.MONTHLY -> calendar.add(Calendar.MONTH, task.frequencyAmount)
+                        TaskFrequency.ANNUAL -> calendar.add(Calendar.YEAR, task.frequencyAmount)
                     }
                     val newTask = task.copy(
                         dueDate = calendar.timeInMillis,

@@ -1,16 +1,21 @@
 package com.mhss.app.mybrain.domain.use_case.notes
 
+import com.mhss.app.mybrain.di.namedDefaultDispatcher
 import com.mhss.app.mybrain.domain.model.notes.Note
 import com.mhss.app.mybrain.domain.repository.notes.NoteRepository
 import com.mhss.app.mybrain.util.settings.Order
 import com.mhss.app.mybrain.util.settings.OrderType
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 
 @Single
 class GetAllFolderlessNotesUseCase(
-    private val notesRepository: NoteRepository
+    private val notesRepository: NoteRepository,
+    @Named(namedDefaultDispatcher) private val defaultDispatcher: CoroutineDispatcher
 ) {
     operator fun invoke(order: Order) : Flow<List<Note>> {
         return notesRepository.getAllFolderlessNotes().map { list ->
@@ -32,7 +37,7 @@ class GetAllFolderlessNotesUseCase(
                     }
                 }
             }
-        }
+        }.flowOn(defaultDispatcher)
     }
 
 }

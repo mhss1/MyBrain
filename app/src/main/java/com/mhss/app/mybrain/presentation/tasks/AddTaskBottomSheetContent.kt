@@ -19,7 +19,6 @@ import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.date.now
 import com.mhss.app.mybrain.util.settings.TaskFrequency
 import com.mhss.app.mybrain.util.settings.Priority
-import com.mhss.app.mybrain.util.settings.toInt
 import java.util.*
 
 @Composable
@@ -86,10 +85,10 @@ fun AddTaskBottomSheetContent(
                                 title = title,
                                 description = description,
                                 isCompleted = completed,
-                                priority = priority.toInt(),
+                                priority = priority,
                                 dueDate = if (dueDateExists) dueDate.timeInMillis else 0L,
                                 recurring = recurring,
-                                frequency = frequency.value,
+                                frequency = frequency,
                                 frequencyAmount = frequencyAmount,
                                 createdDate = now(),
                                 updatedDate = now(),

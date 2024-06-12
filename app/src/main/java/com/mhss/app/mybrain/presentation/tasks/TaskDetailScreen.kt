@@ -38,9 +38,6 @@ import com.mhss.app.mybrain.util.permissions.Permission
 import com.mhss.app.mybrain.util.permissions.rememberPermissionState
 import com.mhss.app.mybrain.util.settings.TaskFrequency
 import com.mhss.app.mybrain.util.settings.Priority
-import com.mhss.app.mybrain.util.settings.toTaskFrequency
-import com.mhss.app.mybrain.util.settings.toInt
-import com.mhss.app.mybrain.util.settings.toPriority
 import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
@@ -82,12 +79,12 @@ fun TaskDetailScreen(
     LaunchedEffect(uiState.task) {
         title = uiState.task.title
         description = uiState.task.description
-        priority = uiState.task.priority.toPriority()
+        priority = uiState.task.priority
         dueDate = uiState.task.dueDate
         dueDateExists = uiState.task.dueDate != 0L
         completed = uiState.task.isCompleted
         recurring = uiState.task.recurring
-        frequency = uiState.task.frequency.toTaskFrequency()
+        frequency = uiState.task.frequency
         frequencyAmount = uiState.task.frequencyAmount
         subTasks.addAll(uiState.task.subTasks)
     }
@@ -115,10 +112,10 @@ fun TaskDetailScreen(
                 title = title,
                 description = description,
                 dueDate = if (dueDateExists) dueDate else 0L,
-                priority = priority.toInt(),
+                priority = priority,
                 subTasks = subTasks,
                 recurring = recurring,
-                frequency = frequency.value,
+                frequency = frequency,
                 frequencyAmount = frequencyAmount
             ),
             {
@@ -449,19 +446,19 @@ fun PriorityTabRow(
     onChange: (Priority) -> Unit
 ) {
     val indicator = @Composable { tabPositions: List<TabPosition> ->
-        AnimatedTabIndicator(Modifier.tabIndicatorOffset(tabPositions[selectedPriority.toInt()]))
+        AnimatedTabIndicator(Modifier.tabIndicatorOffset(tabPositions[selectedPriority.value]))
     }
     TabRow(
-        selectedTabIndex = selectedPriority.toInt(),
+        selectedTabIndex = selectedPriority.value,
         indicator = indicator,
         modifier = Modifier.clip(RoundedCornerShape(14.dp))
     ) {
-        priorities.forEachIndexed { index, it ->
+        priorities.forEach {
             Tab(
                 text = { Text(stringResource(it.title)) },
-                selected = selectedPriority.toInt() == index,
+                selected = selectedPriority == it,
                 onClick = {
-                    onChange(index.toPriority())
+                    onChange(it)
                 },
                 modifier = Modifier.background(it.color),
                 unselectedContentColor = Color.White.copy(alpha = 0.7f),
