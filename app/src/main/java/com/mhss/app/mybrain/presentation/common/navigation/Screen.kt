@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.presentation.navigation
+package com.mhss.app.mybrain.presentation.common.navigation
 
 import kotlinx.serialization.Serializable
 

@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.navigation.Screen
+import com.mhss.app.mybrain.presentation.common.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

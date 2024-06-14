@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.ui.theme
+package com.mhss.app.mybrain.presentation.common.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

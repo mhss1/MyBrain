@@ -10,7 +10,7 @@ import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.mybrain.presentation.main.components.MainBottomBar
 import com.mhss.app.mybrain.presentation.main.components.NavigationGraph
 import com.mhss.app.mybrain.presentation.main.components.BottomNavItem
-import com.mhss.app.mybrain.presentation.navigation.Screen
+import com.mhss.app.mybrain.presentation.common.navigation.Screen
 
 @Composable
 fun MainScreen(

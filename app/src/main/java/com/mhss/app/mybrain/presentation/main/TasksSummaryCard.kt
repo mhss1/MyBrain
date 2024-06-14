@@ -23,7 +23,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.tasks.Task
-import com.mhss.app.mybrain.ui.theme.Blue
+import com.mhss.app.mybrain.presentation.common.theme.Blue
 
 @Composable
 fun TasksSummaryCard(

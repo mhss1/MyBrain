@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
-import com.mhss.app.mybrain.ui.theme.LightGray
+import com.mhss.app.mybrain.presentation.common.theme.LightGray
 import com.mhss.app.mybrain.util.permissions.Permission
 import com.mhss.app.mybrain.util.permissions.rememberPermissionState
 

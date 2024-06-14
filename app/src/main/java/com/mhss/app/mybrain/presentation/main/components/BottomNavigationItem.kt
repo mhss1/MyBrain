@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.presentation.main.components
 
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.navigation.Screen
+import com.mhss.app.mybrain.presentation.common.navigation.Screen
 
 sealed class BottomNavItem(val title: Int, val icon: Int, val iconSelected: Int, val screen: Screen){
 

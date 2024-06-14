@@ -24,7 +24,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.notes.Note
 import com.mhss.app.mybrain.domain.model.notes.NoteFolder
-import com.mhss.app.mybrain.ui.theme.Orange
+import com.mhss.app.mybrain.presentation.common.theme.Orange
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import org.koin.androidx.compose.koinViewModel

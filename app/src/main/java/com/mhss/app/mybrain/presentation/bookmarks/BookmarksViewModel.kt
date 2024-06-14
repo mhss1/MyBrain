@@ -19,7 +19,6 @@ import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.presentation.common.ItemView
 import com.mhss.app.mybrain.presentation.common.toNotesView
 import com.mhss.app.mybrain.util.Constants
-import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 import com.mhss.app.mybrain.util.date.now
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect

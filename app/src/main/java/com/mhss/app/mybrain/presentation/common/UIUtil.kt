@@ -5,14 +5,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
-import com.mhss.app.mybrain.ui.theme.Rubik
+import com.mhss.app.mybrain.presentation.common.theme.Rubik
 import com.mhss.app.mybrain.domain.model.preferences.Order
 import com.mhss.app.mybrain.domain.model.preferences.OrderType
 import com.mhss.app.mybrain.domain.model.tasks.Priority
 import com.mhss.app.mybrain.domain.model.tasks.TaskFrequency
-import com.mhss.app.mybrain.ui.theme.Green
-import com.mhss.app.mybrain.ui.theme.Orange
-import com.mhss.app.mybrain.ui.theme.Red
+import com.mhss.app.mybrain.presentation.common.theme.Green
+import com.mhss.app.mybrain.presentation.common.theme.Orange
+import com.mhss.app.mybrain.presentation.common.theme.Red
 
 
 enum class ThemeSettings(val value: Int) {

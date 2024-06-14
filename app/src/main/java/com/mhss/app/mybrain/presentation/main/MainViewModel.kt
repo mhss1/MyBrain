@@ -25,7 +25,7 @@ import com.mhss.app.mybrain.presentation.common.StartUpScreenSettings
 import com.mhss.app.mybrain.presentation.common.ThemeSettings
 import com.mhss.app.mybrain.presentation.common.toInt
 import com.mhss.app.mybrain.presentation.common.toIntList
-import com.mhss.app.mybrain.ui.theme.Rubik
+import com.mhss.app.mybrain.presentation.common.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.formatDateForMapping
 import com.mhss.app.mybrain.util.date.inTheLastWeek

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.common.titleRes
-import com.mhss.app.mybrain.presentation.navigation.Screen
+import com.mhss.app.mybrain.presentation.common.navigation.Screen
 import com.mhss.app.mybrain.domain.model.preferences.Order
 import com.mhss.app.mybrain.domain.model.preferences.OrderType
 import org.koin.androidx.compose.koinViewModel

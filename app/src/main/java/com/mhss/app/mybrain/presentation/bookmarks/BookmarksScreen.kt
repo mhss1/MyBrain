@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.navigation.Screen
+import com.mhss.app.mybrain.presentation.common.navigation.Screen
 import com.mhss.app.mybrain.presentation.common.ItemView
 import com.mhss.app.mybrain.domain.model.preferences.Order
 import com.mhss.app.mybrain.domain.model.preferences.OrderType

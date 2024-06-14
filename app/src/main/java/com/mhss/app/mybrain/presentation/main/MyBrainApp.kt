@@ -37,7 +37,7 @@ import com.mhss.app.mybrain.presentation.diary.DiaryChartScreen
 import com.mhss.app.mybrain.presentation.diary.DiaryEntryDetailsScreen
 import com.mhss.app.mybrain.presentation.diary.DiaryScreen
 import com.mhss.app.mybrain.presentation.diary.DiarySearchScreen
-import com.mhss.app.mybrain.presentation.navigation.Screen
+import com.mhss.app.mybrain.presentation.common.navigation.Screen
 import com.mhss.app.mybrain.presentation.notes.NoteDetailsScreen
 import com.mhss.app.mybrain.presentation.notes.NoteFolderDetailsScreen
 import com.mhss.app.mybrain.presentation.notes.NotesScreen
@@ -46,8 +46,8 @@ import com.mhss.app.mybrain.presentation.settings.ImportExportScreen
 import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksScreen
 import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
-import com.mhss.app.mybrain.ui.theme.MyBrainTheme
-import com.mhss.app.mybrain.ui.theme.Rubik
+import com.mhss.app.mybrain.presentation.common.theme.MyBrainTheme
+import com.mhss.app.mybrain.presentation.common.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.presentation.common.StartUpScreenSettings
 import com.mhss.app.mybrain.presentation.common.toFontFamily

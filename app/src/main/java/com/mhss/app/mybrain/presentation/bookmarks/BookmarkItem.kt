@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
-import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 
 @Composable
 fun BookmarkItem(

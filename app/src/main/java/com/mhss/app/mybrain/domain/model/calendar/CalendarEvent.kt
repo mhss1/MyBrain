@@ -14,5 +14,13 @@ data class CalendarEvent(
     val color: Int = 0,
     val calendarId: Long,
     val recurring: Boolean = false,
-    val frequency: String = "",
-    )
+    val frequency: CalendarEventFrequency = CalendarEventFrequency.NEVER,
+)
+
+enum class CalendarEventFrequency {
+    NEVER,
+    DAILY,
+    WEEKLY,
+    MONTHLY,
+    YEARLY
+}

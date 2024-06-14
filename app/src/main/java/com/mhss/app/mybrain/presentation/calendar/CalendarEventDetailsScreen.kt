@@ -23,8 +23,8 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.Calendar
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEventFrequency
 import com.mhss.app.mybrain.presentation.common.DateTimeDialog
-import com.mhss.app.mybrain.util.calendar.*
 import com.mhss.app.mybrain.util.date.HOUR_MILLIS
 import com.mhss.app.mybrain.util.date.formatDate
 import com.mhss.app.mybrain.util.date.formatTime
@@ -65,7 +65,7 @@ fun CalendarEventDetailsScreen(
             event?.end ?: (now() + 2 * HOUR_MILLIS)
         )
     }
-    var frequency by rememberSaveable { mutableStateOf(event?.frequency ?: CALENDAR_FREQ_NEVER) }
+    var frequency by rememberSaveable { mutableStateOf(event?.frequency ?: CalendarEventFrequency.NEVER) }
     var calendar by remember {
         mutableStateOf(
             Calendar(
@@ -133,7 +133,7 @@ fun CalendarEventDetailsScreen(
                         allDay = allDay,
                         location = location,
                         calendarId = calendar.id,
-                        recurring = frequency != CALENDAR_FREQ_NEVER,
+                        recurring = frequency != CalendarEventFrequency.NEVER,
                         frequency = frequency
                     )
                     if (event != null) {
@@ -336,8 +336,8 @@ fun EventTimeSection(
     onEndDateSelected: (Long) -> Unit,
     allDay: Boolean,
     onAllDayChange: (Boolean) -> Unit,
-    frequency: String,
-    onFrequencySelected: (String) -> Unit
+    frequency: CalendarEventFrequency,
+    onFrequencySelected: (CalendarEventFrequency) -> Unit
 ) {
     var showStartDateDialog by remember {
         mutableStateOf(false)
@@ -450,7 +450,7 @@ fun EventTimeSection(
         ) {
             Icon(painter = painterResource(id = R.drawable.ic_refresh), null)
             Spacer(Modifier.width(8.dp))
-            Text(frequency.toUIFrequency(), style = MaterialTheme.typography.bodyLarge)
+            Text(frequency.getCalendarFrequencyTitleRes(), style = MaterialTheme.typography.bodyLarge)
             FrequencyDialog(
                 selectedFrequency = frequency,
                 onFrequencySelected = {
@@ -467,18 +467,14 @@ fun EventTimeSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FrequencyDialog(
-    selectedFrequency: String,
-    onFrequencySelected: (String) -> Unit,
+    selectedFrequency: CalendarEventFrequency,
+    onFrequencySelected: (CalendarEventFrequency) -> Unit,
     open: Boolean,
     onClose: () -> Unit,
 ) {
-    val frequencies = listOf(
-        CALENDAR_FREQ_NEVER,
-        CALENDAR_FREQ_DAILY,
-        CALENDAR_FREQ_WEEKLY,
-        CALENDAR_FREQ_MONTHLY,
-        CALENDAR_FREQ_YEARLY
-    )
+    val frequencies = remember {
+        CalendarEventFrequency.entries
+    }
     if (open) BasicAlertDialog(
         onDismissRequest = { onClose() },
         content = {
@@ -493,7 +489,7 @@ fun FrequencyDialog(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = frequency.toUIFrequency(),
+                            text = frequency.getCalendarFrequencyTitleRes(),
                             style = MaterialTheme.typography.bodyLarge
                         )
                         RadioButton(
@@ -506,6 +502,16 @@ fun FrequencyDialog(
         }
     )
 }
+
+@Composable
+fun CalendarEventFrequency.getCalendarFrequencyTitleRes(): String = when (this) {
+    CalendarEventFrequency.DAILY -> stringResource(R.string.every_day)
+    CalendarEventFrequency.WEEKLY -> stringResource(R.string.every_week)
+    CalendarEventFrequency.MONTHLY -> stringResource(R.string.every_month)
+    CalendarEventFrequency.YEARLY -> stringResource(R.string.every_year)
+    else -> stringResource(R.string.do_not_repeat)
+}
+
 
 @Composable
 fun DeleteEventDialog(

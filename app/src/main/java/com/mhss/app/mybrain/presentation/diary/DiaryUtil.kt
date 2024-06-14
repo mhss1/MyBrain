@@ -3,7 +3,7 @@ package com.mhss.app.mybrain.presentation.diary
 import androidx.compose.ui.graphics.Color
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.diary.Mood
-import com.mhss.app.mybrain.ui.theme.*
+import com.mhss.app.mybrain.presentation.common.theme.*
 
 val Mood.iconRes: Int
     get() = when (this) {

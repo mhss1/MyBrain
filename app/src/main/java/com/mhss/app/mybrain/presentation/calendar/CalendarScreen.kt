@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.Calendar
-import com.mhss.app.mybrain.presentation.navigation.Screen
+import com.mhss.app.mybrain.presentation.common.navigation.Screen
 import com.mhss.app.mybrain.util.date.*
 import com.mhss.app.mybrain.util.permissions.Permission
 import com.mhss.app.mybrain.util.permissions.rememberPermissionState

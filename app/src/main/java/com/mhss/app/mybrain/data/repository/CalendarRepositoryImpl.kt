@@ -10,8 +10,8 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.di.namedIoDispatcher
 import com.mhss.app.mybrain.domain.model.calendar.Calendar
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
+import com.mhss.app.mybrain.domain.model.calendar.CalendarEventFrequency
 import com.mhss.app.mybrain.domain.repository.calendar.CalendarRepository
-import com.mhss.app.mybrain.util.calendar.*
 import com.mhss.app.mybrain.util.date.now
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -129,7 +129,7 @@ class CalendarRepositoryImpl(
                     val calendarId: Long = curI.getLong(EVENT_CALENDAR_ID_INDEX)
                     val rrule: String = curI.getString(EVENT_RRULE_INDEX) ?: ""
                     val recurring: Boolean = rrule.isNotBlank()
-                    val frequency: String = rrule.extractFrequency()
+                    val frequency: CalendarEventFrequency = rrule.extractFrequency()
                     if (recurring) events.add(
                         CalendarEvent(
                         id = eventId,
@@ -224,7 +224,7 @@ class CalendarRepositoryImpl(
                 put(CalendarContract.Events.TITLE, event.title)
                 put(CalendarContract.Events.DESCRIPTION, event.description)
                 put(CalendarContract.Events.DTSTART, event.start)
-                if (event.recurring && event.frequency.isNotBlank()){
+                if (event.recurring && event.frequency != CalendarEventFrequency.NEVER){
                     val end: Long? = null
                     put(CalendarContract.Events.RRULE, event.getEventRRule())
                     put(CalendarContract.Events.DURATION, event.getEventDuration())
@@ -272,6 +272,49 @@ class CalendarRepositoryImpl(
         withContext(ioDispatcher){
             val updateUri: Uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.id)
             context.contentResolver.delete(updateUri, null, null)
+        }
+    }
+
+    private fun String.extractFrequency(): CalendarEventFrequency {
+        return if (this.contains("FREQ=")) {
+            val freq = this.substringAfter("FREQ=").substringBefore(";")
+            when (freq) {
+                "DAILY" -> CalendarEventFrequency.DAILY
+                "WEEKLY" -> CalendarEventFrequency.WEEKLY
+                "MONTHLY" -> CalendarEventFrequency.MONTHLY
+                "YEARLY" -> CalendarEventFrequency.YEARLY
+                else -> CalendarEventFrequency.NEVER
+            }
+        } else CalendarEventFrequency.NEVER
+    }
+
+    private fun CalendarEvent.getEventDuration(): String {
+        return "P${(end - start) / 1000}S"
+    }
+
+    private fun String.extractEndFromDuration(start: Long): Long {
+        return try {
+            val duration = this.substring(1, this.length - 1).toLong() * 1000
+            start + duration
+        }catch (e: Exception) {
+            start
+        }
+    }
+
+    private fun CalendarEvent.getEventRRule(): String {
+        return buildString {
+            append("FREQ=${frequency}")
+            // will be implemented later
+//       if (until > 0) {
+//           val formattedUntil = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.US).format(until)
+//           append(";UNTIL=${formattedUntil}")
+//       }
+//       if (count > 0) {
+//           append(";COUNT=${count}")
+//       }
+//       if (interval > 0) {
+//           append(";INTERVAL=${interval}")
+//       }
         }
     }
 
