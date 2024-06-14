@@ -9,13 +9,18 @@ import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
+import com.mhss.app.mybrain.domain.model.preferences.Order
+import com.mhss.app.mybrain.domain.model.preferences.OrderType
+import com.mhss.app.mybrain.domain.model.preferences.toInt
+import com.mhss.app.mybrain.domain.model.preferences.toOrder
 import com.mhss.app.mybrain.domain.use_case.bookmarks.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
+import com.mhss.app.mybrain.presentation.common.ItemView
+import com.mhss.app.mybrain.presentation.common.toNotesView
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.bookmarks.isValidUrl
 import com.mhss.app.mybrain.util.date.now
-import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -47,7 +52,7 @@ class BookmarksViewModel(
             combine(
                 getPreference(
                     intPreferencesKey(Constants.BOOKMARK_ORDER_KEY),
-                    Order.DateModified(OrderType.ASC()).toInt()
+                    Order.DateModified(OrderType.ASC).toInt()
                 ),
                 getPreference(
                     intPreferencesKey(Constants.BOOKMARK_VIEW_KEY),
@@ -118,7 +123,7 @@ class BookmarksViewModel(
 
     data class UiState(
         val bookmarks: List<Bookmark> = emptyList(),
-        val bookmarksOrder: Order = Order.DateModified(OrderType.ASC()),
+        val bookmarksOrder: Order = Order.DateModified(OrderType.ASC),
         val bookmarksView: ItemView = ItemView.LIST,
         val bookmark: Bookmark? = null,
         val error: String? = null,

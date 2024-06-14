@@ -26,8 +26,9 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.util.permissions.Permission
 import com.mhss.app.mybrain.util.permissions.rememberPermissionState
-import com.mhss.app.mybrain.util.settings.Order
-import com.mhss.app.mybrain.util.settings.OrderType
+import com.mhss.app.mybrain.domain.model.preferences.Order
+import com.mhss.app.mybrain.domain.model.preferences.OrderType
+import com.mhss.app.mybrain.presentation.common.titleRes
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -127,7 +128,9 @@ fun TasksScreen(
         }
         if (uiState.tasks.isEmpty()) NoTasksMessage()
         Column(
-            Modifier.fillMaxSize().padding(paddingValues)
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
             Column(
                 Modifier.fillMaxWidth()
@@ -230,17 +233,21 @@ fun TasksSettingsSection(
     onOrderChange: (Order) -> Unit,
     onShowCompletedChange: (Boolean) -> Unit
 ) {
-    val orders = listOf(
-        Order.DateModified(),
-        Order.DueDate(),
-        Order.DateCreated(),
-        Order.Alphabetical(),
-        Order.Priority()
-    )
-    val orderTypes = listOf(
-        OrderType.ASC(),
-        OrderType.DESC()
-    )
+    val orders = remember {
+        listOf(
+            Order.DateModified(),
+            Order.DueDate(),
+            Order.DateCreated(),
+            Order.Alphabetical(),
+            Order.Priority()
+        )
+    }
+    val orderTypes = remember {
+        listOf(
+            OrderType.ASC,
+            OrderType.DESC
+        )
+    }
     Column(
         Modifier.background(color = MaterialTheme.colorScheme.background)
     ) {
@@ -255,15 +262,18 @@ fun TasksSettingsSection(
             orders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderTitle == it.orderTitle,
+                        selected = order == it,
                         onClick = {
-                            if (order.orderTitle != it.orderTitle)
+                            if (order != it)
                                 onOrderChange(
-                                    it.copy(orderType = order.orderType)
+                                    it.copyOrder(orderType = order.orderType)
                                 )
                         }
                     )
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = stringResource(it.titleRes),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         }
@@ -272,16 +282,19 @@ fun TasksSettingsSection(
             orderTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderType.orderTitle == it.orderTitle,
+                        selected = order.orderType == it,
                         onClick = {
-                            if (order.orderTitle != it.orderTitle)
+                            if (order != it)
                                 onOrderChange(
-                                    order.copy(it)
+                                    order.copyOrder(it)
                                 )
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = stringResource(it.titleRes),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         }

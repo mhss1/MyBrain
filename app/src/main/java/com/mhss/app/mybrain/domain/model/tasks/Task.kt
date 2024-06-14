@@ -1,7 +1,5 @@
 package com.mhss.app.mybrain.domain.model.tasks
 
-import com.mhss.app.mybrain.util.settings.Priority
-import com.mhss.app.mybrain.util.settings.TaskFrequency
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,3 +17,18 @@ data class Task(
     val frequencyAmount: Int = 1,
     val id: Int = 0
 )
+
+enum class TaskFrequency(val value: Int) {
+    EVERY_MINUTES(0),
+    HOURLY(1),
+    DAILY(2),
+    WEEKLY(3),
+    MONTHLY(4),
+    ANNUAL(5)
+}
+
+enum class Priority(val value: Int) {
+    LOW( 0),
+    MEDIUM(1),
+    HIGH(2)
+}

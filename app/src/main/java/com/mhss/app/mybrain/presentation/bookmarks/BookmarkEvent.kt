@@ -1,8 +1,8 @@
 package com.mhss.app.mybrain.presentation.bookmarks
 
 import com.mhss.app.mybrain.domain.model.bookmarks.Bookmark
-import com.mhss.app.mybrain.util.settings.ItemView
-import com.mhss.app.mybrain.util.settings.Order
+import com.mhss.app.mybrain.presentation.common.ItemView
+import com.mhss.app.mybrain.domain.model.preferences.Order
 
 sealed class BookmarkEvent {
     data class AddBookmark(val bookmark: Bookmark) : BookmarkEvent()

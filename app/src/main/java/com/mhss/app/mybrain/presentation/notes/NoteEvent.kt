@@ -2,8 +2,8 @@ package com.mhss.app.mybrain.presentation.notes
 
 import com.mhss.app.mybrain.domain.model.notes.Note
 import com.mhss.app.mybrain.domain.model.notes.NoteFolder
-import com.mhss.app.mybrain.util.settings.ItemView
-import com.mhss.app.mybrain.util.settings.Order
+import com.mhss.app.mybrain.presentation.common.ItemView
+import com.mhss.app.mybrain.domain.model.preferences.Order
 
 sealed class NoteEvent {
     data class GetNote(val noteId: Int) : NoteEvent()

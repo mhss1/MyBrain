@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.presentation.diary
 
 import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
-import com.mhss.app.mybrain.util.settings.Order
+import com.mhss.app.mybrain.domain.model.preferences.Order
 
 sealed class DiaryEvent {
     data class AddEntry(val entry: DiaryEntry) : DiaryEvent()

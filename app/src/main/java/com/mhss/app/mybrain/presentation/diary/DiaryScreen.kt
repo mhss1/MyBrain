@@ -20,9 +20,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.presentation.common.titleRes
 import com.mhss.app.mybrain.presentation.navigation.Screen
-import com.mhss.app.mybrain.util.settings.Order
-import com.mhss.app.mybrain.util.settings.OrderType
+import com.mhss.app.mybrain.domain.model.preferences.Order
+import com.mhss.app.mybrain.domain.model.preferences.OrderType
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -131,15 +132,19 @@ fun DiaryScreen(
 
 @Composable
 fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
-    val orders = listOf(
-        Order.DateModified(),
-        Order.DateCreated(),
-        Order.Alphabetical()
-    )
-    val orderTypes = listOf(
-        OrderType.ASC(),
-        OrderType.DESC()
-    )
+    val orders = remember {
+        listOf(
+            Order.DateModified(),
+            Order.DateCreated(),
+            Order.Alphabetical()
+        )
+    }
+    val orderTypes = remember {
+        listOf(
+            OrderType.ASC,
+            OrderType.DESC
+        )
+    }
     Column(
         Modifier.background(color = MaterialTheme.colorScheme.background)
     ) {
@@ -154,15 +159,15 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
             orders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderTitle == it.orderTitle,
+                        selected = order == it,
                         onClick = {
-                            if (order.orderTitle != it.orderTitle)
+                            if (order != it)
                                 onOrderChange(
-                                    it.copy(orderType = order.orderType)
+                                    it.copyOrder(orderType = order.orderType)
                                 )
                         }
                     )
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
+                    Text(text = stringResource(it.titleRes), style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
@@ -171,16 +176,16 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
             orderTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderType.orderTitle == it.orderTitle,
+                        selected = order.orderType == it,
                         onClick = {
-                            if (order.orderTitle != it.orderTitle)
+                            if (order != it)
                                 onOrderChange(
-                                    order.copy(it)
+                                    order.copyOrder(it)
                                 )
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = it.orderTitle, style = MaterialTheme.typography.bodyLarge)
+                    Text(text = stringResource(it.titleRes), style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }

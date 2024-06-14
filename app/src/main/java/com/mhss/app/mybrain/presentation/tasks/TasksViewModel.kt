@@ -15,10 +15,10 @@ import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.*
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.now
-import com.mhss.app.mybrain.util.settings.Order
-import com.mhss.app.mybrain.util.settings.OrderType
-import com.mhss.app.mybrain.util.settings.toInt
-import com.mhss.app.mybrain.util.settings.toOrder
+import com.mhss.app.mybrain.domain.model.preferences.Order
+import com.mhss.app.mybrain.domain.model.preferences.OrderType
+import com.mhss.app.mybrain.domain.model.preferences.toInt
+import com.mhss.app.mybrain.domain.model.preferences.toOrder
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -50,7 +50,7 @@ class TasksViewModel(
             combine(
                 getPreference(
                     intPreferencesKey(Constants.TASKS_ORDER_KEY),
-                    Order.DateModified(OrderType.ASC()).toInt()
+                    Order.DateModified(OrderType.ASC).toInt()
                 ),
                 getPreference(
                     booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
@@ -143,7 +143,7 @@ class TasksViewModel(
 
     data class UiState(
         val tasks: List<Task> = emptyList(),
-        val taskOrder: Order = Order.DateModified(OrderType.ASC()),
+        val taskOrder: Order = Order.DateModified(OrderType.ASC),
         val showCompletedTasks: Boolean = false,
         val error: String? = null,
         val errorAlarm: Boolean = false,

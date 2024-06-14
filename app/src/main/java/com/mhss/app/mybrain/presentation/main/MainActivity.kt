@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
-import com.mhss.app.mybrain.util.settings.ThemeSettings
+import com.mhss.app.mybrain.presentation.common.ThemeSettings
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {

@@ -3,10 +3,10 @@ package com.mhss.app.mybrain.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.mhss.app.mybrain.domain.model.tasks.Priority
 import com.mhss.app.mybrain.domain.model.tasks.SubTask
 import com.mhss.app.mybrain.domain.model.tasks.Task
-import com.mhss.app.mybrain.util.settings.Priority
-import com.mhss.app.mybrain.util.settings.TaskFrequency
+import com.mhss.app.mybrain.domain.model.tasks.TaskFrequency
 import kotlinx.serialization.Serializable
 
 @Entity(tableName = "tasks")

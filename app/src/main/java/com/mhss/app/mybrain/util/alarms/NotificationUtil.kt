@@ -9,10 +9,10 @@ import androidx.core.app.TaskStackBuilder
 import androidx.core.net.toUri
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
+import com.mhss.app.mybrain.domain.model.tasks.Priority
 import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.presentation.main.MainActivity
 import com.mhss.app.mybrain.util.Constants
-import com.mhss.app.mybrain.util.settings.Priority
 
 fun NotificationManager.sendNotification(task: Task, context: Context, id: Int) {
     val completeIntent = Intent(context, TaskActionButtonBroadcastReceiver::class.java).apply {

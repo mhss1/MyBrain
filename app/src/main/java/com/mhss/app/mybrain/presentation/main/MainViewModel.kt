@@ -9,7 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.model.preferences.Order
+import com.mhss.app.mybrain.domain.model.preferences.OrderType
 import com.mhss.app.mybrain.domain.model.preferences.intPreferencesKey
+import com.mhss.app.mybrain.domain.model.preferences.toInt
+import com.mhss.app.mybrain.domain.model.preferences.toOrder
 import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.domain.use_case.calendar.GetAllEventsUseCase
 import com.mhss.app.mybrain.domain.use_case.diary.GetAllEntriesUseCase
@@ -17,11 +21,14 @@ import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetAllTasksUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskUseCase
+import com.mhss.app.mybrain.presentation.common.StartUpScreenSettings
+import com.mhss.app.mybrain.presentation.common.ThemeSettings
+import com.mhss.app.mybrain.presentation.common.toInt
+import com.mhss.app.mybrain.presentation.common.toIntList
 import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.formatDateForMapping
 import com.mhss.app.mybrain.util.date.inTheLastWeek
-import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -85,13 +92,13 @@ class MainViewModel(
         combine(
             getPreference(
                 intPreferencesKey(Constants.TASKS_ORDER_KEY),
-                Order.DateModified(OrderType.ASC()).toInt()
+                Order.DateModified(OrderType.ASC).toInt()
             ),
             getPreference(
                 booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
                 false
             ),
-            getAllEntriesUseCase(Order.DateCreated(OrderType.ASC()))
+            getAllEntriesUseCase(Order.DateCreated(OrderType.ASC))
         ) { order, showCompleted, entries ->
             uiState = uiState.copy(
                 dashBoardEntries = entries,

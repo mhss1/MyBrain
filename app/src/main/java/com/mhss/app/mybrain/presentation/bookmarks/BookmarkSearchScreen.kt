@@ -24,7 +24,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.presentation.navigation.Screen
-import com.mhss.app.mybrain.util.settings.ItemView
+import com.mhss.app.mybrain.presentation.common.ItemView
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

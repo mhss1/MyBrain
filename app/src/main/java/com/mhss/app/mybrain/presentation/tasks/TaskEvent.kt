@@ -1,7 +1,7 @@
 package com.mhss.app.mybrain.presentation.tasks
 
 import com.mhss.app.mybrain.domain.model.tasks.Task
-import com.mhss.app.mybrain.util.settings.Order
+import com.mhss.app.mybrain.domain.model.preferences.Order
 
 sealed class TaskEvent {
     data class CompleteTask(val task: Task, val complete: Boolean) : TaskEvent()

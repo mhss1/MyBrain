@@ -7,13 +7,16 @@ import com.mhss.app.mybrain.domain.model.preferences.intPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.mybrain.domain.model.preferences.Order
+import com.mhss.app.mybrain.domain.model.preferences.OrderType
+import com.mhss.app.mybrain.domain.model.preferences.toInt
+import com.mhss.app.mybrain.domain.model.preferences.toOrder
 import com.mhss.app.mybrain.domain.use_case.diary.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.inTheLast30Days
 import com.mhss.app.mybrain.util.date.inTheLastYear
-import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -42,7 +45,7 @@ class DiaryViewModel(
         viewModelScope.launch {
             getPreference(
                 intPreferencesKey(Constants.DIARY_ORDER_KEY),
-                Order.DateModified(OrderType.ASC()).toInt()
+                Order.DateModified(OrderType.ASC).toInt()
             ).collect {
                 getEntries(it.toOrder())
             }
@@ -101,7 +104,7 @@ class DiaryViewModel(
 
     data class UiState(
         val entries: List<DiaryEntry> = emptyList(),
-        val entriesOrder: Order = Order.DateModified(OrderType.ASC()),
+        val entriesOrder: Order = Order.DateModified(OrderType.ASC),
         val entry: DiaryEntry? = null,
         val error: String? = null,
         val searchEntries: List<DiaryEntry> = emptyList(),

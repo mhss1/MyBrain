@@ -21,14 +21,15 @@ import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.domain.model.tasks.Priority
 import com.mhss.app.mybrain.domain.model.tasks.Task
+import com.mhss.app.mybrain.presentation.common.color
 import com.mhss.app.mybrain.presentation.glance_widgets.tasks.CompleteTaskAction
 import com.mhss.app.mybrain.presentation.glance_widgets.tasks.TaskWidgetItemClickAction
 import com.mhss.app.mybrain.presentation.glance_widgets.tasks.completed
 import com.mhss.app.mybrain.presentation.glance_widgets.tasks.taskId
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.date.isDueDateOverdue
-import com.mhss.app.mybrain.util.settings.Priority
 
 @Composable
 fun TaskWidgetItem(

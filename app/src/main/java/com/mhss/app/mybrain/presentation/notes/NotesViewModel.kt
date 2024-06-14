@@ -10,12 +10,17 @@ import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.notes.Note
 import com.mhss.app.mybrain.domain.model.notes.NoteFolder
+import com.mhss.app.mybrain.domain.model.preferences.Order
+import com.mhss.app.mybrain.domain.model.preferences.OrderType
+import com.mhss.app.mybrain.domain.model.preferences.toInt
+import com.mhss.app.mybrain.domain.model.preferences.toOrder
 import com.mhss.app.mybrain.domain.use_case.notes.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
+import com.mhss.app.mybrain.presentation.common.ItemView
+import com.mhss.app.mybrain.presentation.common.toNotesView
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.now
-import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -50,7 +55,7 @@ class NotesViewModel(
             combine(
                 getPreference(
                     intPreferencesKey(Constants.NOTES_ORDER_KEY),
-                    Order.DateModified(OrderType.ASC()).toInt()
+                    Order.DateModified(OrderType.ASC).toInt()
                 ),
                 getPreference(
                     intPreferencesKey(Constants.NOTE_VIEW_KEY),
@@ -161,7 +166,7 @@ class NotesViewModel(
     data class UiState(
         val notes: List<Note> = emptyList(),
         val note: Note? = null,
-        val notesOrder: Order = Order.DateModified(OrderType.ASC()),
+        val notesOrder: Order = Order.DateModified(OrderType.ASC),
         val error: String? = null,
         val noteView: ItemView = ItemView.LIST,
         val navigateUp: Boolean = false,

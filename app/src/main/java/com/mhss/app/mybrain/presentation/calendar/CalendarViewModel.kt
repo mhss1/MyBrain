@@ -13,13 +13,11 @@ import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.domain.use_case.calendar.*
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.SavePreferenceUseCase
+import com.mhss.app.mybrain.presentation.common.toIntList
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.formatDateForMapping
 import com.mhss.app.mybrain.util.date.monthName
 import com.mhss.app.mybrain.util.date.now
-import com.mhss.app.mybrain.util.settings.addAndToStringSet
-import com.mhss.app.mybrain.util.settings.removeAndToStringSet
-import com.mhss.app.mybrain.util.settings.toIntList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -127,4 +125,7 @@ class CalendarViewModel(
         val navigateUp: Boolean = false,
         val error: String? = null
     )
+
+    private fun MutableList<Int>.addAndToStringSet(id: Int) = apply { add(id) }.map { it.toString() }.toSet()
+    private fun MutableList<Int>.removeAndToStringSet(id: Int) = apply { remove(id) }.map { it.toString() }.toSet()
 }

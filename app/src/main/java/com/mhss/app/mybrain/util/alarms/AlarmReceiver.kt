@@ -10,7 +10,7 @@ import com.mhss.app.mybrain.domain.use_case.alarm.DeleteAlarmUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetTaskByIdUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.UpdateTaskUseCase
 import com.mhss.app.mybrain.util.Constants
-import com.mhss.app.mybrain.util.settings.TaskFrequency
+import com.mhss.app.mybrain.domain.model.tasks.TaskFrequency
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

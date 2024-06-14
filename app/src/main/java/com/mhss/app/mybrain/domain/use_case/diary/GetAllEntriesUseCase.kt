@@ -3,8 +3,8 @@ package com.mhss.app.mybrain.domain.use_case.diary
 import com.mhss.app.mybrain.di.namedDefaultDispatcher
 import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
 import com.mhss.app.mybrain.domain.repository.diary.DiaryRepository
-import com.mhss.app.mybrain.util.settings.Order
-import com.mhss.app.mybrain.util.settings.OrderType
+import com.mhss.app.mybrain.domain.model.preferences.Order
+import com.mhss.app.mybrain.domain.model.preferences.OrderType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn

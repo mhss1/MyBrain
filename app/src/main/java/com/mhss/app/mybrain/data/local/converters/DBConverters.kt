@@ -2,9 +2,9 @@ package com.mhss.app.mybrain.data.local.converters
 
 import androidx.room.TypeConverter
 import com.mhss.app.mybrain.domain.model.diary.Mood
+import com.mhss.app.mybrain.domain.model.tasks.Priority
 import com.mhss.app.mybrain.domain.model.tasks.SubTask
-import com.mhss.app.mybrain.util.settings.Priority
-import com.mhss.app.mybrain.util.settings.TaskFrequency
+import com.mhss.app.mybrain.domain.model.tasks.TaskFrequency
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

@@ -49,9 +49,10 @@ import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
 import com.mhss.app.mybrain.ui.theme.MyBrainTheme
 import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
-import com.mhss.app.mybrain.util.settings.StartUpScreenSettings
-import com.mhss.app.mybrain.util.settings.toFontFamily
-import com.mhss.app.mybrain.util.settings.toInt
+import com.mhss.app.mybrain.presentation.common.StartUpScreenSettings
+import com.mhss.app.mybrain.presentation.common.toFontFamily
+import com.mhss.app.mybrain.presentation.common.toInt
+
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

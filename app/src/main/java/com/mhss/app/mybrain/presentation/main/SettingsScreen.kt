@@ -20,6 +20,11 @@ import com.mhss.app.mybrain.BuildConfig
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
+import com.mhss.app.mybrain.presentation.common.StartUpScreenSettings
+import com.mhss.app.mybrain.presentation.common.ThemeSettings
+import com.mhss.app.mybrain.presentation.common.getName
+import com.mhss.app.mybrain.presentation.common.toFontFamily
+import com.mhss.app.mybrain.presentation.common.toInt
 import com.mhss.app.mybrain.presentation.settings.SettingsBasicLinkItem
 import com.mhss.app.mybrain.presentation.settings.SettingsItemCard
 import com.mhss.app.mybrain.presentation.settings.SettingsSwitchCard
@@ -27,7 +32,6 @@ import com.mhss.app.mybrain.presentation.settings.SettingsViewModel
 import com.mhss.app.mybrain.presentation.navigation.Screen
 import com.mhss.app.mybrain.ui.theme.Rubik
 import com.mhss.app.mybrain.util.Constants
-import com.mhss.app.mybrain.util.settings.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

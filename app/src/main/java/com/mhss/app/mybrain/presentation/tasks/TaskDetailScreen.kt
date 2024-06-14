@@ -29,14 +29,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.mybrain.R
+import com.mhss.app.mybrain.domain.model.tasks.Priority
 import com.mhss.app.mybrain.domain.model.tasks.SubTask
 import com.mhss.app.mybrain.domain.model.tasks.Task
 import com.mhss.app.mybrain.presentation.common.DateTimeDialog
 import com.mhss.app.mybrain.util.date.formatDateDependingOnDay
 import com.mhss.app.mybrain.util.permissions.Permission
 import com.mhss.app.mybrain.util.permissions.rememberPermissionState
-import com.mhss.app.mybrain.util.settings.TaskFrequency
-import com.mhss.app.mybrain.util.settings.Priority
+import com.mhss.app.mybrain.domain.model.tasks.TaskFrequency
+import com.mhss.app.mybrain.presentation.common.color
+import com.mhss.app.mybrain.presentation.common.titleRes
 import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
@@ -397,7 +399,7 @@ fun TaskDetailsContent(
                             items = TaskFrequency.entries,
                             selectedItem = frequency,
                             getText = {
-                                stringResource(it.title)
+                                stringResource(it.titleRes)
                             },
                             onItemSelected = {
                                 frequencyMenuVisible = false
@@ -454,7 +456,7 @@ fun PriorityTabRow(
     ) {
         priorities.forEach {
             Tab(
-                text = { Text(stringResource(it.title)) },
+                text = { Text(stringResource(it.titleRes)) },
                 selected = selectedPriority == it,
                 onClick = {
                     onChange(it)
