@@ -3,6 +3,7 @@ package com.mhss.app.mybrain.presentation.common.theme
 import androidx.compose.ui.graphics.Color
 
 val PrimaryColor = Color(0xFF2DD1E7)
+val OnPrimary = Color(0xFF2562C7)
 val SecondaryColor = Color(0xFF00B0B0)
 val TertiaryColor = SecondaryColor
 val DarkGray = Color(0xFF131313)

@@ -1,5 +1,6 @@
 package com.mhss.app.mybrain.presentation.main
 
+import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -44,6 +45,9 @@ fun SettingsScreen(
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
+    }
+    val showMaterialYouOption = remember {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     }
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -176,22 +180,25 @@ fun SettingsScreen(
                 }
             }
 
-            item {
-                val block = viewModel
-                    .getSettings(
-                        booleanPreferencesKey(Constants.WIDGETS_MATERIAL_YOU),
-                        false
-                    ).collectAsState(
-                        initial = false
-                    )
-                SettingsSwitchCard(
-                    stringResource(R.string.material_you_for_widgets),
-                    block.value
-                ) {
-                    viewModel.saveSettings(
-                        booleanPreferencesKey(Constants.WIDGETS_MATERIAL_YOU),
-                        it
-                    )
+
+            if (showMaterialYouOption) {
+                item {
+                    val block = viewModel
+                        .getSettings(
+                            booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU),
+                            false
+                        ).collectAsState(
+                            initial = false
+                        )
+                    SettingsSwitchCard(
+                        stringResource(R.string.material_you_for_widgets),
+                        block.value
+                    ) {
+                        viewModel.saveSettings(
+                            booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU),
+                            it
+                        )
+                    }
                 }
             }
 

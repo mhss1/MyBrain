@@ -10,7 +10,7 @@ object Constants {
     // Settings
     const val SETTINGS_PREFERENCES = "settings_preferences"
     const val SETTINGS_THEME_KEY = "settings_theme"
-    const val WIDGETS_MATERIAL_YOU = "material_you"
+    const val SETTINGS_MATERIAL_YOU = "material_you"
     const val DEFAULT_START_UP_SCREEN_KEY = "default_start_up_screen"
     const val SHOW_COMPLETED_TASKS_KEY = "show_completed_tasks"
     const val TASKS_ORDER_KEY = "tasks_order"

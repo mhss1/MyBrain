@@ -54,6 +54,7 @@ class MainViewModel(
     val defaultStartUpScreen = getPreference(intPreferencesKey(Constants.DEFAULT_START_UP_SCREEN_KEY), StartUpScreenSettings.SPACES.value)
     val font = getPreference(intPreferencesKey(Constants.APP_FONT_KEY), Rubik.toInt())
     val blockScreenshots = getPreference(booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY), false)
+    val useMaterialYou = getPreference(booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU), false)
 
     fun onDashboardEvent(event: DashboardEvent) {
         when(event) {

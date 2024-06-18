@@ -41,7 +41,7 @@ class TasksHomeWidget : GlanceAppWidget(), KoinComponent {
                 false
             ).collectAsState(false)
             val useMaterialYou by getSettings(
-                booleanPreferencesKey(Constants.WIDGETS_MATERIAL_YOU),
+                booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU),
                 false
             ).collectAsState(false)
             val tasks by getAllTasks(order.toOrder(), showCompletedTasks).collectAsState(emptyList())

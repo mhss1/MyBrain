@@ -43,7 +43,7 @@ class CalendarHomeWidget : GlanceAppWidget(), KoinComponent {
 
         provideContent {
             val useMaterialYou by getSettings(
-                booleanPreferencesKey(Constants.WIDGETS_MATERIAL_YOU),
+                booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU),
                 false
             ).collectAsState(false)
 

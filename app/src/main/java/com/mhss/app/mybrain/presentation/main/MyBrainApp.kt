@@ -9,7 +9,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
@@ -70,8 +70,9 @@ fun MyBrainApp(
     var appUnlocked by remember {
         mutableStateOf(true)
     }
+    val useMaterialYou by viewModel.useMaterialYou.collectAsStateWithLifecycle(false)
     val lifecycleOwner = LocalLifecycleOwner.current
-    val font = viewModel.font.collectAsState(initial = Rubik.toInt())
+    val font = viewModel.font.collectAsStateWithLifecycle(Rubik.toInt())
     var startDestination: Screen by remember { mutableStateOf(Screen.SpacesScreen) }
     LaunchedEffect(Unit) {
         lifecycleOwner.lifecycleScope.launch {
@@ -118,7 +119,10 @@ fun MyBrainApp(
             startDestination = Screen.DashboardScreen
         }
     }
-    MyBrainTheme(darkTheme = isDarkMode, fontFamily = font.value.toFontFamily()) {
+    MyBrainTheme(
+        darkTheme = isDarkMode,
+        useDynamicColors = useMaterialYou,
+        fontFamily = font.value.toFontFamily()) {
         val navController = rememberNavController()
         Scaffold(
             modifier = modifier.fillMaxSize(),
@@ -128,9 +132,11 @@ fun MyBrainApp(
             NavHost(
                 startDestination = Screen.Main,
                 navController = navController,
-                modifier = Modifier.padding(
-                    top = paddingValues.calculateTopPadding()
-                ).consumeWindowInsets(paddingValues)
+                modifier = Modifier
+                    .padding(
+                        top = paddingValues.calculateTopPadding()
+                    )
+                    .consumeWindowInsets(paddingValues)
             ) {
                 composable<Screen.Main> {
                     MainScreen(
