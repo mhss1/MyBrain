@@ -191,7 +191,7 @@ fun SettingsScreen(
                             initial = false
                         )
                     SettingsSwitchCard(
-                        stringResource(R.string.material_you_for_widgets),
+                        stringResource(R.string.material_you),
                         block.value
                     ) {
                         viewModel.saveSettings(
