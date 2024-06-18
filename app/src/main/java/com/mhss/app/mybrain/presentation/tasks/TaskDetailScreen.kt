@@ -121,7 +121,6 @@ fun TaskDetailScreen(
             ),
             {
                 navController.navigateUp()
-                navController.navigateUp()
             }
         ) {
             viewModel.onEvent(TaskEvent.UpdateTask(it, dueDate != uiState.task.dueDate))
