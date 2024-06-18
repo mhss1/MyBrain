@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.glance.GlanceId
+import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
+import androidx.glance.material3.ColorProviders
 import com.mhss.app.mybrain.domain.model.preferences.Order
 import com.mhss.app.mybrain.domain.model.preferences.OrderType
 import com.mhss.app.mybrain.domain.model.preferences.booleanPreferencesKey
@@ -15,6 +17,8 @@ import com.mhss.app.mybrain.domain.model.preferences.toInt
 import com.mhss.app.mybrain.domain.model.preferences.toOrder
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetAllTasksUseCase
+import com.mhss.app.mybrain.presentation.glance_widgets.WidgetTheme
+import com.mhss.app.mybrain.presentation.glance_widgets.widgetDarkColorScheme
 import com.mhss.app.mybrain.presentation.tasks.TasksHomeScreenWidget
 import com.mhss.app.mybrain.util.Constants
 import org.koin.core.component.KoinComponent
@@ -36,11 +40,21 @@ class TasksHomeWidget : GlanceAppWidget(), KoinComponent {
                 booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
                 false
             ).collectAsState(false)
+            val useMaterialYou by getSettings(
+                booleanPreferencesKey(Constants.WIDGETS_MATERIAL_YOU),
+                false
+            ).collectAsState(false)
             val tasks by getAllTasks(order.toOrder(), showCompletedTasks).collectAsState(emptyList())
 
-            TasksHomeScreenWidget(
-                tasks
-            )
+            WidgetTheme(
+                if (useMaterialYou) {
+                    GlanceTheme.colors
+                } else ColorProviders(widgetDarkColorScheme)
+            ) {
+                TasksHomeScreenWidget(
+                    tasks
+                )
+            }
         }
     }
 }

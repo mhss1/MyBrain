@@ -1,7 +1,6 @@
 package com.mhss.app.mybrain.presentation.tasks
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.*
@@ -15,7 +14,6 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
-import androidx.glance.unit.ColorProvider
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.tasks.Task
@@ -29,7 +27,7 @@ fun TasksHomeScreenWidget(
     Box(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .background(ImageProvider(R.drawable.large_item_rounded_corner_shape))
+            .background(GlanceTheme.colors.secondaryContainer)
             .cornerRadius(25.dp)
     ) {
         Column(
@@ -43,7 +41,7 @@ fun TasksHomeScreenWidget(
                 Text(
                     getString(R.string.tasks),
                     style = TextStyle(
-                        color = ColorProvider(Color.White),
+                        color = GlanceTheme.colors.onSecondaryContainer,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     ),
@@ -64,7 +62,8 @@ fun TasksHomeScreenWidget(
                             .size(22.dp)
                             .clickable(actionRunCallback<AddTaskAction>())
                         ,
-                        contentDescription = "Add task"
+                        contentDescription = "Add task",
+                        colorFilter = ColorFilter.tint(GlanceTheme.colors.onSecondaryContainer)
                     )
                 }
             }
@@ -73,7 +72,7 @@ fun TasksHomeScreenWidget(
                 modifier = GlanceModifier
                     .fillMaxSize()
                     .padding(horizontal = 6.dp)
-                    .background(ImageProvider(R.drawable.large_inner_item_rounded_corner_shape))
+                    .background(GlanceTheme.colors.onSecondary)
                     .cornerRadius(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -83,7 +82,7 @@ fun TasksHomeScreenWidget(
                                 text = getString(R.string.no_tasks_message),
                                 modifier = GlanceModifier.padding(16.dp),
                                 style = TextStyle(
-                                    color = ColorProvider(Color.White),
+                                    color = GlanceTheme.colors.secondary,
                                     fontWeight = FontWeight.Normal,
                                     fontSize = 16.sp,
                                     textAlign = TextAlign.Center

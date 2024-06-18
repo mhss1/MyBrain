@@ -5,7 +5,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
+import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.action.Action
@@ -40,7 +42,8 @@ fun TaskWidgetItem(
     ) {
         Column(
             GlanceModifier
-                .background(ImageProvider(R.drawable.small_item_rounded_corner_shape))
+                .background(GlanceTheme.colors.secondaryContainer)
+                .cornerRadius(16.dp)
                 .padding(10.dp)
                 .clickable(
                     actionRunCallback<TaskWidgetItemClickAction>(
@@ -50,15 +53,17 @@ fun TaskWidgetItem(
                     )
                 )
         ) {
-            Row(GlanceModifier
-                .fillMaxWidth()
-                .clickable(
-                    actionRunCallback<TaskWidgetItemClickAction>(
-                    parameters = actionParametersOf(
-                        taskId to task.id
-                    )
-                ))
-                , verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                GlanceModifier
+                    .fillMaxWidth()
+                    .clickable(
+                        actionRunCallback<TaskWidgetItemClickAction>(
+                            parameters = actionParametersOf(
+                                taskId to task.id
+                            )
+                        )
+                    ), verticalAlignment = Alignment.CenterVertically
+            ) {
                 TaskWidgetCheckBox(
                     isComplete = task.isCompleted,
                     task.priority.color,
@@ -73,23 +78,25 @@ fun TaskWidgetItem(
                 Text(
                     task.title,
                     style = TextStyle(
-                        color = ColorProvider(Color.White),
+                        color = GlanceTheme.colors.onSecondaryContainer,
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
                         textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
                     ),
                     maxLines = 2,
-                    modifier = GlanceModifier.clickable(actionRunCallback<CompleteTaskAction>(
-                        parameters = actionParametersOf(
-                            taskId to task.id,
-                            completed to !task.isCompleted
+                    modifier = GlanceModifier.clickable(
+                        actionRunCallback<CompleteTaskAction>(
+                            parameters = actionParametersOf(
+                                taskId to task.id,
+                                completed to !task.isCompleted
+                            )
                         )
-                    ))
+                    )
                 )
 
             }
             Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                if (task.subTasks.isNotEmpty()){
+                if (task.subTasks.isNotEmpty()) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = GlanceModifier.padding(top = 4.dp)
@@ -102,13 +109,14 @@ fun TaskWidgetItem(
                             provider = ImageProvider(R.drawable.ic_bullet_list),
                             modifier = GlanceModifier
                                 .size(12.dp),
-                            contentDescription = null
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(GlanceTheme.colors.onSecondaryContainer)
                         )
                         Spacer(GlanceModifier.width(3.dp))
                         Text(
                             text = "$completed/$total",
                             style = TextStyle(
-                                color = ColorProvider(Color.White.copy(alpha = 0.8f)),
+                                color = GlanceTheme.colors.onSecondaryContainer,
                                 fontSize = 12.sp,
                                 textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
                             )
@@ -123,18 +131,19 @@ fun TaskWidgetItem(
                     ) {
                         Image(
                             modifier = GlanceModifier.size(12.dp),
-                            provider = if (task.dueDate.isDueDateOverdue()) ImageProvider(R.drawable.ic_alarm_red) else ImageProvider(
-                                R.drawable.ic_alarm
-                            ),
+                            provider = ImageProvider(R.drawable.ic_alarm),
                             contentDescription = "",
+                            colorFilter = ColorFilter.tint(
+                                if (task.dueDate.isDueDateOverdue()) ColorProvider(Color.Red) else GlanceTheme.colors.onSecondaryContainer
+                            )
                         )
                         Spacer(GlanceModifier.width(3.dp))
                         Text(
                             text = task.dueDate.formatDateDependingOnDay(),
                             style = TextStyle(
-                                color = if (task.dueDate.isDueDateOverdue()) ColorProvider(Color.Red) else ColorProvider(
-                                    Color.White.copy(0.8f)
-                                ),
+                                color = if (task.dueDate.isDueDateOverdue())
+                                    ColorProvider(Color.Red)
+                                else GlanceTheme.colors.onSecondaryContainer,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 12.sp,
                             )
@@ -156,12 +165,15 @@ fun TaskWidgetCheckBox(
         modifier = GlanceModifier
             .size(25.dp)
             .cornerRadius(99.dp)
-            .background(ImageProvider(
-                when (borderColor){
-                      Priority.LOW.color -> R.drawable.task_check_box_background_green
-                      Priority.MEDIUM.color -> R.drawable.task_check_box_background_orange
-                    else -> R.drawable.task_check_box_background_red
-                }))
+            .background(
+                ImageProvider(
+                    when (borderColor) {
+                        Priority.LOW.color -> R.drawable.task_check_box_background_green
+                        Priority.MEDIUM.color -> R.drawable.task_check_box_background_orange
+                        else -> R.drawable.task_check_box_background_red
+                    }
+                )
+            )
             .clickable(
                 onClick = onComplete
             ).padding(3.dp),
@@ -171,7 +183,8 @@ fun TaskWidgetCheckBox(
             Image(
                 modifier = GlanceModifier.size(14.dp),
                 provider = ImageProvider(R.drawable.ic_check),
-                contentDescription = null
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(GlanceTheme.colors.onSecondaryContainer)
             )
         }
     }

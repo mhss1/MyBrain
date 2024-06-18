@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
-import androidx.glance.ImageProvider
+import androidx.glance.GlanceTheme
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionRunCallback
@@ -15,8 +15,6 @@ import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import androidx.glance.unit.ColorProvider
-import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
 import com.mhss.app.mybrain.presentation.glance_widgets.calendar.CalendarWidgetItemClick
 import com.mhss.app.mybrain.presentation.glance_widgets.calendar.eventJson
@@ -34,8 +32,8 @@ fun CalendarEventWidgetItem(
     ) {
         Box(
             modifier = GlanceModifier
+                .background(GlanceTheme.colors.secondaryContainer)
                 .cornerRadius(16.dp)
-                .background(ImageProvider(R.drawable.small_item_rounded_corner_shape))
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -57,7 +55,7 @@ fun CalendarEventWidgetItem(
                     Text(
                         event.title,
                         style = TextStyle(
-                            color = ColorProvider(Color.White),
+                            color = GlanceTheme.colors.onSecondaryContainer,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         ),
@@ -71,7 +69,7 @@ fun CalendarEventWidgetItem(
                             location = event.location,
                             allDay = event.allDay,
                         ),
-                        style = TextStyle(color = ColorProvider(Color.LightGray))
+                        style = TextStyle(color = GlanceTheme.colors.onSecondaryContainer)
                     )
                 }
             }

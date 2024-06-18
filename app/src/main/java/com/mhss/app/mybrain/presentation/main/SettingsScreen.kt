@@ -177,6 +177,25 @@ fun SettingsScreen(
             }
 
             item {
+                val block = viewModel
+                    .getSettings(
+                        booleanPreferencesKey(Constants.WIDGETS_MATERIAL_YOU),
+                        false
+                    ).collectAsState(
+                        initial = false
+                    )
+                SettingsSwitchCard(
+                    stringResource(R.string.material_you_for_widgets),
+                    block.value
+                ) {
+                    viewModel.saveSettings(
+                        booleanPreferencesKey(Constants.WIDGETS_MATERIAL_YOU),
+                        it
+                    )
+                }
+            }
+
+            item {
                 SettingsItemCard(
                     cornerRadius = 16.dp,
                     onClick = {

@@ -1,19 +1,25 @@
 package com.mhss.app.mybrain.presentation.glance_widgets.calendar
 
 import android.content.Context
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.core.content.ContextCompat
 import com.mhss.app.mybrain.domain.model.preferences.stringSetPreferencesKey
 import androidx.glance.GlanceId
+import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
+import androidx.glance.material3.ColorProviders
+import com.mhss.app.mybrain.domain.model.preferences.booleanPreferencesKey
 import com.mhss.app.mybrain.domain.use_case.calendar.GetAllEventsUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.presentation.calendar.CalendarHomeScreenWidget
 import com.mhss.app.mybrain.presentation.common.toIntList
+import com.mhss.app.mybrain.presentation.glance_widgets.WidgetTheme
+import com.mhss.app.mybrain.presentation.glance_widgets.widgetDarkColorScheme
 import com.mhss.app.mybrain.util.Constants
 import com.mhss.app.mybrain.util.date.formatDateForMapping
 import kotlinx.coroutines.flow.first
@@ -36,6 +42,11 @@ class CalendarHomeWidget : GlanceAppWidget(), KoinComponent {
         }
 
         provideContent {
+            val useMaterialYou by getSettings(
+                booleanPreferencesKey(Constants.WIDGETS_MATERIAL_YOU),
+                false
+            ).collectAsState(false)
+
             val hasPermission by remember {
                 mutableStateOf(
                     ContextCompat.checkSelfPermission(
@@ -45,10 +56,17 @@ class CalendarHomeWidget : GlanceAppWidget(), KoinComponent {
                 )
             }
 
-            CalendarHomeScreenWidget(
-                events,
-                hasPermission
-            )
+            WidgetTheme(
+                if (useMaterialYou) {
+                    GlanceTheme.colors
+                } else ColorProviders(widgetDarkColorScheme)
+            ) {
+                CalendarHomeScreenWidget(
+                    events,
+                    hasPermission
+                )
+            }
+
         }
     }
 }
