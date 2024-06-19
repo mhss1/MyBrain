@@ -73,3 +73,9 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
+[bundles]
+koin = ["koin-core", "koin-android", "koin-android-workmanager", "koin-annotations"]
+compose = ["compose-ui", "compose-material", "compose-ui-tooling", "compose-ui-tooling-preview", "koin-androidx-compose", "compose-markdown"]
+androidx-glance = ["androidx-glance-appwidget", "androidx-glance-material"]
+
+
