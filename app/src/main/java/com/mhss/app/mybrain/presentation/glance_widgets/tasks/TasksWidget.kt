@@ -19,12 +19,11 @@ import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
 import com.mhss.app.mybrain.domain.use_case.tasks.GetAllTasksUseCase
 import com.mhss.app.mybrain.presentation.glance_widgets.WidgetTheme
 import com.mhss.app.mybrain.presentation.glance_widgets.widgetDarkColorScheme
-import com.mhss.app.mybrain.presentation.tasks.TasksHomeScreenWidget
 import com.mhss.app.mybrain.util.Constants
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class TasksHomeWidget : GlanceAppWidget(), KoinComponent {
+class TasksWidget : GlanceAppWidget(), KoinComponent {
 
     private val getSettings: GetPreferenceUseCase by inject()
     private val getAllTasks: GetAllTasksUseCase by inject()
@@ -60,5 +59,5 @@ class TasksHomeWidget : GlanceAppWidget(), KoinComponent {
 }
 
 class TasksWidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = TasksHomeWidget()
+    override val glanceAppWidget: GlanceAppWidget = TasksWidget()
 }

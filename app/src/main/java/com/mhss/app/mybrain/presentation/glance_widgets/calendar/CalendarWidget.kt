@@ -16,7 +16,6 @@ import androidx.glance.material3.ColorProviders
 import com.mhss.app.mybrain.domain.model.preferences.booleanPreferencesKey
 import com.mhss.app.mybrain.domain.use_case.calendar.GetAllEventsUseCase
 import com.mhss.app.mybrain.domain.use_case.settings.GetPreferenceUseCase
-import com.mhss.app.mybrain.presentation.calendar.CalendarHomeScreenWidget
 import com.mhss.app.mybrain.presentation.common.toIntList
 import com.mhss.app.mybrain.presentation.glance_widgets.WidgetTheme
 import com.mhss.app.mybrain.presentation.glance_widgets.widgetDarkColorScheme
@@ -26,7 +25,7 @@ import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class CalendarHomeWidget : GlanceAppWidget(), KoinComponent {
+class CalendarWidget : GlanceAppWidget(), KoinComponent {
 
     private val getSettings: GetPreferenceUseCase by inject()
     private val getAllEvents: GetAllEventsUseCase by inject()
@@ -72,5 +71,5 @@ class CalendarHomeWidget : GlanceAppWidget(), KoinComponent {
 }
 
 class CalendarWidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = CalendarHomeWidget()
+    override val glanceAppWidget: GlanceAppWidget = CalendarWidget()
 }

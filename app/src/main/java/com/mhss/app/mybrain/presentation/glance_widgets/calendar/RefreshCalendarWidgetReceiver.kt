@@ -11,7 +11,7 @@ class RefreshCalendarWidgetReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         runBlocking {
-            CalendarHomeWidget().updateAll(context)
+            CalendarWidget().updateAll(context)
         }
     }
 }

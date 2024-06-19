@@ -3,8 +3,8 @@ package com.mhss.app.mybrain.data.repository
 import android.content.Context
 import androidx.glance.appwidget.updateAll
 import com.mhss.app.mybrain.domain.repository.widget.WidgetUpdater
-import com.mhss.app.mybrain.presentation.glance_widgets.calendar.CalendarHomeWidget
-import com.mhss.app.mybrain.presentation.glance_widgets.tasks.TasksHomeWidget
+import com.mhss.app.mybrain.presentation.glance_widgets.calendar.CalendarWidget
+import com.mhss.app.mybrain.presentation.glance_widgets.tasks.TasksWidget
 import org.koin.core.annotation.Single
 
 @Single
@@ -14,10 +14,10 @@ class WidgetUpdaterImpl(
     override suspend fun updateAll(type: WidgetUpdater.WidgetType) {
         when (type) {
             WidgetUpdater.WidgetType.Calendar -> {
-                CalendarHomeWidget().updateAll(context)
+                CalendarWidget().updateAll(context)
             }
             WidgetUpdater.WidgetType.Tasks -> {
-                TasksHomeWidget().updateAll(context)
+                TasksWidget().updateAll(context)
             }
         }
     }

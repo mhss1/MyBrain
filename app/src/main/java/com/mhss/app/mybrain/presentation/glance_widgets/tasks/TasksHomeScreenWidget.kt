@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.presentation.tasks
+package com.mhss.app.mybrain.presentation.glance_widgets.tasks
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -17,8 +17,7 @@ import androidx.glance.text.TextStyle
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.tasks.Task
-import com.mhss.app.mybrain.presentation.glance_widgets.tasks.AddTaskAction
-import com.mhss.app.mybrain.presentation.glance_widgets.tasks.NavigateToTasksAction
+import com.mhss.app.mybrain.presentation.tasks.TaskWidgetItem
 
 @Composable
 fun TasksHomeScreenWidget(

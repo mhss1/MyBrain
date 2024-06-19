@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.presentation.calendar
+package com.mhss.app.mybrain.presentation.glance_widgets.calendar
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -16,10 +16,7 @@ import androidx.glance.text.TextStyle
 import com.mhss.app.mybrain.R
 import com.mhss.app.mybrain.app.getString
 import com.mhss.app.mybrain.domain.model.calendar.CalendarEvent
-import com.mhss.app.mybrain.presentation.glance_widgets.calendar.AddEventAction
-import com.mhss.app.mybrain.presentation.glance_widgets.calendar.GoToSettingsAction
-import com.mhss.app.mybrain.presentation.glance_widgets.calendar.NavigateToCalendarAction
-import com.mhss.app.mybrain.presentation.glance_widgets.calendar.RefreshCalendarAction
+import com.mhss.app.mybrain.presentation.calendar.CalendarEventWidgetItem
 
 @Composable
 fun CalendarHomeScreenWidget(

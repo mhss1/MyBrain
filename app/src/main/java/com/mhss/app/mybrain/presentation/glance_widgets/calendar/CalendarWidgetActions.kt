@@ -60,7 +60,7 @@ class GoToSettingsAction : ActionCallback {
 
 class RefreshCalendarAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        CalendarHomeWidget().updateAll(context)
+        CalendarWidget().updateAll(context)
     }
 }
 
