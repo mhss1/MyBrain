@@ -6,8 +6,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
-import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.app.getString
+import com.mhss.app.app.R
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -26,7 +25,7 @@ class AppLockManager(
 
     fun showAuthPrompt() {
         val info = BiometricPrompt.PromptInfo.Builder()
-            .setTitle(getString(R.string.auth_title))
+            .setTitle(activity.getString(R.string.auth_title))
             .setConfirmationRequired(false)
             .setAllowedAuthenticators(authenticators)
 

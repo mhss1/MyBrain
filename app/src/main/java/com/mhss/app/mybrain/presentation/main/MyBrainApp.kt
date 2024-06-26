@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,34 +25,33 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
-import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.app.getString
+import com.mhss.app.app.R
+import com.mhss.app.util.Constants
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.mybrain.presentation.app_lock.AuthScreen
-import com.mhss.app.mybrain.presentation.bookmarks.BookmarkDetailsScreen
-import com.mhss.app.mybrain.presentation.bookmarks.BookmarkSearchScreen
-import com.mhss.app.mybrain.presentation.bookmarks.BookmarksScreen
-import com.mhss.app.mybrain.presentation.calendar.CalendarEventDetailsScreen
-import com.mhss.app.mybrain.presentation.calendar.CalendarScreen
-import com.mhss.app.mybrain.presentation.diary.DiaryChartScreen
-import com.mhss.app.mybrain.presentation.diary.DiaryEntryDetailsScreen
-import com.mhss.app.mybrain.presentation.diary.DiaryScreen
-import com.mhss.app.mybrain.presentation.diary.DiarySearchScreen
-import com.mhss.app.mybrain.presentation.common.navigation.Screen
-import com.mhss.app.mybrain.presentation.notes.NoteDetailsScreen
-import com.mhss.app.mybrain.presentation.notes.NoteFolderDetailsScreen
-import com.mhss.app.mybrain.presentation.notes.NotesScreen
-import com.mhss.app.mybrain.presentation.notes.NotesSearchScreen
-import com.mhss.app.mybrain.presentation.settings.ImportExportScreen
-import com.mhss.app.mybrain.presentation.tasks.TaskDetailScreen
-import com.mhss.app.mybrain.presentation.tasks.TasksScreen
-import com.mhss.app.mybrain.presentation.tasks.TasksSearchScreen
-import com.mhss.app.mybrain.presentation.common.theme.MyBrainTheme
-import com.mhss.app.mybrain.presentation.common.theme.Rubik
-import com.mhss.app.mybrain.util.Constants
-import com.mhss.app.mybrain.presentation.common.StartUpScreenSettings
-import com.mhss.app.mybrain.presentation.common.toFontFamily
-import com.mhss.app.mybrain.presentation.common.toInt
+import com.mhss.app.presentation.BookmarkDetailsScreen
+import com.mhss.app.presentation.BookmarkSearchScreen
+import com.mhss.app.presentation.BookmarksScreen
+import com.mhss.app.presentation.CalendarEventDetailsScreen
+import com.mhss.app.presentation.CalendarScreen
+import com.mhss.app.presentation.DiaryChartScreen
+import com.mhss.app.presentation.DiaryEntryDetailsScreen
+import com.mhss.app.presentation.DiaryScreen
+import com.mhss.app.presentation.DiarySearchScreen
+import com.mhss.app.presentation.ImportExportScreen
+import com.mhss.app.presentation.NoteDetailsScreen
+import com.mhss.app.presentation.NoteFolderDetailsScreen
+import com.mhss.app.presentation.NotesScreen
+import com.mhss.app.presentation.NotesSearchScreen
+import com.mhss.app.presentation.TaskDetailScreen
+import com.mhss.app.presentation.TasksScreen
+import com.mhss.app.presentation.TasksSearchScreen
+import com.mhss.app.ui.StartUpScreenSettings
+import com.mhss.app.ui.navigation.Screen
+import com.mhss.app.ui.theme.MyBrainTheme
+import com.mhss.app.ui.theme.Rubik
+import com.mhss.app.ui.toFontFamily
+import com.mhss.app.ui.toInt
 
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -64,6 +64,7 @@ fun MyBrainApp(
     isDarkMode: Boolean,
     appLockManager: AppLockManager
 ) {
+    val context = LocalContext.current
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -92,13 +93,13 @@ fun MyBrainApp(
 
                         AppLockManager.AuthResult.Failed -> {
                             snackbarHostState.showSnackbar(
-                                getString(R.string.auth_failed)
+                                context.getString(R.string.auth_failed)
                             )
                         }
 
                         AppLockManager.AuthResult.NoHardware, AppLockManager.AuthResult.HardwareUnavailable -> {
                             snackbarHostState.showSnackbar(
-                                getString(R.string.auth_no_hardware)
+                                context.getString(R.string.auth_no_hardware)
                             )
                         }
 

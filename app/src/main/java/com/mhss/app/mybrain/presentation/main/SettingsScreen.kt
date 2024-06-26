@@ -9,30 +9,29 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mhss.app.mybrain.domain.model.preferences.booleanPreferencesKey
-import com.mhss.app.mybrain.domain.model.preferences.intPreferencesKey
 import androidx.navigation.NavHostController
+import com.mhss.app.util.Constants
 import com.mhss.app.mybrain.BuildConfig
-import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.app.getString
+import com.mhss.app.app.R
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
-import com.mhss.app.mybrain.presentation.common.StartUpScreenSettings
-import com.mhss.app.mybrain.presentation.common.ThemeSettings
-import com.mhss.app.mybrain.presentation.common.getName
-import com.mhss.app.mybrain.presentation.common.toFontFamily
-import com.mhss.app.mybrain.presentation.common.toInt
-import com.mhss.app.mybrain.presentation.settings.SettingsBasicLinkItem
-import com.mhss.app.mybrain.presentation.settings.SettingsItemCard
-import com.mhss.app.mybrain.presentation.settings.SettingsSwitchCard
-import com.mhss.app.mybrain.presentation.settings.SettingsViewModel
-import com.mhss.app.mybrain.presentation.common.navigation.Screen
-import com.mhss.app.mybrain.presentation.common.theme.Rubik
-import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.preferences.domain.model.*
+import com.mhss.app.presentation.SettingsBasicLinkItem
+import com.mhss.app.presentation.SettingsItemCard
+import com.mhss.app.presentation.SettingsSwitchCard
+import com.mhss.app.presentation.SettingsViewModel
+import com.mhss.app.ui.StartUpScreenSettings
+import com.mhss.app.ui.ThemeSettings
+import com.mhss.app.ui.getName
+import com.mhss.app.ui.navigation.Screen
+import com.mhss.app.ui.theme.Rubik
+import com.mhss.app.ui.toFontFamily
+import com.mhss.app.ui.toInt
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -49,6 +48,7 @@ fun SettingsScreen(
     val showMaterialYouOption = remember {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     }
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -173,7 +173,7 @@ fun SettingsScreen(
                     } else {
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                getString(R.string.no_auth_method)
+                                context.getString(R.string.no_auth_method)
                             )
                         }
                     }

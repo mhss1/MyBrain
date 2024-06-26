@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.common.theme.Blue
+import com.mhss.app.app.R
+import com.mhss.app.ui.theme.Blue
 
 @Composable
 fun SpaceRegularCard(

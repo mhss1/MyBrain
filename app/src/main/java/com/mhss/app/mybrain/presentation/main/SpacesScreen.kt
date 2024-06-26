@@ -16,11 +16,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.mhss.app.mybrain.R
+import com.mhss.app.app.R
 import com.mhss.app.mybrain.presentation.main.components.SpaceRegularCard
 import com.mhss.app.mybrain.presentation.main.components.SpaceWideCard
-import com.mhss.app.mybrain.presentation.common.navigation.Screen
-import com.mhss.app.mybrain.presentation.common.theme.*
+import com.mhss.app.ui.navigation.Screen
+import com.mhss.app.ui.theme.Blue
+import com.mhss.app.ui.theme.Green
+import com.mhss.app.ui.theme.Orange
+import com.mhss.app.ui.theme.Purple
+import com.mhss.app.ui.theme.Red
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -68,77 +68,63 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":notes:presentation"))
+    implementation(project(":tasks:presentation"))
+    implementation(project(":bookmarks:presentation"))
+    implementation(project(":calendar:presentation"))
+    implementation(project(":diary:presentation"))
+    implementation(project(":settings:presentation"))
+
+    implementation(project(":notes:data"))
+    implementation(project(":tasks:data"))
+    implementation(project(":bookmarks:data"))
+    implementation(project(":diary:data"))
+    implementation(project(":calendar:data"))
+    implementation(project(":settings:data"))
+
+    implementation(project(":tasks:domain"))
+    implementation(project(":calendar:domain"))
+    implementation(project(":diary:domain"))
+
+    implementation(project(":core:notification"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:app"))
+    implementation(project(":core:di"))
+    implementation(project(":core:alarm"))
+    implementation(project(":core:database"))
+    implementation(project(":widget"))
+    implementation(project(":core:preferences"))
+    implementation(project(":core:util"))
+
     implementation(platform(libs.compose.bom))
     androidTestImplementation(platform(libs.compose.bom))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.compose.ui)
-    implementation(libs.compose.material)
-    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.bundles.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.compose.test.junit4)
-    debugImplementation(libs.compose.ui.tooling)
-
-    // Compose navigation
-    implementation(libs.androidx.navigation.compose)
-
-    // Room
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
-
-    // Coroutines
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.android)
-
-    // Preferences DataStore
-    implementation(libs.androidx.datastore.preferences)
-
-    // Compose MarkDown
-    implementation(libs.compose.markdown)
-
-    // Compose Glance (Widgets)
-    implementation(libs.androidx.glance.appwidget)
-    implementation(libs.androidx.glance.material)
 
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
 
-    // DocumentFile
-    implementation(libs.androidx.documentfile)
-
     // Biometric
     implementation(libs.androidx.biometric)
 
-    // Kotlinx serialization
-    implementation(libs.kotlinx.serialization.json)
-
     // Koin
     implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
+    implementation(libs.bundles.koin)
     implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android.workmanager)
-    implementation(libs.koin.annotations)
     ksp(libs.koin.ksp.compiler)
 
-    // UUID
-    implementation(libs.uuid)
+    implementation(libs.kotlinx.serialization.json)
 
-    //Kotlinx datetime
-    implementation(libs.kotlinx.datetime)
-
-    //Calf
-    implementation(libs.calf.file.picker)
+    implementation(libs.androidx.datastore.preferences)
 }
 
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-    arg("KOIN_DEFAULT_MODULE","false")
-}

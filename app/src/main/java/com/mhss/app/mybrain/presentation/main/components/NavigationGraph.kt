@@ -9,7 +9,7 @@ import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.mybrain.presentation.main.DashboardScreen
 import com.mhss.app.mybrain.presentation.main.SettingsScreen
 import com.mhss.app.mybrain.presentation.main.SpacesScreen
-import com.mhss.app.mybrain.presentation.common.navigation.Screen
+import com.mhss.app.ui.navigation.Screen
 
 @Composable
 fun NavigationGraph(

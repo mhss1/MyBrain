@@ -15,7 +15,7 @@
 
 
     <application
-        android:name=".app.MyBrainApplication"
+        android:name=".MyBrainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -33,10 +33,21 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="app"/>
+                <data android:host="com.mhss.app.mybrain.task_details"/>
+                <data android:host="com.mhss.app.mybrain.tasks"/>
+                <data android:host="com.mhss.app.mybrain.calendar"/>
+                <data android:host="com.mhss.app.mybrain.calendar_event_details"/>
+            </intent-filter>
+
         </activity>
 
         <receiver
-            android:name=".util.alarms.BootBroadcastReceiver"
+            android:name="com.mhss.app.notification.BootBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -44,14 +55,14 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".util.alarms.AlarmReceiver"
+            android:name="com.mhss.app.notification.AlarmReceiver"
             android:enabled="true" />
         <receiver
-            android:name=".util.alarms.TaskActionButtonBroadcastReceiver"
+            android:name="com.mhss.app.notification.TaskActionButtonBroadcastReceiver"
             android:enabled="true" />
 
         <activity
-            android:name=".presentation.bookmarks.SaveBookmarkActivity"
+            android:name="com.mhss.app.presentation.SaveBookmarkActivity"
             android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -66,7 +77,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.tasks.AddTaskFromShareActivity"
+            android:name="com.mhss.app.presentation.AddTaskFromShareActivity"
             android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -81,7 +92,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.notes.AddNoteFromShareActivity"
+            android:name="com.mhss.app.presentation.AddNoteFromShareActivity"
             android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -98,7 +109,7 @@
 
         <!-- The Add task tile in the quick settings -->
         <service
-            android:name=".presentation.tasks.AddTaskTileService"
+            android:name="com.mhss.app.presentation.AddTaskTileService"
             android:exported="true"
             android:icon="@drawable/ic_check"
             android:label="@string/add_task_to_my_brain"
@@ -110,7 +121,7 @@
 
         <!-- Calendar widget-->
         <receiver
-            android:name=".presentation.glance_widgets.calendar.CalendarWidgetReceiver"
+            android:name="com.mhss.app.widget.calendar.CalendarWidgetReceiver"
             android:enabled="@bool/glance_appwidget_available"
             android:exported="true"
             android:label="@string/calendar">
@@ -122,22 +133,9 @@
                 android:resource="@xml/calendar_widget_info" />
         </receiver>
 
-        <!-- For updating the events in the  calendar widget when there are changes-->
-        <receiver
-            android:name=".presentation.glance_widgets.calendar.RefreshCalendarWidgetReceiver"
-            android:enabled="@bool/glance_appwidget_available"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.PROVIDER_CHANGED" />
-
-                <data android:scheme="content" />
-                <data android:host="com.android.calendar" />
-            </intent-filter>
-        </receiver>
-
         <!-- Tasks widget-->
         <receiver
-            android:name=".presentation.glance_widgets.tasks.TasksWidgetReceiver"
+            android:name="com.mhss.app.widget.tasks.TasksWidgetReceiver"
             android:enabled="@bool/glance_appwidget_available"
             android:exported="false"
             android:label="@string/tasks">
@@ -150,7 +148,7 @@
         </receiver>
 
         <receiver
-            android:name=".presentation.glance_widgets.tasks.CompleteTaskWidgetReceiver"
+            android:name="com.mhss.app.widget.tasks.CompleteTaskWidgetReceiver"
             android:enabled="@bool/glance_appwidget_available"
             android:exported="false" />
 

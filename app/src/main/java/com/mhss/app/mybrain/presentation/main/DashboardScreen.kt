@@ -10,11 +10,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.calendar.CalendarDashboardWidget
-import com.mhss.app.mybrain.presentation.diary.MoodCircularBar
-import com.mhss.app.mybrain.presentation.tasks.TasksDashboardWidget
-import com.mhss.app.mybrain.presentation.common.navigation.Screen
+import com.mhss.app.app.R
+import com.mhss.app.presentation.CalendarDashboardWidget
+import com.mhss.app.presentation.MoodCircularBar
+import com.mhss.app.presentation.TasksDashboardWidget
+import com.mhss.app.ui.navigation.Screen
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
