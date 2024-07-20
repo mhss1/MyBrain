@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.util.Constants
+import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.app.R
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.use_case.*
@@ -48,11 +48,11 @@ class TasksViewModel(
         viewModelScope.launch {
             combine(
                 getPreference(
-                    intPreferencesKey(Constants.TASKS_ORDER_KEY),
+                    intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
                     Order.DateModified(OrderType.ASC).toInt()
                 ),
                 getPreference(
-                    booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
+                    booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
                     false
                 )
             ) { order, showCompleted ->
@@ -89,14 +89,14 @@ class TasksViewModel(
 
             is TaskEvent.UpdateOrder -> viewModelScope.launch {
                 savePreference(
-                    intPreferencesKey(Constants.TASKS_ORDER_KEY),
+                    intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
                     event.order.toInt()
                 )
             }
 
             is TaskEvent.ShowCompletedTasks -> viewModelScope.launch {
                 savePreference(
-                    booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
+                    booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
                     event.showCompleted
                 )
             }

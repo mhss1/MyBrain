@@ -12,7 +12,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
 import androidx.glance.material3.ColorProviders
-import com.mhss.app.util.Constants
+import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.domain.use_case.GetAllEventsUseCase
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.widget.WidgetTheme
@@ -33,7 +33,7 @@ class CalendarWidget : GlanceAppWidget(), KoinComponent {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
         val includedCalendars = getSettings(
-            stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
+            stringSetPreferencesKey(PrefsConstants.EXCLUDED_CALENDARS_KEY),
             emptySet()
         ).first()
         val events  = getAllEvents(includedCalendars.toIntList(), true) {
@@ -42,7 +42,7 @@ class CalendarWidget : GlanceAppWidget(), KoinComponent {
 
         provideContent {
             val useMaterialYou by getSettings(
-                booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU),
+                booleanPreferencesKey(PrefsConstants.SETTINGS_MATERIAL_YOU),
                 false
             ).collectAsState(false)
 

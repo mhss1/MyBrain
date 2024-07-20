@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.util.Constants
+import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
 import com.mhss.app.domain.use_case.*
 import com.mhss.app.preferences.domain.model.Order
@@ -44,7 +44,7 @@ class DiaryViewModel(
     init {
         viewModelScope.launch {
             getPreference(
-                intPreferencesKey(Constants.DIARY_ORDER_KEY),
+                intPreferencesKey(PrefsConstants.DIARY_ORDER_KEY),
                 Order.DateModified(OrderType.ASC).toInt()
             ).collect {
                 getEntries(it.toOrder())
@@ -87,7 +87,7 @@ class DiaryViewModel(
             }
             is DiaryEvent.UpdateOrder -> viewModelScope.launch {
                 savePreference(
-                    intPreferencesKey(Constants.DIARY_ORDER_KEY),
+                    intPreferencesKey(PrefsConstants.DIARY_ORDER_KEY),
                     event.order.toInt()
                 )
             }

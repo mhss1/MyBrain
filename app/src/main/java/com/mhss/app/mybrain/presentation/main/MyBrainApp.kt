@@ -39,6 +39,7 @@ import com.mhss.app.presentation.DiaryEntryDetailsScreen
 import com.mhss.app.presentation.DiaryScreen
 import com.mhss.app.presentation.DiarySearchScreen
 import com.mhss.app.presentation.ImportExportScreen
+import com.mhss.app.presentation.integrations.IntegrationsScreen
 import com.mhss.app.presentation.NoteDetailsScreen
 import com.mhss.app.presentation.NoteFolderDetailsScreen
 import com.mhss.app.presentation.NotesScreen
@@ -254,6 +255,9 @@ fun MyBrainApp(
                 }
                 composable<Screen.ImportExportScreen> {
                     ImportExportScreen()
+                }
+                composable<Screen.IntegrationsScreen> {
+                    IntegrationsScreen()
                 }
             }
             if (!appUnlocked) {

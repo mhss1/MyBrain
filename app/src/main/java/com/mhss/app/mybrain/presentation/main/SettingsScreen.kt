@@ -15,8 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mhss.app.util.Constants
+import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.mybrain.BuildConfig
 import com.mhss.app.app.R
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
@@ -70,24 +72,22 @@ fun SettingsScreen(
             item {
                 val theme = viewModel
                     .getSettings(
-                        intPreferencesKey(Constants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value
-                    ).collectAsState(
-                        initial = ThemeSettings.AUTO.value
-                    )
+                        intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value
+                    ).collectAsStateWithLifecycle(ThemeSettings.AUTO.value)
                 ThemeSettingsItem(theme.value) {
                     when (theme.value) {
                         ThemeSettings.AUTO.value -> viewModel.saveSettings(
-                            intPreferencesKey(Constants.SETTINGS_THEME_KEY),
+                            intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY),
                             ThemeSettings.LIGHT.value
                         )
 
                         ThemeSettings.LIGHT.value -> viewModel.saveSettings(
-                            intPreferencesKey(Constants.SETTINGS_THEME_KEY),
+                            intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY),
                             ThemeSettings.DARK.value
                         )
 
                         ThemeSettings.DARK.value -> viewModel.saveSettings(
-                            intPreferencesKey(Constants.SETTINGS_THEME_KEY),
+                            intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY),
                             ThemeSettings.AUTO.value
                         )
                     }
@@ -96,22 +96,20 @@ fun SettingsScreen(
             item {
                 val screen = viewModel
                     .getSettings(
-                        intPreferencesKey(Constants.DEFAULT_START_UP_SCREEN_KEY),
+                        intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY),
                         StartUpScreenSettings.SPACES.value
-                    ).collectAsState(
-                        initial = StartUpScreenSettings.SPACES.value
-                    )
+                    ).collectAsStateWithLifecycle(StartUpScreenSettings.SPACES.value)
                 StartUpScreenSettingsItem(
                     screen.value,
                     {
                         viewModel.saveSettings(
-                            intPreferencesKey(Constants.DEFAULT_START_UP_SCREEN_KEY),
+                            intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY),
                             StartUpScreenSettings.SPACES.value
                         )
                     },
                     {
                         viewModel.saveSettings(
-                            intPreferencesKey(Constants.DEFAULT_START_UP_SCREEN_KEY),
+                            intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY),
                             StartUpScreenSettings.DASHBOARD.value
                         )
                     }
@@ -120,16 +118,14 @@ fun SettingsScreen(
             item {
                 val screen = viewModel
                     .getSettings(
-                        intPreferencesKey(Constants.APP_FONT_KEY),
+                        intPreferencesKey(PrefsConstants.APP_FONT_KEY),
                         Rubik.toInt()
-                    ).collectAsState(
-                        initial = Rubik.toInt()
-                    )
+                    ).collectAsStateWithLifecycle(Rubik.toInt())
                 AppFontSettingsItem(
                     screen.value,
                 ) { font ->
                     viewModel.saveSettings(
-                        intPreferencesKey(Constants.APP_FONT_KEY),
+                        intPreferencesKey(PrefsConstants.APP_FONT_KEY),
                         font
                     )
                 }
@@ -137,17 +133,15 @@ fun SettingsScreen(
             item {
                 val block = viewModel
                     .getSettings(
-                        booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY),
+                        booleanPreferencesKey(PrefsConstants.BLOCK_SCREENSHOTS_KEY),
                         false
-                    ).collectAsState(
-                        initial = false
-                    )
+                    ).collectAsStateWithLifecycle(false)
                 SettingsSwitchCard(
                     stringResource(R.string.block_screenshots),
                     block.value
                 ) {
                     viewModel.saveSettings(
-                        booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY),
+                        booleanPreferencesKey(PrefsConstants.BLOCK_SCREENSHOTS_KEY),
                         it
                     )
                 }
@@ -156,18 +150,16 @@ fun SettingsScreen(
             item {
                 val block = viewModel
                     .getSettings(
-                        booleanPreferencesKey(Constants.LOCK_APP_KEY),
+                        booleanPreferencesKey(PrefsConstants.LOCK_APP_KEY),
                         false
-                    ).collectAsState(
-                        initial = false
-                    )
+                    ).collectAsStateWithLifecycle(false)
                 SettingsSwitchCard(
                     stringResource(R.string.lock_app),
                     block.value
                 ) {
                     if (appLockManager.canUseFeature()) {
                         viewModel.saveSettings(
-                            booleanPreferencesKey(Constants.LOCK_APP_KEY),
+                            booleanPreferencesKey(PrefsConstants.LOCK_APP_KEY),
                             it
                         )
                     } else {
@@ -185,23 +177,40 @@ fun SettingsScreen(
                 item {
                     val block = viewModel
                         .getSettings(
-                            booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU),
+                            booleanPreferencesKey(PrefsConstants.SETTINGS_MATERIAL_YOU),
                             false
-                        ).collectAsState(
-                            initial = false
-                        )
+                        ).collectAsStateWithLifecycle(false)
                     SettingsSwitchCard(
                         stringResource(R.string.material_you),
                         block.value
                     ) {
                         viewModel.saveSettings(
-                            booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU),
+                            booleanPreferencesKey(PrefsConstants.SETTINGS_MATERIAL_YOU),
                             it
                         )
                     }
                 }
             }
-
+            item {
+                SettingsItemCard(
+                    cornerRadius = 16.dp,
+                    onClick = {
+                        navController.navigate(Screen.IntegrationsScreen)
+                    }
+                ) {
+                    Row {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_integrations),
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.integrations),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
             item {
                 SettingsItemCard(
                     cornerRadius = 16.dp,

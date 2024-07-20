@@ -23,9 +23,12 @@ kotlin = "2.0.0"
 ksp = "2.0.0-1.0.22"
 koinBOM = "3.5.6"
 koinKSP = "1.3.1"
-uui = "0.8.4"
+uuid = "0.8.4"
 kotlinxDatetime = "0.6.0"
 material = "1.12.0"
+ktor = "2.3.12"
+logbackClassic = "1.2.13"
+squircleShape = "2.0.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -63,11 +66,17 @@ koin-core = { module = "io.insert-koin:koin-core" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose"}
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinKSP" }
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKSP" }
-uuid = { module = "com.benasher44:uuid", version.ref = "uui" }
+uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime"}
 calf-file-picker = { module = "com.mohamedrejeb.calf:calf-file-picker", version.ref = "calf" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-
+ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor"}
+ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logbackClassic" }
+squircle-shape = { group = "io.github.stoyan-vuchev", name = "squircle-shape", version.ref = "squircleShape" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -82,5 +91,6 @@ kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.
 koin = ["koin-core", "koin-annotations"]
 compose = ["compose-ui", "compose-material", "androidx-navigation-compose", "compose-ui-tooling", "androidx-lifecycle-runtime-compose", "compose-ui-tooling-preview", "koin-androidx-compose", "compose-markdown"]
 androidx-glance = ["androidx-glance-appwidget", "androidx-glance-material"]
+ktor-core = ["ktor-core", "ktor-serialization", "ktor-content-negotiation", "ktor-logging"]
 
 

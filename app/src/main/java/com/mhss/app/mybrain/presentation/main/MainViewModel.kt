@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.util.Constants
+import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.use_case.GetAllEntriesUseCase
@@ -43,12 +43,12 @@ class MainViewModel(
 
     private var refreshTasksJob : Job? = null
 
-    val lockApp = getPreference(booleanPreferencesKey(Constants.LOCK_APP_KEY), false)
-    val themeMode = getPreference(intPreferencesKey(Constants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value)
-    val defaultStartUpScreen = getPreference(intPreferencesKey(Constants.DEFAULT_START_UP_SCREEN_KEY), StartUpScreenSettings.SPACES.value)
-    val font = getPreference(intPreferencesKey(Constants.APP_FONT_KEY), Rubik.toInt())
-    val blockScreenshots = getPreference(booleanPreferencesKey(Constants.BLOCK_SCREENSHOTS_KEY), false)
-    val useMaterialYou = getPreference(booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU), false)
+    val lockApp = getPreference(booleanPreferencesKey(PrefsConstants.LOCK_APP_KEY), false)
+    val themeMode = getPreference(intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value)
+    val defaultStartUpScreen = getPreference(intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY), StartUpScreenSettings.SPACES.value)
+    val font = getPreference(intPreferencesKey(PrefsConstants.APP_FONT_KEY), Rubik.toInt())
+    val blockScreenshots = getPreference(booleanPreferencesKey(PrefsConstants.BLOCK_SCREENSHOTS_KEY), false)
+    val useMaterialYou = getPreference(booleanPreferencesKey(PrefsConstants.SETTINGS_MATERIAL_YOU), false)
 
     fun onDashboardEvent(event: DashboardEvent) {
         when(event) {
@@ -72,7 +72,7 @@ class MainViewModel(
 
     private fun getCalendarEvents() = viewModelScope.launch {
         val excluded = getPreference(
-            stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
+            stringSetPreferencesKey(PrefsConstants.EXCLUDED_CALENDARS_KEY),
             emptySet()
         ).first()
         val events = getAllEventsUseCase(excluded.toIntList()) {
@@ -86,11 +86,11 @@ class MainViewModel(
     private fun collectDashboardData() = viewModelScope.launch {
         combine(
             getPreference(
-                intPreferencesKey(Constants.TASKS_ORDER_KEY),
+                intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
                 Order.DateModified(OrderType.ASC).toInt()
             ),
             getPreference(
-                booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
+                booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
                 false
             ),
             getAllEntriesUseCase(Order.DateCreated(OrderType.ASC))
@@ -113,7 +113,7 @@ class MainViewModel(
     }
 
     fun disableAppLock() = viewModelScope.launch {
-        savePreference(booleanPreferencesKey(Constants.LOCK_APP_KEY), false)
+        savePreference(booleanPreferencesKey(PrefsConstants.LOCK_APP_KEY), false)
     }
 
 }

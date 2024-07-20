@@ -9,7 +9,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
 import androidx.glance.material3.ColorProviders
-import com.mhss.app.util.Constants
+import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.domain.use_case.GetAllTasksUseCase
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.widget.WidgetTheme
@@ -32,15 +32,15 @@ class TasksWidget : GlanceAppWidget(), KoinComponent {
 
         provideContent {
             val order by getSettings(
-                intPreferencesKey(Constants.TASKS_ORDER_KEY),
+                intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
                 Order.DateModified(OrderType.ASC).toInt()
             ).collectAsState(Order.DateModified(OrderType.ASC).toInt())
             val showCompletedTasks by getSettings(
-                booleanPreferencesKey(Constants.SHOW_COMPLETED_TASKS_KEY),
+                booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
                 false
             ).collectAsState(false)
             val useMaterialYou by getSettings(
-                booleanPreferencesKey(Constants.SETTINGS_MATERIAL_YOU),
+                booleanPreferencesKey(PrefsConstants.SETTINGS_MATERIAL_YOU),
                 false
             ).collectAsState(false)
             val tasks by getAllTasks(order.toOrder(), showCompletedTasks).collectAsState(emptyList())

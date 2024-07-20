@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.preferences.domain.model.PrefsKey
@@ -43,6 +44,6 @@ fun <T> PrefsKey<T>.toDatastoreKey(): Preferences.Key<T> {
         is PrefsKey.IntKey -> intPreferencesKey(name)
         is PrefsKey.BooleanKey -> booleanPreferencesKey(name)
         is PrefsKey.StringSetKey -> stringSetPreferencesKey(name)
+        is PrefsKey.StringKey -> stringPreferencesKey(name)
     } as Preferences.Key<T>
 }
-

@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.util.Constants
+import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.app.R
 import com.mhss.app.domain.model.Bookmark
 import com.mhss.app.domain.use_case.*
@@ -49,11 +49,11 @@ class BookmarksViewModel(
         viewModelScope.launch {
             combine(
                 getPreference(
-                    intPreferencesKey(Constants.BOOKMARK_ORDER_KEY),
+                    intPreferencesKey(PrefsConstants.BOOKMARK_ORDER_KEY),
                     Order.DateModified(OrderType.ASC).toInt()
                 ),
                 getPreference(
-                    intPreferencesKey(Constants.BOOKMARK_VIEW_KEY),
+                    intPreferencesKey(PrefsConstants.BOOKMARK_VIEW_KEY),
                     ItemView.LIST.value
                 )
             ) { order, view ->
@@ -105,13 +105,13 @@ class BookmarksViewModel(
             }
             is BookmarkEvent.UpdateOrder -> viewModelScope.launch {
                 savePreference(
-                    intPreferencesKey(Constants.BOOKMARK_ORDER_KEY),
+                    intPreferencesKey(PrefsConstants.BOOKMARK_ORDER_KEY),
                     event.order.toInt()
                 )
             }
             is BookmarkEvent.UpdateView -> viewModelScope.launch {
                 savePreference(
-                    intPreferencesKey(Constants.BOOKMARK_VIEW_KEY),
+                    intPreferencesKey(PrefsConstants.BOOKMARK_VIEW_KEY),
                     event.view.value
                 )
             }

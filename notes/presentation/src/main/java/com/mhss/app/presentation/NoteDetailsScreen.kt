@@ -3,10 +3,12 @@
 package com.mhss.app.presentation
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,9 +23,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mhss.app.app.R
 import com.mhss.app.domain.model.*
+import com.mhss.app.presentation.components.AiSummarizeButton
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -58,7 +62,7 @@ fun NoteDetailsScreen(
     val wordCountString by remember {
         derivedStateOf { content.split(" ").size.toString() }
     }
-
+    val aiEnabled by viewModel.aiEnabled.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.note) {
         if (state.note != null) {
@@ -207,6 +211,19 @@ fun NoteDetailsScreen(
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.fillMaxWidth(),
             )
+            AnimatedVisibility(aiEnabled) {
+                LazyRow(
+                    Modifier.fillMaxWidth().padding(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    item {
+                        AiSummarizeButton(
+                            onClick = { /* TODO */ }
+                        )
+                    }
+                }
+            }
             if (readingMode)
                 MarkdownText(
                     markdown = content,
@@ -231,6 +248,7 @@ fun NoteDetailsScreen(
                         .fillMaxWidth()
                         .weight(1f)
                         .padding(bottom = 8.dp)
+                        .imePadding()
                 )
 
             Row(

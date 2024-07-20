@@ -37,8 +37,17 @@ class SettingsViewModel(
 
     fun onEvent(event: SettingsEvent) {
         when (event) {
-            is SettingsEvent.ImportData -> importDatabase(event.fileUri, event.encrypted, event.password)
-            is SettingsEvent.ExportData -> exportDatabase(event.directoryUri, event.encrypted, event.password)
+            is SettingsEvent.ImportData -> importDatabase(
+                event.fileUri,
+                event.encrypted,
+                event.password
+            )
+
+            is SettingsEvent.ExportData -> exportDatabase(
+                event.directoryUri,
+                event.encrypted,
+                event.password
+            )
         }
     }
 

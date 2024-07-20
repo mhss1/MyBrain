@@ -39,6 +39,7 @@ android {
 
 dependencies {
     implementation(project(":settings:domain"))
+    implementation(project(":ai:domain"))
 
     implementation(project(":core:ui"))
     implementation(project(":core:app"))

@@ -78,4 +78,7 @@ sealed class Screen {
     ): Screen()
     @Serializable
     data object ImportExportScreen : Screen()
+
+    @Serializable
+    data object IntegrationsScreen : Screen()
 }

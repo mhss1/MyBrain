@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.util.Constants
+import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.app.R
 import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarEvent
@@ -85,7 +85,7 @@ class CalendarViewModel(
     private fun updateExcludedCalendars(id: Int, add: Boolean) {
         viewModelScope.launch {
             savePreference(
-                stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
+                stringSetPreferencesKey(PrefsConstants.EXCLUDED_CALENDARS_KEY),
                 if (add) uiState.excludedCalendars.addAndToStringSet(id)
                 else uiState.excludedCalendars.removeAndToStringSet(id)
             )
@@ -94,7 +94,7 @@ class CalendarViewModel(
 
     private fun collectSettings() {
             updateEventsJob = getPreference(
-                stringSetPreferencesKey(Constants.EXCLUDED_CALENDARS_KEY),
+                stringSetPreferencesKey(PrefsConstants.EXCLUDED_CALENDARS_KEY),
                 emptySet()
             ).onEach { calendarsSet ->
                 val events = getAllEventsUseCase(calendarsSet.toIntList()) {

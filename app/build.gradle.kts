@@ -78,6 +78,7 @@ dependencies {
     implementation(project(":bookmarks:data"))
     implementation(project(":diary:data"))
     implementation(project(":calendar:data"))
+    implementation(project(":ai:data"))
     implementation(project(":settings:data"))
 
     implementation(project(":tasks:domain"))
@@ -93,6 +94,7 @@ dependencies {
     implementation(project(":widget"))
     implementation(project(":core:preferences"))
     implementation(project(":core:util"))
+    implementation(project(":core:network"))
 
     implementation(platform(libs.compose.bom))
     androidTestImplementation(platform(libs.compose.bom))
@@ -107,13 +109,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.compose.test.junit4)
 
-    // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
 
-    // Biometric
     implementation(libs.androidx.biometric)
 
-    // Koin
     implementation(platform(libs.koin.bom))
     implementation(libs.bundles.koin)
     implementation(libs.koin.android)
@@ -123,5 +122,10 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.ktor.okhttp)
+    implementation(libs.logback.classic)
+
+    implementation(libs.squircle.shape)
 }
 

@@ -11,17 +11,20 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.mhss.app.alarm.di.AlarmModule
+import com.mhss.app.app.R
+import com.mhss.app.data.bookmarksDataModule
 import com.mhss.app.data.calendarDataModule
+import com.mhss.app.data.di.aiDataModule
 import com.mhss.app.data.diaryDataModule
 import com.mhss.app.data.noteDataModule
 import com.mhss.app.data.settingsDataModule
 import com.mhss.app.data.tasksDataModule
-import com.mhss.app.util.Constants
-import com.mhss.app.app.R
-import com.mhss.app.data.bookmarksDataModule
 import com.mhss.app.database.di.databaseModule
 import com.mhss.app.di.coroutinesModule
 import com.mhss.app.mybrain.di.MainPresentationModule
+import com.mhss.app.mybrain.di.platformModule
+import com.mhss.app.network.networkModule
+import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.preferences.di.PreferencesModule
 import com.mhss.app.presentation.di.BookmarksPresentationModule
 import com.mhss.app.presentation.di.CalendarPresentationModule
@@ -29,16 +32,16 @@ import com.mhss.app.presentation.di.DiaryPresentationModule
 import com.mhss.app.presentation.di.NotePresentationModule
 import com.mhss.app.presentation.di.SettingsPresentationModule
 import com.mhss.app.presentation.di.TasksPresentationModule
+import com.mhss.app.util.Constants
 import com.mhss.app.widget.di.WidgetModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
-import org.koin.dsl.module
 import org.koin.ksp.generated.*
 import kotlin.system.exitProcess
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.SETTINGS_PREFERENCES)
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PrefsConstants.SETTINGS_PREFERENCES)
 
 class MyBrainApplication : Application() {
 
@@ -48,12 +51,11 @@ class MyBrainApplication : Application() {
             androidContext(this@MyBrainApplication)
             androidLogger()
             modules(
-                module {
-                    single { this@MyBrainApplication.dataStore }
-                },
+                platformModule,
                 MainPresentationModule().module,
                 AlarmModule().module,
                 databaseModule,
+                networkModule,
                 coroutinesModule,
                 PreferencesModule().module,
                 NotePresentationModule().module,
@@ -68,7 +70,8 @@ class MyBrainApplication : Application() {
                 calendarDataModule,
                 BookmarksPresentationModule().module,
                 bookmarksDataModule,
-                WidgetModule().module
+                WidgetModule().module,
+                aiDataModule
             )
             workManagerFactory()
         }

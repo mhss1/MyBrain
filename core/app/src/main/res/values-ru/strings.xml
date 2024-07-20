@@ -174,4 +174,14 @@
     <string name="no_alarm_permission">Пожалуйста, предоставьте доступ к будильникам для настройки срока выполнения.</string>
     <string name="exception_stack_trace_copied">Exception stack trace copied to clipboard</string>
     <string name="material_you">Material You</string>
+    <string name="summarize">Summarize</string>
+    <string name="integrations">Integrations</string>
+    <string name="api_key">API Key</string>
+    <string name="ai">AI</string>
+    <string name="gemini">Gemini</string>
+    <string name="openai">OpenAI</string>
+    <string name="model">Model</string>
+    <string name="gemini_description">Gemini models from Google</string>
+    <string name="openai_description">"GPT models from OpenAI.\nYou can also use any OpenAI compatible API  like Groq or a self hosted option by adding a custom URL "</string>
+    <string name="custom_url">Custom URL</string>
 </resources>
