@@ -124,7 +124,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.ktor.okhttp)
-    implementation(libs.logback.classic)
+    implementation(libs.ktor.logging)
 
     implementation(libs.squircle.shape)
 }
