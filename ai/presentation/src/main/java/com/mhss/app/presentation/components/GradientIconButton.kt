@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhss.app.app.R
@@ -33,15 +34,8 @@ fun GradientIconButton(
     iconPainter: Painter,
     onClick: () -> Unit
 ) {
-    val colorOnBackground = MaterialTheme.colorScheme.onBackground
-    val colorPrimary = MaterialTheme.colorScheme.primary
-    val colorTertiary = MaterialTheme.colorScheme.tertiary
     val gradientBrush = remember {
-        gradientBrushColor(
-            colorOnBackground,
-            colorPrimary,
-            colorTertiary
-        )
+        gradientBrushColor()
     }
     OutlinedButton(
         modifier = modifier,
@@ -73,7 +67,8 @@ fun GradientIconButton(
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodySmall.copy(
-                    brush = gradientBrush
+                    brush = gradientBrush,
+                    fontWeight = FontWeight.SemiBold
                 )
             )
         }

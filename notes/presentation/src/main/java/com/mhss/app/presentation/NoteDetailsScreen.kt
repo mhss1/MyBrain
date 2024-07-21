@@ -27,7 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mhss.app.app.R
 import com.mhss.app.domain.model.*
-import com.mhss.app.presentation.components.AiSummarizeButton
+import com.mhss.app.presentation.components.GradientIconButton
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -63,6 +63,10 @@ fun NoteDetailsScreen(
         derivedStateOf { content.split(" ").size.toString() }
     }
     val aiEnabled by viewModel.aiEnabled.collectAsStateWithLifecycle()
+    val aiState = viewModel.aiState
+    LaunchedEffect(aiState) {
+        // TODO: Handle AI state
+    }
 
     LaunchedEffect(state.note) {
         if (state.note != null) {
@@ -213,14 +217,29 @@ fun NoteDetailsScreen(
             )
             AnimatedVisibility(aiEnabled) {
                 LazyRow(
-                    Modifier.fillMaxWidth().padding(4.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     item {
-                        AiSummarizeButton(
-                            onClick = { /* TODO */ }
-                        )
+                        GradientIconButton(
+                            text = stringResource(id = R.string.summarize),
+                            iconPainter = painterResource(id = R.drawable.ic_summarize),
+                        ) { viewModel.onEvent(NoteEvent.Summarize(content)) }
+                    }
+                    item {
+                        GradientIconButton(
+                            text = stringResource(id = R.string.auto_format),
+                            iconPainter = painterResource(id = R.drawable.ic_auto_format),
+                        ) { viewModel.onEvent(NoteEvent.AutoFormat(content)) }
+                    }
+                    item {
+                        GradientIconButton(
+                            text = stringResource(id = R.string.correct_spelling),
+                            iconPainter = painterResource(id = R.drawable.ic_spelling),
+                        ) { viewModel.onEvent(NoteEvent.CorrectSpelling(content)) }
                     }
                 }
             }

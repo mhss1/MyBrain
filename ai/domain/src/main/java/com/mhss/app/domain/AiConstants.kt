@@ -16,4 +16,31 @@ object AiConstants {
 }
 
 val String.summarizeNotePrompt: String
-    get() = "Summarize this note in a few bullet points. Respond with the summary only and don't say anything else.\nNote content:\n$this\nSummary:"
+    get() = """
+        Summarize this note in bullet points.
+        Respond with the summary only and don't say anything else.
+        Use Markdown for formatting.
+        Note content:
+        $this
+        Summary:
+    """.trimIndent()
+
+val String.autoFormatNotePrompt: String
+    get() = """
+        Format this note in a more readable way.
+        Include headings, bullet points, and other formatting.
+        Respond with the formatted note only and don't say anything else.
+        Use Markdown for formatting.
+        Note content:
+        $this
+        Formatted note:
+    """.trimIndent()
+
+val String.correctSpellingNotePrompt: String
+    get() = """
+        Correct the spelling and grammar errors in this note.
+        Respond with the corrected note only and don't say anything else.
+        Note content:
+        $this
+        Corrected note:
+    """.trimIndent()

@@ -8,7 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.app.R
 import com.mhss.app.domain.AiConstants
+import com.mhss.app.domain.autoFormatNotePrompt
+import com.mhss.app.domain.correctSpellingNotePrompt
 import com.mhss.app.domain.model.*
+import com.mhss.app.domain.summarizeNotePrompt
 import com.mhss.app.domain.use_case.*
 import com.mhss.app.preferences.domain.model.AiProvider
 import com.mhss.app.preferences.domain.model.Order
@@ -57,6 +60,8 @@ class NotesViewModel(
     private lateinit var openaiURL: String
     private val _aiEnabled = MutableStateFlow(false)
     val aiEnabled: StateFlow<Boolean> = _aiEnabled
+    var aiState by mutableStateOf((AiState()))
+        private set
 
     private val aiProvider =
         getPreference(intPreferencesKey(PrefsConstants.AI_PROVIDER_KEY), AiProvider.None.id)
@@ -170,7 +175,11 @@ class NotesViewModel(
                 )
             }
 
-            is NoteEvent.ErrorDisplayed -> notesUiState = notesUiState.copy(error = null)
+            is NoteEvent.ErrorDisplayed -> {
+                notesUiState = notesUiState.copy(error = null)
+                aiState = aiState.copy(error = null)
+            }
+
             NoteEvent.ToggleReadingMode -> notesUiState =
                 notesUiState.copy(readingMode = !notesUiState.readingMode)
 
@@ -223,6 +232,25 @@ class NotesViewModel(
                 val folder = getNoteFolder(event.id)
                 notesUiState = notesUiState.copy(folder = folder)
             }
+
+            is AiAction -> viewModelScope.launch {
+                val prompt = when (event) {
+                    is NoteEvent.Summarize -> event.content.summarizeNotePrompt
+                    is NoteEvent.AutoFormat -> event.content.autoFormatNotePrompt
+                    is NoteEvent.CorrectSpelling -> event.content.correctSpellingNotePrompt
+                }
+                aiState = aiState.copy(loading = true)
+                val result = sendAiPrompt(prompt)
+                aiState = when (result) {
+                    is Success<*> -> aiState.copy(
+                        loading = false,
+                        result = result.data as String,
+                        error = null
+                    )
+                    is NetworkError -> aiState.copy(error = result)
+                }
+
+            }
         }
     }
 
@@ -248,6 +276,12 @@ class NotesViewModel(
         val folders: List<NoteFolder> = emptyList(),
         val folderNotes: List<Note> = emptyList(),
         val folder: NoteFolder? = null
+    )
+
+    data class AiState(
+        val loading: Boolean = false,
+        val result: String = "",
+        val error: NetworkError? = null
     )
 
     private fun getFolderlessNotes(order: Order) {

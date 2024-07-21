@@ -20,4 +20,9 @@ sealed class NoteEvent {
     data class UpdateFolder(val folder: NoteFolder): NoteEvent()
     data class GetFolderNotes(val id: Int): NoteEvent()
     data class GetFolder(val id: Int): NoteEvent()
+    data class Summarize(val content: String): NoteEvent(), AiAction
+    data class AutoFormat(val content: String): NoteEvent(), AiAction
+    data class CorrectSpelling(val content: String): NoteEvent(), AiAction
 }
+
+sealed interface AiAction

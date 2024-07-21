@@ -48,15 +48,8 @@ fun AiProviderCard(
     onClick: () -> Unit,
     extraContent: @Composable ColumnScope.() -> Unit = {},
 ) {
-    val colorOnBackground = MaterialTheme.colorScheme.onBackground
-    val colorPrimary = MaterialTheme.colorScheme.primary
-    val colorTertiary = MaterialTheme.colorScheme.tertiary
     val gradientBrush = remember {
-        gradientBrushColor(
-            colorOnBackground,
-            colorPrimary,
-            colorTertiary
-        )
+        gradientBrushColor()
     }
     Card(
         modifier = modifier.fillMaxWidth(),
