@@ -2,11 +2,20 @@
 
 package com.mhss.app.presentation
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
@@ -64,9 +73,7 @@ fun NoteDetailsScreen(
     }
     val aiEnabled by viewModel.aiEnabled.collectAsStateWithLifecycle()
     val aiState = viewModel.aiState
-    LaunchedEffect(aiState) {
-        // TODO: Handle AI state
-    }
+    val showAiSheet = aiState.showAiSheet
 
     LaunchedEffect(state.note) {
         if (state.note != null) {
@@ -129,7 +136,7 @@ fun NoteDetailsScreen(
         )
     }
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState)},
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -285,6 +292,49 @@ fun NoteDetailsScreen(
                 )
             }
         }
+        AnimatedVisibility(
+            visible = showAiSheet,
+            enter = slideInVertically(
+                initialOffsetY = { it }, animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioLowBouncy,
+                    stiffness = Spring.StiffnessVeryLow
+                )
+            ),
+            exit = slideOutVertically(targetOffsetY = { it }, animationSpec = tween(700))
+        ) {
+            val interactionSource = remember { MutableInteractionSource() }
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) {
+                        viewModel.onEvent(NoteEvent.AiResultHandled)
+                    }, contentAlignment = Alignment.BottomCenter
+            ) {
+                AiResultSheet(
+                    loading = aiState.loading,
+                    result = aiState.result,
+                    error = aiState.error?.toUserMessage(),
+                    onCopyClick = {
+                        val clipboard =
+                            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip = ClipData.newPlainText("ai result", aiState.result.toString())
+                        clipboard.setPrimaryClip(clip)
+                        viewModel.onEvent(NoteEvent.AiResultHandled)
+                    },
+                    onReplaceClick = {
+                        content = aiState.result.toString()
+                        viewModel.onEvent(NoteEvent.AiResultHandled)
+                    },
+                    onAddToNoteClick = {
+                        content = aiState.result + "\n" + content
+                        viewModel.onEvent(NoteEvent.AiResultHandled)
+                    }
+                )
+            }
+        }
         if (openDeleteDialog)
             AlertDialog(
                 shape = RoundedCornerShape(25.dp),
@@ -387,6 +437,15 @@ fun NoteDetailsScreen(
                     }
                 }
             }
+    }
+}
+
+@Composable
+private fun NetworkError.toUserMessage(): String {
+    return when (this) {
+        NetworkResult.InvalidKey -> stringResource(R.string.invalid_api_key)
+        NetworkResult.InternetError -> stringResource(R.string.no_internet_connection)
+        is NetworkResult.OtherError -> if (message != null) message.toString() else stringResource(R.string.unexpected_error)
     }
 }
 

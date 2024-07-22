@@ -177,7 +177,6 @@ class NotesViewModel(
 
             is NoteEvent.ErrorDisplayed -> {
                 notesUiState = notesUiState.copy(error = null)
-                aiState = aiState.copy(error = null)
             }
 
             NoteEvent.ToggleReadingMode -> notesUiState =
@@ -239,18 +238,23 @@ class NotesViewModel(
                     is NoteEvent.AutoFormat -> event.content.autoFormatNotePrompt
                     is NoteEvent.CorrectSpelling -> event.content.correctSpellingNotePrompt
                 }
-                aiState = aiState.copy(loading = true)
+                aiState = aiState.copy(
+                    loading = true,
+                    showAiSheet = true,
+                    result = null,
+                    error = null
+                )
                 val result = sendAiPrompt(prompt)
                 aiState = when (result) {
-                    is Success<*> -> aiState.copy(
+                    is NetworkResult.Success<*> -> aiState.copy(
                         loading = false,
                         result = result.data as String,
                         error = null
                     )
-                    is NetworkError -> aiState.copy(error = result)
+                    is NetworkError -> aiState.copy(error = result, loading = false)
                 }
-
             }
+            NoteEvent.AiResultHandled -> aiState = aiState.copy(showAiSheet = false)
         }
     }
 
@@ -280,8 +284,9 @@ class NotesViewModel(
 
     data class AiState(
         val loading: Boolean = false,
-        val result: String = "",
-        val error: NetworkError? = null
+        val result: String? = null,
+        val error: NetworkError? = null,
+        val showAiSheet: Boolean = false
     )
 
     private fun getFolderlessNotes(order: Order) {

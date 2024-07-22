@@ -186,4 +186,10 @@
     <string name="custom_url">Custom URL</string>
     <string name="auto_format">Auto format</string>
     <string name="correct_spelling">Correct spelling</string>
+    <string name="copy">Copy</string>
+    <string name="replace">Replace</string>
+    <string name="add_to_note">Add to note</string>
+    <string name="invalid_api_key">Invalid API key.\nPlease provide a valid key in settings.</string>
+    <string name="no_internet_connection">No internet connection.\nPlease connect to a network and try again.</string>
+    <string name="unexpected_error">Unexpected error occurred.\nPlease try again later.</string>
 </resources>

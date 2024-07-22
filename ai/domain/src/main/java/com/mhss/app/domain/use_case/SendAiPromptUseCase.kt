@@ -3,10 +3,7 @@ package com.mhss.app.domain.use_case
 import com.mhss.app.di.geminiApi
 import com.mhss.app.di.openaiApi
 import com.mhss.app.domain.AiConstants
-import com.mhss.app.domain.model.InternetError
 import com.mhss.app.domain.model.NetworkResult
-import com.mhss.app.domain.model.Success
-import com.mhss.app.domain.model.UnexpectedError
 import com.mhss.app.domain.repository.AiApi
 import com.mhss.app.preferences.domain.model.AiProvider
 import org.koin.core.annotation.Named
@@ -25,36 +22,29 @@ class SendAiPromptUseCase(
         provider: AiProvider,
         baseURL: String = ""
     ): NetworkResult {
+        if (key.isBlank()) return NetworkResult.InvalidKey
         return try {
             when (provider) {
-                AiProvider.OpenAI -> {
-                    Success(
-                        openai.sendPrompt(
-                            baseUrl = baseURL,
-                            prompt = prompt,
-                            model = model,
-                            key = key
-                        )
-                    )
-                }
-
-                AiProvider.Gemini -> {
-                    Success(
-                        gemini.sendPrompt(
-                            baseUrl = AiConstants.GEMINI_BASE_URL,
-                            prompt = prompt,
-                            model = model,
-                            key = key
-                        )
-                    )
-                }
-
+                AiProvider.OpenAI -> openai.sendPrompt(
+                    baseUrl = baseURL,
+                    prompt = prompt,
+                    model = model,
+                    key = key
+                )
+                AiProvider.Gemini -> gemini.sendPrompt(
+                    baseUrl = AiConstants.GEMINI_BASE_URL,
+                    prompt = prompt,
+                    model = model,
+                    key = key
+                )
                 else -> throw IllegalStateException("No AI provider is chosen")
             }
         } catch (e: IOException) {
-            InternetError
+            e.printStackTrace()
+            NetworkResult.InternetError
         } catch (e: Exception) {
-            UnexpectedError
+            e.printStackTrace()
+            NetworkResult.OtherError()
         }
     }
 }

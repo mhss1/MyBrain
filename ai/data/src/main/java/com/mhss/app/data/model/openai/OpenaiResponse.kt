@@ -9,12 +9,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OpenaiResponse(
-    val choices: List<OpenaiChoice>
+    val choices: List<OpenaiChoice>? = null,
+    val error: OpenaiError? = null
 )
 
 @Serializable
 data class OpenaiChoice(
     val message: OpenaiMessage
+)
+
+@Serializable
+data class OpenaiError(
+    val message: String
 )
 
 fun OpenaiMessage.toAiMessage() = AiMessage(

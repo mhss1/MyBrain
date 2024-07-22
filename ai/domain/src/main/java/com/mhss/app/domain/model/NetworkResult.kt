@@ -1,9 +1,10 @@
 package com.mhss.app.domain.model
 
-sealed interface NetworkResult
+sealed interface NetworkResult {
+    data class Success<T>(val data: T) : NetworkResult
+    data object InvalidKey : NetworkResult, UserError
+    data object InternetError : NetworkResult, UserError
+    data class OtherError(val message: String? = null) : NetworkResult, NetworkError
+}
 sealed interface NetworkError
-
-data class Success<T>(val data: T) : NetworkResult
-data object InvalidToken : NetworkResult, NetworkError
-data object InternetError : NetworkResult, NetworkError
-data object UnexpectedError : NetworkResult, NetworkError
+sealed interface UserError: NetworkError

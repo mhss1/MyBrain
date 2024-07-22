@@ -1,6 +1,7 @@
 package com.mhss.app.domain.repository
 
 import com.mhss.app.domain.model.AiMessage
+import com.mhss.app.domain.model.NetworkResult
 
 interface AiApi {
 
@@ -9,7 +10,7 @@ interface AiApi {
         prompt: String,
         model: String,
         key: String
-    ): String
+    ): NetworkResult
 
     suspend fun sendMessage(
         baseUrl: String,
@@ -17,6 +18,6 @@ interface AiApi {
         systemMessage: String,
         model: String,
         key: String
-    ): AiMessage
+    ): NetworkResult
 
 }

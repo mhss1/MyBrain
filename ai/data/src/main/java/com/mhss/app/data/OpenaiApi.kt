@@ -8,6 +8,7 @@ import com.mhss.app.data.model.openai.toAiMessage
 import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.di.openaiApi
 import com.mhss.app.domain.model.AiMessage
+import com.mhss.app.domain.model.NetworkResult
 import com.mhss.app.domain.repository.AiApi
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -28,9 +29,9 @@ class OpenaiApi(
     private val client: HttpClient,
     @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
 ) : AiApi {
-    override suspend fun sendPrompt(baseUrl: String, prompt: String, model: String, key: String): String {
+    override suspend fun sendPrompt(baseUrl: String, prompt: String, model: String, key: String): NetworkResult {
         return withContext(ioDispatcher) {
-            client.post(baseUrl) {
+            val result = client.post(baseUrl) {
                 url {
                     appendPathSegments("chat", "completions")
                 }
@@ -48,7 +49,16 @@ class OpenaiApi(
 
                     )
                 )
-            }.body<OpenaiResponse>().choices.first().message.content
+            }.body<OpenaiResponse>()
+            if (result.error != null) {
+                if (result.error.message.contains("API key")) {
+                    NetworkResult.InvalidKey
+                } else {
+                    NetworkResult.OtherError(result.error.message)
+                }
+            } else {
+                NetworkResult.Success(result.choices?.first()?.message?.content)
+            }
         }
     }
 
@@ -58,9 +68,9 @@ class OpenaiApi(
         systemMessage: String,
         model: String,
         key: String
-    ): AiMessage {
+    ): NetworkResult {
         return withContext(ioDispatcher) {
-            client.post(baseUrl) {
+            val result = client.post(baseUrl) {
                 url {
                     appendPathSegments("chat", "completions")
                 }
@@ -77,7 +87,16 @@ class OpenaiApi(
                         }
                     )
                 )
-            }.body<OpenaiResponse>().choices.first().message.toAiMessage()
+            }.body<OpenaiResponse>()
+            if (result.error != null) {
+                if (result.error.message.contains("API key")) {
+                    NetworkResult.InvalidKey
+                } else {
+                    NetworkResult.OtherError(result.error.message)
+                }
+            } else {
+                NetworkResult.Success(result.choices?.first()?.message?.toAiMessage())
+            }
         }
     }
 

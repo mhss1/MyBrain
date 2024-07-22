@@ -20,7 +20,7 @@ import com.mhss.app.ui.theme.MyBrainTheme
 fun gradientBrushColor(
     vararg colorStops: Pair<Float, Color> = arrayOf(
         0f to LightBlue,
-        0.65f to LightPurple,
+        0.7f to LightPurple,
         1f to LightOrange
     )
 ) = Brush.linearGradient(

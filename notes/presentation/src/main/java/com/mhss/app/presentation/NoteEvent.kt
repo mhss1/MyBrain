@@ -23,6 +23,7 @@ sealed class NoteEvent {
     data class Summarize(val content: String): NoteEvent(), AiAction
     data class AutoFormat(val content: String): NoteEvent(), AiAction
     data class CorrectSpelling(val content: String): NoteEvent(), AiAction
+    data object AiResultHandled: NoteEvent()
 }
 
 sealed interface AiAction
