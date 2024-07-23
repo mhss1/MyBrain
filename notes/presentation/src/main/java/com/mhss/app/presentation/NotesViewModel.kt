@@ -13,7 +13,6 @@ import com.mhss.app.domain.correctSpellingNotePrompt
 import com.mhss.app.domain.model.*
 import com.mhss.app.domain.summarizeNotePrompt
 import com.mhss.app.domain.use_case.*
-import com.mhss.app.network.NetworkError
 import com.mhss.app.preferences.domain.model.AiProvider
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
@@ -248,27 +247,27 @@ class NotesViewModel(
                 )
                 val result = sendAiPrompt(prompt)
                 aiState = when (result) {
-                    is NetworkResult.Success<*> -> aiState.copy(
+                    is NetworkResult.Success -> aiState.copy(
                         loading = false,
-                        result = result.data as String,
+                        result = result.data,
                         error = null
                     )
-                    is NetworkError -> aiState.copy(error = result, loading = false)
+
+                    is NetworkResult.Failure -> aiState.copy(error = result, loading = false)
                 }
             }
+
             NoteEvent.AiResultHandled -> aiState = aiState.copy(showAiSheet = false)
         }
     }
 
-    private suspend fun sendAiPrompt(prompt: String): NetworkResult {
-        return sendAiPrompt(
-            prompt,
-            aiKey,
-            aiModel,
-            aiProvider.value,
-            openaiURL
-        )
-    }
+    private suspend fun sendAiPrompt(prompt: String) = sendAiPrompt(
+        prompt,
+        aiKey,
+        aiModel,
+        aiProvider.value,
+        openaiURL
+    )
 
     data class UiState(
         val notes: List<Note> = emptyList(),
@@ -287,7 +286,7 @@ class NotesViewModel(
     data class AiState(
         val loading: Boolean = false,
         val result: String? = null,
-        val error: NetworkError? = null,
+        val error: NetworkResult.Failure? = null,
         val showAiSheet: Boolean = false
     )
 

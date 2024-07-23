@@ -21,7 +21,7 @@ class SendAiPromptUseCase(
         model: String,
         provider: AiProvider,
         baseURL: String = ""
-    ): NetworkResult {
+    ): NetworkResult<String> {
         if (key.isBlank()) return NetworkResult.InvalidKey
         return try {
             when (provider) {

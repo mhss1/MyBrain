@@ -10,7 +10,7 @@ interface AiApi {
         prompt: String,
         model: String,
         key: String
-    ): NetworkResult
+    ): NetworkResult<String>
 
     suspend fun sendMessage(
         baseUrl: String,
@@ -18,6 +18,5 @@ interface AiApi {
         systemMessage: String,
         model: String,
         key: String
-    ): NetworkResult
-
+    ): NetworkResult<AiMessage>
 }

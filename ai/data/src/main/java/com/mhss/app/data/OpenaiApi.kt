@@ -29,7 +29,8 @@ class OpenaiApi(
     private val client: HttpClient,
     @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
 ) : AiApi {
-    override suspend fun sendPrompt(baseUrl: String, prompt: String, model: String, key: String): NetworkResult {
+    override suspend fun sendPrompt(baseUrl: String, prompt: String, model: String, key: String)
+            : NetworkResult<String> {
         return withContext(ioDispatcher) {
             val result = client.post(baseUrl) {
                 url {
@@ -57,7 +58,7 @@ class OpenaiApi(
                     NetworkResult.OtherError(result.error.message)
                 }
             } else {
-                NetworkResult.Success(result.choices?.first()?.message?.content)
+                NetworkResult.Success(result.choices!!.first().message.content)
             }
         }
     }
@@ -68,7 +69,7 @@ class OpenaiApi(
         systemMessage: String,
         model: String,
         key: String
-    ): NetworkResult {
+    ): NetworkResult<AiMessage> {
         return withContext(ioDispatcher) {
             val result = client.post(baseUrl) {
                 url {
@@ -95,7 +96,7 @@ class OpenaiApi(
                     NetworkResult.OtherError(result.error.message)
                 }
             } else {
-                NetworkResult.Success(result.choices?.first()?.message?.toAiMessage())
+                NetworkResult.Success(result.choices!!.first().message.toAiMessage())
             }
         }
     }

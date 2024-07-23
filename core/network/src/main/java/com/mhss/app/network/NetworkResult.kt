@@ -1,10 +1,12 @@
 package com.mhss.app.network
 
-sealed interface NetworkResult {
-    data class Success<T>(val data: T) : NetworkResult
-    data object InvalidKey : NetworkResult, UserError
-    data object InternetError : NetworkResult, UserError
-    data class OtherError(val message: String? = null) : NetworkResult, NetworkError
+
+sealed interface NetworkResult<out T> {
+    data class Success<T>(val data: T) : NetworkResult<T>
+    data object InvalidKey : UserError
+    data object InternetError : UserError
+    data class OtherError(val message: String? = null): Failure
+
+    sealed interface Failure: NetworkResult<Nothing>
+    sealed interface UserError: Failure
 }
-sealed interface NetworkError
-sealed interface UserError: NetworkError

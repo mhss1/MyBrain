@@ -33,7 +33,7 @@ class GeminiApi(
         prompt: String,
         model: String,
         key: String
-    ): NetworkResult {
+    ): NetworkResult<String> {
         return withContext(ioDispatcher) {
             val result = client.post(baseUrl) {
                 url {
@@ -64,7 +64,7 @@ class GeminiApi(
         systemMessage: String,
         model: String,
         key: String
-    ): NetworkResult {
+    ): NetworkResult<AiMessage> {
         return withContext(ioDispatcher) {
             val result = client.post(baseUrl) {
                 url {

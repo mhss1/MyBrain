@@ -8,7 +8,6 @@ import androidx.compose.ui.text.font.FontFamily
 import com.mhss.app.app.R
 import com.mhss.app.domain.model.Priority
 import com.mhss.app.domain.model.TaskFrequency
-import com.mhss.app.network.NetworkError
 import com.mhss.app.network.NetworkResult
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
@@ -111,7 +110,7 @@ val Priority.color: Color
 fun Set<String>.toIntList() = this.toList().map { it.toInt() }
 
 @Composable
-fun NetworkError.toUserMessage(): String {
+fun NetworkResult.Failure.toUserMessage(): String {
     return when (this) {
         NetworkResult.InvalidKey -> stringResource(R.string.invalid_api_key)
         NetworkResult.InternetError -> stringResource(R.string.no_internet_connection)

@@ -23,7 +23,7 @@ class SendAiMessageUseCase(
         model: String,
         provider: AiProvider,
         baseURL: String = ""
-    ): NetworkResult {
+    ): NetworkResult<AiMessage> {
         return try {
             if (key.isBlank()) return NetworkResult.InvalidKey
             when (provider) {
