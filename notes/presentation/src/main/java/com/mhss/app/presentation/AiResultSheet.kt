@@ -126,7 +126,6 @@ fun AiResultSheet(
                 }
                 Spacer(Modifier.height(12.dp))
                 AiResultActions(
-                    modifier = Modifier.padding(bottom = 12.dp, top = 8.dp),
                     onCopyClick = onCopyClick,
                     onReplaceClick = onReplaceClick,
                     onAddToNoteClick = onAddToNoteClick
@@ -191,6 +190,7 @@ private fun RowScope.AiResultAction(
             .clip(RoundedCornerShape(8.dp))
             .weight(1f)
             .clickable(onClick = onClick)
+            .padding(bottom = 12.dp, top = 8.dp)
     ) {
         Icon(
             painter = painterResource(id = iconRes),
