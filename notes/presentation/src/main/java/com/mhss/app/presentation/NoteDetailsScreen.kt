@@ -38,6 +38,7 @@ import com.mhss.app.app.R
 import com.mhss.app.domain.model.*
 import com.mhss.app.presentation.components.GradientIconButton
 import com.mhss.app.ui.theme.Orange
+import com.mhss.app.ui.toUserMessage
 import com.mhss.app.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import org.koin.androidx.compose.koinViewModel
@@ -437,15 +438,6 @@ fun NoteDetailsScreen(
                     }
                 }
             }
-    }
-}
-
-@Composable
-private fun NetworkError.toUserMessage(): String {
-    return when (this) {
-        NetworkResult.InvalidKey -> stringResource(R.string.invalid_api_key)
-        NetworkResult.InternetError -> stringResource(R.string.no_internet_connection)
-        is NetworkResult.OtherError -> if (message != null) message.toString() else stringResource(R.string.unexpected_error)
     }
 }
 

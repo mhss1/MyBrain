@@ -1,4 +1,4 @@
-package com.mhss.app.network
+package com.mhss.app.di
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout

@@ -8,7 +8,7 @@ import com.mhss.app.data.model.openai.toAiMessage
 import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.di.openaiApi
 import com.mhss.app.domain.model.AiMessage
-import com.mhss.app.domain.model.NetworkResult
+import com.mhss.app.network.NetworkResult
 import com.mhss.app.domain.repository.AiApi
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

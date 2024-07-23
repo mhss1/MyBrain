@@ -75,7 +75,7 @@ fun AiResultSheet(
     val backgroundGradient = remember {
         gradientBrushColor(
             0f to surfaceVariant,
-            0.4f to surfaceVariant.copy(alpha = 0.8f).compositeOver(LightBlue),
+            0.35f to surfaceVariant.copy(alpha = 0.8f).compositeOver(LightBlue),
             0.7f to surfaceVariant.copy(alpha = 0.8f).compositeOver(LightPurple),
             1f to surfaceVariant.copy(alpha = 0.8f).compositeOver(LightOrange)
         )

@@ -21,9 +21,9 @@ import com.mhss.app.data.settingsDataModule
 import com.mhss.app.data.tasksDataModule
 import com.mhss.app.database.di.databaseModule
 import com.mhss.app.di.coroutinesModule
+import com.mhss.app.di.networkModule
 import com.mhss.app.mybrain.di.MainPresentationModule
 import com.mhss.app.mybrain.di.platformModule
-import com.mhss.app.network.networkModule
 import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.preferences.di.PreferencesModule
 import com.mhss.app.presentation.di.BookmarksPresentationModule

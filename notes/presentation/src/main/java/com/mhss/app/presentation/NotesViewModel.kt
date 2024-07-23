@@ -13,6 +13,7 @@ import com.mhss.app.domain.correctSpellingNotePrompt
 import com.mhss.app.domain.model.*
 import com.mhss.app.domain.summarizeNotePrompt
 import com.mhss.app.domain.use_case.*
+import com.mhss.app.network.NetworkError
 import com.mhss.app.preferences.domain.model.AiProvider
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
@@ -29,6 +30,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import com.mhss.app.network.NetworkResult
 
 @KoinViewModel
 class NotesViewModel(

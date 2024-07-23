@@ -3,7 +3,7 @@ package com.mhss.app.domain.use_case
 import com.mhss.app.di.geminiApi
 import com.mhss.app.di.openaiApi
 import com.mhss.app.domain.AiConstants
-import com.mhss.app.domain.model.NetworkResult
+import com.mhss.app.network.NetworkResult
 import com.mhss.app.domain.repository.AiApi
 import com.mhss.app.preferences.domain.model.AiProvider
 import org.koin.core.annotation.Named

@@ -7,8 +7,8 @@ import com.mhss.app.data.model.gemini.toGeminiRequestBody
 import com.mhss.app.di.geminiApi
 import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.domain.model.AiMessage
-import com.mhss.app.domain.model.NetworkResult
 import com.mhss.app.domain.repository.AiApi
+import com.mhss.app.network.NetworkResult
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post

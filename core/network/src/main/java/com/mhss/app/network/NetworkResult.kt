@@ -1,4 +1,4 @@
-package com.mhss.app.domain.model
+package com.mhss.app.network
 
 sealed interface NetworkResult {
     data class Success<T>(val data: T) : NetworkResult

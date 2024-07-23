@@ -1,7 +1,7 @@
 package com.mhss.app.domain.repository
 
 import com.mhss.app.domain.model.AiMessage
-import com.mhss.app.domain.model.NetworkResult
+import com.mhss.app.network.NetworkResult
 
 interface AiApi {
 

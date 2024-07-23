@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.bundles.ktor.core)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.bundles.koin)
