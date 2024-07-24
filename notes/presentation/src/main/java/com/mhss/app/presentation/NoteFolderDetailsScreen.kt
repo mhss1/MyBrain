@@ -147,7 +147,8 @@ fun NoteFolderDetailsScreen(
                     bottom = 24.dp,
                     start = 12.dp,
                     end = 12.dp
-                )
+                ),
+                modifier = Modifier.padding(contentPadding)
             ) {
                 items(uiState.folderNotes) { note ->
                     key(note.id) {
