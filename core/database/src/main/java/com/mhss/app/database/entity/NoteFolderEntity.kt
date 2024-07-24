@@ -3,6 +3,7 @@ package com.mhss.app.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mhss.app.domain.model.NoteFolder
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Entity(
@@ -10,7 +11,9 @@ import kotlinx.serialization.Serializable
 )
 @Serializable
 data class NoteFolderEntity(
-    val name: String,
+    @SerialName("name")
+    val name: String = "",
+    @SerialName("id")
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 )

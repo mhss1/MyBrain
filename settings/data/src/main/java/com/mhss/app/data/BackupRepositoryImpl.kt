@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -107,10 +108,10 @@ class BackupRepositoryImpl(
 
     @Serializable
     private data class BackupData(
-        val notes: List<NoteEntity>,
-        val noteFolders: List<NoteFolderEntity>,
-        val tasks: List<TaskEntity>,
-        val diary: List<DiaryEntryEntity>,
-        val bookmarks: List<BookmarkEntity>
+        @SerialName("notes") val notes: List<NoteEntity>,
+        @SerialName("noteFolders") val noteFolders: List<NoteFolderEntity>,
+        @SerialName("tasks") val tasks: List<TaskEntity>,
+        @SerialName("diary") val diary: List<DiaryEntryEntity>,
+        @SerialName("bookmarks") val bookmarks: List<BookmarkEntity>
     )
 }

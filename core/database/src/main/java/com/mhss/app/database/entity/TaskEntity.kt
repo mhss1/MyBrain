@@ -7,27 +7,40 @@ import com.mhss.app.domain.model.Priority
 import com.mhss.app.domain.model.SubTask
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.model.TaskFrequency
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Entity(tableName = "tasks")
 @Serializable
 data class TaskEntity(
+    @SerialName("title")
     val title: String,
+    @SerialName("description")
     val description: String = "",
+    @SerialName("isCompleted")
     @ColumnInfo(name = "is_completed")
     val isCompleted: Boolean = false,
+    @SerialName("priority")
     val priority: Priority = Priority.LOW,
+    @SerialName("createdDate")
     @ColumnInfo(name = "created_date")
     val createdDate: Long = 0L,
+    @SerialName("updatedDate")
     @ColumnInfo(name = "updated_date")
     val updatedDate: Long = 0L,
+    @SerialName("subTasks")
     @ColumnInfo(name = "sub_tasks")
     val subTasks: List<SubTask> = emptyList(),
+    @SerialName("dueDate")
     val dueDate: Long = 0L,
+    @SerialName("recurring")
     val recurring: Boolean = false,
+    @SerialName("frequency")
     val frequency: TaskFrequency = TaskFrequency.DAILY,
+    @SerialName("frequencyAmount")
     @ColumnInfo(name = "frequency_amount")
     val frequencyAmount: Int = 1,
+    @SerialName("id")
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 )
