@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mhss.app.domain.model.Mood
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.domain.model.DiaryEntry
 import kotlinx.serialization.Serializable
 
 @Entity(tableName = "diary")

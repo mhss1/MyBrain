@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhss.app.app.R
 import com.mhss.app.domain.model.Mood
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.domain.model.DiaryEntry
 
 @Composable
 fun MoodCircularBar(

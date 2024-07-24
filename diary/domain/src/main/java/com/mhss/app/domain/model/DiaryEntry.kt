@@ -1,6 +1,5 @@
-package com.mhss.app.mybrain.domain.model.diary
+package com.mhss.app.domain.model
 
-import com.mhss.app.domain.model.Mood
 import kotlinx.serialization.Serializable
 
 @Serializable

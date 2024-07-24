@@ -2,7 +2,7 @@ package com.mhss.app.domain.use_case
 
 import com.mhss.app.di.namedDefaultDispatcher
 import com.mhss.app.domain.repository.DiaryRepository
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.domain.model.DiaryEntry
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.domain.use_case.*
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType

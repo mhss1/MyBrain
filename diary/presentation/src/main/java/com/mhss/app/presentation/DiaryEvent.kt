@@ -1,6 +1,6 @@
 package com.mhss.app.presentation
 
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.preferences.domain.model.Order
 
 sealed class DiaryEvent {

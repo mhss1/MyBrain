@@ -1,7 +1,7 @@
 package com.mhss.app.domain.use_case
 
 import com.mhss.app.domain.repository.DiaryRepository
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.domain.model.DiaryEntry
 import org.koin.core.annotation.Single
 
 @Single

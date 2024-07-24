@@ -1,6 +1,6 @@
 package com.mhss.app.domain.repository
 
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.domain.model.DiaryEntry
 import kotlinx.coroutines.flow.Flow
 
 interface DiaryRepository {

@@ -12,7 +12,7 @@ import com.mhss.app.domain.use_case.GetAllEntriesUseCase
 import com.mhss.app.domain.use_case.GetAllEventsUseCase
 import com.mhss.app.domain.use_case.GetAllTasksUseCase
 import com.mhss.app.domain.use_case.UpdateTaskUseCase
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.preferences.domain.model.*
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase

@@ -4,7 +4,7 @@ import com.mhss.app.database.dao.DiaryDao
 import com.mhss.app.database.entity.*
 import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.domain.repository.DiaryRepository
-import com.mhss.app.mybrain.domain.model.diary.DiaryEntry
+import com.mhss.app.domain.model.DiaryEntry
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
