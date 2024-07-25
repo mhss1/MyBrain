@@ -20,6 +20,7 @@ val String.summarizeNotePrompt: String
         Summarize this note in bullet points.
         Respond with the summary only and don't say anything else.
         Use Markdown for formatting.
+        Respond using the same language as the original note language.
         Note content:
         $this
         Summary:
@@ -31,6 +32,7 @@ val String.autoFormatNotePrompt: String
         Include headings, bullet points, and other formatting.
         Respond with the formatted note only and don't say anything else.
         Use Markdown for formatting.
+        Respond using the same language as the original note language.
         Note content:
         $this
         Formatted note:
@@ -40,6 +42,7 @@ val String.correctSpellingNotePrompt: String
     get() = """
         Correct the spelling and grammar errors in this note.
         Respond with the corrected note only and don't say anything else.
+        Respond using the same language as the original note language.
         Note content:
         $this
         Corrected note:
