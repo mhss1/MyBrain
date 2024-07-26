@@ -1,5 +1,6 @@
 package com.mhss.app.presentation.integrations
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import com.mhss.app.preferences.domain.model.PrefsKey
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.stringPreferencesKey
 import com.mhss.app.presentation.SettingsViewModel
+import kotlinx.coroutines.flow.map
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +68,8 @@ fun IntegrationsScreen(
                     val provider by viewModel.getSettings(
                         PrefsKey.IntKey(PrefsConstants.AI_PROVIDER_KEY),
                         AiProvider.None.ordinal
-                    ).collectAsStateWithLifecycle(AiProvider.None.ordinal)
+                    ).map { AiProvider.entries.first { entry -> entry.id == it } }
+                        .collectAsStateWithLifecycle(AiProvider.None)
 
                     Column(
                         Modifier
@@ -83,7 +86,7 @@ fun IntegrationsScreen(
                                 style = MaterialTheme.typography.titleLarge
                             )
                             Switch(
-                                checked = provider != AiProvider.None.ordinal,
+                                checked = provider != AiProvider.None,
                                 onCheckedChange = {
                                     viewModel.saveSettings(
                                         PrefsKey.IntKey(PrefsConstants.AI_PROVIDER_KEY),
@@ -92,118 +95,118 @@ fun IntegrationsScreen(
                                 }
                             )
                         }
-                        Spacer(Modifier.height(8.dp))
-                        val geminiKey by viewModel
-                            .getSettings(
-                                stringPreferencesKey(PrefsConstants.GEMINI_KEY),
-                                ""
-                            ).collectAsStateWithLifecycle("")
-                        val geminiModel by  viewModel
-                            .getSettings(
-                                stringPreferencesKey(PrefsConstants.GEMINI_MODEL_KEY),
-                                AiConstants.GEMINI_DEFAULT_MODEL
-                            ).collectAsStateWithLifecycle("")
-                        AiProviderCard(
-                            name = stringResource(R.string.gemini),
-                            description = stringResource(R.string.gemini_description),
-                            selected = provider == AiProvider.Gemini.id,
-                            key = geminiKey,
-                            model = geminiModel,
-                            keyInfoURL = AiConstants.GEMINI_KEY_INFO_URL,
-                            modelInfoURL = AiConstants.GEMINI_MODELS_INFO_URL,
-                            onKeyChange = {
-                                viewModel.saveSettings(
-                                    stringPreferencesKey(PrefsConstants.GEMINI_KEY),
-                                    it
-                                )
-                            },
-                            onModelChange = {
-                                viewModel.saveSettings(
-                                    stringPreferencesKey(PrefsConstants.GEMINI_MODEL_KEY),
-                                    it
-                                )
-                            },
-                            onClick = {
-                                if (provider != AiProvider.None.id) {
-                                    viewModel.saveSettings(
-                                        PrefsKey.IntKey(PrefsConstants.AI_PROVIDER_KEY),
-                                        AiProvider.Gemini.id
-                                    )
-                                }
-                            }
-                        )
-                        Spacer(Modifier.height(8.dp))
-                        val openaiKey by  viewModel
-                                .getSettings(
-                            stringPreferencesKey(PrefsConstants.OPENAI_KEY),
-                            ""
-                        ).collectAsStateWithLifecycle("")
-                        val openaiModel by viewModel
-                            .getSettings(
-                                stringPreferencesKey(PrefsConstants.OPENAI_MODEL_KEY),
-                                AiConstants.OPENAI_DEFAULT_MODEL
-                            ).collectAsStateWithLifecycle("")
-                        val openaiUseCustomURL by viewModel
-                            .getSettings(
-                                booleanPreferencesKey(PrefsConstants.OPENAI_USE_URL_KEY),
-                                false
-                            ).collectAsStateWithLifecycle(false)
-                        val openaiCustomURL by viewModel
-                            .getSettings(
-                                stringPreferencesKey(PrefsConstants.OPENAI_URL_KEY),
-                                AiConstants.OPENAI_BASE_URL
-                            ).collectAsStateWithLifecycle("")
-                        AiProviderCard(
-                            name = stringResource(R.string.openai),
-                            description = stringResource(R.string.openai_description),
-                            selected = provider == AiProvider.OpenAI.id,
-                            key = openaiKey,
-                            model = openaiModel,
-                            keyInfoURL = AiConstants.OPENAI_KEY_INFO_URL,
-                            modelInfoURL = AiConstants.OPENAI_MODELS_INFO_URL,
-                            onKeyChange = {
-                                viewModel.saveSettings(
-                                    stringPreferencesKey(PrefsConstants.OPENAI_KEY),
-                                    it
-                                )
-                            },
-                            onModelChange = {
-                                viewModel.saveSettings(
-                                    stringPreferencesKey(PrefsConstants.OPENAI_MODEL_KEY),
-                                    it
-                                )
-                            },
-                            onClick = {
-                                if (provider != AiProvider.None.id) {
-                                    viewModel.saveSettings(
-                                        PrefsKey.IntKey(PrefsConstants.AI_PROVIDER_KEY),
-                                        AiProvider.OpenAI.id
-                                    )
-                                }
-                            }
-                        ) {
-                            CustomURLSection(
-                                enabled = openaiUseCustomURL,
-                                url = openaiCustomURL,
-                                onSave = {
-                                    viewModel.saveSettings(
-                                        PrefsKey.StringKey(PrefsConstants.OPENAI_URL_KEY),
-                                        it
-                                    )
-                                },
-                                onEnable = {
-                                    viewModel.saveSettings(
-                                        PrefsKey.BooleanKey(PrefsConstants.OPENAI_USE_URL_KEY),
-                                        it
-                                    )
-                                    if (!it) {
+                        AnimatedVisibility(provider != AiProvider.None) {
+                            Column {
+                                Spacer(Modifier.height(8.dp))
+                                val geminiKey by viewModel
+                                    .getSettings(
+                                        stringPreferencesKey(PrefsConstants.GEMINI_KEY),
+                                        ""
+                                    ).collectAsStateWithLifecycle("")
+                                val geminiModel by viewModel
+                                    .getSettings(
+                                        stringPreferencesKey(PrefsConstants.GEMINI_MODEL_KEY),
+                                        AiConstants.GEMINI_DEFAULT_MODEL
+                                    ).collectAsStateWithLifecycle("")
+                                AiProviderCard(
+                                    name = stringResource(R.string.gemini),
+                                    description = stringResource(R.string.gemini_description),
+                                    selected = provider == AiProvider.Gemini,
+                                    key = geminiKey,
+                                    model = geminiModel,
+                                    keyInfoURL = AiConstants.GEMINI_KEY_INFO_URL,
+                                    modelInfoURL = AiConstants.GEMINI_MODELS_INFO_URL,
+                                    onKeyChange = {
                                         viewModel.saveSettings(
-                                            PrefsKey.StringKey(PrefsConstants.OPENAI_URL_KEY),
-                                            AiConstants.OPENAI_BASE_URL
+                                            stringPreferencesKey(PrefsConstants.GEMINI_KEY),
+                                            it
+                                        )
+                                    },
+                                    onModelChange = {
+                                        viewModel.saveSettings(
+                                            stringPreferencesKey(PrefsConstants.GEMINI_MODEL_KEY),
+                                            it
+                                        )
+                                    },
+                                    onClick = {
+                                        viewModel.saveSettings(
+                                            PrefsKey.IntKey(PrefsConstants.AI_PROVIDER_KEY),
+                                            AiProvider.Gemini.id
                                         )
                                     }
+                                )
+                                Spacer(Modifier.height(8.dp))
+                                val openaiKey by viewModel
+                                    .getSettings(
+                                        stringPreferencesKey(PrefsConstants.OPENAI_KEY),
+                                        ""
+                                    ).collectAsStateWithLifecycle("")
+                                val openaiModel by viewModel
+                                    .getSettings(
+                                        stringPreferencesKey(PrefsConstants.OPENAI_MODEL_KEY),
+                                        AiConstants.OPENAI_DEFAULT_MODEL
+                                    ).collectAsStateWithLifecycle("")
+                                val openaiUseCustomURL by viewModel
+                                    .getSettings(
+                                        booleanPreferencesKey(PrefsConstants.OPENAI_USE_URL_KEY),
+                                        false
+                                    ).collectAsStateWithLifecycle(false)
+                                val openaiCustomURL by viewModel
+                                    .getSettings(
+                                        stringPreferencesKey(PrefsConstants.OPENAI_URL_KEY),
+                                        AiConstants.OPENAI_BASE_URL
+                                    ).collectAsStateWithLifecycle("")
+                                AiProviderCard(
+                                    name = stringResource(R.string.openai),
+                                    description = stringResource(R.string.openai_description),
+                                    selected = provider == AiProvider.OpenAI,
+                                    key = openaiKey,
+                                    model = openaiModel,
+                                    keyInfoURL = AiConstants.OPENAI_KEY_INFO_URL,
+                                    modelInfoURL = AiConstants.OPENAI_MODELS_INFO_URL,
+                                    onKeyChange = {
+                                        viewModel.saveSettings(
+                                            stringPreferencesKey(PrefsConstants.OPENAI_KEY),
+                                            it
+                                        )
+                                    },
+                                    onModelChange = {
+                                        viewModel.saveSettings(
+                                            stringPreferencesKey(PrefsConstants.OPENAI_MODEL_KEY),
+                                            it
+                                        )
+                                    },
+                                    onClick = {
+                                        viewModel.saveSettings(
+                                            PrefsKey.IntKey(PrefsConstants.AI_PROVIDER_KEY),
+                                            AiProvider.OpenAI.id
+                                        )
+                                    }
+                                ) {
+                                    CustomURLSection(
+                                        enabled = openaiUseCustomURL,
+                                        url = openaiCustomURL,
+                                        onSave = {
+                                            viewModel.saveSettings(
+                                                PrefsKey.StringKey(PrefsConstants.OPENAI_URL_KEY),
+                                                it
+                                            )
+                                        },
+                                        onEnable = {
+                                            viewModel.saveSettings(
+                                                PrefsKey.BooleanKey(PrefsConstants.OPENAI_USE_URL_KEY),
+                                                it
+                                            )
+                                            if (!it) {
+                                                viewModel.saveSettings(
+                                                    PrefsKey.StringKey(PrefsConstants.OPENAI_URL_KEY),
+                                                    AiConstants.OPENAI_BASE_URL
+                                                )
+                                            }
+                                        }
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
                 }
