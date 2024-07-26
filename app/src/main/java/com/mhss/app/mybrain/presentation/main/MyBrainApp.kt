@@ -53,7 +53,7 @@ import com.mhss.app.ui.theme.MyBrainTheme
 import com.mhss.app.ui.theme.Rubik
 import com.mhss.app.ui.toFontFamily
 import com.mhss.app.ui.toInt
-
+import org.koin.compose.KoinContext
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -121,148 +121,150 @@ fun MyBrainApp(
             startDestination = Screen.DashboardScreen
         }
     }
-    MyBrainTheme(
-        darkTheme = isDarkMode,
-        useDynamicColors = useMaterialYou,
-        fontFamily = font.value.toFontFamily()) {
-        val navController = rememberNavController()
-        Scaffold(
-            modifier = modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            snackbarHost = { SnackbarHost(snackbarHostState) }
-        ) { paddingValues ->
-            NavHost(
-                startDestination = Screen.Main,
-                navController = navController,
-                modifier = Modifier
-                    .padding(
-                        top = paddingValues.calculateTopPadding()
-                    )
-                    .consumeWindowInsets(paddingValues)
-            ) {
-                composable<Screen.Main> {
-                    MainScreen(
-                        startUpScreen = startDestination,
-                        mainNavController = navController,
-                        appLockManager = appLockManager
-                    )
-                }
-                composable<Screen.TasksScreen>(
-                    deepLinks =
-                    listOf(
-                        navDeepLink {
-                            uriPattern =
-                                "${Constants.TASKS_SCREEN_URI}?${Constants.ADD_TASK_ARG}={${Constants.ADD_TASK_ARG}}"
-                        }
-                    )
+    KoinContext {
+        MyBrainTheme(
+            darkTheme = isDarkMode,
+            useDynamicColors = useMaterialYou,
+            fontFamily = font.value.toFontFamily()) {
+            val navController = rememberNavController()
+            Scaffold(
+                modifier = modifier.fillMaxSize(),
+                containerColor = MaterialTheme.colorScheme.background,
+                snackbarHost = { SnackbarHost(snackbarHostState) }
+            ) { paddingValues ->
+                NavHost(
+                    startDestination = Screen.Main,
+                    navController = navController,
+                    modifier = Modifier
+                        .padding(
+                            top = paddingValues.calculateTopPadding()
+                        )
+                        .consumeWindowInsets(paddingValues)
                 ) {
-                    val args = it.toRoute<Screen.TasksScreen>()
-                    TasksScreen(
-                        navController = navController,
-                        addTask = args.addTask
-                    )
+                    composable<Screen.Main> {
+                        MainScreen(
+                            startUpScreen = startDestination,
+                            mainNavController = navController,
+                            appLockManager = appLockManager
+                        )
+                    }
+                    composable<Screen.TasksScreen>(
+                        deepLinks =
+                        listOf(
+                            navDeepLink {
+                                uriPattern =
+                                    "${Constants.TASKS_SCREEN_URI}?${Constants.ADD_TASK_ARG}={${Constants.ADD_TASK_ARG}}"
+                            }
+                        )
+                    ) {
+                        val args = it.toRoute<Screen.TasksScreen>()
+                        TasksScreen(
+                            navController = navController,
+                            addTask = args.addTask
+                        )
+                    }
+                    composable<Screen.TaskDetailScreen>(
+                        deepLinks =
+                        listOf(
+                            navDeepLink {
+                                uriPattern =
+                                    "${Constants.TASK_DETAILS_URI}/{${Constants.TASK_ID_ARG}}"
+                            }
+                        )
+                    ) {
+                        val args = it.toRoute<Screen.TaskDetailScreen>()
+                        TaskDetailScreen(
+                            navController = navController,
+                            args.taskId
+                        )
+                    }
+                    composable<Screen.TaskSearchScreen> {
+                        TasksSearchScreen(navController = navController)
+                    }
+                    composable<Screen.NotesScreen> {
+                        NotesScreen(navController = navController)
+                    }
+                    composable<Screen.NoteDetailsScreen> {
+                        val args = it.toRoute<Screen.NoteDetailsScreen>()
+                        NoteDetailsScreen(
+                            navController,
+                            args.noteId,
+                            args.folderId
+                        )
+                    }
+                    composable<Screen.NoteSearchScreen> {
+                        NotesSearchScreen(navController = navController)
+                    }
+                    composable<Screen.DiaryScreen> {
+                        DiaryScreen(navController = navController)
+                    }
+                    composable<Screen.DiaryChartScreen> {
+                        DiaryChartScreen()
+                    }
+                    composable<Screen.DiarySearchScreen> {
+                        DiarySearchScreen(navController = navController)
+                    }
+                    composable<Screen.DiaryDetailScreen> {
+                        val args = it.toRoute<Screen.DiaryDetailScreen>()
+                        DiaryEntryDetailsScreen(
+                            navController = navController,
+                            args.entryId
+                        )
+                    }
+                    composable<Screen.BookmarksScreen> {
+                        BookmarksScreen(navController = navController)
+                    }
+                    composable<Screen.BookmarkDetailScreen> {
+                        val args = it.toRoute<Screen.BookmarkDetailScreen>()
+                        BookmarkDetailsScreen(
+                            navController = navController,
+                            args.bookmarkId
+                        )
+                    }
+                    composable<Screen.BookmarkSearchScreen> {
+                        BookmarkSearchScreen(navController = navController)
+                    }
+                    composable<Screen.CalendarScreen>(
+                        deepLinks = listOf(
+                            navDeepLink {
+                                uriPattern = Constants.CALENDAR_SCREEN_URI
+                            }
+                        )
+                    ) {
+                        CalendarScreen(navController = navController)
+                    }
+                    composable<Screen.CalendarEventDetailsScreen>(
+                        deepLinks = listOf(
+                            navDeepLink {
+                                uriPattern =
+                                    "${Constants.CALENDAR_DETAILS_SCREEN_URI}?${Constants.CALENDAR_EVENT_ARG}={${Constants.CALENDAR_EVENT_ARG}}"
+                            }
+                        )
+                    ) {
+                        val args = it.toRoute<Screen.CalendarEventDetailsScreen>()
+                        CalendarEventDetailsScreen(
+                            navController = navController,
+                            eventJson = args.eventJson
+                        )
+                    }
+                    composable<Screen.NoteFolderDetailsScreen> {
+                        val args = it.toRoute<Screen.NoteFolderDetailsScreen>()
+                        NoteFolderDetailsScreen(
+                            navController = navController,
+                            args.folderId
+                        )
+                    }
+                    composable<Screen.ImportExportScreen> {
+                        ImportExportScreen()
+                    }
+                    composable<Screen.IntegrationsScreen> {
+                        IntegrationsScreen()
+                    }
                 }
-                composable<Screen.TaskDetailScreen>(
-                    deepLinks =
-                    listOf(
-                        navDeepLink {
-                            uriPattern =
-                                "${Constants.TASK_DETAILS_URI}/{${Constants.TASK_ID_ARG}}"
-                        }
-                    )
-                ) {
-                    val args = it.toRoute<Screen.TaskDetailScreen>()
-                    TaskDetailScreen(
-                        navController = navController,
-                        args.taskId
-                    )
-                }
-                composable<Screen.TaskSearchScreen> {
-                    TasksSearchScreen(navController = navController)
-                }
-                composable<Screen.NotesScreen> {
-                    NotesScreen(navController = navController)
-                }
-                composable<Screen.NoteDetailsScreen> {
-                    val args = it.toRoute<Screen.NoteDetailsScreen>()
-                    NoteDetailsScreen(
-                        navController,
-                        args.noteId,
-                        args.folderId
-                    )
-                }
-                composable<Screen.NoteSearchScreen> {
-                    NotesSearchScreen(navController = navController)
-                }
-                composable<Screen.DiaryScreen> {
-                    DiaryScreen(navController = navController)
-                }
-                composable<Screen.DiaryChartScreen> {
-                    DiaryChartScreen()
-                }
-                composable<Screen.DiarySearchScreen> {
-                    DiarySearchScreen(navController = navController)
-                }
-                composable<Screen.DiaryDetailScreen> {
-                    val args = it.toRoute<Screen.DiaryDetailScreen>()
-                    DiaryEntryDetailsScreen(
-                        navController = navController,
-                        args.entryId
-                    )
-                }
-                composable<Screen.BookmarksScreen> {
-                    BookmarksScreen(navController = navController)
-                }
-                composable<Screen.BookmarkDetailScreen> {
-                    val args = it.toRoute<Screen.BookmarkDetailScreen>()
-                    BookmarkDetailsScreen(
-                        navController = navController,
-                        args.bookmarkId
-                    )
-                }
-                composable<Screen.BookmarkSearchScreen> {
-                    BookmarkSearchScreen(navController = navController)
-                }
-                composable<Screen.CalendarScreen>(
-                    deepLinks = listOf(
-                        navDeepLink {
-                            uriPattern = Constants.CALENDAR_SCREEN_URI
-                        }
-                    )
-                ) {
-                    CalendarScreen(navController = navController)
-                }
-                composable<Screen.CalendarEventDetailsScreen>(
-                    deepLinks = listOf(
-                        navDeepLink {
-                            uriPattern =
-                                "${Constants.CALENDAR_DETAILS_SCREEN_URI}?${Constants.CALENDAR_EVENT_ARG}={${Constants.CALENDAR_EVENT_ARG}}"
-                        }
-                    )
-                ) {
-                    val args = it.toRoute<Screen.CalendarEventDetailsScreen>()
-                    CalendarEventDetailsScreen(
-                        navController = navController,
-                        eventJson = args.eventJson
-                    )
-                }
-                composable<Screen.NoteFolderDetailsScreen> {
-                    val args = it.toRoute<Screen.NoteFolderDetailsScreen>()
-                    NoteFolderDetailsScreen(
-                        navController = navController,
-                        args.folderId
-                    )
-                }
-                composable<Screen.ImportExportScreen> {
-                    ImportExportScreen()
-                }
-                composable<Screen.IntegrationsScreen> {
-                    IntegrationsScreen()
-                }
-            }
-            if (!appUnlocked) {
-                AuthScreen {
-                    appLockManager.showAuthPrompt()
+                if (!appUnlocked) {
+                    AuthScreen {
+                        appLockManager.showAuthPrompt()
+                    }
                 }
             }
         }

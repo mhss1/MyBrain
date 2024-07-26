@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
-import org.koin.compose.KoinContext
 
 private val DarkColorPalette = darkColorScheme(
     primary = PrimaryColor,
@@ -39,13 +38,13 @@ private val LightColorPalette = lightColorScheme(
 @Composable
 fun MyBrainTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    useDynamicColors: Boolean,
+    useDynamicColors: Boolean = false,
     fontFamily: FontFamily = Rubik,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
     val colors = if (useDynamicColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (darkTheme){
+        if (darkTheme) {
             dynamicDarkColorScheme(context)
         } else dynamicLightColorScheme(context)
     } else if (darkTheme) {
@@ -54,12 +53,10 @@ fun MyBrainTheme(
         LightColorPalette
     }
     val typography = getTypography(fontFamily)
-    KoinContext {
-        MaterialTheme(
-            colorScheme = colors,
-            typography = typography,
-            shapes = Shapes,
-            content = content
-        )
-    }
+    MaterialTheme(
+        colorScheme = colors,
+        typography = typography,
+        shapes = Shapes,
+        content = content
+    )
 }
