@@ -63,6 +63,7 @@ class NotesViewModel(
     val aiEnabled: StateFlow<Boolean> = _aiEnabled
     var aiState by mutableStateOf((AiState()))
         private set
+    private var aiActionJob: Job? = null
 
     private val aiProvider =
         getPreference(intPreferencesKey(PrefsConstants.AI_PROVIDER_KEY), AiProvider.None.id)
@@ -233,7 +234,7 @@ class NotesViewModel(
                 notesUiState = notesUiState.copy(folder = folder)
             }
 
-            is AiAction -> viewModelScope.launch {
+            is AiAction -> aiActionJob = viewModelScope.launch {
                 val prompt = when (event) {
                     is NoteEvent.Summarize -> event.content.summarizeNotePrompt
                     is NoteEvent.AutoFormat -> event.content.autoFormatNotePrompt
@@ -257,7 +258,11 @@ class NotesViewModel(
                 }
             }
 
-            NoteEvent.AiResultHandled -> aiState = aiState.copy(showAiSheet = false)
+            NoteEvent.AiResultHandled -> {
+                aiActionJob?.cancel()
+                aiActionJob = null
+                aiState = aiState.copy(showAiSheet = false)
+            }
         }
     }
 

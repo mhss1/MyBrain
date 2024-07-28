@@ -1,10 +1,13 @@
 package com.mhss.app.presentation
 
+import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
@@ -18,6 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -35,18 +39,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.mhss.app.app.R
-import com.mhss.app.ui.gradientBrushColor
 import com.mhss.app.ui.theme.LightBlue
 import com.mhss.app.ui.theme.LightOrange
 import com.mhss.app.ui.theme.LightPurple
+import com.mhss.app.ui.theme.MyBrainTheme
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import sv.lib.squircleshape.CornerSmoothing
 import sv.lib.squircleshape.SquircleShape
@@ -62,30 +71,53 @@ fun AiResultSheet(
     onCopyClick: () -> Unit
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "")
-    val angle by infiniteTransition.animateFloat(
+    val smoothEasing = remember {
+        CubicBezierEasing(0.42f, 0.0f, 0.58f, 1.0f)
+    }
+
+    val offset by infiniteTransition.animateValue(
+        initialValue = 0,
+        targetValue = 20,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        typeConverter = Int.VectorConverter,
+        label = "Card y offset"
+    )
+    val xMul by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 360f,
+        targetValue = 1f,
         animationSpec =
         infiniteRepeatable(
-            animation = tween(3500, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ), label = ""
+            animation = tween(2900, easing = smoothEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "x Multiplier"
     )
+    val yMul by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 0.9f,
+        animationSpec =
+        infiniteRepeatable(
+            animation = tween(1900, easing = smoothEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "y Multiplier"
+    )
+
     val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
-    val backgroundGradient = remember {
-        gradientBrushColor(
-            0f to surfaceVariant,
-            0.35f to surfaceVariant.copy(alpha = 0.8f).compositeOver(LightBlue),
-            0.7f to surfaceVariant.copy(alpha = 0.8f).compositeOver(LightPurple),
-            1f to surfaceVariant.copy(alpha = 0.8f).compositeOver(LightOrange)
-        )
-    }
     Card(
         modifier = modifier
             .padding(bottom = 24.dp)
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
-            .clickable(enabled = false) {},
+            .clickable(enabled = false) {}
+            .offset {
+                if (loading) {
+                    IntOffset(0, offset)
+                } else IntOffset.Zero
+            },
         shape = SquircleShape(
             radius = 42.dp,
             cornerSmoothing = CornerSmoothing.Medium
@@ -96,9 +128,32 @@ fun AiResultSheet(
             modifier = Modifier
                 .heightIn(min = 120.dp)
                 .drawBehind {
-                    rotate(if (loading) angle else 0f) {
-                        drawCircle(backgroundGradient, radius = size.maxDimension / 1.5f)
-                    }
+                    drawGradientRadial(
+                        surfaceVariant
+                            .copy(alpha = 0.75f)
+                            .compositeOver(LightBlue),
+                        Offset(size.width * xMul,
+                            size.height - size.height * yMul
+                        )
+                    )
+                    drawGradientRadial(
+                        surfaceVariant
+                            .copy(alpha = 0.75f)
+                            .compositeOver(LightOrange),
+                        Offset(
+                            size.width - size.width * xMul,
+                            size.height - size.height * yMul
+                        )
+                    )
+                    drawGradientRadial(
+                        surfaceVariant
+                            .copy(alpha = 0.75f)
+                            .compositeOver(LightPurple),
+                        Offset(
+                            size.width - size.width * xMul,
+                            size.height * yMul
+                        )
+                    )
                 }
                 .fillMaxWidth()
                 .animateContentSize(
@@ -201,6 +256,35 @@ private fun RowScope.AiResultAction(
         Text(
             text = stringResource(id = textRes),
             style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+fun DrawScope.drawGradientRadial(
+    color: Color,
+    center: Offset
+) = drawRect(
+    brush = Brush.radialGradient(
+        colors = listOf(
+            color,
+            Color.Transparent
+        ),
+        center = center,
+        radius = size.maxDimension * 0.75f,
+    )
+)
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun AiResultSheetPreview() {
+    MyBrainTheme {
+        AiResultSheet(
+            modifier = Modifier,
+            loading = false,
+            result = "This is a test content\n\n".repeat(8),
+            error = null,
+            {}, {}, {}
         )
     }
 }
