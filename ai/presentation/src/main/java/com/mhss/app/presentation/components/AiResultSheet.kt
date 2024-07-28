@@ -1,4 +1,4 @@
-package com.mhss.app.presentation
+package com.mhss.app.presentation.components
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
