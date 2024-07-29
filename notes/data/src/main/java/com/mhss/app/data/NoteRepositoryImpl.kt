@@ -5,7 +5,6 @@ import com.mhss.app.database.entity.toNote
 import com.mhss.app.database.entity.toNoteEntity
 import com.mhss.app.database.entity.toNoteFolder
 import com.mhss.app.database.entity.toNoteFolderEntity
-import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.domain.model.Note
 import com.mhss.app.domain.model.NoteFolder
 import com.mhss.app.domain.repository.NoteRepository
@@ -20,7 +19,7 @@ import org.koin.core.annotation.Single
 @Single
 class NoteRepositoryImpl(
     private val noteDao: NoteDao,
-    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : NoteRepository {
 
     override fun getAllFolderlessNotes(): Flow<List<Note>> {

@@ -3,7 +3,6 @@ package com.mhss.app.data
 import com.mhss.app.database.dao.BookmarkDao
 import com.mhss.app.database.entity.toBookmark
 import com.mhss.app.database.entity.toBookmarkEntity
-import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.domain.model.Bookmark
 import com.mhss.app.domain.repository.BookmarkRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,7 +16,7 @@ import org.koin.core.annotation.Single
 @Single
 class BookmarkRepositoryImpl(
     private val bookmarkDao: BookmarkDao,
-    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : BookmarkRepository {
 
     override fun getAllBookmarks(): Flow<List<Bookmark>> {

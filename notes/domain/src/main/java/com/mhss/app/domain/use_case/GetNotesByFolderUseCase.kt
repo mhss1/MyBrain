@@ -1,6 +1,5 @@
 package com.mhss.app.domain.use_case
 
-import com.mhss.app.di.namedDefaultDispatcher
 import com.mhss.app.domain.repository.NoteRepository
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
@@ -13,7 +12,7 @@ import org.koin.core.annotation.Single
 @Single
 class GetNotesByFolderUseCase(
     private val notesRepository: NoteRepository,
-    @Named(namedDefaultDispatcher) private val defaultDispatcher: CoroutineDispatcher
+    @Named("defaultDispatcher") private val defaultDispatcher: CoroutineDispatcher
 ) {
     operator fun invoke(id: Int, order: Order) = notesRepository.getNotesByFolder(id).map { list ->
         when (order.orderType) {

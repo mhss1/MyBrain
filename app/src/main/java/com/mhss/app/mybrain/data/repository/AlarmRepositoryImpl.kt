@@ -5,7 +5,6 @@ import com.mhss.app.alarm.repository.AlarmRepository
 import com.mhss.app.database.dao.AlarmDao
 import com.mhss.app.database.entity.toAlarm
 import com.mhss.app.database.entity.toAlarmEntity
-import com.mhss.app.di.namedIoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Named
@@ -14,7 +13,7 @@ import org.koin.core.annotation.Single
 @Single
 class AlarmRepositoryImpl(
     private val alarmDao: AlarmDao,
-    @Named(namedIoDispatcher)private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher")private val ioDispatcher: CoroutineDispatcher
 ) : AlarmRepository {
 
     override suspend fun getAlarms(): List<Alarm> {

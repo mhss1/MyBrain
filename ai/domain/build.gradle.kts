@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:di"))
     api(project(":core:network"))
     implementation(project(":core:preferences"))
 

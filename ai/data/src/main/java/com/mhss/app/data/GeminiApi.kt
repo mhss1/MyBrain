@@ -4,8 +4,6 @@ import com.mhss.app.data.model.gemini.GeminiResponse
 import com.mhss.app.data.model.gemini.text
 import com.mhss.app.data.model.gemini.toAiMessage
 import com.mhss.app.data.model.gemini.toGeminiRequestBody
-import com.mhss.app.di.geminiApi
-import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.domain.model.AiMessage
 import com.mhss.app.domain.repository.AiApi
 import com.mhss.app.network.NetworkResult
@@ -22,10 +20,10 @@ import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 
 @Single
-@Named(geminiApi)
+@Named("geminiApi")
 class GeminiApi(
     private val client: HttpClient,
-    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : AiApi {
 
     override suspend fun sendPrompt(

@@ -1,7 +1,5 @@
 package com.mhss.app.domain.use_case
 
-import com.mhss.app.di.geminiApi
-import com.mhss.app.di.openaiApi
 import com.mhss.app.domain.AiConstants
 import com.mhss.app.domain.model.AiMessage
 import com.mhss.app.network.NetworkResult
@@ -13,8 +11,8 @@ import java.io.IOException
 
 @Single
 class SendAiMessageUseCase(
-    @Named(openaiApi) private val openai: AiApi,
-    @Named(geminiApi) private val gemini: AiApi
+    @Named("openaiApi") private val openai: AiApi,
+    @Named("geminiApi") private val gemini: AiApi
 ) {
     suspend operator fun invoke(
         messages: List<AiMessage>,

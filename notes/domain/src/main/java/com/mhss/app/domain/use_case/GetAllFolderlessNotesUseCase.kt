@@ -1,6 +1,5 @@
 package com.mhss.app.domain.use_case
 
-import com.mhss.app.di.namedDefaultDispatcher
 import com.mhss.app.domain.model.Note
 import com.mhss.app.domain.repository.NoteRepository
 import com.mhss.app.preferences.domain.model.Order
@@ -15,7 +14,7 @@ import org.koin.core.annotation.Single
 @Single
 class GetAllFolderlessNotesUseCase(
     private val notesRepository: NoteRepository,
-    @Named(namedDefaultDispatcher) private val defaultDispatcher: CoroutineDispatcher
+    @Named("defaultDispatcher") private val defaultDispatcher: CoroutineDispatcher
 ) {
     operator fun invoke(order: Order) : Flow<List<Note>> {
         return notesRepository.getAllFolderlessNotes().map { list ->

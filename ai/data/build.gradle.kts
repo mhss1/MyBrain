@@ -5,7 +5,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:di"))
     implementation(project(":ai:domain"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.ktor.core)

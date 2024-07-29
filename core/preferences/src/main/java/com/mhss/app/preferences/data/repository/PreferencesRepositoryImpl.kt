@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
-import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.preferences.domain.model.PrefsKey
 import com.mhss.app.preferences.domain.repository.PreferenceRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,7 +19,7 @@ import org.koin.core.annotation.Single
 @Single
 class PreferenceRepositoryImpl(
     private val preferences: DataStore<Preferences>,
-    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : PreferenceRepository {
 
     override suspend fun <T> savePreference(key: PrefsKey<T>, value: T) {

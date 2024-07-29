@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:di"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.datastore.preferences)
 

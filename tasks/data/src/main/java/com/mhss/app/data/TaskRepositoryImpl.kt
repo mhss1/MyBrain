@@ -3,7 +3,6 @@ package com.mhss.app.data
 import com.mhss.app.database.dao.TaskDao
 import com.mhss.app.database.entity.toTask
 import com.mhss.app.database.entity.toTaskEntity
-import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.repository.TaskRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,7 +16,7 @@ import org.koin.core.annotation.Single
 @Single
 class TaskRepositoryImpl(
     private val taskDao: TaskDao,
-    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : TaskRepository {
 
     override fun getAllTasks(): Flow<List<Task>> {

@@ -1,6 +1,5 @@
 package com.mhss.app.domain.use_case
 
-import com.mhss.app.di.namedDefaultDispatcher
 import com.mhss.app.domain.repository.DiaryRepository
 import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.preferences.domain.model.Order
@@ -15,7 +14,7 @@ import org.koin.core.annotation.Single
 @Single
 class GetAllEntriesUseCase(
     private val diaryRepository: DiaryRepository,
-    @Named(namedDefaultDispatcher) private val defaultDispatcher: CoroutineDispatcher
+    @Named("defaultDispatcher") private val defaultDispatcher: CoroutineDispatcher
 ) {
     operator fun invoke(order: Order) : Flow<List<DiaryEntry>> {
         return diaryRepository.getAllEntries().map { entries ->

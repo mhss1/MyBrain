@@ -5,8 +5,6 @@ import com.mhss.app.data.model.openai.OpenaiMessageRequestBody
 import com.mhss.app.data.model.openai.OpenaiResponse
 import com.mhss.app.data.model.openai.openaiRole
 import com.mhss.app.data.model.openai.toAiMessage
-import com.mhss.app.di.namedIoDispatcher
-import com.mhss.app.di.openaiApi
 import com.mhss.app.domain.model.AiMessage
 import com.mhss.app.network.NetworkResult
 import com.mhss.app.domain.repository.AiApi
@@ -24,10 +22,10 @@ import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 
 @Single
-@Named(openaiApi)
+@Named("openaiApi")
 class OpenaiApi(
     private val client: HttpClient,
-    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : AiApi {
     override suspend fun sendPrompt(baseUrl: String, prompt: String, model: String, key: String)
             : NetworkResult<String> {

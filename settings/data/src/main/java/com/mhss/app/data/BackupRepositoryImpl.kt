@@ -11,7 +11,6 @@ import com.mhss.app.database.entity.NoteEntity
 import com.mhss.app.database.entity.NoteFolderEntity
 import com.mhss.app.database.entity.TaskEntity
 import com.mhss.app.database.entity.withoutIds
-import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.domain.repository.BackupRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
@@ -29,7 +28,7 @@ import org.koin.core.annotation.Single
 class BackupRepositoryImpl(
     private val context: Context,
     private val database: MyBrainDatabase,
-    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : BackupRepository {
 
     @OptIn(ExperimentalSerializationApi::class)

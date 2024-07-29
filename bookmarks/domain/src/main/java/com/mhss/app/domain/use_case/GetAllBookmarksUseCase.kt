@@ -1,6 +1,5 @@
 package com.mhss.app.domain.use_case
 
-import com.mhss.app.di.namedDefaultDispatcher
 import com.mhss.app.domain.model.Bookmark
 import com.mhss.app.domain.repository.BookmarkRepository
 import com.mhss.app.preferences.domain.model.Order
@@ -15,7 +14,7 @@ import org.koin.core.annotation.Single
 @Single
 class GetAllBookmarksUseCase(
     private val bookmarksRepository: BookmarkRepository,
-    @Named(namedDefaultDispatcher) private val defaultDispatcher: CoroutineDispatcher
+    @Named("defaultDispatcher") private val defaultDispatcher: CoroutineDispatcher
 ) {
     operator fun invoke(order: Order) : Flow<List<Bookmark>>{
         return bookmarksRepository.getAllBookmarks().map { bookmarks ->

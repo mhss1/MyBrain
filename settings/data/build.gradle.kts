@@ -36,7 +36,6 @@ android {
 
 dependencies {
     implementation(project(":core:database"))
-    implementation(project(":core:di"))
     implementation(project(":settings:domain"))
 
     testImplementation(libs.junit)

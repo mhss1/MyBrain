@@ -1,6 +1,5 @@
 package com.mhss.app.domain.use_case
 
-import com.mhss.app.di.namedDefaultDispatcher
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.repository.CalendarRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -11,7 +10,7 @@ import org.koin.core.annotation.Single
 @Single
 class GetAllEventsUseCase(
     private val calendarRepository: CalendarRepository,
-    @Named(namedDefaultDispatcher) private val defaultDispatcher: CoroutineDispatcher
+    @Named("defaultDispatcher") private val defaultDispatcher: CoroutineDispatcher
 ) {
     suspend operator fun invoke(
         excluded: List<Int>,

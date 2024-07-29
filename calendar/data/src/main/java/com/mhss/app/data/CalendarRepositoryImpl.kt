@@ -6,7 +6,6 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
-import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.repository.CalendarRepository
 import com.mhss.app.app.R
@@ -21,7 +20,7 @@ import java.util.TimeZone
 @Single
 class CalendarRepositoryImpl(
     private val context: Context,
-    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : CalendarRepository {
 
     override suspend fun getEvents(): List<CalendarEvent> {

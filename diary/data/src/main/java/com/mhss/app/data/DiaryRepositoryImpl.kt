@@ -2,7 +2,6 @@ package com.mhss.app.data
 
 import com.mhss.app.database.dao.DiaryDao
 import com.mhss.app.database.entity.*
-import com.mhss.app.di.namedIoDispatcher
 import com.mhss.app.domain.repository.DiaryRepository
 import com.mhss.app.domain.model.DiaryEntry
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,7 +15,7 @@ import org.koin.core.annotation.Single
 @Single
 class DiaryRepositoryImpl(
     private val diaryDao: DiaryDao,
-    @Named(namedIoDispatcher) private val ioDispatcher: CoroutineDispatcher
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : DiaryRepository {
 
     override fun getAllEntries(): Flow<List<DiaryEntry>> {
