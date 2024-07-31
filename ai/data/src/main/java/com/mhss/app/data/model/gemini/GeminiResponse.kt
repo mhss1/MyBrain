@@ -25,7 +25,7 @@ data class GeminiError(
 )
 
 fun GeminiResponse.toAiMessage() = AiMessage(
-    message = candidates!!.first().content.parts.first().text,
+    content = candidates!!.first().content.parts.first().text,
     type = if (candidates.first().content.role == GEMINI_MESSAGE_USER_TYPE) AiMessageType.USER else AiMessageType.MODEL,
     time = Clock.System.now().toEpochMilliseconds()
 )

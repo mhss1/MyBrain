@@ -24,6 +24,11 @@ fun getTypography(font: FontFamily) = Typography(
         fontSize = 14.sp,
         fontFamily = font
     ),
+    bodySmall = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp,
+        fontFamily = font
+    ),
     labelLarge = TextStyle(
         fontWeight = FontWeight.W500,
         fontSize = 14.sp,

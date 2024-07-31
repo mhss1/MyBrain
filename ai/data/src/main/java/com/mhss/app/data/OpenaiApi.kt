@@ -3,8 +3,8 @@ package com.mhss.app.data
 import com.mhss.app.data.model.openai.OpenaiMessage
 import com.mhss.app.data.model.openai.OpenaiMessageRequestBody
 import com.mhss.app.data.model.openai.OpenaiResponse
-import com.mhss.app.data.model.openai.openaiRole
 import com.mhss.app.data.model.openai.toAiMessage
+import com.mhss.app.data.model.openai.toOpenAiRequestBody
 import com.mhss.app.domain.model.AiMessage
 import com.mhss.app.network.NetworkResult
 import com.mhss.app.domain.repository.AiApi
@@ -64,7 +64,6 @@ class OpenaiApi(
     override suspend fun sendMessage(
         baseUrl: String,
         messages: List<AiMessage>,
-        systemMessage: String,
         model: String,
         key: String
     ): NetworkResult<AiMessage> {
@@ -75,17 +74,7 @@ class OpenaiApi(
                 }
                 contentType(ContentType.Application.Json)
                 bearerAuth(key)
-                setBody(
-                    OpenaiMessageRequestBody(
-                        model = model,
-                        messages = messages.map {
-                            OpenaiMessage(
-                                content = it.message,
-                                role = it.type.openaiRole
-                            )
-                        }
-                    )
-                )
+                setBody(messages.toOpenAiRequestBody(model))
             }.body<OpenaiResponse>()
             if (result.error != null) {
                 if (result.error.message.contains("API key")) {

@@ -1,11 +1,15 @@
 package com.mhss.app.data.model.gemini
 
 import com.mhss.app.domain.model.AiMessage
+import com.mhss.app.domain.systemMessage
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GeminiMessageRequestBody(
-    val contents: List<GeminiMessage>
+    val contents: List<GeminiMessage>,
+    @SerialName("system_instruction")
+    val systemInstruction: GeminiMessage? = null,
 )
 
 @Serializable
@@ -20,7 +24,7 @@ data class GeminiMessagePart(
 )
 
 fun String.toGeminiRequestBody() = GeminiMessageRequestBody(
-    listOf(
+    contents = listOf(
         GeminiMessage(
             listOf(
                 GeminiMessagePart(this)
@@ -30,10 +34,11 @@ fun String.toGeminiRequestBody() = GeminiMessageRequestBody(
 )
 
 fun List<AiMessage>.toGeminiRequestBody() = GeminiMessageRequestBody(
-    map {
+    contents = map {
         GeminiMessage(
-            parts = listOf(GeminiMessagePart(it.message)),
+            parts = listOf(GeminiMessagePart(it.content + it.attachmentsText)),
             role = it.type.geminiRole
         )
-    }
+    },
+    systemInstruction = GeminiMessage(listOf(GeminiMessagePart(systemMessage)))
 )

@@ -19,7 +19,7 @@ import com.mhss.app.app.R
 import com.mhss.app.ui.theme.Blue
 
 @Composable
-fun SpaceRegularCard(
+fun SpaceCard(
     title: String,
     image: Int,
     backgroundColor: Color,
@@ -55,49 +55,10 @@ fun SpaceRegularCard(
     }
 }
 
-@Composable
-fun SpaceWideCard(
-    title: String,
-    image: Int,
-    backgroundColor: Color = Color.White,
-    onClick: () -> Unit = {}
-) {
-    Card(
-        modifier = Modifier.padding(8.dp),
-        shape = RoundedCornerShape(25.dp),
-        elevation = CardDefaults.elevatedCardElevation(
-            12.dp
-        ),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = backgroundColor
-        )
-    ) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() }
-                .padding(18.dp),
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineMedium.copy(color = Color.White),
-            )
-            Spacer(Modifier.height(12.dp))
-            Image(
-                modifier = Modifier
-                    .size(80.dp)
-                    .align(Alignment.End),
-                painter = painterResource(id = image),
-                contentDescription = title)
-
-        }
-    }
-}
-
 @Preview
 @Composable
-fun SpaceRegularCardPreview() {
-    SpaceRegularCard(
+fun SpaceCardPreview() {
+    SpaceCard(
         "Notes",
         R.drawable.notes_img,
         Blue

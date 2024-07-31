@@ -17,7 +17,7 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :id")
     suspend fun getNote(id: Int): NoteEntity
 
-    @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
+    @Query("SELECT title, SUBSTR(content, 1, 250) AS content, created_date, updated_date, pinned, folder_id, id FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
     suspend fun getNotesByTitle(query: String): List<NoteEntity>
 
     @Query("SELECT title, SUBSTR(content, 1, 450) AS content, created_date, updated_date, pinned, folder_id, id FROM notes WHERE folder_id = :folderId")

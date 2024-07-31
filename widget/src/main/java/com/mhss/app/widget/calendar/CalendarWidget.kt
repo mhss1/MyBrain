@@ -36,7 +36,7 @@ class CalendarWidget : GlanceAppWidget(), KoinComponent {
             stringSetPreferencesKey(PrefsConstants.EXCLUDED_CALENDARS_KEY),
             emptySet()
         ).first()
-        val events  = getAllEvents(includedCalendars.toIntList(), true) {
+        val events  = getAllEvents(includedCalendars.toIntList(), fromWidget = true) {
             it.start.formatDateForMapping()
         }
 

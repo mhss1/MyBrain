@@ -52,8 +52,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.mhss.app.app.R
-import com.mhss.app.ui.theme.LightBlue
-import com.mhss.app.ui.theme.LightOrange
+import com.mhss.app.ui.theme.Blue
+import com.mhss.app.ui.theme.DarkOrange
 import com.mhss.app.ui.theme.LightPurple
 import com.mhss.app.ui.theme.MyBrainTheme
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -131,7 +131,7 @@ fun AiResultSheet(
                     drawGradientRadial(
                         surfaceVariant
                             .copy(alpha = 0.75f)
-                            .compositeOver(LightBlue),
+                            .compositeOver(Blue),
                         Offset(size.width * xMul,
                             size.height - size.height * yMul
                         )
@@ -139,7 +139,7 @@ fun AiResultSheet(
                     drawGradientRadial(
                         surfaceVariant
                             .copy(alpha = 0.75f)
-                            .compositeOver(LightOrange),
+                            .compositeOver(DarkOrange),
                         Offset(
                             size.width - size.width * xMul,
                             size.height - size.height * yMul

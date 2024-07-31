@@ -157,8 +157,7 @@ class NotesViewModel(
             }
 
             is NoteEvent.SearchNotes -> viewModelScope.launch {
-                val notes = searchNotes(event.query)
-                notesUiState = notesUiState.copy(searchNotes = notes)
+                notesUiState = notesUiState.copy(searchNotes = searchNotes(event.query))
             }
 
             is NoteEvent.UpdateNote -> viewModelScope.launch {

@@ -2,7 +2,7 @@ package com.mhss.app.domain
 
 object AiConstants {
     const val OPENAI_BASE_URL = "https://api.openai.com/v1"
-    const val GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1"
+    const val GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
 
     const val OPENAI_DEFAULT_MODEL = "gpt-4o"
     const val GEMINI_DEFAULT_MODEL = "gemini-1.5-pro"
@@ -12,8 +12,14 @@ object AiConstants {
 
     const val GEMINI_MODELS_INFO_URL = "https://ai.google.dev/gemini-api/docs/models/gemini"
     const val OPENAI_MODELS_INFO_URL = "https://platform.openai.com/docs/models"
-
 }
+
+val systemMessage = """
+    You are a personal AI assistant.
+    You help users with their requests and provide detailed explanations if needed.
+    Users might attach notes, tasks, or calendar events. Use this attached data as a context for your response.
+""".trimIndent()
+
 
 val String.summarizeNotePrompt: String
     get() = """

@@ -26,6 +26,7 @@ import com.mhss.app.mybrain.di.MainPresentationModule
 import com.mhss.app.mybrain.di.platformModule
 import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.preferences.di.PreferencesModule
+import com.mhss.app.presentation.di.AiPresentationModule
 import com.mhss.app.presentation.di.BookmarksPresentationModule
 import com.mhss.app.presentation.di.CalendarPresentationModule
 import com.mhss.app.presentation.di.DiaryPresentationModule
@@ -71,7 +72,8 @@ class MyBrainApplication : Application() {
                 BookmarksPresentationModule().module,
                 bookmarksDataModule,
                 WidgetModule().module,
-                aiDataModule
+                aiDataModule,
+                AiPresentationModule().module
             )
             workManagerFactory()
         }

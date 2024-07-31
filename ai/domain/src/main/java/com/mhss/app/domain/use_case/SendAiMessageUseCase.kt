@@ -16,7 +16,6 @@ class SendAiMessageUseCase(
 ) {
     suspend operator fun invoke(
         messages: List<AiMessage>,
-        systemPrompt: String,
         key: String,
         model: String,
         provider: AiProvider,
@@ -28,7 +27,6 @@ class SendAiMessageUseCase(
                 AiProvider.OpenAI -> openai.sendMessage(
                     baseUrl = baseURL,
                     messages = messages,
-                    systemMessage = systemPrompt,
                     model = model,
                     key = key
                 )
@@ -37,7 +35,6 @@ class SendAiMessageUseCase(
                     gemini.sendMessage(
                         baseUrl = AiConstants.GEMINI_BASE_URL,
                         messages = messages,
-                        systemMessage = systemPrompt,
                         model = model,
                         key = key
                     )

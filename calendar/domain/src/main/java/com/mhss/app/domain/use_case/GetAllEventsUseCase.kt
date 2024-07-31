@@ -14,13 +14,17 @@ class GetAllEventsUseCase(
 ) {
     suspend operator fun invoke(
         excluded: List<Int>,
+        until: Long? = null,
         fromWidget: Boolean = false,
         groupBySelector: (CalendarEvent) -> String
     ): Map<String, List<CalendarEvent>> {
         return withContext(defaultDispatcher) {
             try {
                 calendarRepository.getEvents()
-                    .filter { it.calendarId.toInt() !in excluded }
+                    .filter { event ->
+                        until?.let { event.start <= it } ?: true &&
+                        event.calendarId.toInt() !in excluded
+                    }
                     .let {
                         if (fromWidget) it.take(25).groupBy(groupBySelector)
                         else it.groupBy(groupBySelector)

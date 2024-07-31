@@ -7,4 +7,5 @@ object NetworkConstants {
 
     const val OPENAI_MESSAGE_USER_TYPE = "user"
     const val OPENAI_MESSAGE_MODEL_TYPE = "assistant"
+    const val OPENAI_MESSAGE_SYSTEM_TYPE = "system"
 }

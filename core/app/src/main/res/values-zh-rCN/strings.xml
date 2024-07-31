@@ -192,4 +192,6 @@
     <string name="invalid_api_key">Invalid API key.\nPlease provide a valid key in settings.</string>
     <string name="no_internet_connection">No internet connection.\nPlease connect to a network and try again.</string>
     <string name="unexpected_error">Unexpected error occurred.\nPlease try again later.</string>
+    <string name="assistant">Assistant</string>
+    <string name="calendar_events_next_7_days">Next 7 days events</string>
 </resources>

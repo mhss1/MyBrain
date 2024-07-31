@@ -6,6 +6,9 @@ plugins {
 dependencies {
     api(project(":core:network"))
     implementation(project(":core:preferences"))
+    implementation(project(":notes:domain"))
+    implementation(project(":tasks:domain"))
+    implementation(project(":calendar:domain"))
 
     implementation(libs.kotlinx.coroutines.core)
 

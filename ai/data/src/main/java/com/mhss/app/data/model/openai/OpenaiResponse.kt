@@ -24,7 +24,7 @@ data class OpenaiError(
 )
 
 fun OpenaiMessage.toAiMessage() = AiMessage(
-    message = content,
+    content = content,
     type = if (role == OPENAI_MESSAGE_USER_TYPE) AiMessageType.USER else AiMessageType.MODEL,
     time = Clock.System.now().toEpochMilliseconds()
 )

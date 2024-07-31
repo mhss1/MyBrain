@@ -59,7 +59,6 @@ class GeminiApi(
     override suspend fun sendMessage(
         baseUrl: String,
         messages: List<AiMessage>,
-        systemMessage: String,
         model: String,
         key: String
     ): NetworkResult<AiMessage> {

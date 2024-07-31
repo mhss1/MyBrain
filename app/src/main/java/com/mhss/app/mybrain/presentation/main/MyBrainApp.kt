@@ -29,6 +29,7 @@ import com.mhss.app.app.R
 import com.mhss.app.util.Constants
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.mybrain.presentation.app_lock.AuthScreen
+import com.mhss.app.presentation.AssistantScreen
 import com.mhss.app.presentation.BookmarkDetailsScreen
 import com.mhss.app.presentation.BookmarkSearchScreen
 import com.mhss.app.presentation.BookmarksScreen
@@ -84,7 +85,6 @@ fun MyBrainApp(
                     appLockManager.showAuthPrompt()
                 }
                 appLockManager.resultFlow.collectLatest { authResult ->
-                    println(authResult)
                     when (authResult) {
                         is AppLockManager.AuthResult.Error -> {
                             snackbarHostState.showSnackbar(
@@ -259,6 +259,9 @@ fun MyBrainApp(
                     }
                     composable<Screen.IntegrationsScreen> {
                         IntegrationsScreen()
+                    }
+                    composable<Screen.AssistantScreen> {
+                        AssistantScreen()
                     }
                 }
                 if (!appUnlocked) {

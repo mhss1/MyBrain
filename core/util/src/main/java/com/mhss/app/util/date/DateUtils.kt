@@ -14,6 +14,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.yearsUntil
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.time.Duration.Companion.days
 
 val Long.localDateTime
     get() = Instant.fromEpochMilliseconds(this).toLocalDateTime(
@@ -101,6 +102,10 @@ fun LocalDateTime.isCurrentYear(): Boolean {
 
 fun Long.isDueDateOverdue(): Boolean {
     return this < now()
+}
+
+fun todayPlusDays(days: Int): Long {
+    return now() + days.days.inWholeMilliseconds
 }
 
 fun Context.formatEventStartEnd(start: Long, end: Long, location: String?, allDay: Boolean): String {

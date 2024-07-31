@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -40,6 +41,9 @@ android {
 dependencies {
 
     implementation(project(":ai:domain"))
+    implementation(project(":notes:domain"))
+    implementation(project(":tasks:domain"))
+    implementation(project(":calendar:domain"))
     implementation(project(":core:util"))
 
     implementation(project(":core:ui"))
@@ -61,6 +65,8 @@ dependencies {
     implementation(libs.bundles.koin)
     implementation(libs.koin.android)
     ksp(libs.koin.ksp.compiler)
+
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.squircle.shape)
 }
