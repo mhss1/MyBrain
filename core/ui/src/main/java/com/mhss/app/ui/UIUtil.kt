@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
-import com.mhss.app.app.R
 import com.mhss.app.domain.model.Priority
 import com.mhss.app.domain.model.TaskFrequency
 import com.mhss.app.network.NetworkResult

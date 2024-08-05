@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mhss.app.domain.model.Note
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText

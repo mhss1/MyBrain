@@ -47,7 +47,6 @@ dependencies {
     implementation(project(":core:util"))
 
     implementation(project(":core:ui"))
-    implementation(project(":core:app"))
     implementation(project(":core:preferences"))
 
     implementation(platform(libs.compose.bom))

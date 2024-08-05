@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mhss.app.domain.model.CalendarEvent
+import com.mhss.app.ui.R
 import com.mhss.app.util.date.formatEventStartEnd
-import com.mhss.app.app.R
 
 @Composable
 fun CalendarEventSmallItem(
@@ -63,6 +63,9 @@ fun CalendarEventSmallItem(
                     context.formatEventStartEnd(
                         start = event.start,
                         end = event.end,
+                        allDayString = stringResource(R.string.all_day),
+                        eventTimeAtRes = R.string.event_time_at,
+                        eventTimeRes = R.string.event_time,
                         location = event.location,
                         allDay = event.allDay,
                     ),

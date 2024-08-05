@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.domain.model.Bookmark
 import com.mhss.app.domain.use_case.*
 import com.mhss.app.preferences.domain.model.Order

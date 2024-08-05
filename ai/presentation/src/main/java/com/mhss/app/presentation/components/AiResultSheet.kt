@@ -51,7 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.ui.theme.Blue
 import com.mhss.app.ui.theme.DarkOrange
 import com.mhss.app.ui.theme.LightPurple

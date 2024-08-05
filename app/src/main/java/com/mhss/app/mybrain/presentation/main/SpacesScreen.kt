@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.mybrain.presentation.main.components.SpaceCard
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.theme.Blue

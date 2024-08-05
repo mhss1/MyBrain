@@ -41,7 +41,6 @@ dependencies {
     implementation(project(":tasks:domain"))
 
     implementation(project(":core:util"))
-    implementation(project(":core:app"))
     implementation(project(":core:preferences"))
     implementation(project(":core:network"))
     implementation(platform(libs.compose.bom))

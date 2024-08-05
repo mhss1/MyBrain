@@ -14,7 +14,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.domain.model.Task
 
 @Composable

@@ -38,7 +38,6 @@ android {
 
 dependencies {
 
-    implementation(project(":core:app"))
     implementation(platform(libs.koin.bom))
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)

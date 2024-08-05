@@ -24,7 +24,7 @@ import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.mhss.app.domain.model.Priority
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.domain.model.Task
 import com.mhss.app.ui.color
 import com.mhss.app.util.date.formatDateDependingOnDay

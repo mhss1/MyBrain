@@ -2,6 +2,7 @@ package com.mhss.app.widget.calendar
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
@@ -17,6 +18,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.mhss.app.domain.model.CalendarEvent
+import com.mhss.app.ui.R
 import com.mhss.app.util.date.formatEventStartEnd
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -66,6 +68,9 @@ fun CalendarEventWidgetItem(
                         context.formatEventStartEnd(
                             start = event.start,
                             end = event.end,
+                            allDayString = stringResource(R.string.all_day),
+                            eventTimeAtRes = R.string.event_time_at,
+                            eventTimeRes = R.string.event_time,
                             location = event.location,
                             allDay = event.allDay,
                         ),

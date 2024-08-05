@@ -20,7 +20,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.util.Constants
 import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.mybrain.BuildConfig
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.preferences.domain.model.*
 import com.mhss.app.presentation.SettingsBasicLinkItem

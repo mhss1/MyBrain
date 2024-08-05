@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.mhss.app.domain.model.Task
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.util.date.now
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

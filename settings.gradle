@@ -15,7 +15,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "My Brain"
 include ':app'
-include ':core:app'
 include ':core:util'
 include ':core:notification'
 include ':tasks:domain'

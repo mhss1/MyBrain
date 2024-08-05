@@ -45,7 +45,6 @@ dependencies {
     implementation(project(":core:preferences"))
     
     implementation(project(":core:ui"))
-    implementation(project(":core:app"))
     implementation(project(":core:util"))
     implementation(project(":core:widget"))
 

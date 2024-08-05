@@ -15,11 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.util.date.formatEventStartEnd
+import com.mhss.app.ui.R
 
 @Composable
 fun LazyItemScope.CalendarEventItem(
@@ -65,6 +67,9 @@ fun LazyItemScope.CalendarEventItem(
                     context.formatEventStartEnd(
                         start = event.start,
                         end = event.end,
+                        allDayString = stringResource(R.string.all_day),
+                        eventTimeAtRes = R.string.event_time_at,
+                        eventTimeRes = R.string.event_time,
                         location = event.location,
                         allDay = event.allDay,
                     ),

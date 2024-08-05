@@ -2,7 +2,6 @@ package com.mhss.app.util.date
 
 import android.content.Context
 import android.text.format.DateFormat
-import com.mhss.app.app.R
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -108,14 +107,21 @@ fun todayPlusDays(days: Int): Long {
     return now() + days.days.inWholeMilliseconds
 }
 
-fun Context.formatEventStartEnd(start: Long, end: Long, location: String?, allDay: Boolean): String {
+fun Context.formatEventStartEnd(
+    start: Long,
+    end: Long,
+    allDayString: String,
+    eventTimeAtRes: Int,
+    eventTimeRes: Int,
+    location: String?,
+    allDay: Boolean
+): String {
     return if (allDay)
-        getString(R.string.all_day)
+        allDayString
     else
         getString(
             if (!location.isNullOrBlank())
-                R.string.event_time_at
-            else R.string.event_time,
+                eventTimeAtRes else eventTimeRes,
             start.formatTime(this),
             end.formatTime(this),
             location ?: ""

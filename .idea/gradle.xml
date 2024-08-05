@@ -24,7 +24,6 @@
             <option value="$PROJECT_DIR$/calendar/presentation" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/alarm" />
-            <option value="$PROJECT_DIR$/core/app" />
             <option value="$PROJECT_DIR$/core/database" />
             <option value="$PROJECT_DIR$/core/di" />
             <option value="$PROJECT_DIR$/core/network" />

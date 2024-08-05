@@ -10,7 +10,7 @@ import androidx.core.net.toUri
 import com.mhss.app.util.Constants
 import com.mhss.app.domain.model.Priority
 import com.mhss.app.domain.model.Task
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 
 fun NotificationManager.sendNotification(task: Task, context: Context, id: Int) {
     val completeIntent = Intent(context, TaskActionButtonBroadcastReceiver::class.java).apply {

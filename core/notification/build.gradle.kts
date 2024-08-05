@@ -36,7 +36,7 @@ android {
 dependencies {
 
     implementation(project(":core:util"))
-    implementation(project(":core:app"))
+    implementation(project(":core:ui"))
     implementation(project(":core:alarm"))
     implementation(project(":tasks:domain"))
 

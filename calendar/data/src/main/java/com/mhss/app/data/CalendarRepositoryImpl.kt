@@ -8,7 +8,7 @@ import android.net.Uri
 import android.provider.CalendarContract
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.repository.CalendarRepository
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarEventFrequency
 import kotlinx.coroutines.CoroutineDispatcher

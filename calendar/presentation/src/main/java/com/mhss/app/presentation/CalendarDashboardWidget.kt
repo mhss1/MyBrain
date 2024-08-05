@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.util.permissions.Permission
 import com.mhss.app.ui.theme.LightGray

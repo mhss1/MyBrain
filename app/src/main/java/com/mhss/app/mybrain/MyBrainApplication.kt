@@ -11,7 +11,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.mhss.app.alarm.di.AlarmModule
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.data.bookmarksDataModule
 import com.mhss.app.data.calendarDataModule
 import com.mhss.app.data.di.aiDataModule

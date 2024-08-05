@@ -2,7 +2,7 @@ package com.mhss.app.presentation
 
 import androidx.compose.ui.graphics.Color
 import com.mhss.app.domain.model.Mood
-import com.mhss.app.app.R
+import com.mhss.app.ui.R
 import com.mhss.app.ui.theme.*
 
 val Mood.iconRes: Int

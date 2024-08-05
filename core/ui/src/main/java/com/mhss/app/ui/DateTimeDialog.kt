@@ -27,7 +27,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.mhss.app.util.date.at
 import com.mhss.app.util.date.hour
 import com.mhss.app.util.date.minute
-import com.mhss.app.app.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
