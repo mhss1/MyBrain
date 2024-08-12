@@ -12,11 +12,10 @@ val DarkGray = Color(0xFF131313)
 val Red = Color(0xFFD53A2F)
 val Blue = Color(0xFF2965C9)
 val Green = Color(0xFF1E9651)
-val Orange = Color(0xFFFF9800)
+val Orange = Color(0xFFE78A00)
 val Purple = Color(0xFF6F4CAD)
 
 val Gray = Color(0xFF7E7979)
 val LightGray = Color(0xFFECECEC)
-val LightPurple = Color(0xFF7943D5)
-val DarkOrange = Color(0xFFCA7137)
+val LightPurple = Color(0xFF743AD6)
 

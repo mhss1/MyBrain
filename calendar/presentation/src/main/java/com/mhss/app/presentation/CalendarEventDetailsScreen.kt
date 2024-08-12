@@ -26,7 +26,7 @@ import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.model.CalendarEventFrequency
 import com.mhss.app.util.permissions.Permission
-import com.mhss.app.ui.DateTimeDialog
+import com.mhss.app.ui.components.DateTimeDialog
 import com.mhss.app.util.date.HOUR_MILLIS
 import com.mhss.app.util.date.formatDate
 import com.mhss.app.util.date.formatTime

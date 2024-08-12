@@ -35,6 +35,7 @@ import com.mhss.app.domain.model.*
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
 import com.mhss.app.ui.ItemView
+import com.mhss.app.ui.components.notes.NoteCard
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.titleRes
 import org.koin.androidx.compose.koinViewModel
@@ -182,7 +183,7 @@ fun NotesScreen(
                         )
                     ) {
                         items(uiState.notes, key = { it.id }) { note ->
-                            NoteItem(
+                            NoteCard(
                                 note = note,
                                 onClick = {
                                     navController.navigate(
@@ -203,7 +204,7 @@ fun NotesScreen(
                     ) {
                         items(uiState.notes) { note ->
                             key(note.id) {
-                                NoteItem(
+                                NoteCard(
                                     note = note,
                                     onClick = {
                                         navController.navigate(

@@ -23,7 +23,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.domain.model.Mood
 import com.mhss.app.ui.R
-import com.mhss.app.ui.DateTimeDialog
+import com.mhss.app.ui.components.DateTimeDialog
 import com.mhss.app.util.date.fullDate
 import com.mhss.app.util.date.now
 import dev.jeziellago.compose.markdowntext.MarkdownText

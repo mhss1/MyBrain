@@ -53,9 +53,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.mhss.app.ui.R
 import com.mhss.app.ui.theme.Blue
-import com.mhss.app.ui.theme.DarkOrange
 import com.mhss.app.ui.theme.LightPurple
 import com.mhss.app.ui.theme.MyBrainTheme
+import com.mhss.app.ui.theme.Orange
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import sv.lib.squircleshape.CornerSmoothing
 import sv.lib.squircleshape.SquircleShape
@@ -139,7 +139,7 @@ fun AiResultSheet(
                     drawGradientRadial(
                         surfaceVariant
                             .copy(alpha = 0.75f)
-                            .compositeOver(DarkOrange),
+                            .compositeOver(Orange),
                         Offset(
                             size.width - size.width * xMul,
                             size.height - size.height * yMul
@@ -262,7 +262,8 @@ private fun RowScope.AiResultAction(
 
 fun DrawScope.drawGradientRadial(
     color: Color,
-    center: Offset
+    center: Offset,
+    radius: Float = size.maxDimension * 0.75f
 ) = drawRect(
     brush = Brush.radialGradient(
         colors = listOf(
@@ -270,7 +271,7 @@ fun DrawScope.drawGradientRadial(
             Color.Transparent
         ),
         center = center,
-        radius = size.maxDimension * 0.75f,
+        radius = radius,
     )
 )
 

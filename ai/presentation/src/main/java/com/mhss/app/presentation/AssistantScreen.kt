@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +47,10 @@ import com.mhss.app.domain.model.AiMessage
 import com.mhss.app.domain.model.AiMessageAttachment
 import com.mhss.app.domain.model.AiMessageType
 import com.mhss.app.presentation.components.AiChatBar
+import com.mhss.app.presentation.components.AttachNoteSheet
+import com.mhss.app.presentation.components.AttachTaskSheet
+import com.mhss.app.presentation.components.AttachmentDropDownMenu
+import com.mhss.app.presentation.components.AttachmentMenuItem
 import com.mhss.app.presentation.components.MessageCard
 import com.mhss.app.ui.toUserMessage
 import com.mhss.app.util.date.now
@@ -64,6 +70,17 @@ fun AssistantScreen(
     val attachments = remember {
         mutableStateListOf<AiMessageAttachment>()
     }
+    var attachmentsMenuExpanded by remember {
+        mutableStateOf(false)
+    }
+    val noteSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    val taskSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    var openNoteSheet by remember { mutableStateOf(false) }
+    var openTaskSheet by remember { mutableStateOf(false) }
     val lazyListState = rememberLazyListState()
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(loading) {
@@ -94,9 +111,7 @@ fun AssistantScreen(
                 enabled = viewModel.aiEnabled && !loading && text.isNotBlank(),
                 attachments = attachments,
                 onTextChange = { text = it },
-                onAttachClick = {
-                    // TODO
-                },
+                onAttachClick = { attachmentsMenuExpanded = true },
                 onRemoveAttachment = { attachments.removeAt(it) },
                 onSend = {
                     viewModel.onEvent(
@@ -114,9 +129,55 @@ fun AssistantScreen(
                     keyboardController?.hide()
                 }
             )
+            AttachmentDropDownMenu(
+                modifier = Modifier.fillMaxWidth(),
+                expanded = attachmentsMenuExpanded,
+                onDismiss = { attachmentsMenuExpanded = false },
+                excludedItems = attachments.map {
+                    when (it) {
+                        is AiMessageAttachment.Note -> AttachmentMenuItem.Note
+                        is AiMessageAttachment.Task -> AttachmentMenuItem.Task
+                        is AiMessageAttachment.CalenderEvents -> AttachmentMenuItem.CalendarEvents
+                    }
+                },
+                onItemClick = {
+                    when (it) {
+                        AttachmentMenuItem.Note -> openNoteSheet = true
+                        AttachmentMenuItem.Task -> openTaskSheet = true
+                        AttachmentMenuItem.CalendarEvents -> attachments.add(
+                            AiMessageAttachment.CalenderEvents
+                        )
+                    }
+                    attachmentsMenuExpanded = false
+                }
+            )
         }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
+        if (openNoteSheet) AttachNoteSheet(
+            state = noteSheetState,
+            onDismissRequest = { openNoteSheet = false },
+            notes = uiState.searchNotes,
+            view = uiState.noteView,
+            onQueryChange = { viewModel.onEvent(AssistantEvent.SearchNotes(it)) }
+        ) {
+            attachments.add(AiMessageAttachment.Note(it))
+            openNoteSheet = false
+        }
+        if (openTaskSheet) AttachTaskSheet(
+            state = taskSheetState,
+            onDismissRequest = { openTaskSheet = false },
+            tasks = uiState.searchTasks,
+            onQueryChange = { viewModel.onEvent(AssistantEvent.SearchTasks(it)) }
+        ) {
+            attachments.add(AiMessageAttachment.Task(it))
+            openTaskSheet = false
+        }
+
+        Column(
+            modifier = Modifier.padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             if (viewModel.aiEnabled) {
                 LeftToRight {
                     LazyColumn(
@@ -155,7 +216,8 @@ fun AssistantScreen(
                             MessageCard(
                                 message = message,
                                 onCopy = {
-                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clipboard =
+                                        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("label", message.content)
                                     clipboard.setPrimaryClip(clip)
                                 }
@@ -164,7 +226,29 @@ fun AssistantScreen(
                     }
                 }
             } else {
-                // TODO: Show AI disabled message
+                Card(
+                    shape = RoundedCornerShape(18.dp),
+                    border = BorderStroke(
+                        1.dp,
+                        MaterialTheme.colorScheme.onErrorContainer
+                    ),
+                    colors = CardDefaults.cardColors(
+                        contentColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.ai_not_enabled),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .align(Alignment.CenterHorizontally),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
             }
         }
 

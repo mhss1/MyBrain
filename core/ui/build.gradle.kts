@@ -39,11 +39,13 @@ android {
 
 dependencies {
     implementation(project(":tasks:domain"))
+    implementation(project(":notes:domain"))
 
     implementation(project(":core:util"))
     implementation(project(":core:preferences"))
     implementation(project(":core:network"))
     implementation(platform(libs.compose.bom))
+    implementation(libs.compose.markdown)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -1,4 +1,4 @@
-package com.mhss.app.ui
+package com.mhss.app.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border

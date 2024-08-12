@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
 import com.mhss.app.ui.ItemView
+import com.mhss.app.ui.components.notes.NoteCard
 import com.mhss.app.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
@@ -125,7 +126,7 @@ fun NoteFolderDetailsScreen(
                 modifier = Modifier.padding(contentPadding)
             ) {
                 items(uiState.folderNotes, key = { it.id }) { note ->
-                    NoteItem(
+                    NoteCard(
                         note = note,
                         onClick = {
                             navController.navigate(
@@ -152,7 +153,7 @@ fun NoteFolderDetailsScreen(
             ) {
                 items(uiState.folderNotes) { note ->
                     key(note.id) {
-                        NoteItem(
+                        NoteCard(
                             note = note,
                             onClick = {
                                 navController.navigate(

@@ -3,7 +3,6 @@ package com.mhss.app.presentation.components
 import android.content.res.Configuration
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,17 +30,20 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import com.mhss.app.domain.model.AiMessage
 import com.mhss.app.domain.model.AiMessageAttachment
 import com.mhss.app.domain.model.AiMessageType
+import com.mhss.app.ui.R
 import com.mhss.app.ui.gradientBrushColor
 import com.mhss.app.ui.theme.Blue
-import com.mhss.app.ui.theme.DarkOrange
 import com.mhss.app.ui.theme.LightPurple
 import com.mhss.app.ui.theme.MyBrainTheme
+import com.mhss.app.ui.theme.Orange
 import com.mhss.app.ui.theme.SecondaryColor
 import com.mhss.app.util.date.formatTime
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -94,7 +98,8 @@ fun LazyItemScope.MessageCard(
                                     .compositeOver(
                                         SecondaryColor
                                     )
-                            ), Offset.Zero, size
+                            ), Offset.Zero, size,
+                            size.minDimension * 1.5f
                         )
                         else {
                             drawRect(surfaceVariant, Offset.Zero, size)
@@ -102,16 +107,17 @@ fun LazyItemScope.MessageCard(
                                 surfaceVariant
                                     .copy(alpha = 0.75f)
                                     .compositeOver(Blue),
-                                Offset(0f, size.height)
+                                Offset(0f, size.height * 0.9f)
                             )
                             drawGradientRadial(
                                 surfaceVariant
                                     .copy(alpha = 0.75f)
-                                    .compositeOver(DarkOrange),
+                                    .compositeOver(Orange),
                                 Offset(
-                                    size.width,
-                                    size.height * 0.9f
-                                )
+                                    size.width * 1.1f,
+                                    size.height
+                                ),
+                                size.minDimension * 1.5f
                             )
                             drawGradientRadial(
                                 surfaceVariant
@@ -120,12 +126,10 @@ fun LazyItemScope.MessageCard(
                                 Offset(
                                     size.width * 1.1f,
                                     size.height * .1f,
-                                )
+                                ),
+                                size.minDimension * 1.5f
                             )
                         }
-                    }
-                    .clickable {
-                        showContextMenu = true
                     }
             ) {
                 MarkdownText(
@@ -160,16 +164,29 @@ fun LazyItemScope.MessageCard(
                     onDismissRequest = { showContextMenu = false },
                     modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                 ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(stringResource(id = R.string.copy))
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_copy),
+                                contentDescription = stringResource(id = R.string.copy)
+                            )
+                        }
+                        ,onClick = {
+                            showContextMenu = false
+                            onCopy()
+                        }
+                    )
                 }
             }
-
-            // TODO: Implement context menu
         }
     }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview()
+@Preview
 @Composable
 fun MessageCardPreview() {
     MyBrainTheme {

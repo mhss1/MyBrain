@@ -32,9 +32,10 @@ import com.mhss.app.domain.model.SubTask
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.model.TaskFrequency
 import com.mhss.app.util.permissions.Permission
-import com.mhss.app.ui.AnimatedTabIndicator
-import com.mhss.app.ui.DateTimeDialog
+import com.mhss.app.ui.components.AnimatedTabIndicator
+import com.mhss.app.ui.components.DateTimeDialog
 import com.mhss.app.ui.color
+import com.mhss.app.ui.components.tasks.TaskCheckBox
 import com.mhss.app.ui.titleRes
 import com.mhss.app.util.date.formatDateDependingOnDay
 import com.mhss.app.util.permissions.rememberPermissionState

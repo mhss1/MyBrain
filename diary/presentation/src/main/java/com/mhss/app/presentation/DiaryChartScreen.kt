@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mhss.app.ui.R
-import com.mhss.app.ui.AnimatedTabIndicator
+import com.mhss.app.ui.components.AnimatedTabIndicator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

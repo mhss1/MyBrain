@@ -13,7 +13,7 @@ val networkModule = module {
     single {
         HttpClient(get()) {
             install(HttpTimeout) {
-                socketTimeoutMillis = 20_000
+                socketTimeoutMillis = 25_000
             }
             install(ContentNegotiation) {
                 json(Json {

@@ -26,6 +26,7 @@ import com.mhss.app.ui.R
 import com.mhss.app.util.permissions.Permission
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.ui.components.tasks.TaskCard
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.titleRes
 import com.mhss.app.util.permissions.rememberPermissionState
@@ -178,7 +179,7 @@ fun TasksScreen(
                 contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
             ) {
                 items(uiState.tasks, key = { it.id }) { task ->
-                    TaskItem(
+                    TaskCard(
                         task = task,
                         onComplete = {
                             viewModel.onEvent(

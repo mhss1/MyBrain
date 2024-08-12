@@ -1,11 +1,14 @@
 package com.mhss.app.presentation.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ContextualFlowRow
+import androidx.compose.foundation.layout.ContextualFlowRowOverflow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,18 +19,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +56,7 @@ import com.mhss.app.util.date.formatDateDependingOnDay
 import com.mhss.app.util.date.isDueDateOverdue
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AiAttachmentsSection(
     modifier: Modifier = Modifier,
@@ -57,24 +64,41 @@ fun AiAttachmentsSection(
     onRemove: (Int) -> Unit = {},
     showRemoveButton: Boolean = false,
 ) {
-    LazyRow(
-        modifier = modifier.padding(4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        attachments.forEachIndexed { i, it ->
-            item {
-                when (it) {
-                    is AiMessageAttachment.Note -> NoteAttachmentCard(it.note, showRemoveButton) {
-                        onRemove(i)
-                    }
-                    is AiMessageAttachment.Task -> TaskAttachmentCard(it.task, showRemoveButton) {
-                        onRemove(i)
-                    }
-                    is AiMessageAttachment.CalenderEvents -> CalendarEventsAttachmentCard(showRemoveButton) {
-                        onRemove(i)
-                    }
+    var maxLines by remember { mutableIntStateOf(2) }
+    ContextualFlowRow(
+        modifier = modifier
+            .animateContentSize()
+            .padding(4.dp),
+        itemCount = attachments.size,
+        maxLines = maxLines,
+        overflow = ContextualFlowRowOverflow.expandOrCollapseIndicator(
+            expandIndicator = {
+                Button(onClick = { maxLines++ }) {
+                    Text(
+                        "+${this@expandOrCollapseIndicator.totalItemCount - this@expandOrCollapseIndicator.shownItemCount}",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
                 }
+            },
+            collapseIndicator = {}
+        )
+    ) { i ->
+        val attachment = remember {
+            attachments[i]
+        }
+        when (attachment) {
+            is AiMessageAttachment.Note -> NoteAttachmentCard(attachment.note, showRemoveButton) {
+                onRemove(i)
+            }
+
+            is AiMessageAttachment.Task -> TaskAttachmentCard(attachment.task, showRemoveButton) {
+                onRemove(i)
+            }
+
+            is AiMessageAttachment.CalenderEvents -> CalendarEventsAttachmentCard(
+                showRemoveButton
+            ) {
+                onRemove(i)
             }
         }
     }
@@ -89,7 +113,7 @@ fun NoteAttachmentCard(
 ) {
     Box(
         Modifier
-            .widthIn(max = 120.dp)
+            .widthIn(max = 200.dp)
             .padding(8.dp)
     ) {
         Card(
@@ -123,7 +147,7 @@ internal fun TaskAttachmentCard(
     val context = LocalContext.current
     Box(
         Modifier
-            .widthIn(max = 165.dp)
+            .widthIn(max = 200.dp)
             .padding(8.dp)
     ) {
         Card(

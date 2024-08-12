@@ -9,6 +9,8 @@ import com.mhss.app.domain.AiConstants
 import com.mhss.app.domain.model.AiMessage
 import com.mhss.app.domain.model.AiMessageAttachment
 import com.mhss.app.domain.model.CalendarEvent
+import com.mhss.app.domain.model.Note
+import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.use_case.GetAllEventsUseCase
 import com.mhss.app.domain.use_case.SearchNotesUseCase
 import com.mhss.app.domain.use_case.SearchTasksUseCase
@@ -20,11 +22,15 @@ import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.stringPreferencesKey
 import com.mhss.app.preferences.domain.model.stringSetPreferencesKey
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
+import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.toIntList
+import com.mhss.app.ui.toNotesView
 import com.mhss.app.util.date.formatDateForMapping
 import com.mhss.app.util.date.todayPlusDays
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -56,6 +62,20 @@ class AssistantViewModel(
     private lateinit var openaiURL: String
     var aiEnabled by mutableStateOf(false)
         private set
+
+    private var searchNotesJob: Job? = null
+    private var searchTasksJob: Job? = null
+
+    init {
+        viewModelScope.launch {
+            getPreference(
+                intPreferencesKey(PrefsConstants.NOTE_VIEW_KEY),
+                ItemView.LIST.value
+            ).onEach {
+                uiState = uiState.copy(noteView = it.toNotesView())
+            }.collect()
+        }
+    }
 
     private val aiProvider =
         getPreference(intPreferencesKey(PrefsConstants.AI_PROVIDER_KEY), AiProvider.None.id)
@@ -143,6 +163,25 @@ class AssistantViewModel(
                     }
                 }
             }
+            is AssistantEvent.SearchNotes -> {
+                searchNotesJob?.cancel()
+                searchNotesJob = viewModelScope.launch {
+                    delay(300)
+                    searchNotes(event.query).let {
+                        uiState = uiState.copy(searchNotes = it)
+                    }
+                }
+            }
+
+            is AssistantEvent.SearchTasks -> {
+                searchTasksJob?.cancel()
+                searchTasksJob = viewModelScope.launch {
+                    delay(300)
+                    searchTasks(event.query).first().let {
+                        uiState = uiState.copy(searchTasks = it)
+                    }
+                }
+            }
         }
     }
 
@@ -186,6 +225,9 @@ class AssistantViewModel(
     data class UiState(
         val messages: List<AiMessage> = emptyList(),
         val loading: Boolean = false,
-        val error: NetworkResult.Failure? = null
+        val error: NetworkResult.Failure? = null,
+        val noteView: ItemView = ItemView.LIST,
+        val searchNotes: List<Note> = emptyList(),
+        val searchTasks: List<Task> = emptyList()
     )
 }

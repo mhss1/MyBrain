@@ -11,16 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhss.app.ui.theme.Blue
-import com.mhss.app.ui.theme.DarkOrange
 import com.mhss.app.ui.theme.MyBrainTheme
+import com.mhss.app.ui.theme.Orange
 import com.mhss.app.ui.theme.Purple
 
 
 fun gradientBrushColor(
     vararg colorStops: Pair<Float, Color> = arrayOf(
         0f to Blue,
-        0.5f to Purple,
-        1f to DarkOrange,
+        0.4f to Purple,
+        1f to Orange,
     )
 ) = Brush.linearGradient(
     colorStops = colorStops,

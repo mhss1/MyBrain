@@ -1,4 +1,4 @@
-package com.mhss.app.presentation
+package com.mhss.app.ui.components.tasks
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
@@ -39,7 +39,7 @@ import com.mhss.app.util.date.formatDateDependingOnDay
 import com.mhss.app.util.date.isDueDateOverdue
 
 @Composable
-fun LazyItemScope.TaskItem(
+fun LazyItemScope.TaskCard(
     modifier: Modifier = Modifier,
     task: Task,
     onComplete: () -> Unit,
@@ -183,7 +183,7 @@ fun SubTasksProgressBar(modifier: Modifier = Modifier, subTasks: List<SubTask>) 
 @Preview
 @Composable
 fun LazyItemScope.TaskItemPreview() {
-    TaskItem(
+    TaskCard(
         task = Task(
             title = "Task 1",
             description = "Task 1 description",

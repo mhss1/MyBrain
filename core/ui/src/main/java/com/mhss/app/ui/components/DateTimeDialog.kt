@@ -1,4 +1,4 @@
-package com.mhss.app.ui
+package com.mhss.app.ui.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.mhss.app.ui.R
 import com.mhss.app.util.date.at
 import com.mhss.app.util.date.hour
 import com.mhss.app.util.date.minute
