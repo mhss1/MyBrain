@@ -59,7 +59,7 @@ fun AiChatBar(
         AnimatedVisibility(attachments.isNotEmpty()) {
             AiAttachmentsSection(
                 attachments = attachments,
-                showRemoveButton = true,
+                editable = true,
                 onRemove = onRemoveAttachment
             )
         }

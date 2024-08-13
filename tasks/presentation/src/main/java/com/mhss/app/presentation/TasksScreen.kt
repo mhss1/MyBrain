@@ -226,6 +226,7 @@ fun NoTasksMessage() {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TasksSettingsSection(
     order: Order,

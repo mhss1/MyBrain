@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.data.local.migrations
+package com.mhss.app.database.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase

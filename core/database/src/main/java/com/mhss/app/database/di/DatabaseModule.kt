@@ -2,9 +2,9 @@ package com.mhss.app.database.di
 
 import androidx.room.Room
 import com.mhss.app.database.MyBrainDatabase
-import com.mhss.app.mybrain.data.local.migrations.MIGRATION_1_2
-import com.mhss.app.mybrain.data.local.migrations.MIGRATION_2_3
-import com.mhss.app.mybrain.data.local.migrations.MIGRATION_3_4
+import com.mhss.app.database.migrations.MIGRATION_1_2
+import com.mhss.app.database.migrations.MIGRATION_2_3
+import com.mhss.app.database.migrations.MIGRATION_3_4
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

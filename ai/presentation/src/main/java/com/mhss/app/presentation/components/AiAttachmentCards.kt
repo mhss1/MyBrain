@@ -19,11 +19,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -62,43 +65,72 @@ fun AiAttachmentsSection(
     modifier: Modifier = Modifier,
     attachments: List<AiMessageAttachment>,
     onRemove: (Int) -> Unit = {},
-    showRemoveButton: Boolean = false,
+    editable: Boolean = false,
 ) {
-    var maxLines by remember { mutableIntStateOf(2) }
-    ContextualFlowRow(
-        modifier = modifier
-            .animateContentSize()
-            .padding(4.dp),
-        itemCount = attachments.size,
-        maxLines = maxLines,
-        overflow = ContextualFlowRowOverflow.expandOrCollapseIndicator(
-            expandIndicator = {
-                Button(onClick = { maxLines++ }) {
-                    Text(
-                        "+${this@expandOrCollapseIndicator.totalItemCount - this@expandOrCollapseIndicator.shownItemCount}",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
-            },
-            collapseIndicator = {}
-        )
-    ) { i ->
-        val attachment = remember {
-            attachments[i]
+    if (editable) {
+        LazyRow(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            itemsIndexed(attachments) {i, it ->
+                    when (it) {
+                        is AiMessageAttachment.Note -> NoteAttachmentCard(
+                            note = it.note,
+                            modifier = Modifier.animateItem(),
+                            showRemoveButton = true
+                        ) {
+                            onRemove(i)
+                        }
+                        is AiMessageAttachment.Task -> TaskAttachmentCard(
+                            task = it.task,
+                            modifier = Modifier.animateItem(),
+                            showRemoveButton = true
+                        ) {
+                            onRemove(i)
+                        }
+                        is AiMessageAttachment.CalenderEvents -> CalendarEventsAttachmentCard(
+                            showRemoveButton = true,
+                            modifier = Modifier.animateItem()
+                        ) {
+                            onRemove(i)
+                        }
+                    }
+            }
         }
-        when (attachment) {
-            is AiMessageAttachment.Note -> NoteAttachmentCard(attachment.note, showRemoveButton) {
-                onRemove(i)
+    } else {
+        var maxLines by remember { mutableIntStateOf(2) }
+        ContextualFlowRow(
+            modifier = modifier
+                .animateContentSize()
+                .padding(4.dp),
+            itemCount = attachments.size,
+            maxLines = maxLines,
+            overflow = ContextualFlowRowOverflow.expandOrCollapseIndicator(
+                expandIndicator = {
+                    Button(
+                        onClick = { maxLines++ },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    ) {
+                        Text(
+                            "+${this@expandOrCollapseIndicator.totalItemCount - this@expandOrCollapseIndicator.shownItemCount}",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                },
+                collapseIndicator = {}
+            )
+        ) { i ->
+            val attachment = remember {
+                attachments[i]
             }
-
-            is AiMessageAttachment.Task -> TaskAttachmentCard(attachment.task, showRemoveButton) {
-                onRemove(i)
-            }
-
-            is AiMessageAttachment.CalenderEvents -> CalendarEventsAttachmentCard(
-                showRemoveButton
-            ) {
-                onRemove(i)
+            when (attachment) {
+                is AiMessageAttachment.Note -> NoteAttachmentCard(attachment.note)
+                is AiMessageAttachment.Task -> TaskAttachmentCard(attachment.task)
+                is AiMessageAttachment.CalenderEvents -> CalendarEventsAttachmentCard()
             }
         }
     }
@@ -108,11 +140,12 @@ fun AiAttachmentsSection(
 @Composable
 fun NoteAttachmentCard(
     note: Note,
+    modifier: Modifier = Modifier,
     showRemoveButton: Boolean = false,
     onRemoveClick: () -> Unit = {},
 ) {
     Box(
-        Modifier
+        modifier
             .widthIn(max = 200.dp)
             .padding(8.dp)
     ) {
@@ -141,12 +174,13 @@ fun NoteAttachmentCard(
 @Composable
 internal fun TaskAttachmentCard(
     task: Task,
+    modifier: Modifier = Modifier,
     showRemoveButton: Boolean = false,
     onRemoveClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
     Box(
-        Modifier
+        modifier
             .widthIn(max = 200.dp)
             .padding(8.dp)
     ) {
@@ -236,11 +270,12 @@ internal fun TaskAttachmentCard(
 
 @Composable
 fun CalendarEventsAttachmentCard(
+    modifier: Modifier = Modifier,
     showRemoveButton: Boolean = false,
     onRemoveClick: () -> Unit = {},
 ) {
     Box(
-        Modifier.padding(8.dp)
+        modifier.padding(8.dp)
     ) {
         Card(
             shape = RoundedCornerShape(12.dp),
@@ -306,7 +341,7 @@ private fun NoteAttachmentPreview() {
                 title = "Test note Note Title".repeat(3),
                 content = "Note Content",
             ),
-            true
+            showRemoveButton = true
         )
     }
 }
@@ -326,7 +361,7 @@ private fun TaskAttachmentPreview() {
                     SubTask()
                 )
             ),
-            true
+            showRemoveButton = true
         )
     }
 }
@@ -335,6 +370,6 @@ private fun TaskAttachmentPreview() {
 @Composable
 private fun CalendarEventsCardPreview() {
     MyBrainTheme {
-        CalendarEventsAttachmentCard(true)
+        CalendarEventsAttachmentCard(showRemoveButton = true)
     }
 }

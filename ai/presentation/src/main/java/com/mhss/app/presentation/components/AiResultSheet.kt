@@ -2,7 +2,7 @@ package com.mhss.app.presentation.components
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VectorConverter
@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -34,7 +35,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,9 +71,6 @@ fun AiResultSheet(
     onCopyClick: () -> Unit
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "")
-    val smoothEasing = remember {
-        CubicBezierEasing(0.42f, 0.0f, 0.58f, 1.0f)
-    }
 
     val offset by infiniteTransition.animateValue(
         initialValue = 0,
@@ -90,7 +87,7 @@ fun AiResultSheet(
         targetValue = 1f,
         animationSpec =
         infiniteRepeatable(
-            animation = tween(2900, easing = smoothEasing),
+            animation = tween(2900, easing = EaseInOut),
             repeatMode = RepeatMode.Reverse
         ),
         label = "x Multiplier"
@@ -100,7 +97,7 @@ fun AiResultSheet(
         targetValue = 0.9f,
         animationSpec =
         infiniteRepeatable(
-            animation = tween(1900, easing = smoothEasing),
+            animation = tween(1900, easing = EaseInOut),
             repeatMode = RepeatMode.Reverse
         ),
         label = "y Multiplier"
@@ -110,7 +107,7 @@ fun AiResultSheet(
     Card(
         modifier = modifier
             .padding(bottom = 24.dp)
-            .fillMaxWidth()
+            .widthIn(max = 500.dp)
             .padding(horizontal = 12.dp)
             .clickable(enabled = false) {}
             .offset {
@@ -168,7 +165,7 @@ fun AiResultSheet(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 400.dp)
+                        .heightIn(max = 440.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
                     MarkdownText(
@@ -283,7 +280,7 @@ fun AiResultSheetPreview() {
         AiResultSheet(
             modifier = Modifier,
             loading = false,
-            result = "This is a test content\n\n".repeat(8),
+            result = "This is a test content\n\n".repeat(9),
             error = null,
             {}, {}, {}
         )
