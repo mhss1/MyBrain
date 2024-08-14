@@ -3,13 +3,20 @@ package com.mhss.app.presentation
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -20,8 +27,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -38,7 +43,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -51,7 +55,9 @@ import com.mhss.app.presentation.components.AttachNoteSheet
 import com.mhss.app.presentation.components.AttachTaskSheet
 import com.mhss.app.presentation.components.AttachmentDropDownMenu
 import com.mhss.app.presentation.components.AttachmentMenuItem
+import com.mhss.app.presentation.components.GlowingBorder
 import com.mhss.app.presentation.components.MessageCard
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.toUserMessage
 import com.mhss.app.util.date.now
 import org.koin.androidx.compose.koinViewModel
@@ -85,25 +91,10 @@ fun AssistantScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(loading) {
         lazyListState.animateScrollToItem(0)
-        if (loading) {
-            // TODO: start loading animation
-        } else {
-            // TODO: stop loading animation
-        }
     }
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.assistant),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            )
+           MyBrainAppBar(stringResource(id = R.string.assistant))
         },
         bottomBar = {
             AiChatBar(
@@ -172,7 +163,6 @@ fun AssistantScreen(
             attachments.add(AiMessageAttachment.Task(it))
             openTaskSheet = false
         }
-
         Column(
             modifier = Modifier.padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -184,9 +174,9 @@ fun AssistantScreen(
                         state = lazyListState,
                         reverseLayout = true
                     ) {
-                        item { Spacer(Modifier.height(20.dp)) }
+                        item(key = 1) { Spacer(Modifier.height(20.dp)) }
                         error?.let { error ->
-                            item {
+                            item(key = 2) {
                                 Card(
                                     shape = RoundedCornerShape(18.dp),
                                     border = BorderStroke(
@@ -251,7 +241,16 @@ fun AssistantScreen(
                 }
             }
         }
-
+    }
+    AnimatedVisibility(
+        visible = loading,
+        enter = fadeIn(),
+        exit = fadeOut(),
+        modifier = Modifier.consumeWindowInsets(WindowInsets.systemBars)
+    ) {
+        GlowingBorder(
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 

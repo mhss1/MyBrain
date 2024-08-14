@@ -23,7 +23,8 @@ import androidx.navigation.NavHostController
 import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.domain.model.Mood
 import com.mhss.app.ui.R
-import com.mhss.app.ui.components.DateTimeDialog
+import com.mhss.app.ui.components.common.DateTimeDialog
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.util.date.fullDate
 import com.mhss.app.util.date.now
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -100,8 +101,8 @@ fun DiaryEntryDetailsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {},
+            MyBrainAppBar(
+                title = "",
                 actions = {
                     IconButton(onClick = {
                         viewModel.onEvent(DiaryEvent.ToggleReadingMode)
@@ -128,10 +129,7 @@ fun DiaryEntryDetailsScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                )
+                }
             )
         },
         floatingActionButton = {

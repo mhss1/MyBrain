@@ -1,8 +1,10 @@
 package com.mhss.app.mybrain.presentation.main
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -128,7 +130,7 @@ fun MyBrainApp(
             fontFamily = font.value.toFontFamily()) {
             val navController = rememberNavController()
             Scaffold(
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize().consumeWindowInsets(WindowInsets.statusBars),
                 containerColor = MaterialTheme.colorScheme.background,
                 snackbarHost = { SnackbarHost(snackbarHostState) }
             ) { paddingValues ->

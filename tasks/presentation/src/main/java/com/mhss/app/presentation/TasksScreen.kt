@@ -26,6 +26,7 @@ import com.mhss.app.ui.R
 import com.mhss.app.util.permissions.Permission
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.tasks.TaskCard
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.titleRes
@@ -62,17 +63,7 @@ fun TasksScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.tasks),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            )
+            MyBrainAppBar(stringResource(R.string.tasks))
         },
         floatingActionButton = {
             AnimatedVisibility(!sheetState.isVisible) {

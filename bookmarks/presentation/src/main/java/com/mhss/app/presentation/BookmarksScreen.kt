@@ -28,11 +28,11 @@ import kotlinx.coroutines.launch
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
 import com.mhss.app.ui.ItemView
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.titleRes
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookmarksScreen(
     navController: NavHostController,
@@ -46,17 +46,7 @@ fun BookmarksScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState)},
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.bookmarks),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            )
+            MyBrainAppBar(stringResource(R.string.bookmarks))
         },
         floatingActionButton = {
             FloatingActionButton(

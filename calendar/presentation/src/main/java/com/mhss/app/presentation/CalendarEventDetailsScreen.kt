@@ -26,7 +26,8 @@ import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.model.CalendarEventFrequency
 import com.mhss.app.util.permissions.Permission
-import com.mhss.app.ui.components.DateTimeDialog
+import com.mhss.app.ui.components.common.DateTimeDialog
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.util.date.HOUR_MILLIS
 import com.mhss.app.util.date.formatDate
 import com.mhss.app.util.date.formatTime
@@ -35,7 +36,6 @@ import com.mhss.app.util.permissions.rememberPermissionState
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarEventDetailsScreen(
     navController: NavHostController,
@@ -109,11 +109,8 @@ fun CalendarEventDetailsScreen(
         }
         Scaffold(
             topBar = {
-                if (event != null) TopAppBar(
-                    title = {},
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                    ),
+                if (event != null) MyBrainAppBar(
+                    title = "",
                     actions = {
                         IconButton(onClick = { openDeleteDialog = true }) {
                             Icon(

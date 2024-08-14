@@ -32,9 +32,10 @@ import com.mhss.app.domain.model.SubTask
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.model.TaskFrequency
 import com.mhss.app.util.permissions.Permission
-import com.mhss.app.ui.components.AnimatedTabIndicator
-import com.mhss.app.ui.components.DateTimeDialog
+import com.mhss.app.ui.components.common.AnimatedTabIndicator
+import com.mhss.app.ui.components.common.DateTimeDialog
 import com.mhss.app.ui.color
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.tasks.TaskCheckBox
 import com.mhss.app.ui.titleRes
 import com.mhss.app.util.date.formatDateDependingOnDay
@@ -42,7 +43,6 @@ import com.mhss.app.util.permissions.rememberPermissionState
 import org.koin.androidx.compose.koinViewModel
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskDetailScreen(
     navController: NavHostController,
@@ -130,8 +130,8 @@ fun TaskDetailScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {},
+            MyBrainAppBar(
+                title = "",
                 actions = {
                     IconButton(onClick = { openDialog = true }) {
                         Icon(
@@ -139,10 +139,7 @@ fun TaskDetailScreen(
                             contentDescription = stringResource(R.string.delete_task)
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                ),
+                }
             )
         }
     ) { paddingValues ->

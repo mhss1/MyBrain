@@ -2,6 +2,7 @@ package com.mhss.app.mybrain.presentation.main
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -22,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mhss.app.ui.R
 import com.mhss.app.mybrain.presentation.main.components.SpaceCard
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.theme.Blue
 import com.mhss.app.ui.theme.Green
@@ -38,17 +40,7 @@ fun SpacesScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.spaces),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                )
-            )
+            MyBrainAppBar(stringResource(R.string.spaces))
         }
     ) { paddingValues ->
         LazyVerticalGrid(

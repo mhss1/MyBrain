@@ -7,19 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
 import com.mhss.app.presentation.CalendarDashboardWidget
 import com.mhss.app.presentation.MoodCircularBar
 import com.mhss.app.presentation.TasksDashboardWidget
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.navigation.Screen
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     navController: NavHostController,
@@ -27,17 +26,7 @@ fun DashboardScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.dashboard),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                )
-            )
+            MyBrainAppBar(stringResource(R.string.dashboard))
         }
     ) {paddingValues ->
         LaunchedEffect(true) { viewModel.onDashboardEvent(DashboardEvent.InitAll) }

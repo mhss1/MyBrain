@@ -38,6 +38,7 @@ import com.mhss.app.ui.R
 import com.mhss.app.domain.model.*
 import com.mhss.app.presentation.components.AiResultSheet
 import com.mhss.app.presentation.components.GradientIconButton
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.ui.toUserMessage
 import com.mhss.app.util.date.formatDateDependingOnDay
@@ -140,8 +141,9 @@ fun NoteDetailsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {
+            MyBrainAppBar(
+                title = "",
+                actions = {
                     if (folder != null) {
                         Row(
                             modifier = Modifier
@@ -171,8 +173,6 @@ fun NoteDetailsScreen(
                             )
                         }
                     }
-                },
-                actions = {
                     if (state.note != null) IconButton(onClick = { openDeleteDialog = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_delete),
@@ -203,10 +203,7 @@ fun NoteDetailsScreen(
                             tint = if (readingMode) Color.Green else Color.Gray
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                )
+                }
             )
         },
     ) { paddingValues ->

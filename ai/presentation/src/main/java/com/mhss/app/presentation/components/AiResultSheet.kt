@@ -14,7 +14,9 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -55,7 +57,7 @@ import com.mhss.app.ui.R
 import com.mhss.app.ui.theme.Blue
 import com.mhss.app.ui.theme.LightPurple
 import com.mhss.app.ui.theme.MyBrainTheme
-import com.mhss.app.ui.theme.Orange
+import com.mhss.app.ui.theme.OrangeRed
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import sv.lib.squircleshape.CornerSmoothing
 import sv.lib.squircleshape.SquircleShape
@@ -104,97 +106,109 @@ fun AiResultSheet(
     )
 
     val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
-    Card(
-        modifier = modifier
-            .padding(bottom = 24.dp)
-            .widthIn(max = 500.dp)
-            .padding(horizontal = 12.dp)
-            .clickable(enabled = false) {}
-            .offset {
-                if (loading) {
-                    IntOffset(0, offset)
-                } else IntOffset.Zero
-            },
-        shape = SquircleShape(
-            radius = 42.dp,
-            cornerSmoothing = CornerSmoothing.Medium
-        ),
-        elevation = CardDefaults.cardElevation(10.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .heightIn(min = 120.dp)
-                .drawBehind {
-                    drawGradientRadial(
-                        surfaceVariant
-                            .copy(alpha = 0.75f)
-                            .compositeOver(Blue),
-                        Offset(size.width * xMul,
-                            size.height - size.height * yMul
-                        )
-                    )
-                    drawGradientRadial(
-                        surfaceVariant
-                            .copy(alpha = 0.75f)
-                            .compositeOver(Orange),
-                        Offset(
-                            size.width - size.width * xMul,
-                            size.height - size.height * yMul
-                        )
-                    )
-                    drawGradientRadial(
-                        surfaceVariant
-                            .copy(alpha = 0.75f)
-                            .compositeOver(LightPurple),
-                        Offset(
-                            size.width - size.width * xMul,
-                            size.height * yMul
-                        )
-                    )
-                }
-                .fillMaxWidth()
-                .animateContentSize(
-                    spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessVeryLow
-                    )
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
+    Box {
+        GlowingBorder(
+            cornerRadius = 22.dp,
+            modifier = Modifier.matchParentSize(),
+            innerPadding = PaddingValues(
+                vertical = 22.dp,
+                horizontal = 22.dp
+            ),
+            blur = 18.dp
+        )
+        Card(
+            modifier = modifier
+                .padding(vertical = 24.dp, horizontal = 8.dp)
+                .widthIn(max = 500.dp)
+                .padding(horizontal = 12.dp)
+                .clickable(enabled = false) {}
+                .offset {
+                    if (loading) {
+                        IntOffset(0, offset)
+                    } else IntOffset.Zero
+                },
+            shape = SquircleShape(
+                radius = 42.dp,
+                cornerSmoothing = CornerSmoothing.Medium
+            ),
+            elevation = CardDefaults.cardElevation(10.dp)
         ) {
-            if (result != null) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 440.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    MarkdownText(
-                        markdown = result,
-                        style = MaterialTheme.typography.bodyLarge,
+            Column(
+                modifier = Modifier
+                    .heightIn(min = 120.dp)
+                    .drawBehind {
+                        drawGradientRadial(
+                            surfaceVariant
+                                .copy(alpha = 0.75f)
+                                .compositeOver(Blue),
+                            Offset(
+                                size.width * xMul,
+                                size.height - size.height * yMul
+                            )
+                        )
+                        drawGradientRadial(
+                            surfaceVariant
+                                .copy(alpha = 0.75f)
+                                .compositeOver(OrangeRed),
+                            Offset(
+                                size.width - size.width * xMul,
+                                size.height - size.height * yMul
+                            )
+                        )
+                        drawGradientRadial(
+                            surfaceVariant
+                                .copy(alpha = 0.75f)
+                                .compositeOver(LightPurple),
+                            Offset(
+                                size.width - size.width * xMul,
+                                size.height * yMul
+                            )
+                        )
+                    }
+                    .fillMaxWidth()
+                    .animateContentSize(
+                        spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessVeryLow
+                        )
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (result != null) {
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 24.dp, start = 24.dp, end = 24.dp)
+                            .heightIn(max = 440.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        MarkdownText(
+                            markdown = result,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 24.dp, start = 24.dp, end = 24.dp)
+                        )
+                    }
+                    Spacer(Modifier.height(12.dp))
+                    AiResultActions(
+                        onCopyClick = onCopyClick,
+                        onReplaceClick = onReplaceClick,
+                        onAddToNoteClick = onAddToNoteClick
                     )
                 }
-                Spacer(Modifier.height(12.dp))
-                AiResultActions(
-                    onCopyClick = onCopyClick,
-                    onReplaceClick = onReplaceClick,
-                    onAddToNoteClick = onAddToNoteClick
-                )
-            }
-            if (error != null) {
-                MarkdownText(
-                    markdown = error,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.error,
-                        textAlign = TextAlign.Center
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 48.dp, horizontal = 12.dp)
-                )
+                if (error != null) {
+                    MarkdownText(
+                        markdown = error,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.error,
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 48.dp, horizontal = 12.dp)
+                    )
+                }
             }
         }
     }

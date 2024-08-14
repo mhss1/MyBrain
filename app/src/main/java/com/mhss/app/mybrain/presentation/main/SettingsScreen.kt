@@ -29,6 +29,7 @@ import com.mhss.app.presentation.SettingsSwitchCard
 import com.mhss.app.presentation.SettingsViewModel
 import com.mhss.app.ui.StartUpScreenSettings
 import com.mhss.app.ui.ThemeSettings
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.getName
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.theme.Rubik
@@ -37,7 +38,6 @@ import com.mhss.app.ui.toInt
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
@@ -55,17 +55,7 @@ fun SettingsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.settings),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                )
-            )
+            MyBrainAppBar(stringResource(R.string.settings))
         }
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = paddingValues) {

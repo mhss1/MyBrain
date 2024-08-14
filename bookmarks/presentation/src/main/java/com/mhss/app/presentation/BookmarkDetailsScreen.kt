@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
 import com.mhss.app.domain.model.Bookmark
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookmarkDetailsScreen(
     navController: NavHostController,
@@ -100,8 +100,8 @@ fun BookmarkDetailsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {},
+            MyBrainAppBar(
+                title = "",
                 actions = {
                     if (state.bookmark != null) IconButton(onClick = { openDialog = true }) {
                         Icon(
@@ -119,10 +119,7 @@ fun BookmarkDetailsScreen(
                                 modifier = Modifier.size(24.dp),
                             )
                         }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                )
+                }
             )
         },
     ) { paddingValues ->

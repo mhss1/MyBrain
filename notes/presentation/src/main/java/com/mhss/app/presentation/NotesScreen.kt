@@ -35,6 +35,7 @@ import com.mhss.app.domain.model.*
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
 import com.mhss.app.ui.ItemView
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.notes.NoteCard
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.titleRes
@@ -65,17 +66,9 @@ fun NotesScreen(
             SnackbarHost(snackbarHostState)
         },
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = if (selectedTab == 0) stringResource(R.string.notes) else stringResource(
-                            R.string.folders
-                        ),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
+            MyBrainAppBar(
+                if (selectedTab == 0) stringResource(R.string.notes) else stringResource(
+                    R.string.folders
                 )
             )
         },
@@ -341,7 +334,10 @@ fun NotesSettingsSection(
                                 )
                         }
                     )
-                    Text(text = stringResource(it.titleRes), style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = stringResource(it.titleRes),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         }
@@ -359,7 +355,10 @@ fun NotesSettingsSection(
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = stringResource(it.titleRes), style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = stringResource(it.titleRes),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         }

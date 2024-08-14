@@ -22,11 +22,11 @@ import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.titleRes
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryScreen(
     navController: NavHostController,
@@ -36,16 +36,8 @@ fun DiaryScreen(
     var orderSettingsVisible by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.diary),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                ),
+            MyBrainAppBar(
+                title = stringResource(R.string.diary),
                 actions = {
                     IconButton(onClick = {
                         navController.navigate(Screen.DiaryChartScreen)

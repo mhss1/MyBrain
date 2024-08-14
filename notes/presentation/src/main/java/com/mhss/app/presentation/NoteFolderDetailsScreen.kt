@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,24 +27,21 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
 import com.mhss.app.ui.ItemView
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.notes.NoteCard
 import com.mhss.app.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteFolderDetailsScreen(
     navController: NavHostController,
@@ -76,13 +72,8 @@ fun NoteFolderDetailsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = folder?.name ?: "",
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
+            MyBrainAppBar(
+                title = folder?.name ?: "",
                 actions = {
                     IconButton(onClick = { openDeleteDialog = true }) {
                         Icon(Icons.Default.Delete, stringResource(R.string.delete_folder))
@@ -90,10 +81,7 @@ fun NoteFolderDetailsScreen(
                     IconButton(onClick = { openEditDialog = true }) {
                         Icon(Icons.Default.Edit, stringResource(R.string.delete_folder))
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
+                }
             )
         },
         floatingActionButton = {

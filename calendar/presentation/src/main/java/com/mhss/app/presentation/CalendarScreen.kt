@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.mhss.app.presentation
 
 import androidx.compose.animation.AnimatedContent
@@ -23,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
 import com.mhss.app.domain.model.Calendar
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.util.permissions.Permission
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.util.date.monthName
@@ -52,13 +51,8 @@ fun CalendarScreen(
     val scope = rememberCoroutineScope()
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.calendar),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
+            MyBrainAppBar(
+                title = stringResource(R.string.calendar),
                 actions = {
                     if (state.events.isNotEmpty()) MonthDropDownMenu(
                         selectedMonth = month,
@@ -73,10 +67,7 @@ fun CalendarScreen(
                             }
                         }
                     )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
+                }
             )
         },
         floatingActionButton = {

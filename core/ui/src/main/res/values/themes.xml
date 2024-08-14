@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Theme.MyBrain" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 </resources>

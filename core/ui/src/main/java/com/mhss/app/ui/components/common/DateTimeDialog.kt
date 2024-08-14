@@ -1,4 +1,4 @@
-package com.mhss.app.ui.components
+package com.mhss.app.ui.components.common
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column

@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mhss.app.ui.R
+import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mohamedrejeb.calf.core.LocalPlatformContext
 import com.mohamedrejeb.calf.io.getPath
 import com.mohamedrejeb.calf.picker.FilePickerFileType
@@ -23,7 +24,6 @@ import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImportExportScreen(
     viewModel: SettingsViewModel = koinViewModel()
@@ -55,19 +55,7 @@ fun ImportExportScreen(
     }
     val backupResult by viewModel.backupResult.collectAsState()
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.export_import),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                )
-            )
-        }
+        topBar = { MyBrainAppBar(stringResource(R.string.export_import)) }
     ) { paddingValues ->
         Column(
             Modifier
