@@ -42,10 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +54,7 @@ import com.mhss.app.ui.R
 import com.mhss.app.ui.theme.Blue
 import com.mhss.app.ui.theme.LightPurple
 import com.mhss.app.ui.theme.MyBrainTheme
-import com.mhss.app.ui.theme.OrangeRed
+import com.mhss.app.ui.theme.DarkOrange
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import sv.lib.squircleshape.CornerSmoothing
 import sv.lib.squircleshape.SquircleShape
@@ -116,10 +113,10 @@ fun AiResultSheet(
         GlowingBorder(
             modifier = Modifier.matchParentSize(),
             innerPadding = PaddingValues(
-                vertical = 24.dp,
-                horizontal = 18.dp
+                vertical = 28.dp,
+                horizontal = 22.dp
             ),
-            blur = 18.dp,
+            blur = 24.dp,
             animationDuration = 2000
         )
         Card(
@@ -150,7 +147,7 @@ fun AiResultSheet(
                         drawGradientRadial(
                             surfaceVariant
                                 .copy(alpha = 0.75f)
-                                .compositeOver(OrangeRed),
+                                .compositeOver(DarkOrange),
                             Offset(
                                 size.width - size.width * xMul,
                                 size.height - size.height * yMul
@@ -272,20 +269,7 @@ private fun RowScope.AiResultAction(
     }
 }
 
-fun DrawScope.drawGradientRadial(
-    color: Color,
-    center: Offset,
-    radius: Float = size.maxDimension * 0.75f
-) = drawRect(
-    brush = Brush.radialGradient(
-        colors = listOf(
-            color,
-            Color.Transparent
-        ),
-        center = center,
-        radius = radius,
-    )
-)
+
 
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)

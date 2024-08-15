@@ -247,7 +247,8 @@ fun AssistantScreen(
         )
     ) {
         GlowingBorder(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            cornerRadius = 28.dp
         )
     }
 }

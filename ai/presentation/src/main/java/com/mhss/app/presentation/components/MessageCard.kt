@@ -40,10 +40,7 @@ import com.mhss.app.domain.model.AiMessageAttachment
 import com.mhss.app.domain.model.AiMessageType
 import com.mhss.app.ui.R
 import com.mhss.app.ui.gradientBrushColor
-import com.mhss.app.ui.theme.Blue
-import com.mhss.app.ui.theme.LightPurple
 import com.mhss.app.ui.theme.MyBrainTheme
-import com.mhss.app.ui.theme.Orange
 import com.mhss.app.ui.theme.SecondaryColor
 import com.mhss.app.util.date.formatTime
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -102,32 +99,9 @@ fun LazyItemScope.MessageCard(
                             size.minDimension * 1.5f
                         )
                         else {
-                            drawRect(surfaceVariant, Offset.Zero, size)
-                            drawGradientRadial(
-                                surfaceVariant
-                                    .copy(alpha = 0.75f)
-                                    .compositeOver(Blue),
-                                Offset(0f, size.height * 0.9f)
-                            )
-                            drawGradientRadial(
-                                surfaceVariant
-                                    .copy(alpha = 0.75f)
-                                    .compositeOver(Orange),
-                                Offset(
-                                    size.width * 1.1f,
-                                    size.height
-                                ),
-                                size.minDimension * 1.5f
-                            )
-                            drawGradientRadial(
-                                surfaceVariant
-                                    .copy(alpha = 0.75f)
-                                    .compositeOver(LightPurple),
-                                Offset(
-                                    size.width * 1.1f,
-                                    size.height * .1f,
-                                ),
-                                size.minDimension * 1.5f
+                            drawAiGradientRadials(
+                                surfaceVariant,
+                                radius = size.minDimension * 1.2f
                             )
                         }
                     }
