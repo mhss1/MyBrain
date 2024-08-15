@@ -106,27 +106,28 @@ fun AiResultSheet(
     )
 
     val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
-    Box {
+    Box(
+        Modifier.offset {
+            if (loading) {
+                IntOffset(0, offset)
+            } else IntOffset.Zero
+        }
+    ) {
         GlowingBorder(
-            cornerRadius = 22.dp,
             modifier = Modifier.matchParentSize(),
             innerPadding = PaddingValues(
-                vertical = 22.dp,
-                horizontal = 22.dp
+                vertical = 24.dp,
+                horizontal = 18.dp
             ),
-            blur = 18.dp
+            blur = 18.dp,
+            animationDuration = 2000
         )
         Card(
             modifier = modifier
-                .padding(vertical = 24.dp, horizontal = 8.dp)
+                .padding(vertical = 24.dp)
                 .widthIn(max = 500.dp)
                 .padding(horizontal = 12.dp)
-                .clickable(enabled = false) {}
-                .offset {
-                    if (loading) {
-                        IntOffset(0, offset)
-                    } else IntOffset.Zero
-                },
+                .clickable(enabled = false) {},
             shape = SquircleShape(
                 radius = 42.dp,
                 cornerSmoothing = CornerSmoothing.Medium

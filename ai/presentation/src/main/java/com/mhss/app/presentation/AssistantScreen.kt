@@ -4,19 +4,17 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -30,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -89,9 +86,6 @@ fun AssistantScreen(
     var openTaskSheet by remember { mutableStateOf(false) }
     val lazyListState = rememberLazyListState()
     val keyboardController = LocalSoftwareKeyboardController.current
-    LaunchedEffect(loading) {
-        lazyListState.animateScrollToItem(0)
-    }
     Scaffold(
         topBar = {
            MyBrainAppBar(stringResource(id = R.string.assistant))
@@ -104,6 +98,7 @@ fun AssistantScreen(
                 onTextChange = { text = it },
                 onAttachClick = { attachmentsMenuExpanded = true },
                 onRemoveAttachment = { attachments.removeAt(it) },
+                loading = loading,
                 onSend = {
                     viewModel.onEvent(
                         AssistantEvent.SendMessage(
@@ -244,9 +239,12 @@ fun AssistantScreen(
     }
     AnimatedVisibility(
         visible = loading,
-        enter = fadeIn(),
-        exit = fadeOut(),
-        modifier = Modifier.consumeWindowInsets(WindowInsets.systemBars)
+        enter = fadeIn(
+            animationSpec = tween(300)
+        ),
+        exit = fadeOut(
+            animationSpec = tween(200)
+        )
     ) {
         GlowingBorder(
             modifier = Modifier.fillMaxSize()

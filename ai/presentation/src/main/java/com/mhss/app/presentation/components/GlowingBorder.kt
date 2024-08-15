@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
@@ -30,16 +31,17 @@ fun GlowingBorder(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 24.dp,
     innerPadding: PaddingValues = PaddingValues(0.dp),
-    blur: Dp = 14.dp
+    blur: Dp = 14.dp,
+    animationDuration: Int = 800
 ) {
     val infiniteTransition = rememberInfiniteTransition("glow")
-    val borderWidth = infiniteTransition.animateValue(
+    val borderWidth by infiniteTransition.animateValue(
         initialValue = 5.dp,
         targetValue = 12.dp,
         typeConverter = Dp.VectorConverter,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = 1000,
+                durationMillis = animationDuration,
                 easing = EaseInOut
             ),
             repeatMode = RepeatMode.Reverse
@@ -59,7 +61,7 @@ fun GlowingBorder(
                     .matchParentSize()
                     .clip(RoundedCornerShape(cornerRadius))
                     .border(
-                        width = borderWidth.value,
+                        width = borderWidth,
                         brush = gradientBrushColor(),
                         shape = RoundedCornerShape(cornerRadius)
                     )
