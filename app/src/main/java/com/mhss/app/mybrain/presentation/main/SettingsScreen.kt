@@ -1,6 +1,7 @@
 package com.mhss.app.mybrain.presentation.main
 
 import android.os.Build
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -59,12 +60,12 @@ fun SettingsScreen(
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = paddingValues) {
             item {
-                val theme = viewModel
+                val theme by viewModel
                     .getSettings(
                         intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value
                     ).collectAsStateWithLifecycle(ThemeSettings.AUTO.value)
-                ThemeSettingsItem(theme.value) {
-                    when (theme.value) {
+                ThemeSettingsItem(theme) {
+                    when (theme) {
                         ThemeSettings.AUTO.value -> viewModel.saveSettings(
                             intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY),
                             ThemeSettings.LIGHT.value
@@ -181,44 +182,22 @@ fun SettingsScreen(
                 }
             }
             item {
-                SettingsItemCard(
-                    cornerRadius = 16.dp,
+                SettingsBasicLinkItem(
+                    title = R.string.integrations,
+                    icon = R.drawable.ic_integrations,
                     onClick = {
                         navController.navigate(Screen.IntegrationsScreen)
                     }
-                ) {
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_integrations),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.integrations),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
+                )
             }
             item {
-                SettingsItemCard(
-                    cornerRadius = 16.dp,
+                SettingsBasicLinkItem(
+                    title = R.string.export_import,
+                    icon = R.drawable.ic_import_export,
                     onClick = {
                         navController.navigate(Screen.ImportExportScreen)
                     }
-                ) {
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_import_export),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.export_import),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
+                )
             }
 
             item {
@@ -287,30 +266,43 @@ fun SettingsScreen(
 fun ThemeSettingsItem(theme: Int = 0, onClick: () -> Unit = {}) {
     SettingsItemCard(
         onClick = onClick,
-        cornerRadius = 18.dp
+        cornerRadius = 18.dp,
+        vPadding = 6.dp
     ) {
         Text(
             text = stringResource(R.string.app_theme),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.bodyLarge
         )
+        val themeTextId = remember(theme) {
+            when (theme) {
+                ThemeSettings.LIGHT.value -> R.string.light_theme
+                ThemeSettings.DARK.value -> R.string.dark_theme
+                else -> R.string.auto_theme
+            }
+        }
+        val themePainterId = remember(theme) {
+            when (theme) {
+                ThemeSettings.LIGHT.value -> R.drawable.ic_sun
+                ThemeSettings.DARK.value -> R.drawable.ic_dark
+                else -> R.drawable.ic_auto
+            }
+        }
+
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = when (theme) {
-                    ThemeSettings.LIGHT.value -> stringResource(R.string.light_theme)
-                    ThemeSettings.DARK.value -> stringResource(R.string.dark_theme)
-                    else -> stringResource(R.string.auto_theme)
-                },
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                painter = when (theme) {
-                    ThemeSettings.LIGHT.value -> painterResource(id = R.drawable.ic_sun)
-                    ThemeSettings.DARK.value -> painterResource(id = R.drawable.ic_dark)
-                    else -> painterResource(id = R.drawable.ic_auto)
-                },
-                contentDescription = theme.toString()
-            )
+            AnimatedContent(themeTextId, label = "themeTex") { id ->
+                Text(
+                    text = stringResource(id),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            Spacer(modifier = Modifier.width(6.dp))
+            AnimatedContent(themePainterId, label = "themePainter") { id ->
+                Icon(
+                    painter = painterResource(id),
+                    contentDescription = stringResource(themeTextId),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }
@@ -330,7 +322,7 @@ fun StartUpScreenSettingsItem(
     ) {
         Text(
             text = stringResource(R.string.start_up_screen),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
         Box(
             modifier = Modifier
@@ -400,7 +392,7 @@ fun AppFontSettingsItem(
     ) {
         Text(
             text = stringResource(R.string.app_font),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
         Box(
             modifier = Modifier

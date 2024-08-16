@@ -17,11 +17,11 @@ fun SettingsSwitchCard(
         onClick = {
             onCheck(!checked)
         },
-        vPadding = 10.dp
+        vPadding = 6.dp
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.bodyLarge
         )
         Switch(checked = checked, onCheckedChange = {
             onCheck(it)

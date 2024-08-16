@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SettingsItemCard(
     modifier: Modifier = Modifier,
-    cornerRadius: Dp = 25.dp,
+    cornerRadius: Dp = 16.dp,
     hPadding: Dp = 12.dp,
     vPadding: Dp = 16.dp,
     onClick: () -> Unit = {},

@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +39,8 @@ fun SettingsBasicLinkItem(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = icon),
-                contentDescription = stringResource(id = title)
+                contentDescription = stringResource(id = title),
+                modifier = Modifier.size(24.dp)
             )
             Spacer(Modifier.width(12.dp))
             Text(
