@@ -58,9 +58,10 @@ Project localisation is managed via [Crowdin](https://crowdin.com/project/my-bra
 To get started, take a look at [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
-Icons Attribution 
-<a href="https://www.flaticon.com/free-icons/paper" title="paper icons">Paper icons created by Freepik - Flaticon</a>
+Icons Attribution:
+<a href="https://www.flaticon.com/free-icons/document" title="document icons">Document icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/list" title="list icons">List icons created by Freepik - Flaticon</a>
-<a href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/3d-calendar" title="3d calendar icons">3d calendar icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/bookmark" title="bookmark icons">Bookmark icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/book" title="book icons">Book icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/chatbot" title="chatbot icons">Chatbot icons created by HideMaru - Flaticon</a>
