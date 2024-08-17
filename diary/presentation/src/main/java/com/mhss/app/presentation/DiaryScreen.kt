@@ -3,6 +3,7 @@
 package com.mhss.app.presentation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,8 +27,10 @@ import com.mhss.app.preferences.domain.model.OrderType
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.titleRes
+import com.mhss.app.util.date.formatTime
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryScreen(
     navController: NavHostController,
@@ -34,6 +38,7 @@ fun DiaryScreen(
 ) {
     val uiState = viewModel.uiState
     var orderSettingsVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             MyBrainAppBar(
@@ -69,7 +74,9 @@ fun DiaryScreen(
             }
         }
     ) { paddingValues ->
-        if (uiState.entries.isEmpty()) { NoEntriesMessage() }
+        if (uiState.entries.isEmpty()) {
+            NoEntriesMessage()
+        }
         Column(Modifier.padding(paddingValues)) {
             Row(
                 Modifier.fillMaxWidth(),
@@ -103,19 +110,34 @@ fun DiaryScreen(
             }
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(12.dp)
+                contentPadding = PaddingValues(vertical = 12.dp)
             ) {
-                items(uiState.entries, key = { it.id }) { entry ->
-                    DiaryEntryItem(
-                        entry = entry,
-                        onClick = {
-                            navController.navigate(
-                                Screen.DiaryDetailScreen(
-                                    entry.id
+                uiState.entries.forEach { (day, entries) ->
+                    stickyHeader {
+                        Text(
+                            text = day,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background)
+                                .padding(bottom = 4.dp)
+                                .padding(horizontal = 12.dp)
+                        )
+                    }
+                    items(entries) { entry ->
+                        DiaryEntryItem(
+                            modifier = Modifier.padding(horizontal = 12.dp),
+                            entry = entry,
+                            timeText = entry.createdDate.formatTime(context),
+                            onClick = {
+                                navController.navigate(
+                                    Screen.DiaryDetailScreen(
+                                        entry.id
+                                    )
                                 )
-                            )
-                        }
-                    )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -159,7 +181,10 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
                                 )
                         }
                     )
-                    Text(text = stringResource(it.titleRes), style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = stringResource(it.titleRes),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         }
@@ -177,7 +202,10 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
                         }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = stringResource(it.titleRes), style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = stringResource(it.titleRes),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         }

@@ -27,16 +27,14 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 fun LazyItemScope.DiaryEntryItem(
     modifier: Modifier = Modifier,
     entry: DiaryEntry,
+    timeText: String = entry.createdDate.fullDate(LocalContext.current),
     onClick: (DiaryEntry) -> Unit
 ) {
-    val context = LocalContext.current
     Card(
         modifier = modifier
             .animateItem(),
         shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.elevatedCardElevation(
-            8.dp
-        )
+        elevation = CardDefaults.elevatedCardElevation(6.dp)
     ) {
         Column(
             modifier = Modifier
@@ -74,7 +72,7 @@ fun LazyItemScope.DiaryEntryItem(
             }
             Spacer(Modifier.height(8.dp))
             Text(
-                text = entry.createdDate.fullDate(context),
+                text = timeText,
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.align(Alignment.End)
             )

@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 data class CalendarEvent(
     val id: Long,
     val title: String,
-    val description: String?,
+    val description: String? = null,
     val start: Long,
     val end: Long,
-    val location: String?,
+    val location: String? = null,
     val allDay: Boolean = false,
     val color: Int = 0,
     val calendarId: Long,

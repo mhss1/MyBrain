@@ -15,13 +15,17 @@ import com.mhss.app.preferences.domain.model.toInt
 import com.mhss.app.preferences.domain.model.toOrder
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
+import com.mhss.app.util.date.formatDateForMapping
 import com.mhss.app.util.date.inTheLast30Days
 import com.mhss.app.util.date.inTheLastYear
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.Named
 
 @KoinViewModel
 class DiaryViewModel(
@@ -33,7 +37,8 @@ class DiaryViewModel(
     private val getEntry: GetDiaryEntryUseCase,
     private val getPreference: GetPreferenceUseCase,
     private val savePreference: SavePreferenceUseCase,
-    private val getEntriesForChart: GetDiaryForChartUseCase
+    private val getEntriesForChart: GetDiaryForChartUseCase,
+    @Named("defaultDispatcher") private val defaultDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     var uiState by mutableStateOf(UiState())
@@ -103,7 +108,7 @@ class DiaryViewModel(
     }
 
     data class UiState(
-        val entries: List<DiaryEntry> = emptyList(),
+        val entries: Map<String, List<DiaryEntry>> = emptyMap(),
         val entriesOrder: Order = Order.DateModified(OrderType.ASC),
         val entry: DiaryEntry? = null,
         val error: String? = null,
@@ -118,10 +123,14 @@ class DiaryViewModel(
         getEntriesJob = getAlEntries(order)
             .onEach { entries ->
                 uiState = uiState.copy(
-                    entries = entries,
+                    entries = entries.groupBy {
+                        it.createdDate.formatDateForMapping()
+                    },
                     entriesOrder = order
                 )
-            }.launchIn(viewModelScope)
+            }
+            .flowOn(defaultDispatcher)
+            .launchIn(viewModelScope)
     }
 
 }

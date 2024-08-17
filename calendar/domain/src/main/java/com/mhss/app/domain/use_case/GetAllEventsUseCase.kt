@@ -22,12 +22,12 @@ class GetAllEventsUseCase(
             try {
                 calendarRepository.getEvents()
                     .filter { event ->
-                        until?.let { event.start <= it } ?: true &&
+                        (until?.let { event.start <= it } ?: true) &&
                         event.calendarId.toInt() !in excluded
                     }
-                    .let {
-                        if (fromWidget) it.take(25).groupBy(groupBySelector)
-                        else it.groupBy(groupBySelector)
+                    .run {
+                        if (fromWidget) take(25).groupBy(groupBySelector)
+                        else groupBy(groupBySelector)
                     }
             } catch (e: Exception) {
                 e.printStackTrace()
