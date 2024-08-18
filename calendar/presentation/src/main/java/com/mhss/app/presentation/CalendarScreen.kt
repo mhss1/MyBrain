@@ -30,7 +30,10 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
+@OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun CalendarScreen(
     navController: NavHostController,
@@ -143,7 +146,7 @@ fun CalendarScreen(
                                     CalendarEventItem(event = event, onClick = {
                                         navController.navigate(
                                             Screen.CalendarEventDetailsScreen(
-                                                Json.encodeToString(event)
+                                                Base64.encode(Json.encodeToString(event).toByteArray())
                                             )
                                         )
                                     })

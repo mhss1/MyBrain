@@ -35,7 +35,10 @@ import com.mhss.app.util.date.now
 import com.mhss.app.util.permissions.rememberPermissionState
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
+@OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun CalendarEventDetailsScreen(
     navController: NavHostController,
@@ -48,12 +51,10 @@ fun CalendarEventDetailsScreen(
         Permission.WRITE_CALENDAR
     )
     var openDeleteDialog by rememberSaveable { mutableStateOf(false) }
-    val event by remember {
-        mutableStateOf(
-            eventJson?.let {
-                Json.decodeFromString<CalendarEvent>(it)
-            }
-        )
+    val event = remember {
+        eventJson?.let {
+            Json.decodeFromString<CalendarEvent>(Base64.decode(it).decodeToString())
+        }
     }
     var title by rememberSaveable { mutableStateOf(event?.title ?: "") }
     var description by rememberSaveable { mutableStateOf(event?.description ?: "") }
@@ -67,7 +68,11 @@ fun CalendarEventDetailsScreen(
             event?.end ?: (now() + 2 * HOUR_MILLIS)
         )
     }
-    var frequency by rememberSaveable { mutableStateOf(event?.frequency ?: CalendarEventFrequency.NEVER) }
+    var frequency by rememberSaveable {
+        mutableStateOf(
+            event?.frequency ?: CalendarEventFrequency.NEVER
+        )
+    }
     var calendar by remember {
         mutableStateOf(
             Calendar(
@@ -81,7 +86,7 @@ fun CalendarEventDetailsScreen(
     LaunchedEffect(state.calendarsList) {
         if (event != null) {
             if (state.calendarsList.isNotEmpty()) {
-                calendar = state.calendarsList.first { it.id == event!!.calendarId }
+                calendar = state.calendarsList.first { it.id == event.calendarId }
             }
         } else {
             if (state.calendarsList.isNotEmpty()) {
@@ -450,7 +455,10 @@ fun EventTimeSection(
         ) {
             Icon(painter = painterResource(id = R.drawable.ic_refresh), null)
             Spacer(Modifier.width(8.dp))
-            Text(frequency.getCalendarFrequencyTitleRes(), style = MaterialTheme.typography.bodyLarge)
+            Text(
+                frequency.getCalendarFrequencyTitleRes(),
+                style = MaterialTheme.typography.bodyLarge
+            )
             FrequencyDialog(
                 selectedFrequency = frequency,
                 onFrequencySelected = {

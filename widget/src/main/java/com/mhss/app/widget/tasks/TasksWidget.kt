@@ -46,9 +46,8 @@ class TasksWidget : GlanceAppWidget(), KoinComponent {
             val tasks by getAllTasks(order.toOrder(), showCompletedTasks).collectAsState(emptyList())
 
             WidgetTheme(
-                if (useMaterialYou) {
-                    GlanceTheme.colors
-                } else ColorProviders(widgetDarkColorScheme)
+                if (useMaterialYou) GlanceTheme.colors
+                else ColorProviders(widgetDarkColorScheme)
             ) {
                 TasksHomeScreenWidget(
                     tasks

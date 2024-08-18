@@ -8,6 +8,7 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.appwidget.lazy.items
 import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
@@ -81,8 +82,9 @@ fun CalendarHomeScreenWidget(
                     modifier = GlanceModifier
                         .fillMaxSize()
                         .background(GlanceTheme.colors.onSecondary)
-                        .cornerRadius(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .cornerRadius(20.dp)
+                        .padding(horizontal = 4.dp),
+                    horizontalAlignment = Alignment.Start
                 ) {
                     if (events.isEmpty()) {
                         item {
@@ -101,24 +103,18 @@ fun CalendarHomeScreenWidget(
                     item { Spacer(GlanceModifier.height(6.dp)) }
                     events.forEach { (day, dayEvents) ->
                         item {
-                            Column(
-                                modifier = GlanceModifier
-                                    .fillMaxWidth()
-                                    .padding(start = 4.dp, end = 4.dp)
-                            ) {
-                                Text(
-                                    text = day.substring(0, day.indexOf(",")),
-                                    style = TextStyle(
-                                        color = GlanceTheme.colors.secondary,
-                                        fontWeight = FontWeight.Normal,
-                                        fontSize = 14.sp
-                                    ),
-                                    modifier = GlanceModifier.padding(bottom = 3.dp)
-                                )
-                                dayEvents.forEach { event ->
-                                    CalendarEventWidgetItem(event = event)
-                                }
-                            }
+                            Text(
+                                text = day,
+                                style = TextStyle(
+                                    color = GlanceTheme.colors.secondary,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp
+                                ),
+                                modifier = GlanceModifier.padding(bottom = 3.dp)
+                            )
+                        }
+                        items(dayEvents) { event ->
+                            CalendarEventWidgetItem(event = event)
                         }
                     }
                 }
