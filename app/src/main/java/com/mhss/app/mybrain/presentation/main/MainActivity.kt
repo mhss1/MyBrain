@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.ui.ThemeSettings
+import kotlinx.coroutines.flow.map
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +35,11 @@ class MainActivity : AppCompatActivity() {
         val appLockManager = AppLockManager(this)
         setContent {
             val blockScreenshots by viewModel.blockScreenshots.collectAsState(initial = false)
-            val themeMode = viewModel.themeMode.collectAsState(initial = ThemeSettings.AUTO.value)
+            val isSystemDarkMode = isSystemInDarkTheme()
+            val isDarkMode by viewModel.themeMode
+                .map {
+                    it == ThemeSettings.DARK.value || (it == ThemeSettings.AUTO.value && isSystemDarkMode)
+                }.collectAsState(true)
 
             LaunchedEffect(blockScreenshots) {
                 if (blockScreenshots) {
@@ -44,12 +49,6 @@ class MainActivity : AppCompatActivity() {
                     )
                 } else
                     window.clearFlags(LayoutParams.FLAG_SECURE)
-            }
-
-            val isDarkMode = when (themeMode.value) {
-                ThemeSettings.DARK.value -> true
-                ThemeSettings.LIGHT.value -> false
-                else -> isSystemInDarkTheme()
             }
             LaunchedEffect(isDarkMode) {
                 enableEdgeToEdge(
