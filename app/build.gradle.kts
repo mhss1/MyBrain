@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.mhss.app.mybrain"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mhss.app.mybrain"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 8
         versionName = "1.0.7"
 
