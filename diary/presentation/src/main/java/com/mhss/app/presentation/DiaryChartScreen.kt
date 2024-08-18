@@ -27,7 +27,8 @@ fun DiaryChartScreen(
         Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(12.dp),
+            .padding(12.dp)
+            .padding(WindowInsets.systemBars.asPaddingValues()),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
