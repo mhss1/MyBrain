@@ -16,14 +16,12 @@ fun SettingsItemCard(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 16.dp,
     hPadding: Dp = 12.dp,
-    vPadding: Dp = 16.dp,
+    vPadding: Dp = 14.dp,
     onClick: () -> Unit = {},
     content: @Composable RowScope.() -> Unit,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 12.dp),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(cornerRadius),
         elevation = CardDefaults.elevatedCardElevation(
             6.dp

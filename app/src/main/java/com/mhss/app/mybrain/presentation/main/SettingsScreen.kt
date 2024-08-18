@@ -58,7 +58,11 @@ fun SettingsScreen(
             MyBrainAppBar(stringResource(R.string.settings))
         }
     ) { paddingValues ->
-        LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = paddingValues) {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth().padding(paddingValues),
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             item {
                 val theme by viewModel
                     .getSettings(
@@ -127,8 +131,9 @@ fun SettingsScreen(
                         false
                     ).collectAsStateWithLifecycle(false)
                 SettingsSwitchCard(
-                    stringResource(R.string.block_screenshots),
-                    block.value
+                    text = stringResource(R.string.block_screenshots),
+                    checked = block.value,
+                    painterResource(R.drawable.ic_block_screenshot)
                 ) {
                     viewModel.saveSettings(
                         booleanPreferencesKey(PrefsConstants.BLOCK_SCREENSHOTS_KEY),
@@ -144,8 +149,9 @@ fun SettingsScreen(
                         false
                     ).collectAsStateWithLifecycle(false)
                 SettingsSwitchCard(
-                    stringResource(R.string.lock_app),
-                    block.value
+                    text = stringResource(R.string.lock_app),
+                    checked = block.value,
+                    iconPainter = painterResource(R.drawable.ic_lock)
                 ) {
                     if (appLockManager.canUseFeature()) {
                         viewModel.saveSettings(
@@ -171,8 +177,9 @@ fun SettingsScreen(
                             false
                         ).collectAsStateWithLifecycle(false)
                     SettingsSwitchCard(
-                        stringResource(R.string.material_you),
-                        block.value
+                        text = stringResource(R.string.material_you),
+                        checked = block.value,
+                        iconPainter = painterResource(R.drawable.ic_palette)
                     ) {
                         viewModel.saveSettings(
                             booleanPreferencesKey(PrefsConstants.SETTINGS_MATERIAL_YOU),
@@ -267,12 +274,21 @@ fun ThemeSettingsItem(theme: Int = 0, onClick: () -> Unit = {}) {
     SettingsItemCard(
         onClick = onClick,
         cornerRadius = 18.dp,
-        vPadding = 6.dp
     ) {
-        Text(
-            text = stringResource(R.string.app_theme),
-            style = MaterialTheme.typography.bodyLarge
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_paint_roller),
+                contentDescription = stringResource(R.string.app_theme),
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = stringResource(R.string.app_theme),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
         val themeTextId = remember(theme) {
             when (theme) {
                 ThemeSettings.LIGHT.value -> R.string.light_theme
@@ -320,10 +336,18 @@ fun StartUpScreenSettingsItem(
             expanded = true
         },
     ) {
-        Text(
-            text = stringResource(R.string.start_up_screen),
-            style = MaterialTheme.typography.bodyLarge,
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_home),
+                contentDescription = stringResource(R.string.start_up_screen),
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = stringResource(R.string.start_up_screen),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -390,10 +414,18 @@ fun AppFontSettingsItem(
             expanded = true
         },
     ) {
-        Text(
-            text = stringResource(R.string.app_font),
-            style = MaterialTheme.typography.bodyLarge,
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_font),
+                contentDescription = stringResource(R.string.app_font),
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = stringResource(R.string.app_font),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxWidth(),
