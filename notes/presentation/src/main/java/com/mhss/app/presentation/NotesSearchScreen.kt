@@ -1,6 +1,11 @@
 package com.mhss.app.presentation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.components.notes.NoteSearchContent
 import com.mhss.app.ui.navigation.Screen
@@ -13,6 +18,7 @@ fun NotesSearchScreen(
 ) {
     val state = viewModel.notesUiState
     NoteSearchContent(
+        modifier = Modifier.padding(WindowInsets.statusBars.asPaddingValues()),
         notes = state.searchNotes,
         onQueryChange = { viewModel.onEvent(NoteEvent.SearchNotes(it)) },
         onNoteClick = {

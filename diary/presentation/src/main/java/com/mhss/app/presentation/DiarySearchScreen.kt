@@ -25,17 +25,19 @@ fun DiarySearchScreen(
 ) {
     val state = viewModel.uiState
     Column(
-        modifier = Modifier.fillMaxSize(),
-    ) {
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(WindowInsets.statusBars.asPaddingValues()),
+        ) {
         var query by rememberSaveable {
             mutableStateOf("")
         }
-        LaunchedEffect(query){viewModel.onEvent(DiaryEvent.SearchEntries(query))}
+        LaunchedEffect(query) { viewModel.onEvent(DiaryEvent.SearchEntries(query)) }
         val focusRequester = remember { FocusRequester() }
-        LaunchedEffect(true){focusRequester.requestFocus()}
+        LaunchedEffect(true) { focusRequester.requestFocus() }
         OutlinedTextField(
             value = query,
-            onValueChange = {query = it},
+            onValueChange = { query = it },
             label = { Text(stringResource(R.string.search_diary)) },
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
@@ -47,7 +49,7 @@ fun DiarySearchScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(12.dp)
         ) {
-            items(state.searchEntries, key = {it.id}){ entry ->
+            items(state.searchEntries, key = { it.id }) { entry ->
                 DiaryEntryItem(
                     entry = entry,
                     onClick = {

@@ -1,10 +1,6 @@
 package com.mhss.app.ui.components.common
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,6 +18,7 @@ fun MyBrainAppBar(
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
+        modifier = modifier,
         title = {
             Text(
                 text = title,
@@ -31,7 +28,6 @@ fun MyBrainAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
-        modifier = modifier.padding(WindowInsets.statusBars.asPaddingValues()),
         actions = actions
     )
 }

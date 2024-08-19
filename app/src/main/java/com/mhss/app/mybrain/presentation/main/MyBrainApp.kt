@@ -1,10 +1,15 @@
 package com.mhss.app.mybrain.presentation.main
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -127,27 +132,26 @@ fun MyBrainApp(
         MyBrainTheme(
             darkTheme = isDarkMode,
             useDynamicColors = useMaterialYou,
-            fontFamily = font.value.toFontFamily()) {
+            fontFamily = font.value.toFontFamily()
+        ) {
             val navController = rememberNavController()
             Scaffold(
-                modifier = modifier.fillMaxSize().consumeWindowInsets(WindowInsets.statusBars),
+                modifier = modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.background,
                 snackbarHost = { SnackbarHost(snackbarHostState) }
             ) { paddingValues ->
                 NavHost(
                     startDestination = Screen.Main,
                     navController = navController,
-                    modifier = Modifier
-                        .padding(
-                            top = paddingValues.calculateTopPadding()
-                        )
-                        .consumeWindowInsets(paddingValues)
                 ) {
                     composable<Screen.Main> {
                         MainScreen(
                             startUpScreen = startDestination,
                             mainNavController = navController,
-                            appLockManager = appLockManager
+                            appLockManager = appLockManager,
+                            modifier = Modifier
+                                .consumeWindowInsets(WindowInsets.systemBars)
+                                .padding(paddingValues)
                         )
                     }
                     composable<Screen.TasksScreen>(
@@ -157,7 +161,11 @@ fun MyBrainApp(
                                 uriPattern =
                                     "${Constants.TASKS_SCREEN_URI}?${Constants.ADD_TASK_ARG}={${Constants.ADD_TASK_ARG}}"
                             }
-                        )
+                        ),
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
                     ) {
                         val args = it.toRoute<Screen.TasksScreen>()
                         TasksScreen(
@@ -172,7 +180,11 @@ fun MyBrainApp(
                                 uriPattern =
                                     "${Constants.TASK_DETAILS_URI}/{${Constants.TASK_ID_ARG}}"
                             }
-                        )
+                        ),
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
                     ) {
                         val args = it.toRoute<Screen.TaskDetailScreen>()
                         TaskDetailScreen(
@@ -180,13 +192,28 @@ fun MyBrainApp(
                             args.taskId
                         )
                     }
-                    composable<Screen.TaskSearchScreen> {
+                    composable<Screen.TaskSearchScreen>(
+                        enterTransition = { slideUpTransition() },
+                        exitTransition = { slideDownTransition() },
+                        popEnterTransition = { slideUpTransition() },
+                        popExitTransition = { slideDownTransition() }
+                    ) {
                         TasksSearchScreen(navController = navController)
                     }
-                    composable<Screen.NotesScreen> {
+                    composable<Screen.NotesScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         NotesScreen(navController = navController)
                     }
-                    composable<Screen.NoteDetailsScreen> {
+                    composable<Screen.NoteDetailsScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         val args = it.toRoute<Screen.NoteDetailsScreen>()
                         NoteDetailsScreen(
                             navController,
@@ -194,36 +221,76 @@ fun MyBrainApp(
                             args.folderId
                         )
                     }
-                    composable<Screen.NoteSearchScreen> {
+                    composable<Screen.NoteSearchScreen>(
+                        enterTransition = { slideUpTransition() },
+                        exitTransition = { slideDownTransition() },
+                        popEnterTransition = { slideUpTransition() },
+                        popExitTransition = { slideDownTransition() }
+                    ) {
                         NotesSearchScreen(navController = navController)
                     }
-                    composable<Screen.DiaryScreen> {
+                    composable<Screen.DiaryScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         DiaryScreen(navController = navController)
                     }
-                    composable<Screen.DiaryChartScreen> {
+                    composable<Screen.DiaryChartScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         DiaryChartScreen()
                     }
-                    composable<Screen.DiarySearchScreen> {
+                    composable<Screen.DiarySearchScreen>(
+                        enterTransition = { slideUpTransition() },
+                        exitTransition = { slideDownTransition() },
+                        popEnterTransition = { slideUpTransition() },
+                        popExitTransition = { slideDownTransition() }
+                    ) {
                         DiarySearchScreen(navController = navController)
                     }
-                    composable<Screen.DiaryDetailScreen> {
+                    composable<Screen.DiaryDetailScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         val args = it.toRoute<Screen.DiaryDetailScreen>()
                         DiaryEntryDetailsScreen(
                             navController = navController,
                             args.entryId
                         )
                     }
-                    composable<Screen.BookmarksScreen> {
+                    composable<Screen.BookmarksScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         BookmarksScreen(navController = navController)
                     }
-                    composable<Screen.BookmarkDetailScreen> {
+                    composable<Screen.BookmarkDetailScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         val args = it.toRoute<Screen.BookmarkDetailScreen>()
                         BookmarkDetailsScreen(
                             navController = navController,
                             args.bookmarkId
                         )
                     }
-                    composable<Screen.BookmarkSearchScreen> {
+                    composable<Screen.BookmarkSearchScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         BookmarkSearchScreen(navController = navController)
                     }
                     composable<Screen.CalendarScreen>(
@@ -231,7 +298,11 @@ fun MyBrainApp(
                             navDeepLink {
                                 uriPattern = Constants.CALENDAR_SCREEN_URI
                             }
-                        )
+                        ),
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
                     ) {
                         CalendarScreen(navController = navController)
                     }
@@ -241,7 +312,11 @@ fun MyBrainApp(
                                 uriPattern =
                                     "${Constants.CALENDAR_DETAILS_SCREEN_URI}?${Constants.CALENDAR_EVENT_ARG}={${Constants.CALENDAR_EVENT_ARG}}"
                             }
-                        )
+                        ),
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
                     ) {
                         val args = it.toRoute<Screen.CalendarEventDetailsScreen>()
                         CalendarEventDetailsScreen(
@@ -249,20 +324,40 @@ fun MyBrainApp(
                             eventJson = args.eventJson
                         )
                     }
-                    composable<Screen.NoteFolderDetailsScreen> {
+                    composable<Screen.NoteFolderDetailsScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         val args = it.toRoute<Screen.NoteFolderDetailsScreen>()
                         NoteFolderDetailsScreen(
                             navController = navController,
                             args.folderId
                         )
                     }
-                    composable<Screen.ImportExportScreen> {
+                    composable<Screen.ImportExportScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         ImportExportScreen()
                     }
-                    composable<Screen.IntegrationsScreen> {
+                    composable<Screen.IntegrationsScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         IntegrationsScreen()
                     }
-                    composable<Screen.AssistantScreen> {
+                    composable<Screen.AssistantScreen>(
+                        enterTransition = { slideInTransition() },
+                        exitTransition = { slideOutTransition() },
+                        popEnterTransition = { slideInTransition() },
+                        popExitTransition = { slideOutTransition() }
+                    ) {
                         AssistantScreen()
                     }
                 }
@@ -275,3 +370,23 @@ fun MyBrainApp(
         }
     }
 }
+
+fun slideInTransition() = slideInHorizontally(
+    initialOffsetX = { it },
+    animationSpec = tween(300)
+)
+
+fun slideOutTransition() = slideOutHorizontally(
+    targetOffsetX = { it },
+    animationSpec = tween(300)
+)
+
+fun slideUpTransition() = slideInVertically(
+    initialOffsetY = { it },
+    animationSpec = tween(300)
+)
+
+fun slideDownTransition() = slideOutVertically(
+    targetOffsetY = { it },
+    animationSpec = tween(300)
+)
