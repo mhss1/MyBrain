@@ -25,7 +25,9 @@ import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.toIntList
 import com.mhss.app.ui.toNotesView
+import com.mhss.app.util.date.formatDate
 import com.mhss.app.util.date.formatDateForMapping
+import com.mhss.app.util.date.now
 import com.mhss.app.util.date.todayPlusDays
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -51,6 +53,7 @@ class AssistantViewModel(
 ) : ViewModel() {
 
     private val messages = ArrayList<AiMessage>()
+
     // LinkedList to enable inserting at the beginning of the list efficiently
     // LazyColumn needs the list in reverse order
     private val uiMessages = LinkedList<AiMessage>()
@@ -163,6 +166,7 @@ class AssistantViewModel(
                     }
                 }
             }
+
             is AssistantEvent.SearchNotes -> {
                 searchNotesJob?.cancel()
                 searchNotesJob = viewModelScope.launch {
@@ -205,6 +209,7 @@ class AssistantViewModel(
                 is AiMessageAttachment.CalenderEvents -> {
                     builder.appendLine("Next 7 days events:")
                     builder.appendLine(Json.encodeToString(getEventsForNext7Days()))
+                    builder.appendLine("(Today's date: ${now().formatDate()})")
                 }
             }
         }
@@ -216,7 +221,7 @@ class AssistantViewModel(
             stringSetPreferencesKey(PrefsConstants.EXCLUDED_CALENDARS_KEY),
             emptySet()
         ).first()
-        return getCalendarEvents(excluded.toIntList(),  todayPlusDays(7)) {
+        return getCalendarEvents(excluded.toIntList(), todayPlusDays(7)) {
             it.start.formatDateForMapping()
         }
     }
