@@ -45,6 +45,7 @@ fun NoteCard(
         elevation = CardDefaults.elevatedCardElevation(
             8.dp
         ),
+        onClick = { onClick(note) }
     ) {
         Column(
             modifier = Modifier

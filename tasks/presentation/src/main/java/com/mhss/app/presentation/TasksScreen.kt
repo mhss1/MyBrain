@@ -254,7 +254,7 @@ fun TasksSettingsSection(
             orders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order == it,
+                        selected = order::class == it::class,
                         onClick = {
                             if (order != it)
                                 onOrderChange(

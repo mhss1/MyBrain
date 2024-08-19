@@ -93,7 +93,6 @@ fun TaskDetailScreen(
         if (uiState.navigateUp) {
             openDialog = false
             navController.navigateUp()
-            navController.navigateUp()
         }
         if (uiState.error != null) {
             val snackbarResult = snackbarHostState.showSnackbar(
