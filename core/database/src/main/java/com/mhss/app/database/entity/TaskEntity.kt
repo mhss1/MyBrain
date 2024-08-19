@@ -21,7 +21,7 @@ data class TaskEntity(
     @ColumnInfo(name = "is_completed")
     val isCompleted: Boolean = false,
     @SerialName("priority")
-    val priority: Priority = Priority.LOW,
+    val priority: Int = Priority.LOW.value,
     @SerialName("createdDate")
     @ColumnInfo(name = "created_date")
     val createdDate: Long = 0L,
@@ -36,7 +36,7 @@ data class TaskEntity(
     @SerialName("recurring")
     val recurring: Boolean = false,
     @SerialName("frequency")
-    val frequency: TaskFrequency = TaskFrequency.DAILY,
+    val frequency: Int = TaskFrequency.DAILY.value,
     @SerialName("frequencyAmount")
     @ColumnInfo(name = "frequency_amount")
     val frequencyAmount: Int = 1,
@@ -49,13 +49,13 @@ fun TaskEntity.toTask() = Task(
     title = title,
     description = description,
     isCompleted = isCompleted,
-    priority = priority,
+    priority = Priority.entries.firstOrNull { it.value == priority } ?: Priority.LOW,
     createdDate = createdDate,
     updatedDate = updatedDate,
     subTasks = subTasks,
     dueDate = dueDate,
     recurring = recurring,
-    frequency = frequency,
+    frequency = TaskFrequency.entries.firstOrNull { it.value == frequency } ?: TaskFrequency.DAILY,
     frequencyAmount = frequencyAmount,
     id = id
 )
@@ -64,13 +64,13 @@ fun Task.toTaskEntity() = TaskEntity(
     title = title,
     description = description,
     isCompleted = isCompleted,
-    priority = priority,
+    priority = priority.value,
     createdDate = createdDate,
     updatedDate = updatedDate,
     subTasks = subTasks,
     dueDate = dueDate,
     recurring = recurring,
-    frequency = frequency,
+    frequency = frequency.value,
     frequencyAmount = frequencyAmount,
     id = id
 )
