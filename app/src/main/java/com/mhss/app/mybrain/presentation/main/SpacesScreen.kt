@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +41,7 @@ fun SpacesScreen(
             MyBrainAppBar(stringResource(R.string.spaces))
         }
     ) { paddingValues ->
+        val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
         LazyVerticalGrid(
             columns = GridCells.Adaptive(150.dp),
             modifier = Modifier.padding(paddingValues),
@@ -71,8 +74,10 @@ fun SpacesScreen(
                     },
                     contentModifier = Modifier.drawBehind {
                         drawAiGradientRadials(
-                            background = DarkGray,
-                            backgroundAlpha = 0.3f
+                            background = surfaceVariant
+                                .copy(alpha = 0.1f)
+                                .compositeOver(DarkGray),
+                            backgroundAlpha = 0.5f
                         )
                     }
                 )

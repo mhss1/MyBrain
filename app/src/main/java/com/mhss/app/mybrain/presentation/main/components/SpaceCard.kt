@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,10 +37,12 @@ fun SpaceCard(
             CornerSmoothing.Medium
         ),
         elevation = CardDefaults.elevatedCardElevation(
-            12.dp
+            8.dp
         ),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = backgroundColor
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                .copy(alpha = 0.1f)
+                .compositeOver(backgroundColor),
         )
     ) {
         Column(
@@ -61,7 +64,8 @@ fun SpaceCard(
                     .size(70.dp)
                     .align(Alignment.End),
                 painter = painterResource(id = image),
-                contentDescription = title)
+                contentDescription = title
+            )
 
         }
     }
