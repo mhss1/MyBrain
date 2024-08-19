@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
@@ -62,7 +63,10 @@ fun MonthlyOrYearlyTab(
         modifier = Modifier.clip(RoundedCornerShape(14.dp))
     ) {
         Tab(
-            text = { Text(stringResource(R.string.last_30_days)) },
+            text = { Text(
+                stringResource(R.string.last_30_days),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            ) },
             selected = selected == R.string.last_30_days,
             onClick = {
                 selected = R.string.last_30_days
@@ -70,7 +74,10 @@ fun MonthlyOrYearlyTab(
             },
         )
         Tab(
-            text = { Text(stringResource(R.string.last_year)) },
+            text = { Text(
+                stringResource(R.string.last_year),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            ) },
             selected = selected == R.string.last_year,
             onClick = {
                 selected = R.string.last_year
