@@ -43,11 +43,11 @@ class BackupRepositoryImpl(
                 val pickedDir = DocumentFile.fromTreeUri(context, directoryUri.toUri())
                 val destination = pickedDir!!.createFile("application/json", fileName)
 
-                val notes = database.noteDao().getAllNotes().withoutIds()
-                val noteFolders = database.noteDao().getAllNoteFolders().first().withoutIds()
-                val tasks = database.taskDao().getAllTasks().first().withoutIds()
-                val diary = database.diaryDao().getAllEntries().first().withoutIds()
-                val bookmarks = database.bookmarkDao().getAllBookmarks().first().withoutIds()
+                val notes = database.noteDao().getAllNotes()
+                val noteFolders = database.noteDao().getAllNoteFolders().first()
+                val tasks = database.taskDao().getAllTasks().first()
+                val diary = database.diaryDao().getAllEntries().first()
+                val bookmarks = database.bookmarkDao().getAllBookmarks().first()
 
                 val backupData = BackupData(notes, noteFolders, tasks, diary, bookmarks)
 
@@ -81,21 +81,29 @@ class BackupRepositoryImpl(
                 val backupData = context.contentResolver.openInputStream(fileUri.toUri())?.use {
                     json.decodeFromStream<BackupData>(it)
                 } ?: return@withContext false
-                val oldNoteFolderIds = backupData.noteFolders.map { it.id }
+
+                val oldNoteFolderIdsMap = HashMap<Int, Int>()
+                for ((i, folder) in backupData.noteFolders.withIndex()) {
+                    oldNoteFolderIdsMap[folder.id] = i
+                }
+
                 database.withTransaction {
-                    val newNoteFolderIds = database.noteDao().insertNoteFolders(backupData.noteFolders)
-                    if (newNoteFolderIds.size != oldNoteFolderIds.size) throw Exception("New folder count does not match old folder count.")
-                    val notes = backupData.notes.map { note ->
-                        if (note.folderId != null) {
-                            note.copy(
-                                folderId = newNoteFolderIds[oldNoteFolderIds.indexOf(note.folderId)].toInt()
-                            )
-                        } else note
+                    val newNoteFolderIds = database.noteDao().insertNoteFolders(backupData.noteFolders.withoutIds())
+                    val notes = if (newNoteFolderIds.size != oldNoteFolderIdsMap.keys.size) {
+                        println("BackupRepositoryImpl.importDatabase: New folder count (${newNoteFolderIds.size}) does not match old folder count. {${oldNoteFolderIdsMap.keys.size})")
+                        backupData.notes.withoutIds()
+                    } else backupData.notes.map { note ->
+                        note.copy(
+                            folderId = note.folderId?.let {
+                                newNoteFolderIds[oldNoteFolderIdsMap[it]!!].toInt()
+                            },
+                            id = 0
+                        )
                     }
                     database.noteDao().insertNotes(notes)
-                    database.taskDao().insertTasks(backupData.tasks)
-                    database.diaryDao().insertEntries(backupData.diary)
-                    database.bookmarkDao().insertBookmarks(backupData.bookmarks)
+                    database.taskDao().insertTasks(backupData.tasks.withoutIds())
+                    database.diaryDao().insertEntries(backupData.diary.withoutIds())
+                    database.bookmarkDao().insertBookmarks(backupData.bookmarks.withoutIds())
                 }
                 true
             } catch (e: Exception) {
