@@ -6,7 +6,7 @@
 
 # My Brain
   
-### Open-source, All-in-one productivity app for Tasks, Notes, Calendar, Diary and Bookmarks.
+### All-in-one productivity app and AI assistant with Tasks, Notes, Calendar, Diary and Bookmarks.
 
 <div align="left">
 <img src = "https://user-images.githubusercontent.com/58703865/169859205-54c0b8f3-7423-4c2a-9a9b-9e43861814c0.png" width ="160" />
@@ -26,29 +26,31 @@
      height="80">](https://github.com/mhss1/MyBrain/releases/latest)
       
 ## Features
-- Private with no data collection at all.
-- Create tasks with priority, sub-tasks, description and due date and reminders.
+- Local and Private with no data collection at all.
+- Create tasks with priority, sub-tasks, due date and reminders.
 - Create Notes that supports markdown which enables you to use Headers, lists, links etc..
 - Record your mood daily and view your mood summary with beautiful graphs.
 - Save bookmarks for later by using the share menu from any other app.
 - View your calendar events in a modern view and also with a beautiful home screen widget.
 - Dashboard screen to see your tasks, calendar events, and more to see your day at a glance.
+- AI assistant to help you with your daily workflow. You can chat and attach notes, tasks, or calendar events to your conversations—or even combine them all for comprehensive planning.
 
 ## Technologies
 - 100% Kotlin.
+- Multi-module project.
 - Made Using Jetpack Compose.
-- Widgets made with Compose Glance.
-- Following Clean Architecture approach.
-- Following MVVM Architectural Design Pattern.
-### Used in the app :
- - Room DB
- - Koin
- - Preferences DataStore
- - Kotlin coroutines
- - Kotlin Flows
- - Alarm Manager
- - Jetpack Compose
- - Compose Glance
+- Widgets made with Jetpack Glance.
+- Following Clean Architecture approach. 
+- MVI Design Pattern.
+- Room DB
+- Koin
+- Ktor
+- Preferences DataStore
+- Kotlin coroutines
+- Kotlin Flows
+- Alarm Manager
+- Content Provider
+- Biometric Authentication
 
 ## Translation
 Project localisation is managed via [Crowdin](https://crowdin.com/project/my-brain-app)
