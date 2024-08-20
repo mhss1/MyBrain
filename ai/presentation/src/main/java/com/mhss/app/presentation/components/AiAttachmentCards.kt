@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ContextualFlowRow
 import androidx.compose.foundation.layout.ContextualFlowRowOverflow
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,8 +72,9 @@ fun AiAttachmentsSection(
         LazyRow(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(4.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(top = 5.dp, end = 5.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            contentPadding = PaddingValues(start = 8.dp, bottom = 8.dp)
         ) {
             itemsIndexed(attachments) {i, it ->
                     when (it) {
@@ -147,7 +149,7 @@ fun NoteAttachmentCard(
     Box(
         modifier
             .widthIn(max = 200.dp)
-            .padding(8.dp)
+            .padding(top = 6.dp, end = 6.dp)
     ) {
         Card(
             shape = RoundedCornerShape(12.dp),
@@ -182,7 +184,7 @@ internal fun TaskAttachmentCard(
     Box(
         modifier
             .widthIn(max = 200.dp)
-            .padding(8.dp)
+            .padding(top = 6.dp, end = 6.dp)
     ) {
         Card(
             shape = RoundedCornerShape(12.dp),
@@ -275,7 +277,7 @@ fun CalendarEventsAttachmentCard(
     onRemoveClick: () -> Unit = {},
 ) {
     Box(
-        modifier.padding(8.dp)
+        modifier.padding(top = 6.dp, end = 6.dp)
     ) {
         Card(
             shape = RoundedCornerShape(12.dp),

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.mhss.app.domain.model.AiMessage
 import com.mhss.app.domain.model.AiMessageAttachment
 import com.mhss.app.domain.model.AiMessageType
+import com.mhss.app.domain.model.Note
 import com.mhss.app.ui.R
 import com.mhss.app.ui.gradientBrushColor
 import com.mhss.app.ui.theme.MyBrainTheme
@@ -60,8 +61,8 @@ fun LazyItemScope.MessageCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                end = if (isUser) 4.dp else 16.dp,
-                start = if (isUser) 26.dp else 4.dp,
+                end = if (isUser) 8.dp else 48.dp,
+                start = if (isUser) 48.dp else 8.dp,
                 bottom = 4.dp,
                 top = 8.dp
             )
@@ -123,7 +124,10 @@ fun LazyItemScope.MessageCard(
                 )
 
                 if (message.attachments.isNotEmpty()) {
-                    AiAttachmentsSection(attachments = message.attachments)
+                    AiAttachmentsSection(
+                        attachments = message.attachments,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
                 }
 
                 Text(
@@ -174,7 +178,17 @@ fun MessageCardPreview() {
                         demoText,
                         AiMessageType.USER,
                         1111111111,
-                        listOf(AiMessageAttachment.CalenderEvents)
+                        listOf(
+                            AiMessageAttachment.Note(
+                                Note(
+                                    "This is a test tile for the note",
+                                    "Description",
+                                    1111111111
+                                )
+                            ),
+                            AiMessageAttachment.CalenderEvents,
+
+                        )
                     )
                 ){}
             }

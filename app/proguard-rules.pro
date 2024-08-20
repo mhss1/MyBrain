@@ -19,7 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--dontobfuscate
 -if @kotlinx.serialization.Serializable class **
 -keep class <1> {
     *;

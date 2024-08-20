@@ -1,5 +1,8 @@
 package com.mhss.app.mybrain.presentation.main.components
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -21,13 +24,22 @@ fun NavigationGraph(
 ) {
     NavHost(modifier = modifier, navController = navController, startDestination = startUpScreen){
 
-        composable<Screen.DashboardScreen> {
+        composable<Screen.DashboardScreen>(
+            enterTransition = { fadeIn(tween(0)) },
+            exitTransition = { fadeOut(tween(0)) },
+        ) {
             DashboardScreen(mainNavController)
         }
-        composable<Screen.SpacesScreen> {
+        composable<Screen.SpacesScreen>(
+            enterTransition = { fadeIn(tween(0)) },
+            exitTransition = { fadeOut(tween(0)) },
+        ) {
             SpacesScreen(mainNavController)
         }
-        composable<Screen.SettingsScreen> {
+        composable<Screen.SettingsScreen>(
+            enterTransition = { fadeIn(tween(0)) },
+            exitTransition = { fadeOut(tween(0)) },
+        ) {
             SettingsScreen(mainNavController, appLockManager)
         }
     }
