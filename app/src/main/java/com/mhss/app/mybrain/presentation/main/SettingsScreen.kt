@@ -1,5 +1,8 @@
 package com.mhss.app.mybrain.presentation.main
 
+import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.*
@@ -59,14 +62,17 @@ fun SettingsScreen(
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().padding(paddingValues),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues),
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
                 val theme by viewModel
                     .getSettings(
-                        intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value
+                        intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY),
+                        ThemeSettings.AUTO.value
                     ).collectAsStateWithLifecycle(ThemeSettings.AUTO.value)
                 ThemeSettingsItem(theme) {
                     when (theme) {
@@ -220,7 +226,7 @@ fun SettingsScreen(
                 SettingsBasicLinkItem(
                     title = R.string.app_version,
                     icon = R.drawable.ic_code,
-                    subtitle = BuildConfig.VERSION_NAME,
+                    subtitle = context.getPackageInfo().versionName ?: BuildConfig.VERSION_NAME,
                     link = Constants.GITHUB_RELEASES_LINK
                 )
             }
@@ -459,5 +465,13 @@ fun AppFontSettingsItem(
                 }
             }
         }
+    }
+}
+
+fun Context.getPackageInfo(): PackageInfo {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
+    } else {
+        packageManager.getPackageInfo(packageName, 0)
     }
 }
