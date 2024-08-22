@@ -36,9 +36,7 @@ fun ImportExportScreen(
     }
     val kmpContext = LocalPlatformContext.current
     val pickFileLauncher = rememberFilePickerLauncher(
-        FilePickerFileType.Custom(
-            listOf("application/json")
-        ),
+        FilePickerFileType.Document,
         selectionMode = FilePickerSelectionMode.Single
     ) { files ->
         files.firstOrNull()?.getPath(kmpContext)?.let {
