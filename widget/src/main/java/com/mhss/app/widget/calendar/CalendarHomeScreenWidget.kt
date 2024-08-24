@@ -6,7 +6,6 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.*
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionRunCallback
-import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.layout.*
@@ -16,6 +15,8 @@ import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import com.mhss.app.ui.R
 import com.mhss.app.domain.model.CalendarEvent
+import com.mhss.app.widget.largeBackgroundBasedOnVersion
+import com.mhss.app.widget.largeInnerBackgroundBasedOnVersion
 
 @Composable
 fun CalendarHomeScreenWidget(
@@ -26,8 +27,7 @@ fun CalendarHomeScreenWidget(
     Box(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .background(GlanceTheme.colors.secondaryContainer)
-            .cornerRadius(25.dp)
+            .largeBackgroundBasedOnVersion()
     ) {
         Column(
             modifier = GlanceModifier
@@ -81,8 +81,7 @@ fun CalendarHomeScreenWidget(
                 LazyColumn(
                     modifier = GlanceModifier
                         .fillMaxSize()
-                        .background(GlanceTheme.colors.onSecondary)
-                        .cornerRadius(20.dp)
+                        .largeInnerBackgroundBasedOnVersion()
                         .padding(horizontal = 4.dp),
                     horizontalAlignment = Alignment.Start
                 ) {

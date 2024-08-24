@@ -6,7 +6,6 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.*
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionRunCallback
-import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.layout.*
@@ -16,6 +15,8 @@ import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import com.mhss.app.ui.R
 import com.mhss.app.domain.model.Task
+import com.mhss.app.widget.largeBackgroundBasedOnVersion
+import com.mhss.app.widget.largeInnerBackgroundBasedOnVersion
 
 @Composable
 fun TasksHomeScreenWidget(
@@ -25,8 +26,7 @@ fun TasksHomeScreenWidget(
     Box(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .background(GlanceTheme.colors.secondaryContainer)
-            .cornerRadius(25.dp)
+            .largeBackgroundBasedOnVersion()
     ) {
         Column(
             modifier = GlanceModifier.padding(8.dp)
@@ -70,8 +70,7 @@ fun TasksHomeScreenWidget(
                 modifier = GlanceModifier
                     .fillMaxSize()
                     .padding(horizontal = 6.dp)
-                    .background(GlanceTheme.colors.onSecondary)
-                    .cornerRadius(20.dp),
+                    .largeInnerBackgroundBasedOnVersion(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                     if (tasks.isEmpty()) {

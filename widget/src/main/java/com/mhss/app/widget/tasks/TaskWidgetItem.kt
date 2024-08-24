@@ -15,7 +15,6 @@ import androidx.glance.action.Action
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionRunCallback
-import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
@@ -29,6 +28,7 @@ import com.mhss.app.domain.model.Task
 import com.mhss.app.ui.color
 import com.mhss.app.util.date.formatDateDependingOnDay
 import com.mhss.app.util.date.isDueDateOverdue
+import com.mhss.app.widget.smallBackgroundBasedOnVersion
 
 @Composable
 fun TaskWidgetItem(
@@ -40,8 +40,7 @@ fun TaskWidgetItem(
     ) {
         Column(
             GlanceModifier
-                .background(GlanceTheme.colors.secondaryContainer)
-                .cornerRadius(16.dp)
+                .smallBackgroundBasedOnVersion()
                 .padding(10.dp)
                 .clickable(
                     actionRunCallback<TaskWidgetItemClickAction>(
@@ -162,7 +161,6 @@ fun TaskWidgetCheckBox(
     Box(
         modifier = GlanceModifier
             .size(25.dp)
-            .cornerRadius(99.dp)
             .background(
                 ImageProvider(
                     when (borderColor) {

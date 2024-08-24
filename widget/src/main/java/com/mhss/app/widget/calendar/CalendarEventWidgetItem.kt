@@ -22,6 +22,7 @@ import androidx.glance.text.TextStyle
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.ui.R
 import com.mhss.app.util.date.formatTime
+import com.mhss.app.widget.smallBackgroundBasedOnVersion
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
@@ -38,9 +39,7 @@ fun CalendarEventWidgetItem(
             .padding(vertical = 4.dp)
     ) {
         Box(
-            modifier = GlanceModifier
-                .background(GlanceTheme.colors.secondaryContainer)
-                .cornerRadius(16.dp)
+            modifier = GlanceModifier.smallBackgroundBasedOnVersion()
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
