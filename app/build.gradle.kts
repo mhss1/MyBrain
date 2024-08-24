@@ -1,22 +1,21 @@
-
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id ("com.google.dagger.hilt.android")
-    id ("com.google.devtools.ksp")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.kotlin.compose.compiler)
 }
 
 android {
     namespace = "com.mhss.app.mybrain"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mhss.app.mybrain"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 8
-        versionName = "1.0.7"
+        targetSdk = 35
+        versionCode = 9
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -51,15 +50,13 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.12"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
     androidResources {
+        @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
     }
     lint {
@@ -68,79 +65,67 @@ android {
 }
 
 dependencies {
-    val roomVersion = "2.6.1"
-    val coroutinesVersion = "1.8.0"
-    val lifecycleVersion = "2.7.0"
-    val workVersion = "2.9.0"
-    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
 
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material:material")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
-    implementation("androidx.activity:activity-compose:1.9.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation(project(":notes:presentation"))
+    implementation(project(":tasks:presentation"))
+    implementation(project(":bookmarks:presentation"))
+    implementation(project(":calendar:presentation"))
+    implementation(project(":diary:presentation"))
+    implementation(project(":settings:presentation"))
+    implementation(project(":ai:presentation"))
 
-    // Compose navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(project(":notes:data"))
+    implementation(project(":tasks:data"))
+    implementation(project(":bookmarks:data"))
+    implementation(project(":diary:data"))
+    implementation(project(":calendar:data"))
+    implementation(project(":ai:data"))
+    implementation(project(":settings:data"))
 
-    // Room
-    implementation("androidx.room:room-runtime:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation(project(":tasks:domain"))
+    implementation(project(":calendar:domain"))
+    implementation(project(":diary:domain"))
 
-    //Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.49")
-    ksp("com.google.dagger:hilt-android-compiler:2.49")
-    ksp("androidx.hilt:hilt-compiler:1.2.0")
-    implementation("androidx.hilt:hilt-work:1.2.0")
+    implementation(project(":core:notification"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:di"))
+    implementation(project(":core:alarm"))
+    implementation(project(":core:database"))
+    implementation(project(":widget"))
+    implementation(project(":core:preferences"))
+    implementation(project(":core:util"))
+    implementation(project(":core:network"))
 
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation(platform(libs.compose.bom))
+    androidTestImplementation(platform(libs.compose.bom))
 
-    // Preferences DataStore
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.bundles.compose)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.compose.test.junit4)
 
-    // Accompanist libraries
-    implementation("com.google.accompanist:accompanist-flowlayout:0.23.1")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
-    implementation("com.google.accompanist:accompanist-permissions:0.23.1")
+    implementation(libs.androidx.work.runtime.ktx)
 
-    // Compose MarkDown
-    implementation("com.github.jeziellago:compose-markdown:0.5.0")
+    implementation(libs.androidx.biometric)
 
-    // Compose Glance (Widgets)
-    implementation("androidx.glance:glance-appwidget:1.1.0-beta02")
-    implementation("androidx.glance:glance-material:1.1.0-beta02")
+    implementation(platform(libs.koin.bom))
+    implementation(libs.bundles.koin)
+    implementation(libs.koin.android)
+    implementation(libs.koin.android.workmanager)
+    ksp(libs.koin.ksp.compiler)
 
-    //Moshi
-    implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
+    implementation(libs.kotlinx.serialization.json)
 
-    // WorkManager
-    implementation("androidx.work:work-runtime-ktx:$workVersion")
+    implementation(libs.androidx.datastore.preferences)
 
-    // Compose live data
-    implementation("androidx.compose.runtime:runtime-livedata")
+    implementation(libs.ktor.okhttp)
+    implementation(libs.ktor.logging)
 
-    // DocumentFile
-    implementation("androidx.documentfile:documentfile:1.0.1")
-
-    // Biometric
-    implementation("androidx.biometric:biometric:1.2.0-alpha05")
-
-    // Kotlinx serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.squircle.shape)
 }
 
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-}

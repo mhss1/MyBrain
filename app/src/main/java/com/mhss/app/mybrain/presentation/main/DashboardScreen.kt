@@ -2,43 +2,31 @@ package com.mhss.app.mybrain.presentation.main
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.mhss.app.mybrain.R
-import com.mhss.app.mybrain.presentation.calendar.CalendarDashboardWidget
-import com.mhss.app.mybrain.presentation.diary.MoodCircularBar
-import com.mhss.app.mybrain.presentation.tasks.TasksDashboardWidget
-import com.mhss.app.mybrain.presentation.util.Screen
-import com.mhss.app.mybrain.util.Constants
+import com.mhss.app.ui.R
+import com.mhss.app.presentation.CalendarDashboardWidget
+import com.mhss.app.presentation.MoodCircularBar
+import com.mhss.app.presentation.TasksDashboardWidget
+import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.navigation.Screen
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DashboardScreen(
     navController: NavHostController,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = koinViewModel()
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.dashboard),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp
-            )
+            MyBrainAppBar(stringResource(R.string.dashboard))
         }
     ) {paddingValues ->
         LaunchedEffect(true) { viewModel.onDashboardEvent(DashboardEvent.InitAll) }
@@ -51,7 +39,7 @@ fun DashboardScreen(
                     events = viewModel.uiState.dashBoardEvents,
                     onClick = {
                         navController.navigate(
-                            Screen.CalendarScreen.route
+                            Screen.CalendarScreen
                         )
                     },
                     onPermission = {
@@ -59,20 +47,13 @@ fun DashboardScreen(
                     },
                     onAddEventClicked = {
                         navController.navigate(
-                            Screen.CalendarEventDetailsScreen.route.replace(
-                                "{${Constants.CALENDAR_EVENT_ARG}}",
-                                " "
-                            )
+                            Screen.CalendarEventDetailsScreen()
                         )
                     },
                     onEventClicked = {
-                        val eventJson = Json.encodeToString(it)
-                        // encoding the string to avoid crashes when the event contains fields that equals a URL
-                        val encodedJson = URLEncoder.encode(eventJson, StandardCharsets.UTF_8.toString())
                         navController.navigate(
-                            Screen.CalendarEventDetailsScreen.route.replace(
-                                "{${Constants.CALENDAR_EVENT_ARG}}",
-                                encodedJson
+                            Screen.CalendarEventDetailsScreen(
+                                Json.encodeToString(it)
                             )
                         )
                     }
@@ -89,26 +70,17 @@ fun DashboardScreen(
                     },
                     onTaskClick = {
                         navController.navigate(
-                            Screen.TaskDetailScreen.route
-                                .replace(
-                                    "{${Constants.TASK_ID_ARG}}",
-                                    it.id.toString()
-                                )
+                            Screen.TaskDetailScreen(it.id)
                         )
                     },
                     onAddClick = {
                         navController.navigate(
-                            Screen.TasksScreen
-                                .route
-                                .replace(
-                                    "{${Constants.ADD_TASK_ARG}}",
-                                    "true"
-                                )
+                            Screen.TasksScreen(addTask = true)
                         )
                     },
                     onClick = {
                         navController.navigate(
-                            Screen.TasksScreen.route
+                            Screen.TasksScreen()
                         )
                     }
                 )
@@ -121,7 +93,7 @@ fun DashboardScreen(
                         modifier = Modifier.weight(1f, fill = true),
                         onClick = {
                             navController.navigate(
-                                Screen.DiaryChartScreen.route
+                                Screen.DiaryChartScreen
                             )
                         }
                     )

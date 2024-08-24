@@ -1,33 +1,36 @@
 package com.mhss.app.mybrain.data.repository
 
-import com.mhss.app.mybrain.data.local.dao.AlarmDao
-import com.mhss.app.mybrain.domain.model.Alarm
-import com.mhss.app.mybrain.domain.repository.AlarmRepository
+import com.mhss.app.alarm.model.Alarm
+import com.mhss.app.alarm.repository.AlarmRepository
+import com.mhss.app.database.dao.AlarmDao
+import com.mhss.app.database.entity.toAlarm
+import com.mhss.app.database.entity.toAlarmEntity
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Single
 
-class AlarmRepositoryImpl @Inject constructor(
+@Single
+class AlarmRepositoryImpl(
     private val alarmDao: AlarmDao,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    @Named("ioDispatcher")private val ioDispatcher: CoroutineDispatcher
 ) : AlarmRepository {
 
     override suspend fun getAlarms(): List<Alarm> {
         return withContext(ioDispatcher) {
-            alarmDao.getAll()
+            alarmDao.getAll().map { it.toAlarm() }
         }
     }
 
     override suspend fun insertAlarm(alarm: Alarm) {
         withContext(ioDispatcher) {
-            alarmDao.insert(alarm)
+            alarmDao.insert(alarm.toAlarmEntity())
         }
     }
 
     override suspend fun deleteAlarm(alarm: Alarm) {
         withContext(ioDispatcher) {
-            alarmDao.delete(alarm)
+            alarmDao.delete(alarm.toAlarmEntity())
         }
     }
 

@@ -1,0 +1,11 @@
+- New "Assistant" Space: Your AI companion to help you with your daily workflow. Chat and attach notes, tasks, or calendar events to your conversations, or combine them all for comprehensive planning.
+- Three new options available now for every note:
+	- Summarize: Get concise summaries of your notes.
+	- Auto-Format: Clean up and structure your notes.
+	- Correct Spelling: Ensure your notes are error-free with automatic spelling correction.
+- New Integrations Screen: Starting with AI today, and more connections coming in the future.
+- Smooth, intuitive screen transitions.
+- Added "Material You" support.
+- Added Light theme for widgets.
+- Performance improvements.
+- Bug fixes.
