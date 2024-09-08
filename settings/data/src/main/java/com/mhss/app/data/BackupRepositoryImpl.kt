@@ -34,6 +34,10 @@ class BackupRepositoryImpl(
     @OptIn(ExperimentalSerializationApi::class)
     override suspend fun exportDatabase(
         directoryUri: String,
+        exportNotes: Boolean,
+        exportTasks: Boolean,
+        exportDiary: Boolean,
+        exportBookmarks: Boolean,
         encrypted: Boolean, // To be added in a future version
         password: String // To be added in a future version
     ): Boolean {
@@ -43,11 +47,11 @@ class BackupRepositoryImpl(
                 val pickedDir = DocumentFile.fromTreeUri(context, directoryUri.toUri())
                 val destination = pickedDir!!.createFile("application/json", fileName)
 
-                val notes = database.noteDao().getAllNotes()
-                val noteFolders = database.noteDao().getAllNoteFolders().first()
-                val tasks = database.taskDao().getAllTasks().first()
-                val diary = database.diaryDao().getAllEntries().first()
-                val bookmarks = database.bookmarkDao().getAllBookmarks().first()
+                val notes = if (exportNotes) database.noteDao().getAllNotes() else emptyList()
+                val noteFolders = if (exportNotes) database.noteDao().getAllNoteFolders().first() else emptyList()
+                val tasks = if (exportTasks) database.taskDao().getAllTasks().first() else emptyList()
+                val diary = if (exportDiary) database.diaryDao().getAllEntries().first() else emptyList()
+                val bookmarks = if (exportBookmarks) database.bookmarkDao().getAllBookmarks().first() else emptyList()
 
                 val backupData = BackupData(notes, noteFolders, tasks, diary, bookmarks)
 
@@ -115,10 +119,10 @@ class BackupRepositoryImpl(
 
     @Serializable
     private data class BackupData(
-        @SerialName("notes") val notes: List<NoteEntity>,
-        @SerialName("noteFolders") val noteFolders: List<NoteFolderEntity>,
-        @SerialName("tasks") val tasks: List<TaskEntity>,
-        @SerialName("diary") val diary: List<DiaryEntryEntity>,
-        @SerialName("bookmarks") val bookmarks: List<BookmarkEntity>
+        @SerialName("notes") val notes: List<NoteEntity> = emptyList(),
+        @SerialName("noteFolders") val noteFolders: List<NoteFolderEntity> = emptyList(),
+        @SerialName("tasks") val tasks: List<TaskEntity> = emptyList(),
+        @SerialName("diary") val diary: List<DiaryEntryEntity> = emptyList(),
+        @SerialName("bookmarks") val bookmarks: List<BookmarkEntity> = emptyList()
     )
 }

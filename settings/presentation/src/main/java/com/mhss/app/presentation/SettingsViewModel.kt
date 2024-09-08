@@ -44,9 +44,13 @@ class SettingsViewModel(
             )
 
             is SettingsEvent.ExportData -> exportDatabase(
-                event.directoryUri,
-                event.encrypted,
-                event.password
+                uri = event.directoryUri,
+                exportNotes = event.exportNotes,
+                exportTasks = event.exportTasks,
+                exportDiary = event.exportDiary,
+                exportBookmarks = event.exportBookmarks,
+                encrypted = event.encrypted,
+                password = event.password
             )
         }
     }
@@ -69,12 +73,24 @@ class SettingsViewModel(
 
     private fun exportDatabase(
         uri: String,
+        exportNotes: Boolean,
+        exportTasks: Boolean ,
+        exportDiary: Boolean,
+        exportBookmarks: Boolean,
         encrypted: Boolean,
         password: String
     ) {
         viewModelScope.launch {
             _backupResult.update { BackupResult.Loading }
-            val result = exportData(uri, encrypted, password)
+            val result = exportData(
+                directoryUri = uri,
+                exportNotes = exportNotes,
+                exportTasks = exportTasks,
+                exportDiary = exportDiary,
+                exportBookmarks = exportBookmarks,
+                encrypted = encrypted,
+                password = password
+            )
             if (result) {
                 _backupResult.update { BackupResult.ExportSuccess }
             } else {
