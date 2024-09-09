@@ -4,12 +4,12 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ContextualFlowRow
 import androidx.compose.foundation.layout.ContextualFlowRowOverflow
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,8 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -69,36 +68,34 @@ fun AiAttachmentsSection(
     editable: Boolean = false,
 ) {
     if (editable) {
-        LazyRow(
+        Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 5.dp, end = 5.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            contentPadding = PaddingValues(start = 8.dp, bottom = 8.dp)
+                .padding(top = 5.dp, end = 5.dp)
+                .horizontalScroll(rememberScrollState()),
         ) {
-            itemsIndexed(attachments) {i, it ->
-                    when (it) {
-                        is AiMessageAttachment.Note -> NoteAttachmentCard(
-                            note = it.note,
-                            modifier = Modifier.animateItem(),
-                            showRemoveButton = true
-                        ) {
-                            onRemove(i)
-                        }
-                        is AiMessageAttachment.Task -> TaskAttachmentCard(
-                            task = it.task,
-                            modifier = Modifier.animateItem(),
-                            showRemoveButton = true
-                        ) {
-                            onRemove(i)
-                        }
-                        is AiMessageAttachment.CalenderEvents -> CalendarEventsAttachmentCard(
-                            showRemoveButton = true,
-                            modifier = Modifier.animateItem()
-                        ) {
-                            onRemove(i)
-                        }
+            attachments.forEachIndexed { i, it ->
+                when (it) {
+                    is AiMessageAttachment.Note -> NoteAttachmentCard(
+                        note = it.note,
+                        showRemoveButton = true
+                    ) {
+                        onRemove(i)
                     }
+
+                    is AiMessageAttachment.Task -> TaskAttachmentCard(
+                        task = it.task,
+                        showRemoveButton = true
+                    ) {
+                        onRemove(i)
+                    }
+
+                    is AiMessageAttachment.CalenderEvents -> CalendarEventsAttachmentCard(
+                        showRemoveButton = true,
+                    ) {
+                        onRemove(i)
+                    }
+                }
             }
         }
     } else {
@@ -126,10 +123,7 @@ fun AiAttachmentsSection(
                 collapseIndicator = {}
             )
         ) { i ->
-            val attachment = remember {
-                attachments[i]
-            }
-            when (attachment) {
+            when (val attachment = attachments[i]) {
                 is AiMessageAttachment.Note -> NoteAttachmentCard(attachment.note)
                 is AiMessageAttachment.Task -> TaskAttachmentCard(attachment.task)
                 is AiMessageAttachment.CalenderEvents -> CalendarEventsAttachmentCard()

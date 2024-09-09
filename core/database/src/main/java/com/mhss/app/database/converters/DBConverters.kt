@@ -14,7 +14,10 @@ class DBConverters {
     }
     @TypeConverter
     fun toSubTasksList(value: String): List<SubTask> {
-        return Json.decodeFromString<List<SubTask>>(value)
+        val json = Json {
+            ignoreUnknownKeys = true
+        }
+        return json.decodeFromString<List<SubTask>>(value)
     }
 
     @TypeConverter

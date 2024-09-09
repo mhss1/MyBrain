@@ -28,8 +28,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -62,7 +62,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssistantScreen(
-    viewModel: AssistantViewModel = koinViewModel()
+    viewModel: AssistantViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val uiState = viewModel.uiState
@@ -70,9 +70,7 @@ fun AssistantScreen(
     val loading = uiState.loading
     val error = uiState.error
     var text by rememberSaveable { mutableStateOf("") }
-    val attachments = remember {
-        mutableStateListOf<AiMessageAttachment>()
-    }
+    val attachments = viewModel.attachments
     var attachmentsMenuExpanded by remember {
         mutableStateOf(false)
     }
@@ -88,7 +86,7 @@ fun AssistantScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     Scaffold(
         topBar = {
-           MyBrainAppBar(stringResource(id = R.string.assistant))
+            MyBrainAppBar(stringResource(id = R.string.assistant))
         },
         bottomBar = {
             AiChatBar(
@@ -97,7 +95,11 @@ fun AssistantScreen(
                 attachments = attachments,
                 onTextChange = { text = it },
                 onAttachClick = { attachmentsMenuExpanded = true },
-                onRemoveAttachment = { attachments.removeAt(it) },
+                onRemoveAttachment = {
+                    viewModel.onEvent(
+                        AssistantEvent.RemoveAttachment(it)
+                    )
+                },
                 loading = loading,
                 onSend = {
                     viewModel.onEvent(
@@ -111,28 +113,28 @@ fun AssistantScreen(
                         )
                     )
                     text = ""
-                    attachments.clear()
                     keyboardController?.hide()
                 }
             )
+            val excludedItems by remember {
+                derivedStateOf {
+                    if (attachments.contains(AiMessageAttachment.CalenderEvents)) {
+                        listOf(AttachmentMenuItem.CalendarEvents)
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
             AttachmentDropDownMenu(
                 modifier = Modifier.fillMaxWidth(),
                 expanded = attachmentsMenuExpanded,
                 onDismiss = { attachmentsMenuExpanded = false },
-                excludedItems = attachments.map {
-                    when (it) {
-                        is AiMessageAttachment.Note -> AttachmentMenuItem.Note
-                        is AiMessageAttachment.Task -> AttachmentMenuItem.Task
-                        is AiMessageAttachment.CalenderEvents -> AttachmentMenuItem.CalendarEvents
-                    }
-                },
+                excludedItems = excludedItems,
                 onItemClick = {
                     when (it) {
                         AttachmentMenuItem.Note -> openNoteSheet = true
                         AttachmentMenuItem.Task -> openTaskSheet = true
-                        AttachmentMenuItem.CalendarEvents -> attachments.add(
-                            AiMessageAttachment.CalenderEvents
-                        )
+                        AttachmentMenuItem.CalendarEvents -> viewModel.onEvent(AssistantEvent.AddAttachmentEvents)
                     }
                     attachmentsMenuExpanded = false
                 }
@@ -146,7 +148,7 @@ fun AssistantScreen(
             view = uiState.noteView,
             onQueryChange = { viewModel.onEvent(AssistantEvent.SearchNotes(it)) }
         ) {
-            attachments.add(AiMessageAttachment.Note(it))
+            viewModel.onEvent(AssistantEvent.AddAttachmentNote(it.id))
             openNoteSheet = false
         }
         if (openTaskSheet) AttachTaskSheet(
@@ -155,7 +157,7 @@ fun AssistantScreen(
             tasks = uiState.searchTasks,
             onQueryChange = { viewModel.onEvent(AssistantEvent.SearchTasks(it)) }
         ) {
-            attachments.add(AiMessageAttachment.Task(it))
+            viewModel.onEvent(AssistantEvent.AddAttachmentTask(it.id))
             openTaskSheet = false
         }
         Column(

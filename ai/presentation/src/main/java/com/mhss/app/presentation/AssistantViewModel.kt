@@ -1,6 +1,7 @@
 package com.mhss.app.presentation
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,8 @@ import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.model.Note
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.use_case.GetAllEventsUseCase
+import com.mhss.app.domain.use_case.GetNoteUseCase
+import com.mhss.app.domain.use_case.GetTaskByIdUseCase
 import com.mhss.app.domain.use_case.SearchNotesUseCase
 import com.mhss.app.domain.use_case.SearchTasksUseCase
 import com.mhss.app.domain.use_case.SendAiMessageUseCase
@@ -49,10 +52,13 @@ class AssistantViewModel(
     private val getPreference: GetPreferenceUseCase,
     private val searchNotes: SearchNotesUseCase,
     private val searchTasks: SearchTasksUseCase,
-    private val getCalendarEvents: GetAllEventsUseCase
+    private val getCalendarEvents: GetAllEventsUseCase,
+    private val getNoteById: GetNoteUseCase,
+    private val getTaskById: GetTaskByIdUseCase,
 ) : ViewModel() {
 
     private val messages = ArrayList<AiMessage>()
+    val attachments = mutableStateListOf<AiMessageAttachment>()
 
     // LinkedList to enable inserting at the beginning of the list efficiently
     // LazyColumn needs the list in reverse order
@@ -132,6 +138,7 @@ class AssistantViewModel(
                 )
                 messages.add(message)
                 uiMessages.addFirst(message)
+                attachments.clear()
 
                 uiState = uiState.copy(
                     messages = uiMessages,
@@ -186,6 +193,25 @@ class AssistantViewModel(
                     }
                 }
             }
+
+            AssistantEvent.AddAttachmentEvents -> {
+                attachments.add(AiMessageAttachment.CalenderEvents)
+            }
+
+            is AssistantEvent.AddAttachmentNote -> viewModelScope.launch {
+                val note = getNoteById(event.id)
+                attachments.add(AiMessageAttachment.Note(note.copy(
+                    title = note.title.ifBlank { "Untitled Note" }
+                )))
+            }
+
+            is AssistantEvent.AddAttachmentTask -> viewModelScope.launch {
+                attachments.add(AiMessageAttachment.Task(getTaskById(event.id)))
+            }
+
+            is AssistantEvent.RemoveAttachment -> {
+                attachments.removeAt(event.index)
+            }
         }
     }
 
@@ -197,12 +223,12 @@ class AssistantViewModel(
         for (attachment in attachments) {
             when (attachment) {
                 is AiMessageAttachment.Note -> {
-                    builder.appendLine("Attached Notes:")
+                    builder.appendLine("Attached Note:")
                     builder.appendLine(Json.encodeToString(attachment.note))
                 }
 
                 is AiMessageAttachment.Task -> {
-                    builder.appendLine("Attached Tasks:")
+                    builder.appendLine("Attached Task:")
                     builder.appendLine(Json.encodeToString(attachment.task))
                 }
 

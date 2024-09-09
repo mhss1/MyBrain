@@ -1,6 +1,7 @@
 package com.mhss.app.presentation
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,7 +27,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ImportExportScreen(
-    viewModel: SettingsViewModel = koinViewModel()
+    viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val encrypted by remember {
         mutableStateOf(false)
@@ -34,6 +35,19 @@ fun ImportExportScreen(
     val password by remember {
         mutableStateOf("")
     }
+    var exportNotes by remember {
+        mutableStateOf(true)
+    }
+    var exportTasks by remember {
+        mutableStateOf(true)
+    }
+    var exportDiary by remember {
+        mutableStateOf(true)
+    }
+    var exportBookmarks by remember {
+        mutableStateOf(true)
+    }
+
     val kmpContext = LocalPlatformContext.current
     val pickFileLauncher = rememberFilePickerLauncher(
         FilePickerFileType.Document,
@@ -48,7 +62,17 @@ fun ImportExportScreen(
         selectionMode = FilePickerSelectionMode.Single
     ) { files ->
         files.firstOrNull()?.getPath(kmpContext)?.let {
-            viewModel.onEvent(SettingsEvent.ExportData(it, encrypted, password))
+            viewModel.onEvent(
+                SettingsEvent.ExportData(
+                    directoryUri = it,
+                    exportNotes = exportNotes,
+                    exportTasks = exportTasks,
+                    exportDiary = exportDiary,
+                    exportBookmarks = exportBookmarks,
+                    encrypted = encrypted,
+                    password = password
+                )
+            )
         }
     }
     val backupResult by viewModel.backupResult.collectAsState()
@@ -108,6 +132,26 @@ fun ImportExportScreen(
                     color = Color.White
                 )
             }
+            CheckBoxWithText(
+                text = stringResource(R.string.notes),
+                checked = exportNotes,
+                onCheckedChange = { exportNotes = it },
+            )
+            CheckBoxWithText(
+                text = stringResource(R.string.tasks),
+                checked = exportTasks,
+                onCheckedChange = { exportTasks = it },
+            )
+            CheckBoxWithText(
+                text = stringResource(R.string.diary),
+                checked = exportDiary,
+                onCheckedChange = { exportDiary = it },
+            )
+            CheckBoxWithText(
+                text = stringResource(R.string.bookmarks),
+                checked = exportBookmarks,
+                onCheckedChange = { exportBookmarks = it },
+            )
 
             if (backupResult == SettingsViewModel.BackupResult.ExportFailed) {
                 Text(
@@ -181,5 +225,27 @@ fun ImportExportScreen(
             }
 
         }
+    }
+}
+
+@Composable
+fun CheckBoxWithText(
+    text: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = onCheckedChange
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+        )
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -18,14 +19,17 @@ fun AttachmentDropDownMenu(
     excludedItems: List<AttachmentMenuItem>,
     onDismiss: () -> Unit,
     onItemClick: (AttachmentMenuItem) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
+    val items = remember(excludedItems) {
+        AttachmentMenuItem.entries.filterNot { it in excludedItems }
+    }
     DropdownMenu(
         modifier = modifier,
         expanded = expanded,
         onDismissRequest = onDismiss
     ) {
-        AttachmentMenuItem.entries.filter { it !in excludedItems }.forEach {
+        items.forEach {
             DropdownMenuItem(
                 text = { Text(stringResource(it.titleRes)) },
                 leadingIcon = {
