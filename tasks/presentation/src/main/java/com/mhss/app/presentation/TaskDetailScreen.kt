@@ -338,14 +338,14 @@ fun TaskDetailsContent(
         var showDateDialog by remember {
             mutableStateOf(false)
         }
+        if (showDateDialog) DateTimeDialog(
+            onDismissRequest = { showDateDialog = false },
+            initialDate = dueDate
+        ) {
+            onDueDateChange(it)
+            showDateDialog = false
+        }
         AnimatedVisibility(dueDateExists) {
-            if (showDateDialog) DateTimeDialog(
-                onDismissRequest = { showDateDialog = false },
-                initialDate = dueDate
-            ) {
-                onDueDateChange(it)
-                showDateDialog = false
-            }
             Column {
                 Row(
                     Modifier

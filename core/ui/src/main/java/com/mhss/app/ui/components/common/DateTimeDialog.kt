@@ -1,8 +1,8 @@
 package com.mhss.app.ui.components.common
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
@@ -17,7 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimeInput
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.ui.Alignment
@@ -52,19 +52,15 @@ fun DateTimeDialog(
             usePlatformDefaultWidth = false
         )
     ) {
-        Surface(
-            shape = RoundedCornerShape(12.dp)
-        ) {
+        Surface(shape = RoundedCornerShape(12.dp)) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
             ) {
-                AnimatedContent(
-                    showTime, label = "",
-                    modifier = Modifier.fillMaxWidth()
-                ) { isTime ->
+                AnimatedContent(targetState = showTime, label = "") { isTime ->
                     if (isTime) {
-                        TimePicker(
+                        TimeInput(
                             timePickerState
                         )
                     } else {
@@ -78,7 +74,10 @@ fun DateTimeDialog(
                     onClick = {
                         if (showTime) {
                             onDatePicked(
-                                datePickerState.selectedDateMillis?.at(timePickerState.hour, timePickerState.minute) ?: 0L
+                                datePickerState.selectedDateMillis?.at(
+                                    timePickerState.hour,
+                                    timePickerState.minute
+                                ) ?: initialDate
                             )
                         } else showTime = true
                     },
