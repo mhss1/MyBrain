@@ -43,7 +43,7 @@ fun SpacesScreen(
     ) { paddingValues ->
         val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(150.dp),
+            columns = GridCells.Adaptive(140.dp),
             modifier = Modifier.padding(paddingValues),
             contentPadding = PaddingValues(
                 top = 10.dp,
