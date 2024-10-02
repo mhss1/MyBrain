@@ -34,7 +34,7 @@ android {
         debug {
             isMinifyEnabled = false
             applicationIdSuffix = ".debug"
-            isDebuggable = false
+            isDebuggable = true
             resValue("string", "app_name", "MyBrain Debug")
         }
     }
