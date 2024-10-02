@@ -11,15 +11,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mhss.app.ui.R
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.util.permissions.Permission
-import com.mhss.app.ui.theme.LightGray
 import com.mhss.app.util.permissions.rememberPermissionState
 
 @Composable
@@ -43,8 +41,6 @@ fun CalendarDashboardWidget(
         val readCalendarPermissionState = rememberPermissionState(
             Permission.READ_CALENDAR
         )
-        // Workaround replacement to Material2 `isLight`
-        val isDark = MaterialTheme.colorScheme.background.luminance() <= 0.5
         Column(
             modifier = modifier
                 .clickable { onClick() }
@@ -73,7 +69,11 @@ fun CalendarDashboardWidget(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(20.dp))
-                    .background(if (isDark) Color.DarkGray else LightGray),
+                    .background(
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(0.1f).compositeOver(
+                            MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    ),
                 contentPadding = PaddingValues(vertical = 10.dp, horizontal = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
