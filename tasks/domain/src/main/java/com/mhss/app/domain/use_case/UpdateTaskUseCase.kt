@@ -15,18 +15,17 @@ class UpdateTaskUseCase(
     private val deleteAlarm: DeleteAlarmUseCase,
     private val widgetUpdater: WidgetUpdater
 ) {
-    suspend operator fun invoke(task: Task, oldTask: Task): Boolean {
+    suspend operator fun invoke(task: Task, updateDueDate: Boolean): Boolean {
         tasksRepository.updateTask(task)
         widgetUpdater.updateAll(WidgetUpdater.WidgetType.Tasks)
-        return if (task.dueDate != oldTask.dueDate) {
+        return if (updateDueDate) {
             if (task.dueDate != 0L) {
-                val scheduleSuccess = addAlarm(
+                addAlarm(
                     Alarm(
                         task.id,
                         task.dueDate
                     )
                 )
-                scheduleSuccess
             } else {
                 deleteAlarm(task.id)
                 true

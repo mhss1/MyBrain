@@ -24,7 +24,7 @@ class AddTaskUseCase(
                     task.dueDate,
                 )
             )
-            if (!success) updateTask(task.copy(id = id, dueDate = 0L), task)
+            if (!success) updateTask(task.copy(id = id, dueDate = 0L), false)
             success
         } else true
     }

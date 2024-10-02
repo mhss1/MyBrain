@@ -1,6 +1,5 @@
 package com.mhss.app.presentation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,13 +25,12 @@ import com.mhss.app.domain.model.Task
 import com.mhss.app.ui.R
 import com.mhss.app.ui.theme.LightGray
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TasksDashboardWidget(
     modifier: Modifier = Modifier,
     tasks: List<Task>,
     onTaskClick: (Task) -> Unit = {},
-    onCheck: (Task) -> Unit = {},
+    onCheck: (Task, Boolean) -> Unit = {_,_ ->},
     onAddClick: () -> Unit = {},
     onClick: () -> Unit = {}
 ) {
@@ -92,7 +90,7 @@ fun TasksDashboardWidget(
                     TaskDashboardItem(
                         task = it,
                         onClick = { onTaskClick(it) },
-                        onComplete = { onCheck(it.copy(isCompleted = !it.isCompleted)) },
+                        onComplete = { onCheck(it, !it.isCompleted) },
                         modifier = Modifier.animateItem()
                     )
                 }

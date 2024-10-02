@@ -56,7 +56,7 @@ class AlarmReceiver : BroadcastReceiver(), KoinComponent {
                     val newTask = task.copy(
                         dueDate = calendar.timeInMillis,
                     )
-                    updateTaskUseCase(newTask, task)
+                    updateTaskUseCase(newTask, true)
                     addAlarmUseCase(Alarm(newTask.id, newTask.dueDate))
                 }
             }

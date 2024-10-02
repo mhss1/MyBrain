@@ -65,8 +65,8 @@ fun DashboardScreen(
                         .fillMaxWidth()
                         .aspectRatio(1.5f),
                     tasks = viewModel.uiState.dashBoardTasks,
-                    onCheck = {
-                        viewModel.onDashboardEvent(DashboardEvent.UpdateTask(it))
+                    onCheck = { task, completed ->
+                        viewModel.onDashboardEvent(DashboardEvent.CompleteTask(task, completed))
                     },
                     onTaskClick = {
                         navController.navigate(
