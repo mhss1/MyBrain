@@ -11,7 +11,7 @@ interface BookmarkRepository {
 
     suspend fun searchBookmarks(query: String): List<Bookmark>
 
-    suspend fun addBookmark(bookmark: Bookmark)
+    suspend fun addBookmark(bookmark: Bookmark): Long
 
     suspend fun deleteBookmark(bookmark: Bookmark)
 

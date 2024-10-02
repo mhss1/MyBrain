@@ -123,12 +123,12 @@ class NoteDetailsViewModel(
             is NoteDetailsEvent.ScreenOnStop -> viewModelScope.launch {
                 if (noteUiState.note == null) {
                     if (event.currentNote.title.isNotBlank() || event.currentNote.content.isNotBlank()) {
-                        addNote(
-                            event.currentNote.copy(
-                                createdDate = now(),
-                                updatedDate = now()
-                            )
+                        val note = event.currentNote.copy(
+                            createdDate = now(),
+                            updatedDate = now()
                         )
+                        val id = addNote(note)
+                        noteUiState = noteUiState.copy(note = note.copy(id = id.toInt()))
                     }
                 } else if (noteChanged(noteUiState.note!!, event.currentNote)) {
                     val newNote = noteUiState.note!!.copy(

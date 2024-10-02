@@ -17,7 +17,7 @@ interface BookmarkDao {
     suspend fun getBookmark(query: String): List<BookmarkEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBookmark(bookmark: BookmarkEntity)
+    suspend fun insertBookmark(bookmark: BookmarkEntity): Long
 
     @Update
     suspend fun updateBookmark(bookmark: BookmarkEntity)
