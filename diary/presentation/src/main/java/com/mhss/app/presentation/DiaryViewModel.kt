@@ -29,12 +29,8 @@ import org.koin.core.annotation.Named
 
 @KoinViewModel
 class DiaryViewModel(
-    private val addEntry: AddDiaryEntryUseCase,
-    private val updateEntry: UpdateDiaryEntryUseCase,
-    private val deleteEntry: DeleteDiaryEntryUseCase,
     private val getAlEntries: GetAllEntriesUseCase,
     private val searchEntries: SearchEntriesUseCase,
-    private val getEntry: GetDiaryEntryUseCase,
     private val getPreference: GetPreferenceUseCase,
     private val savePreference: SavePreferenceUseCase,
     private val getEntriesForChart: GetDiaryForChartUseCase,
@@ -59,35 +55,10 @@ class DiaryViewModel(
 
     fun onEvent(event: DiaryEvent) {
         when (event) {
-            is DiaryEvent.AddEntry -> viewModelScope.launch {
-                addEntry(event.entry)
-                uiState = uiState.copy(
-                    navigateUp = true
-                )
-            }
-            is DiaryEvent.DeleteEntry -> viewModelScope.launch {
-                deleteEntry(event.entry)
-                uiState = uiState.copy(
-                    navigateUp = true
-                )
-            }
-            is DiaryEvent.GetEntry -> viewModelScope.launch {
-                val entry = getEntry(event.entryId)
-                uiState = uiState.copy(
-                    entry = entry,
-                    readingMode = true
-                )
-            }
             is DiaryEvent.SearchEntries -> viewModelScope.launch {
                 val entries = searchEntries(event.query)
                 uiState = uiState.copy(
                     searchEntries = entries
-                )
-            }
-            is DiaryEvent.UpdateEntry -> viewModelScope.launch {
-                updateEntry(event.entry)
-                uiState = uiState.copy(
-                    navigateUp = true
                 )
             }
             is DiaryEvent.UpdateOrder -> viewModelScope.launch {
@@ -96,26 +67,20 @@ class DiaryViewModel(
                     event.order.toInt()
                 )
             }
-            DiaryEvent.ErrorDisplayed -> uiState = uiState.copy(error = null)
             is DiaryEvent.ChangeChartEntriesRange -> viewModelScope.launch {
                 uiState = uiState.copy(chartEntries = getEntriesForChart {
                     if (event.monthly) it.createdDate.inTheLast30Days()
                     else it.createdDate.inTheLastYear()
                 })
             }
-            is DiaryEvent.ToggleReadingMode -> uiState = uiState.copy(readingMode = !uiState.readingMode)
         }
     }
 
     data class UiState(
         val entries: Map<String, List<DiaryEntry>> = emptyMap(),
         val entriesOrder: Order = Order.DateModified(OrderType.ASC),
-        val entry: DiaryEntry? = null,
-        val error: String? = null,
         val searchEntries: List<DiaryEntry> = emptyList(),
-        val navigateUp: Boolean = false,
-        val chartEntries : List<DiaryEntry> = emptyList(),
-        val readingMode: Boolean = false
+        val chartEntries : List<DiaryEntry> = emptyList()
     )
 
     private fun getEntries(order: Order) {
