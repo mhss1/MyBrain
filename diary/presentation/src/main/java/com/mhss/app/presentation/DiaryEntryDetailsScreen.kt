@@ -161,6 +161,7 @@ fun DiaryEntryDetailsScreen(
                         .fillMaxWidth()
                         .weight(1f)
                         .padding(bottom = 8.dp)
+                        .imePadding()
                 )
             }
         }
