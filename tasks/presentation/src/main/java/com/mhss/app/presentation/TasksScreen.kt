@@ -2,7 +2,6 @@
 
 package com.mhss.app.presentation
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -54,12 +53,6 @@ fun TasksScreen(
     }
     val alarmPermissionState = rememberPermissionState(Permission.SCHEDULE_ALARMS)
     val scope = rememberCoroutineScope()
-    BackHandler {
-        if (openSheet)
-            openSheet = false
-        else
-            navController.navigateUp()
-    }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
@@ -85,7 +78,10 @@ fun TasksScreen(
     ) { paddingValues ->
         if (openSheet) ModalBottomSheet(
             sheetState = sheetState,
-            onDismissRequest = { openSheet = false }
+            onDismissRequest = { openSheet = false },
+            properties = ModalBottomSheetProperties(
+                shouldDismissOnBackPress = true
+            )
         ) {
             AddTaskBottomSheetContent(
                 onAddTask = {
