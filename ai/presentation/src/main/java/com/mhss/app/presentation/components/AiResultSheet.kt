@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -104,7 +105,7 @@ fun AiResultSheet(
 
     val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
     Box(
-        Modifier.offset {
+        Modifier.wrapContentHeight().offset {
             if (loading) {
                 IntOffset(0, offset)
             } else IntOffset.Zero
