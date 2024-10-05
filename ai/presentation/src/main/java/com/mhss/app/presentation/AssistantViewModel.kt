@@ -44,7 +44,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.android.annotation.KoinViewModel
-import java.util.LinkedList
 
 @KoinViewModel
 class AssistantViewModel(
@@ -57,12 +56,11 @@ class AssistantViewModel(
     private val getTaskById: GetTaskByIdUseCase,
 ) : ViewModel() {
 
-    private val messages = ArrayList<AiMessage>()
+
+    private val _messages = mutableStateListOf<AiMessage>()
+    val messages: List<AiMessage> = _messages
     val attachments = mutableStateListOf<AiMessageAttachment>()
 
-    // LinkedList to enable inserting at the beginning of the list efficiently
-    // LazyColumn needs the list in reverse order
-    private val uiMessages = LinkedList<AiMessage>()
     var uiState by mutableStateOf(UiState())
         private set
 
@@ -136,17 +134,15 @@ class AssistantViewModel(
                     attachments = event.message.attachments,
                     attachmentsText = getAttachmentText(event.message.attachments)
                 )
-                messages.add(message)
-                uiMessages.addFirst(message)
+                _messages.add(0, message)
                 attachments.clear()
 
                 uiState = uiState.copy(
-                    messages = uiMessages,
                     loading = true,
                     error = null
                 )
                 val result = sendAiMessage(
-                    messages,
+                    _messages.reversed(),
                     aiKey,
                     aiModel,
                     aiProvider.value,
@@ -154,19 +150,16 @@ class AssistantViewModel(
                 )
                 when (result) {
                     is NetworkResult.Success -> {
-                        messages.add(result.data)
-                        uiMessages.addFirst(result.data)
+                        _messages.add(0, result.data)
 
-                        uiState = uiState.copy(messages = uiMessages, loading = false)
+                        uiState = uiState.copy(loading = false)
                     }
 
                     is NetworkResult.Failure -> {
-                        messages.removeLast()
                         delay(300)
-                        uiMessages.removeFirst()
+                        _messages.removeAt(0)
 
                         uiState = uiState.copy(
-                            messages = uiMessages,
                             loading = false,
                             error = result
                         )
@@ -254,7 +247,6 @@ class AssistantViewModel(
 
 
     data class UiState(
-        val messages: List<AiMessage> = emptyList(),
         val loading: Boolean = false,
         val error: NetworkResult.Failure? = null,
         val noteView: ItemView = ItemView.LIST,
