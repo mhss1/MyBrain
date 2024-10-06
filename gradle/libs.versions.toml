@@ -39,7 +39,10 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfile" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppwidget" }
+androidx-glance = { module = "androidx.glance:glance", version.ref = "glanceAppwidget" }
 androidx-glance-material = { module = "androidx.glance:glance-material3", version.ref = "glanceAppwidget" }
+androidx-glance-preview = { module = "androidx.glance:glance-preview", version.ref = "glanceAppwidget" }
+androidx-glance-appwidget-preview = { module = "androidx.glance:glance-appwidget-preview", version.ref = "glanceAppwidget" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleVersion" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleVersion" }
@@ -88,7 +91,7 @@ kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.
 [bundles]
 koin = ["koin-core", "koin-annotations"]
 compose = ["compose-ui", "compose-material", "androidx-navigation-compose", "compose-ui-tooling", "androidx-lifecycle-runtime-compose", "compose-ui-tooling-preview", "koin-androidx-compose", "compose-markdown"]
-androidx-glance = ["androidx-glance-appwidget", "androidx-glance-material"]
+androidx-glance = ["androidx-glance", "androidx-glance-appwidget", "androidx-glance-material", "androidx-glance-preview", "androidx-glance-appwidget-preview"]
 ktor-core = ["ktor-core", "ktor-serialization", "ktor-content-negotiation", "ktor-logging"]
 
 
