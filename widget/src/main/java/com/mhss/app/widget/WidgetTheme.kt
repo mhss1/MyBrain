@@ -9,8 +9,8 @@ import com.mhss.app.ui.theme.DarkGray
 import com.mhss.app.ui.theme.LightGray
 
 val widgetDarkColorScheme = darkColorScheme(
-    secondaryContainer = Color(0xFF0C0C0C),
-    onSecondary = Color.DarkGray,
+    secondaryContainer = Color(0xFF090909),
+    onSecondary = Color(0xFF1A1A1A),
     onSecondaryContainer = Color.White,
     secondary = Color.LightGray
 )
