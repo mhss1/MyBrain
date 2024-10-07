@@ -91,9 +91,10 @@ fun CalendarHomeScreenWidget(
                     modifier = GlanceModifier
                         .fillMaxSize()
                         .largeInnerBackgroundBasedOnVersion()
-                        .padding(horizontal = 4.dp),
+                        .padding(horizontal = 6.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
+                    item { Spacer(GlanceModifier.height(4.dp)) }
                     if (events.isEmpty()) {
                         item {
                             Text(
@@ -115,10 +116,10 @@ fun CalendarHomeScreenWidget(
                                 text = day,
                                 style = TextStyle(
                                     color = GlanceTheme.colors.secondary,
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 14.sp
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 12.sp
                                 ),
-                                modifier = GlanceModifier.padding(bottom = 3.dp)
+                                modifier = GlanceModifier.padding(bottom = 2.dp)
                             )
                         }
                         items(dayEvents) { event ->
