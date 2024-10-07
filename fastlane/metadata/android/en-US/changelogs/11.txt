@@ -1,0 +1,5 @@
+- Added auto save to diary
+- Fixed auto save doesn't work when closing the app
+- Refined widgets UI
+- Performance improvements
+- Bug fixes
