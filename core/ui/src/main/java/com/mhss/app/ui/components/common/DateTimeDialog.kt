@@ -13,17 +13,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimeInput
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.mhss.app.ui.R
 import com.mhss.app.util.date.at
 import com.mhss.app.util.date.hour
@@ -34,7 +33,7 @@ import com.mhss.app.util.date.minute
 fun DateTimeDialog(
     initialDate: Long,
     onDismissRequest: () -> Unit,
-    onDatePicked: (Long) -> Unit
+    onDatePicked: (Long) -> Unit,
 ) {
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialDate
@@ -48,24 +47,19 @@ fun DateTimeDialog(
     }
     BasicAlertDialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false
-        )
+        modifier = Modifier.fillMaxWidth().padding(8.dp)
     ) {
         Surface(
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(20.dp)
         ) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AnimatedContent(
-                    showTime, label = "",
-                    modifier = Modifier.fillMaxWidth()
-                ) { isTime ->
+                AnimatedContent(targetState = showTime, label = "") { isTime ->
                     if (isTime) {
-                        TimePicker(
-                            timePickerState
+                        TimeInput(
+                            timePickerState,
+                            modifier = Modifier.padding(12.dp)
                         )
                     } else {
                         DatePicker(
@@ -74,11 +68,14 @@ fun DateTimeDialog(
                         )
                     }
                 }
-                Button(
+                TextButton(
                     onClick = {
                         if (showTime) {
                             onDatePicked(
-                                datePickerState.selectedDateMillis?.at(timePickerState.hour, timePickerState.minute) ?: 0L
+                                datePickerState.selectedDateMillis?.at(
+                                    timePickerState.hour,
+                                    timePickerState.minute
+                                ) ?: initialDate
                             )
                         } else showTime = true
                     },
@@ -87,5 +84,6 @@ fun DateTimeDialog(
                 }
             }
         }
+
     }
 }

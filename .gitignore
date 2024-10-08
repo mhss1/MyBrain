@@ -22,3 +22,7 @@ local.properties
 /app/release
 /.idea/appInsightsSettings.xml
 /.kotlin/
+/.idea/studiobot.xml
+/.idea/runConfigurations.xml
+/.idea/gradle.xml
+/.idea/compiler.xml

@@ -1,6 +1,5 @@
 package com.mhss.app.presentation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,23 +15,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mhss.app.domain.model.Task
 import com.mhss.app.ui.R
-import com.mhss.app.ui.theme.LightGray
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TasksDashboardWidget(
     modifier: Modifier = Modifier,
     tasks: List<Task>,
     onTaskClick: (Task) -> Unit = {},
-    onCheck: (Task) -> Unit = {},
+    onCheck: (Task, Boolean) -> Unit = {_,_ ->},
     onAddClick: () -> Unit = {},
     onClick: () -> Unit = {}
 ) {
@@ -45,8 +41,6 @@ fun TasksDashboardWidget(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        // Workaround replacement to Material2 `isLight`
-        val isDark = MaterialTheme.colorScheme.background.luminance() <= 0.5
         Column(
             modifier = modifier
                 .clickable { onClick() }
@@ -75,7 +69,10 @@ fun TasksDashboardWidget(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(20.dp))
-                    .background(if (isDark) Color.DarkGray else LightGray),
+                    .background(
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(0.1f).compositeOver(
+                        MaterialTheme.colorScheme.surfaceVariant)
+                    ),
                 contentPadding = PaddingValues(vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
@@ -88,11 +85,11 @@ fun TasksDashboardWidget(
                             textAlign = TextAlign.Center
                         )
                     }
-                } else items(tasks) {
-                    TaskDashboardItem(
+                } else items(tasks, key = { it.id }) {
+                    TaskSmallCard(
                         task = it,
                         onClick = { onTaskClick(it) },
-                        onComplete = { onCheck(it.copy(isCompleted = !it.isCompleted)) },
+                        onComplete = { onCheck(it, !it.isCompleted) },
                         modifier = Modifier.animateItem()
                     )
                 }

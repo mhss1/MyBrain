@@ -12,7 +12,7 @@
         android:text="@string/sunday_5_calendar_preview"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:padding="4dp"
         />
 

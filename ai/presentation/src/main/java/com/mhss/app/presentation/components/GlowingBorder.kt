@@ -8,7 +8,6 @@ import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,9 +16,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -32,12 +36,12 @@ fun GlowingBorder(
     cornerRadius: Dp = 24.dp,
     innerPadding: PaddingValues = PaddingValues(0.dp),
     blur: Dp = 14.dp,
-    animationDuration: Int = 800
+    animationDuration: Int = 800,
 ) {
     val infiniteTransition = rememberInfiniteTransition("glow")
     val borderWidth by infiniteTransition.animateValue(
-        initialValue = 5.dp,
-        targetValue = 12.dp,
+        initialValue = 7.dp,
+        targetValue = 14.dp,
         typeConverter = Dp.VectorConverter,
         animationSpec = infiniteRepeatable(
             animation = tween(
@@ -48,26 +52,24 @@ fun GlowingBorder(
         ),
         label = "glowBorder"
     )
+    val cornerRadiusPx = with(LocalDensity.current) { cornerRadius.toPx() }
+    val gradientBorder = remember { gradientBrushColor() }
+    val rectCornerRadius = remember { CornerRadius(cornerRadiusPx, cornerRadiusPx) }
 
-    Box(modifier) {
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .blur(blur)
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .matchParentSize()
-                    .clip(RoundedCornerShape(cornerRadius))
-                    .border(
-                        width = borderWidth,
-                        brush = gradientBrushColor(),
-                        shape = RoundedCornerShape(cornerRadius)
-                    )
-            )
-        }
-    }
+    Box(
+        modifier = modifier
+            .blur(blur)
+            .padding(innerPadding)
+            .clip(RoundedCornerShape(cornerRadius))
+            .drawBehind {
+                drawRoundRect(
+                    brush = gradientBorder,
+                    size = size,
+                    cornerRadius = rectCornerRadius,
+                    style = Stroke(width = borderWidth.toPx())
+                )
+            }
+    )
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)

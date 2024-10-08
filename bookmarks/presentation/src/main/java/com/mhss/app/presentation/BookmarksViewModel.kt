@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.ui.R
 import com.mhss.app.domain.model.Bookmark
 import com.mhss.app.domain.use_case.*
 import com.mhss.app.preferences.domain.model.Order
@@ -18,7 +17,6 @@ import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
 import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.toNotesView
-import com.mhss.app.util.date.now
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -30,15 +28,11 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class BookmarksViewModel(
     private val addBookmark: AddBookmarkUseCase,
-    private val updateBookmark: UpdateBookmarkUseCase,
-    private val deleteBookmark: DeleteBookmarkUseCase,
     private val getAlBookmarks: GetAllBookmarksUseCase,
     private val searchBookmarks: SearchBookmarksUseCase,
-    private val getBookmark: GetBookmarkUseCase,
     getPreference: GetPreferenceUseCase,
-    private val savePreference: SavePreferenceUseCase
+    private val savePreference: SavePreferenceUseCase,
 ) : ViewModel() {
-
 
     var uiState by mutableStateOf(UiState())
         private set
@@ -69,52 +63,28 @@ class BookmarksViewModel(
     fun onEvent(event: BookmarkEvent) {
         when (event) {
             is BookmarkEvent.AddBookmark -> viewModelScope.launch {
-                uiState = if (
-                    event.bookmark.url.isBlank()
-                    && event.bookmark.title.isBlank()
-                    && event.bookmark.description.isBlank()
-                )
-                    uiState.copy(navigateUp = true)
-                else {
-                    if (event.bookmark.url.isValidUrl()) {
-                        addBookmark(event.bookmark)
-                        uiState.copy(navigateUp = true)
-                    } else
-                        uiState.copy(error = R.string.invalid_url)
-                }
+                addBookmark(event.bookmark)
             }
-            is BookmarkEvent.DeleteBookmark -> viewModelScope.launch {
-                deleteBookmark(event.bookmark)
-                uiState = uiState.copy(navigateUp = true)
-            }
-            is BookmarkEvent.GetBookmark -> viewModelScope.launch {
-                val bookmark = getBookmark(event.bookmarkId)
-                uiState = uiState.copy(bookmark = bookmark)
-            }
+
             is BookmarkEvent.SearchBookmarks -> viewModelScope.launch {
                 val bookmarks = searchBookmarks(event.query)
                 uiState = uiState.copy(searchBookmarks = bookmarks)
             }
-            is BookmarkEvent.UpdateBookmark -> viewModelScope.launch {
-                uiState = if (!event.bookmark.url.isValidUrl()) {
-                    uiState.copy(error = R.string.invalid_url)
-                } else {
-                    updateBookmark(event.bookmark.copy(updatedDate = now()))
-                    uiState.copy(navigateUp = true)
-                }
-            }
+
             is BookmarkEvent.UpdateOrder -> viewModelScope.launch {
                 savePreference(
                     intPreferencesKey(PrefsConstants.BOOKMARK_ORDER_KEY),
                     event.order.toInt()
                 )
             }
+
             is BookmarkEvent.UpdateView -> viewModelScope.launch {
                 savePreference(
                     intPreferencesKey(PrefsConstants.BOOKMARK_VIEW_KEY),
                     event.view.value
                 )
             }
+
             BookmarkEvent.ErrorDisplayed -> uiState = uiState.copy(error = null)
         }
     }
@@ -123,10 +93,8 @@ class BookmarksViewModel(
         val bookmarks: List<Bookmark> = emptyList(),
         val bookmarksOrder: Order = Order.DateModified(OrderType.ASC),
         val bookmarksView: ItemView = ItemView.LIST,
-        val bookmark: Bookmark? = null,
         val error: Int? = null,
         val searchBookmarks: List<Bookmark> = emptyList(),
-        val navigateUp: Boolean = false
     )
 
     private fun getBookmarks(order: Order) {

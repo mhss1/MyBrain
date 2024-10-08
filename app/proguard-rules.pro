@@ -40,6 +40,7 @@
     public static <1> INSTANCE;
     kotlinx.serialization.KSerializer serializer(...);
 }
+-keep class com.mhss.app.widget.** { *; }
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
 
 -dontwarn org.bouncycastle.jsse.BCSSLParameters

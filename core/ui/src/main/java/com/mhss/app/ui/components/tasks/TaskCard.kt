@@ -5,6 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -182,16 +183,20 @@ fun SubTasksProgressBar(modifier: Modifier = Modifier, subTasks: List<SubTask>) 
 
 @Preview
 @Composable
-fun LazyItemScope.TaskItemPreview() {
-    TaskCard(
-        task = Task(
-            title = "Task 1",
-            description = "Task 1 description",
-            dueDate = 1666999999999L,
-            priority = Priority.MEDIUM,
-            isCompleted = false
-        ),
-        onComplete = {},
-        onClick = {}
-    )
+fun TaskItemPreview() {
+    LazyColumn {
+        item {
+            TaskCard(
+                task = Task(
+                    title = "Task 1",
+                    description = "Task 1 description",
+                    dueDate = 1666999999999L,
+                    priority = Priority.MEDIUM,
+                    isCompleted = false
+                ),
+                onComplete = {},
+                onClick = {}
+            )
+        }
+    }
 }

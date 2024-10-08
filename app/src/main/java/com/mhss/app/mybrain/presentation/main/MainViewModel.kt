@@ -11,8 +11,8 @@ import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.use_case.GetAllEntriesUseCase
 import com.mhss.app.domain.use_case.GetAllEventsUseCase
 import com.mhss.app.domain.use_case.GetAllTasksUseCase
-import com.mhss.app.domain.use_case.UpdateTaskUseCase
 import com.mhss.app.domain.model.DiaryEntry
+import com.mhss.app.domain.use_case.UpdateTaskCompletedUseCase
 import com.mhss.app.preferences.domain.model.*
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
@@ -34,7 +34,7 @@ class MainViewModel(
     private val savePreference: SavePreferenceUseCase,
     private val getAllTasks: GetAllTasksUseCase,
     private val getAllEntriesUseCase: GetAllEntriesUseCase,
-    private val updateTask: UpdateTaskUseCase,
+    private val completeTask: UpdateTaskCompletedUseCase,
     private val getAllEventsUseCase: GetAllEventsUseCase
 ) : ViewModel() {
 
@@ -56,8 +56,8 @@ class MainViewModel(
                 if (event.hasPermission)
                     getCalendarEvents()
             }
-            is DashboardEvent.UpdateTask -> viewModelScope.launch {
-                updateTask(event.task, event.task)
+            is DashboardEvent.CompleteTask -> viewModelScope.launch {
+                completeTask(event.task.id, event.isCompleted)
             }
             DashboardEvent.InitAll -> collectDashboardData()
         }

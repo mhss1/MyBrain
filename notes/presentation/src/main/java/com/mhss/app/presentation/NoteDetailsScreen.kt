@@ -5,7 +5,6 @@ package com.mhss.app.presentation
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -32,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
@@ -44,33 +44,28 @@ import com.mhss.app.ui.toUserMessage
 import com.mhss.app.util.date.formatDateDependingOnDay
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteDetailsScreen(
     navController: NavHostController,
     noteId: Int,
     folderId: Int,
-    viewModel: NotesViewModel = koinViewModel()
+    viewModel: NoteDetailsViewModel = koinViewModel(
+        parameters = { parametersOf(noteId, folderId) }
+    ),
 ) {
-    LaunchedEffect(true) {
-        if (noteId != -1) viewModel.onEvent(NoteEvent.GetNote(noteId))
-        if (folderId != -1) viewModel.onEvent(NoteEvent.GetFolder(folderId))
-    }
-    val state = viewModel.notesUiState
-    val snackbarHostState = remember { SnackbarHostState() }
+    val state = viewModel.noteUiState
     var openDeleteDialog by rememberSaveable { mutableStateOf(false) }
     var openFolderDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
-    var title by rememberSaveable { mutableStateOf(state.note?.title ?: "") }
-    var content by rememberSaveable { mutableStateOf(state.note?.content ?: "") }
-    var pinned by rememberSaveable { mutableStateOf(state.note?.pinned ?: false) }
+    var title by remember { mutableStateOf("") }
+    var content by remember { mutableStateOf("") }
+    var pinned by remember { mutableStateOf(false) }
     val readingMode = state.readingMode
-    var folder: NoteFolder? by remember { mutableStateOf(state.folder) }
-    val lastModified by remember(state.note) {
-        derivedStateOf { state.note?.updatedDate?.formatDateDependingOnDay(context) }
-    }
+    var folder: NoteFolder? by remember { mutableStateOf(null) }
+    var lastModified by remember { mutableStateOf("") }
     val wordCountString by remember {
         derivedStateOf { content.split(" ").size.toString() }
     }
@@ -78,68 +73,36 @@ fun NoteDetailsScreen(
     val aiState = viewModel.aiState
     val showAiSheet = aiState.showAiSheet
 
-    LaunchedEffect(state.note) {
+    LaunchedEffect(state.note, state.folder) {
         if (state.note != null) {
             title = state.note.title
             content = state.note.content
             pinned = state.note.pinned
-            folder = state.folder
+            lastModified = state.note.updatedDate.formatDateDependingOnDay(context)
         }
+        folder = state.folder
     }
-    LaunchedEffect(state) {
+    LaunchedEffect(state.navigateUp) {
         if (state.navigateUp) {
             openDeleteDialog = false
             navController.navigateUp()
         }
-        if (state.error != null) {
-            snackbarHostState.showSnackbar(
-                context.getString(state.error)
-            )
-            viewModel.onEvent(NoteEvent.ErrorDisplayed)
-        }
-        if (state.folder != folder) folder = state.folder
     }
-    BackHandler {
-        addOrUpdateNote(
-            Note(
-                title = title,
-                content = content,
-                pinned = pinned,
-                folderId = folder?.id
-            ),
-            state.note,
-            onNotChanged = {
-                navController.navigateUp()
-            },
-            onUpdate = {
-                if (state.note != null) {
-                    viewModel.onEvent(
-                        NoteEvent.UpdateNote(
-                            state.note.copy(
-                                title = title,
-                                content = content,
-                                folderId = folder?.id
-                            )
-                        )
+    LifecycleStartEffect(Unit) {
+        onStopOrDispose {
+            viewModel.onEvent(
+                NoteDetailsEvent.ScreenOnStop(
+                    Note(
+                        title = title,
+                        content = content,
+                        folderId = folder?.id,
+                        pinned = pinned
                     )
-                } else {
-                    viewModel.onEvent(
-                        NoteEvent.AddNote(
-                            Note(
-                                title = title,
-                                content = content,
-                                pinned = pinned,
-                                folderId = folder?.id
-                            )
-                        )
-                    )
-                }
-
-            }
-        )
+                )
+            )
+        }
     }
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             MyBrainAppBar(
                 title = "",
@@ -181,9 +144,6 @@ fun NoteDetailsScreen(
                     }
                     IconButton(onClick = {
                         pinned = !pinned
-                        if (state.note != null) {
-                            viewModel.onEvent(NoteEvent.PinNote)
-                        }
                     }) {
                         Icon(
                             painter = if (pinned) painterResource(id = R.drawable.ic_pin_filled)
@@ -194,7 +154,7 @@ fun NoteDetailsScreen(
                         )
                     }
                     IconButton(onClick = {
-                        viewModel.onEvent(NoteEvent.ToggleReadingMode)
+                        viewModel.onEvent(NoteDetailsEvent.ToggleReadingMode)
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_read_mode),
@@ -233,19 +193,19 @@ fun NoteDetailsScreen(
                         GradientIconButton(
                             text = stringResource(id = R.string.summarize),
                             iconPainter = painterResource(id = R.drawable.ic_summarize),
-                        ) { viewModel.onEvent(NoteEvent.Summarize(content)) }
+                        ) { viewModel.onEvent(NoteDetailsEvent.Summarize(content)) }
                     }
                     item {
                         GradientIconButton(
                             text = stringResource(id = R.string.auto_format),
                             iconPainter = painterResource(id = R.drawable.ic_auto_format),
-                        ) { viewModel.onEvent(NoteEvent.AutoFormat(content)) }
+                        ) { viewModel.onEvent(NoteDetailsEvent.AutoFormat(content)) }
                     }
                     item {
                         GradientIconButton(
                             text = stringResource(id = R.string.correct_spelling),
                             iconPainter = painterResource(id = R.drawable.ic_spelling),
-                        ) { viewModel.onEvent(NoteEvent.CorrectSpelling(content)) }
+                        ) { viewModel.onEvent(NoteDetailsEvent.CorrectSpelling(content)) }
                     }
                 }
             }
@@ -282,7 +242,7 @@ fun NoteDetailsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = lastModified ?: "",
+                    text = lastModified,
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
                 )
                 Text(
@@ -309,7 +269,7 @@ fun NoteDetailsScreen(
                         interactionSource = interactionSource,
                         indication = null
                     ) {
-                        viewModel.onEvent(NoteEvent.AiResultHandled)
+                        viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     }, contentAlignment = Alignment.BottomCenter
             ) {
                 AiResultSheet(
@@ -321,15 +281,15 @@ fun NoteDetailsScreen(
                             context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText("ai result", aiState.result.toString())
                         clipboard.setPrimaryClip(clip)
-                        viewModel.onEvent(NoteEvent.AiResultHandled)
+                        viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     },
                     onReplaceClick = {
                         content = aiState.result.toString()
-                        viewModel.onEvent(NoteEvent.AiResultHandled)
+                        viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     },
                     onAddToNoteClick = {
                         content = aiState.result + "\n" + content
-                        viewModel.onEvent(NoteEvent.AiResultHandled)
+                        viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     }
                 )
             }
@@ -352,7 +312,7 @@ fun NoteDetailsScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         shape = RoundedCornerShape(25.dp),
                         onClick = {
-                            viewModel.onEvent(NoteEvent.DeleteNote(state.note!!))
+                            viewModel.onEvent(NoteDetailsEvent.DeleteNote(state.note!!))
                         },
                     ) {
                         Text(stringResource(R.string.delete_note), color = Color.White)
@@ -368,10 +328,10 @@ fun NoteDetailsScreen(
                     }
                 }
             )
-        if (openFolderDialog)
-            BasicAlertDialog(
-                onDismissRequest = { openFolderDialog = false },
-            ) {
+        if (openFolderDialog) AlertDialog(
+            onDismissRequest = { openFolderDialog = false },
+            confirmButton = {},
+            text = {
                 Column(
                     Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
@@ -435,31 +395,6 @@ fun NoteDetailsScreen(
                         }
                     }
                 }
-            }
+            })
     }
-}
-
-private fun addOrUpdateNote(
-    newNote: Note,
-    note: Note? = null,
-    onNotChanged: () -> Unit = {},
-    onUpdate: (Note) -> Unit,
-) {
-    if (note != null) {
-        if (noteChanged(newNote, note))
-            onUpdate(note)
-        else
-            onNotChanged()
-    } else {
-        onUpdate(newNote)
-    }
-}
-
-private fun noteChanged(
-    note: Note,
-    newNote: Note
-): Boolean {
-    return note.title != newNote.title ||
-            note.content != newNote.content ||
-            note.folderId != newNote.folderId
 }

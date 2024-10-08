@@ -1,6 +1,5 @@
 package com.mhss.app.presentation
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -19,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavHostController
 import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.domain.model.Mood
@@ -29,31 +29,22 @@ import com.mhss.app.util.date.fullDate
 import com.mhss.app.util.date.now
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryEntryDetailsScreen(
     navController: NavHostController,
     entryId: Int,
-    viewModel: DiaryViewModel = koinViewModel()
+    viewModel: DiaryDetailsViewModel = koinViewModel(parameters = { parametersOf(entryId) })
 ) {
-    LaunchedEffect(true) {
-        if (entryId != -1) {
-            viewModel.onEvent(DiaryEvent.GetEntry(entryId))
-        }
-    }
     val state = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
     var openDialog by rememberSaveable { mutableStateOf(false) }
 
-    var title by rememberSaveable { mutableStateOf(state.entry?.title ?: "") }
-    var content by rememberSaveable { mutableStateOf(state.entry?.content ?: "") }
-    var mood by rememberSaveable { mutableStateOf(state.entry?.mood ?: Mood.OKAY) }
-    var date by rememberSaveable {
-        mutableLongStateOf(
-            state.entry?.createdDate ?: now()
-        )
-    }
+    var title by remember { mutableStateOf("") }
+    var content by remember { mutableStateOf("") }
+    var mood by remember { mutableStateOf(Mood.OKAY) }
+    var date by remember { mutableLongStateOf(now()) }
     val readingMode = state.readingMode
     var showDateDialog by remember {
         mutableStateOf(false)
@@ -61,42 +52,32 @@ fun DiaryEntryDetailsScreen(
     val context = LocalContext.current
 
     LaunchedEffect(state.entry) {
-        if (state.entry != null && title.isBlank() && content.isBlank()) {
+        if (state.entry != null) {
             title = state.entry.title
             content = state.entry.content
             date = state.entry.createdDate
             mood = state.entry.mood
         }
     }
-    LaunchedEffect(state) {
+    LaunchedEffect(state.navigateUp) {
         if (state.navigateUp) {
             openDialog = false
             navController.navigateUp()
         }
-        if (state.error != null) {
-            snackbarHostState.showSnackbar(
-                state.error
-            )
-            viewModel.onEvent(DiaryEvent.ErrorDisplayed)
-        }
     }
-    BackHandler {
-        if (state.entry != null) {
-            val entry = state.entry.copy(
-                title = title,
-                content = content,
-                mood = mood,
-                createdDate = date,
-                updatedDate = now()
-            )
-            if (entryChanged(
-                    state.entry,
-                    entry
+    LifecycleStartEffect(Unit) {
+        onStopOrDispose {
+            viewModel.onEvent(
+                DiaryDetailsEvent.ScreenOnStop(
+                    DiaryEntry(
+                        title = title,
+                        content = content,
+                        mood = mood,
+                        createdDate = date
+                    )
                 )
-            ) viewModel.onEvent(DiaryEvent.UpdateEntry(entry))
-            else navController.navigateUp()
-        } else
-            navController.navigateUp()
+            )
+        }
     }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -105,7 +86,7 @@ fun DiaryEntryDetailsScreen(
                 title = "",
                 actions = {
                     IconButton(onClick = {
-                        viewModel.onEvent(DiaryEvent.ToggleReadingMode)
+                        viewModel.onEvent(DiaryDetailsEvent.ToggleReadingMode)
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_read_mode),
@@ -131,30 +112,6 @@ fun DiaryEntryDetailsScreen(
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            if (state.entry == null)
-                FloatingActionButton(
-                    onClick = {
-                        val entry = DiaryEntry(
-                            title = title,
-                            content = content,
-                            mood = mood,
-                            createdDate = date,
-                            updatedDate = now()
-                        )
-                        viewModel.onEvent(DiaryEvent.AddEntry(entry))
-
-                    },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_save),
-                        contentDescription = stringResource(R.string.save_entry),
-                        modifier = Modifier.size(25.dp),
-                        tint = Color.White
-                    )
-                }
         }
     ) { paddingValues ->
         Column(
@@ -204,6 +161,7 @@ fun DiaryEntryDetailsScreen(
                         .fillMaxWidth()
                         .weight(1f)
                         .padding(bottom = 8.dp)
+                        .imePadding()
                 )
             }
         }
@@ -231,7 +189,7 @@ fun DiaryEntryDetailsScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         shape = RoundedCornerShape(25.dp),
                         onClick = {
-                            viewModel.onEvent(DiaryEvent.DeleteEntry(state.entry!!))
+                            viewModel.onEvent(DiaryDetailsEvent.DeleteEntry)
                         },
                     ) {
                         Text(
@@ -302,14 +260,4 @@ private fun MoodItem(mood: Mood, chosen: Boolean, onMoodChange: () -> Unit) {
             )
         }
     }
-}
-
-private fun entryChanged(
-    entry: DiaryEntry?,
-    newEntry: DiaryEntry
-): Boolean {
-    return entry?.title != newEntry.title ||
-            entry.content != newEntry.content ||
-            entry.mood != newEntry.mood ||
-            entry.createdDate != newEntry.createdDate
 }

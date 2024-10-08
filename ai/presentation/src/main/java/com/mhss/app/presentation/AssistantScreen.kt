@@ -66,7 +66,7 @@ fun AssistantScreen(
 ) {
     val context = LocalContext.current
     val uiState = viewModel.uiState
-    val messages = uiState.messages
+    val messages = viewModel.messages
     val loading = uiState.loading
     val error = uiState.error
     var text by rememberSaveable { mutableStateOf("") }
@@ -169,11 +169,12 @@ fun AssistantScreen(
                 LeftToRight {
                     LazyColumn(
                         state = lazyListState,
-                        reverseLayout = true
+                        reverseLayout = true,
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        item(key = 1) { Spacer(Modifier.height(20.dp)) }
+                        item(key = -1) { Spacer(Modifier.height(20.dp)) }
                         error?.let { error ->
-                            item(key = 2) {
+                            item(key = -2) {
                                 Card(
                                     shape = RoundedCornerShape(18.dp),
                                     border = BorderStroke(

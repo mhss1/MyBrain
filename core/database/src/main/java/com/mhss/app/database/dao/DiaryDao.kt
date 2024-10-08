@@ -17,7 +17,7 @@ interface DiaryDao {
     suspend fun getEntriesByTitle(query: String): List<DiaryEntryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEntry(diary: DiaryEntryEntity)
+    suspend fun insertEntry(diary: DiaryEntryEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntries(diary: List<DiaryEntryEntity>)

@@ -1,6 +1,5 @@
 package com.mhss.app.presentation
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
 import com.mhss.app.domain.model.Priority
@@ -39,19 +39,17 @@ import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.tasks.TaskCheckBox
 import com.mhss.app.ui.titleRes
 import com.mhss.app.util.date.formatDateDependingOnDay
+import com.mhss.app.util.date.now
 import com.mhss.app.util.permissions.rememberPermissionState
 import org.koin.androidx.compose.koinViewModel
-import java.util.*
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun TaskDetailScreen(
     navController: NavHostController,
     taskId: Int,
-    viewModel: TasksViewModel = koinViewModel()
+    viewModel: TaskDetailsViewModel = koinViewModel(parameters = { parametersOf(taskId) }),
 ) {
-    LaunchedEffect(true) {
-        viewModel.onEvent(TaskEvent.GetTask(taskId))
-    }
     val alarmPermissionState = rememberPermissionState(Permission.SCHEDULE_ALARMS)
     val uiState = viewModel.taskDetailsUiState
     val snackbarHostState = remember {
@@ -60,15 +58,15 @@ fun TaskDetailScreen(
     var openDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
-    var title by rememberSaveable { mutableStateOf("") }
-    var description by rememberSaveable { mutableStateOf("") }
-    var priority by rememberSaveable { mutableStateOf(Priority.LOW) }
-    var dueDate by rememberSaveable { mutableLongStateOf(0L) }
-    var recurring by rememberSaveable { mutableStateOf(false) }
-    var frequency by rememberSaveable { mutableStateOf(TaskFrequency.DAILY) }
-    var frequencyAmount by rememberSaveable { mutableIntStateOf(1) }
-    var dueDateExists by rememberSaveable { mutableStateOf(false) }
-    var completed by rememberSaveable { mutableStateOf(false) }
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var priority by remember { mutableStateOf(Priority.LOW) }
+    var dueDate by remember { mutableLongStateOf(0L) }
+    var recurring by remember { mutableStateOf(false) }
+    var frequency by remember { mutableStateOf(TaskFrequency.DAILY) }
+    var frequencyAmount by remember { mutableIntStateOf(1) }
+    var dueDateExists by remember { mutableStateOf(false) }
+    var completed by remember { mutableStateOf(false) }
     val subTasks = remember { mutableStateListOf<SubTask>() }
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
     val formattedDate by remember {
@@ -78,23 +76,27 @@ fun TaskDetailScreen(
     }
 
     LaunchedEffect(uiState.task) {
-        title = uiState.task.title
-        description = uiState.task.description
-        priority = uiState.task.priority
-        dueDate = uiState.task.dueDate
-        dueDateExists = uiState.task.dueDate != 0L
-        completed = uiState.task.isCompleted
-        recurring = uiState.task.recurring
-        frequency = uiState.task.frequency
-        frequencyAmount = uiState.task.frequencyAmount
-        subTasks.addAll(uiState.task.subTasks)
+        if (uiState.task != null) {
+            title = uiState.task.title
+            description = uiState.task.description
+            priority = uiState.task.priority
+            dueDate = uiState.task.dueDate
+            dueDateExists = uiState.task.dueDate != 0L
+            completed = uiState.task.isCompleted
+            recurring = uiState.task.recurring
+            frequency = uiState.task.frequency
+            frequencyAmount = uiState.task.frequencyAmount
+            subTasks.clear()
+            subTasks.addAll(uiState.task.subTasks)
+        }
     }
-    LaunchedEffect(uiState) {
+    LaunchedEffect(uiState.navigateUp, uiState.error, uiState.errorAlarm) {
         if (uiState.navigateUp) {
             openDialog = false
             navController.navigateUp()
         }
         if (uiState.error != null) {
+            if (uiState.errorAlarm) dueDateExists = false
             val snackbarResult = snackbarHostState.showSnackbar(
                 context.getString(uiState.error),
                 if (uiState.errorAlarm) context.getString(R.string.grant_permission) else null
@@ -102,29 +104,27 @@ fun TaskDetailScreen(
             if (snackbarResult == SnackbarResult.ActionPerformed) {
                 alarmPermissionState.launchRequest()
             }
-            viewModel.onEvent(TaskEvent.ErrorDisplayed)
+            viewModel.onEvent(TaskDetailsEvent.ErrorDisplayed)
         }
     }
-    BackHandler {
-        updateTaskIfChanged(
-            uiState.task,
-            uiState.task.copy(
-                title = title,
-                description = description,
-                dueDate = if (dueDateExists) dueDate else 0L,
-                priority = priority,
-                subTasks = subTasks,
-                recurring = recurring,
-                frequency = frequency,
-                frequencyAmount = frequencyAmount
-            ),
-            onNotChanged = {
-                navController.navigateUp()
-            },
-            onUpdate = {
-                viewModel.onEvent(TaskEvent.UpdateTask(it, dueDate != uiState.task.dueDate))
-            }
-        )
+    LifecycleStartEffect(Unit) {
+        onStopOrDispose {
+            viewModel.onEvent(
+                TaskDetailsEvent.ScreenOnStop(
+                    Task(
+                        title = title,
+                        description = description,
+                        isCompleted = completed,
+                        dueDate = if (dueDateExists) dueDate else 0L,
+                        priority = priority,
+                        subTasks = subTasks,
+                        recurring = recurring,
+                        frequency = frequency,
+                        frequencyAmount = frequencyAmount
+                    )
+                )
+            )
+        }
     }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -161,7 +161,7 @@ fun TaskDetailScreen(
             onPriorityChange = { priority = it },
             onDueDateExist = {
                 dueDateExists = it
-                if (it) dueDate = Calendar.getInstance().timeInMillis
+                if (it) dueDate = now()
             },
             onDueDateChange = { dueDate = it },
             onRecurringChange = { recurring = it },
@@ -169,12 +169,6 @@ fun TaskDetailScreen(
             onFrequencyAmountChange = { frequencyAmount = it },
             onComplete = {
                 completed = it
-                viewModel.onEvent(
-                    TaskEvent.CompleteTask(
-                        uiState.task,
-                        it
-                    )
-                )
             }
         )
     }
@@ -187,7 +181,7 @@ fun TaskDetailScreen(
                 Text(
                     stringResource(
                         R.string.delete_task_confirmation_message,
-                        uiState.task.title
+                        uiState.task?.title ?: "Untitled"
                     )
                 )
             },
@@ -196,7 +190,7 @@ fun TaskDetailScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     shape = RoundedCornerShape(25.dp),
                     onClick = {
-                        viewModel.onEvent(TaskEvent.DeleteTask(uiState.task))
+                        viewModel.onEvent(TaskDetailsEvent.DeleteTask)
                     },
                 ) {
                     Text(stringResource(R.string.delete_task), color = Color.White)
@@ -338,14 +332,14 @@ fun TaskDetailsContent(
         var showDateDialog by remember {
             mutableStateOf(false)
         }
+        if (showDateDialog) DateTimeDialog(
+            onDismissRequest = { showDateDialog = false },
+            initialDate = dueDate
+        ) {
+            onDueDateChange(it)
+            showDateDialog = false
+        }
         AnimatedVisibility(dueDateExists) {
-            if (showDateDialog) DateTimeDialog(
-                onDismissRequest = { showDateDialog = false },
-                initialDate = dueDate
-            ) {
-                onDueDateChange(it)
-                showDateDialog = false
-            }
             Column {
                 Row(
                     Modifier
@@ -463,29 +457,6 @@ fun PriorityTabRow(
             )
         }
     }
-}
-
-private fun updateTaskIfChanged(
-    task: Task,
-    newTask: Task,
-    onNotChanged: () -> Unit = {},
-    onUpdate: (Task) -> Unit,
-) {
-    if (taskChanged(task, newTask)) onUpdate(newTask) else onNotChanged()
-}
-
-private fun taskChanged(
-    task: Task,
-    newTask: Task
-): Boolean {
-    return task.title != newTask.title ||
-            task.description != newTask.description ||
-            task.dueDate != newTask.dueDate ||
-            task.priority != newTask.priority ||
-            task.subTasks != newTask.subTasks ||
-            task.recurring != newTask.recurring ||
-            task.frequency != newTask.frequency ||
-            task.frequencyAmount != newTask.frequencyAmount
 }
 
 @Composable

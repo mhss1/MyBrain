@@ -20,19 +20,18 @@ import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.model.TaskFrequency
 import com.mhss.app.util.date.formatDateDependingOnDay
 import com.mhss.app.util.date.now
-import java.util.*
 
 @Composable
 fun AddTaskBottomSheetContent(
     onAddTask: (Task) -> Unit,
-    focusRequester: FocusRequester
+    focusRequester: FocusRequester,
 ) {
     val context = LocalContext.current
     var completed by rememberSaveable { mutableStateOf(false) }
     var title by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
     var priority by rememberSaveable { mutableStateOf(Priority.LOW) }
-    var dueDate by rememberSaveable { mutableStateOf(Calendar.getInstance()) }
+    var dueDate by rememberSaveable { mutableLongStateOf(now()) }
     var dueDateExists by rememberSaveable { mutableStateOf(false) }
     var recurring by rememberSaveable { mutableStateOf(false) }
     var frequency by rememberSaveable { mutableStateOf(TaskFrequency.DAILY) }
@@ -41,7 +40,7 @@ fun AddTaskBottomSheetContent(
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
     val formattedDate by remember {
         derivedStateOf {
-            dueDate.timeInMillis.formatDateDependingOnDay(context)
+            dueDate.formatDateDependingOnDay(context)
         }
     }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -63,7 +62,7 @@ fun AddTaskBottomSheetContent(
             title = title,
             description = description,
             priority = priority,
-            dueDate = dueDate.timeInMillis,
+            dueDate = dueDate,
             dueDateExists = dueDateExists,
             recurring = recurring,
             frequency = frequency,
@@ -76,7 +75,7 @@ fun AddTaskBottomSheetContent(
             onDescriptionChange = { description = it },
             onPriorityChange = { priority = it },
             onDueDateExist = { dueDateExists = it },
-            onDueDateChange = { dueDate.timeInMillis = it },
+            onDueDateChange = { dueDate = it },
             onRecurringChange = { recurring = it },
             onFrequencyChange = { frequency = it },
             onFrequencyAmountChange = { frequencyAmount = it },
@@ -90,7 +89,7 @@ fun AddTaskBottomSheetContent(
                                 description = description,
                                 isCompleted = completed,
                                 priority = priority,
-                                dueDate = if (dueDateExists) dueDate.timeInMillis else 0L,
+                                dueDate = if (dueDateExists) dueDate else 0L,
                                 recurring = recurring,
                                 frequency = frequency,
                                 frequencyAmount = frequencyAmount,
@@ -102,7 +101,7 @@ fun AddTaskBottomSheetContent(
                         title = ""
                         description = ""
                         priority = Priority.LOW
-                        dueDate = Calendar.getInstance()
+                        dueDate = now()
                         dueDateExists = false
                         subTasks.clear()
                         keyboardController?.hide()

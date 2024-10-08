@@ -11,7 +11,7 @@ interface DiaryRepository {
 
     suspend fun searchEntries(title: String): List<DiaryEntry>
 
-    suspend fun addEntry(diary: DiaryEntry)
+    suspend fun addEntry(diary: DiaryEntry): Long
 
     suspend fun updateEntry(diary: DiaryEntry)
 

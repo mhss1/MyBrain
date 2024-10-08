@@ -1,6 +1,7 @@
 package com.mhss.app.data
 
 import android.content.Context
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.room.withTransaction
@@ -94,7 +95,7 @@ class BackupRepositoryImpl(
                 database.withTransaction {
                     val newNoteFolderIds = database.noteDao().insertNoteFolders(backupData.noteFolders.withoutIds())
                     val notes = if (newNoteFolderIds.size != oldNoteFolderIdsMap.keys.size) {
-                        println("BackupRepositoryImpl.importDatabase: New folder count (${newNoteFolderIds.size}) does not match old folder count. {${oldNoteFolderIdsMap.keys.size})")
+                        Log.d("BackupRepositoryImpl.importDatabase","New folder count (${newNoteFolderIds.size}) does not match old folder count. {${oldNoteFolderIdsMap.keys.size})")
                         backupData.notes.withoutIds()
                     } else backupData.notes.map { note ->
                         note.copy(

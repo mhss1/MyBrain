@@ -69,15 +69,13 @@ fun CalendarEventWidgetItem(
                         maxLines = 2
                     )
                     Spacer(GlanceModifier.height(4.dp))
-                    Text(
-                        text = "${event.start.formatTime(context)} - ${event.end.formatTime(context)}",
-                        style = TextStyle(color = GlanceTheme.colors.onSecondaryContainer)
-                    )
-                    if (!event.location.isNullOrBlank()) {
-                        Spacer(GlanceModifier.height(4.dp))
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "${event.start.formatTime(context)} - ${event.end.formatTime(context)}",
+                            style = TextStyle(color = GlanceTheme.colors.onSecondaryContainer)
+                            )
+                        Spacer(GlanceModifier.width(4.dp))
+                        if (!event.location.isNullOrBlank()) {
                             Image(
                                 modifier = GlanceModifier.size(12.dp),
                                 provider = ImageProvider(R.drawable.ic_location),

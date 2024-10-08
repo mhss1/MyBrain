@@ -17,7 +17,6 @@ import com.mhss.app.preferences.domain.model.toInt
 import com.mhss.app.preferences.domain.model.toOrder
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
-import com.mhss.app.util.date.now
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -27,18 +26,13 @@ import org.koin.android.annotation.KoinViewModel
 class TasksViewModel(
     private val addTask: AddTaskUseCase,
     private val getAllTasks: GetAllTasksUseCase,
-    private val getTaskUseCase: GetTaskByIdUseCase,
-    private val updateTask: UpdateTaskUseCase,
     private val completeTask: UpdateTaskCompletedUseCase,
     getPreference: GetPreferenceUseCase,
     private val savePreference: SavePreferenceUseCase,
-    private val deleteTask: DeleteTaskUseCase,
     private val searchTasksUseCase: SearchTasksUseCase
 ) : ViewModel() {
 
     var tasksUiState by mutableStateOf(UiState())
-        private set
-    var taskDetailsUiState by mutableStateOf(TaskUiState())
         private set
 
     private var getTasksJob: Job? = null
@@ -84,7 +78,6 @@ class TasksViewModel(
 
             TaskEvent.ErrorDisplayed -> {
                 tasksUiState = tasksUiState.copy(error = null, errorAlarm = false)
-                taskDetailsUiState = taskDetailsUiState.copy(error = null, errorAlarm = false)
             }
 
             is TaskEvent.UpdateOrder -> viewModelScope.launch {
@@ -106,37 +99,6 @@ class TasksViewModel(
                     searchTasks(event.query)
                 }
             }
-
-            is TaskEvent.UpdateTask -> viewModelScope.launch {
-                if (event.task.title.isBlank())
-                    taskDetailsUiState =
-                        taskDetailsUiState.copy(error = R.string.error_empty_title)
-                else {
-                    val scheduleAlarmSuccess = updateTask(
-                        event.task.copy(updatedDate = now()),
-                        taskDetailsUiState.task
-                    )
-                    taskDetailsUiState = if (scheduleAlarmSuccess) {
-                        taskDetailsUiState.copy(navigateUp = true)
-                    } else {
-                        taskDetailsUiState.copy(
-                            error = R.string.no_alarm_permission,
-                            errorAlarm = true
-                        )
-                    }
-                }
-            }
-
-            is TaskEvent.DeleteTask -> viewModelScope.launch {
-                deleteTask(event.task)
-                taskDetailsUiState = taskDetailsUiState.copy(navigateUp = true)
-            }
-
-            is TaskEvent.GetTask -> viewModelScope.launch {
-                taskDetailsUiState = taskDetailsUiState.copy(
-                    task = getTaskUseCase(event.taskId)
-                )
-            }
         }
     }
 
@@ -147,13 +109,6 @@ class TasksViewModel(
         val error: Int? = null,
         val errorAlarm: Boolean = false,
         val searchTasks: List<Task> = emptyList()
-    )
-
-    data class TaskUiState(
-        val task: Task = Task(""),
-        val navigateUp: Boolean = false,
-        val error: Int? = null,
-        val errorAlarm: Boolean = false
     )
 
     private fun getTasks(order: Order, showCompleted: Boolean) {

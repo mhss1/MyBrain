@@ -31,7 +31,7 @@ import com.mhss.app.util.date.formatDateDependingOnDay
 import com.mhss.app.util.date.isDueDateOverdue
 
 @Composable
-fun TaskDashboardItem(
+fun TaskSmallCard(
     modifier: Modifier = Modifier,
     task: Task,
     onComplete: () -> Unit,
@@ -115,8 +115,8 @@ fun TaskDashboardCheckBox(
 
 @Preview
 @Composable
-fun TaskDashboardItemPreview() {
-    TaskDashboardItem(
+fun TaskSmallCardPreview() {
+    TaskSmallCard(
         task = Task(
             title = "Task 1",
             description = "Task 1 description",

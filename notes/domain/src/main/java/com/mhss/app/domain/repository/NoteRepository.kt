@@ -14,7 +14,7 @@ interface NoteRepository {
 
     fun getNotesByFolder(folderId: Int): Flow<List<Note>>
 
-    suspend fun addNote(note: Note)
+    suspend fun addNote(note: Note): Long
 
     suspend fun updateNote(note: Note)
 

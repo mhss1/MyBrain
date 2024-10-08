@@ -24,7 +24,7 @@ interface NoteDao {
     fun getNotesByFolder(folderId: Int): Flow<List<NoteEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNote(note: NoteEntity)
+    suspend fun insertNote(note: NoteEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertNotes(notes: List<NoteEntity>)

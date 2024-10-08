@@ -32,7 +32,7 @@ fun GlanceModifier.largeInnerBackgroundBasedOnVersion() =
         )
     } else {
         background(GlanceTheme.colors.onSecondary)
-            .cornerRadius(20.dp)
+            .cornerRadius(17.dp)
     }
 
 @Composable

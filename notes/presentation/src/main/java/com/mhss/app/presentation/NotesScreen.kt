@@ -41,7 +41,6 @@ import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.titleRes
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesScreen(
     navController: NavHostController,
