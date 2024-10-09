@@ -182,7 +182,7 @@
     <string name="openai">OpenAI</string>
     <string name="model">Model</string>
     <string name="gemini_description">Gemini models from Google</string>
-    <string name="openai_description">"GPT models from OpenAI.\nYou can also use any OpenAI compatible API  like Groq or a self hosted option by adding a custom URL "</string>
+    <string name="openai_description">GPT models from OpenAI.\nYou can also use any OpenAI compatible API like Groq or a self hosted option by adding a custom URL</string>
     <string name="custom_url">Custom URL</string>
     <string name="auto_format">Auto format</string>
     <string name="correct_spelling">Correct spelling</string>
