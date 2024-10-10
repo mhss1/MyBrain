@@ -10,14 +10,17 @@ import com.mhss.app.domain.use_case.DeleteTaskUseCase
 import com.mhss.app.domain.use_case.GetTaskByIdUseCase
 import com.mhss.app.domain.use_case.UpdateTaskUseCase
 import com.mhss.app.util.date.now
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.Named
 
 @KoinViewModel
 class TaskDetailsViewModel(
     private val getTask: GetTaskByIdUseCase,
     private val updateTask: UpdateTaskUseCase,
     private val deleteTask: DeleteTaskUseCase,
+    @Named("applicationScope") private val applicationScope: CoroutineScope,
     taskId: Int
 ) : ViewModel() {
 
@@ -39,8 +42,9 @@ class TaskDetailsViewModel(
             TaskDetailsEvent.ErrorDisplayed -> {
                 taskDetailsUiState = taskDetailsUiState.copy(error = null, errorAlarm = false)
             }
-
-            is TaskDetailsEvent.ScreenOnStop -> viewModelScope.launch {
+            // Using applicationScope to avoid cancelling when the user exits the screen
+            // and the view model is cleared before the job finishes
+            is TaskDetailsEvent.ScreenOnStop -> applicationScope.launch {
                 if (taskChanged(taskDetailsUiState.task!!, event.task)) {
                     val newTask = taskDetailsUiState.task!!.copy(
                         title = event.task.title.ifBlank { "Untitled" },

@@ -25,6 +25,7 @@ import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.stringPreferencesKey
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.util.date.now
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.Named
 
 @KoinViewModel
 class NoteDetailsViewModel(
@@ -47,6 +49,7 @@ class NoteDetailsViewModel(
     private val getAllFolders: GetAllNoteFoldersUseCase,
     private val getNoteFolder: GetNoteFolderUseCase,
     private val sendAiPrompt: SendAiPromptUseCase,
+    @Named("applicationScope") private val applicationScope: CoroutineScope,
     id: Int,
     folderId: Int,
 ) : ViewModel() {
@@ -120,7 +123,9 @@ class NoteDetailsViewModel(
 
     fun onEvent(event: NoteDetailsEvent) {
         when (event) {
-            is NoteDetailsEvent.ScreenOnStop -> viewModelScope.launch {
+            // Using applicationScope to avoid cancelling when the user exits the screen
+            // and the view model is cleared before the job finishes
+            is NoteDetailsEvent.ScreenOnStop -> applicationScope.launch {
                 if (noteUiState.note == null) {
                     if (event.currentNote.title.isNotBlank() || event.currentNote.content.isNotBlank()) {
                         val note = event.currentNote.copy(
