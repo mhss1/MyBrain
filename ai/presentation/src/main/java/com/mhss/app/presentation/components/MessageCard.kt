@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
@@ -44,7 +45,10 @@ import com.mhss.app.ui.gradientBrushColor
 import com.mhss.app.ui.theme.MyBrainTheme
 import com.mhss.app.ui.theme.SecondaryColor
 import com.mhss.app.util.date.formatTime
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.mikepenz.markdown.coil2.Coil2ImageTransformerImpl
+import com.mikepenz.markdown.m3.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
 
 
 @Composable
@@ -107,22 +111,28 @@ fun LazyItemScope.MessageCard(
                         }
                     }
             ) {
-                MarkdownText(
-                    markdown = message.content,
-                    modifier = Modifier.padding(
+                Markdown(
+                    content = message.content,
+                    modifier =  Modifier.padding(
                         top = 7.dp,
                         start = if (isUser) 12.dp else 8.dp,
                         end = if (isUser) 8.dp else 12.dp,
                     ),
-                    linkColor = Color.Blue,
-                    onClick = {
-                        showContextMenu = true
-                    },
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = if (isUser) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                    imageTransformer = Coil2ImageTransformerImpl,
+                    colors = markdownColor(
+                        text = if (isUser) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                        linkText = Color.Blue
+                    ),
+                    typography = markdownTypography(
+                        text = MaterialTheme.typography.bodyMedium,
+                        h1 = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
+                        h2 = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                        h3 = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                        h4 = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        h5 = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        h6 = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 )
-
                 if (message.attachments.isNotEmpty()) {
                     AiAttachmentsSection(
                         attachments = message.attachments,

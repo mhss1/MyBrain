@@ -11,10 +11,15 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -139,7 +144,10 @@ fun AssistantScreen(
                     attachmentsMenuExpanded = false
                 }
             )
-        }
+        },
+        modifier = Modifier
+            .imePadding()
+            .windowInsetsPadding(WindowInsets.navigationBars)
     ) { paddingValues ->
         if (openNoteSheet) AttachNoteSheet(
             state = noteSheetState,

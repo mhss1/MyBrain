@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,7 +57,10 @@ import com.mhss.app.ui.theme.Blue
 import com.mhss.app.ui.theme.LightPurple
 import com.mhss.app.ui.theme.MyBrainTheme
 import com.mhss.app.ui.theme.DarkOrange
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.mikepenz.markdown.coil2.Coil2ImageTransformerImpl
+import com.mikepenz.markdown.m3.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
 import sv.lib.squircleshape.CornerSmoothing
 import sv.lib.squircleshape.SquircleShape
 
@@ -180,12 +184,24 @@ fun AiResultSheet(
                             .heightIn(max = 440.dp)
                             .verticalScroll(rememberScrollState())
                     ) {
-                        MarkdownText(
-                            markdown = result,
-                            style = MaterialTheme.typography.bodyLarge,
+                        Markdown(
+                            content = result,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 24.dp, start = 24.dp, end = 24.dp)
+                                .padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                            imageTransformer = Coil2ImageTransformerImpl,
+                            colors = markdownColor(
+                                linkText = Color.Blue
+                            ),
+                            typography = markdownTypography(
+                                text = MaterialTheme.typography.bodyMedium,
+                                h1 = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
+                                h2 = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                                h3 = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                                h4 = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                                h5 = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                h6 = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                            )
                         )
                     }
                     Spacer(Modifier.height(12.dp))
@@ -196,8 +212,8 @@ fun AiResultSheet(
                     )
                 }
                 if (error != null) {
-                    MarkdownText(
-                        markdown = error,
+                    Text(
+                        text = error,
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.error,
@@ -280,7 +296,7 @@ fun AiResultSheetPreview() {
         AiResultSheet(
             modifier = Modifier,
             loading = false,
-            result = "This is a test content\n\n".repeat(9),
+            result = "# Header\n" + "This is a test content\n\n".repeat(8) + "`This is code`",
             error = null,
             {}, {}, {}
         )

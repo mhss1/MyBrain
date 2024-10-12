@@ -25,18 +25,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mhss.app.domain.model.Note
 import com.mhss.app.ui.R
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.util.date.formatDateDependingOnDay
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.mikepenz.markdown.m3.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
 
 @Composable
 fun NoteCard(
     modifier: Modifier = Modifier,
     note: Note,
-    onClick: (Note) -> Unit
+    onClick: (Note) -> Unit,
 ) {
     val context = LocalContext.current
     Card(
@@ -55,8 +56,8 @@ fun NoteCard(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                if (note.pinned){
+            ) {
+                if (note.pinned) {
                     Icon(
                         painter = painterResource(R.drawable.ic_pin_filled),
                         contentDescription = stringResource(R.string.pin_note),
@@ -74,15 +75,22 @@ fun NoteCard(
                 )
             }
             Spacer(Modifier.height(8.dp))
-            MarkdownText(
-                markdown = note.content,
-                maxLines = 14,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+            Markdown(
+                content = note.content,
+                colors = markdownColor(
+                    linkText = Color.Blue
                 ),
-                onClick = {onClick(note)},
-                onLinkClicked = {onClick(note)},
+                typography = markdownTypography(
+                    text = MaterialTheme.typography.bodyMedium,
+                    h1 = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    h2 = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    h3 = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    h4 = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    h5 = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                    h6 = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                    code = MaterialTheme.typography.bodySmall,
+                    paragraph = MaterialTheme.typography.bodyMedium,
+                )
             )
             Spacer(Modifier.height(8.dp))
             Text(

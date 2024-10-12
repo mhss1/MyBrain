@@ -27,7 +27,10 @@ import com.mhss.app.ui.components.common.DateTimeDialog
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.util.date.fullDate
 import com.mhss.app.util.date.now
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.mikepenz.markdown.coil2.Coil2ImageTransformerImpl
+import com.mikepenz.markdown.m3.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -117,8 +120,9 @@ fun DiaryEntryDetailsScreen(
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(12.dp)
+                .padding(horizontal = 12.dp)
                 .padding(paddingValues)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
@@ -140,15 +144,24 @@ fun DiaryEntryDetailsScreen(
             )
             Spacer(Modifier.height(8.dp))
             if (readingMode) {
-                MarkdownText(
-                    markdown = content,
+                Markdown(
+                    content = content,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 6.dp)
-                        .padding(10.dp),
-                    linkColor = Color.Blue,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onBackground
+                        .padding(8.dp),
+                    imageTransformer = Coil2ImageTransformerImpl,
+                    colors = markdownColor(
+                        linkText = Color.Blue
+                    ),
+                    typography = markdownTypography(
+                        text = MaterialTheme.typography.bodyMedium,
+                        h1 = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
+                        h2 = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                        h3 = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                        h4 = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        h5 = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        h6 = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 )
             } else {
@@ -161,7 +174,6 @@ fun DiaryEntryDetailsScreen(
                         .fillMaxWidth()
                         .weight(1f)
                         .padding(bottom = 8.dp)
-                        .imePadding()
                 )
             }
         }
