@@ -47,6 +47,7 @@ import com.mikepenz.markdown.coil2.Coil2ImageTransformerImpl
 import com.mikepenz.markdown.m3.Markdown
 import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -70,13 +71,15 @@ fun NoteDetailsScreen(
     val readingMode = state.readingMode
     var folder: NoteFolder? by remember { mutableStateOf(null) }
     var lastModified by remember { mutableStateOf("") }
-    val wordCountString by remember {
-        derivedStateOf { content.split(" ").size.toString() }
-    }
+    var wordCountString by remember { mutableStateOf("") }
     val aiEnabled by viewModel.aiEnabled.collectAsStateWithLifecycle()
     val aiState = viewModel.aiState
     val showAiSheet = aiState.showAiSheet
 
+    LaunchedEffect(content) {
+        delay(700)
+        wordCountString = content.words().toString()
+    }
     LaunchedEffect(state.note, state.folder) {
         if (state.note != null) {
             title = state.note.title
@@ -409,4 +412,20 @@ fun NoteDetailsScreen(
                 }
             })
     }
+}
+
+private fun String.words(): Int {
+    var count = 0
+    var inWord = false
+
+    forEach { char ->
+        if (char == ' ') {
+            inWord = false
+        } else if (!inWord) {
+            count++
+            inWord = true
+        }
+    }
+
+    return count
 }
