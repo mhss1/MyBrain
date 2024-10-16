@@ -1,0 +1,4 @@
+- Added more improvements for auto save
+- Updated German translation
+- Performance improvements
+- Bug fixes
