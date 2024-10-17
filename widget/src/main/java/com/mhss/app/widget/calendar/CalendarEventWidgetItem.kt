@@ -66,7 +66,7 @@ fun CalendarEventWidgetItem(
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         ),
-                        maxLines = 2
+                        maxLines = 1
                     )
                     Spacer(GlanceModifier.height(4.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -86,6 +86,7 @@ fun CalendarEventWidgetItem(
                             Text(
                                 text = event.location!!,
                                 style = TextStyle(color = GlanceTheme.colors.onSecondaryContainer),
+                                maxLines = 1
                             )
                         }
                     }

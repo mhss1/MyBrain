@@ -49,9 +49,14 @@ fun getTypography(font: FontFamily) = Typography(
         fontSize = 48.sp,
         fontFamily = font
     ),
+    headlineLarge = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 32.sp,
+        fontFamily = font
+    ),
     headlineMedium = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 34.sp,
+        fontSize = 28.sp,
         fontFamily = font
     ),
     headlineSmall = TextStyle(

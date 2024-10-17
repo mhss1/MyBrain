@@ -12,16 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.util.date.fullDate
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.mikepenz.markdown.m3.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
 
 @Composable
 fun LazyItemScope.DiaryEntryItem(
@@ -58,15 +60,22 @@ fun LazyItemScope.DiaryEntryItem(
                 )
             }
             if (entry.content.isNotBlank()){
-                MarkdownText(
-                    markdown = entry.content,
-                    maxLines = 14,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onBackground
+                Markdown(
+                    content = entry.content,
+                    colors = markdownColor(
+                        linkText = Color.Blue
                     ),
-                    onClick = {onClick(entry)},
-                    onLinkClicked = {onClick(entry)},
+                    typography = markdownTypography(
+                        text = MaterialTheme.typography.bodyMedium,
+                        h1 = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                        h2 = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        h3 = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        h4 = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        h5 = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                        h6 = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                        code = MaterialTheme.typography.bodySmall,
+                        paragraph = MaterialTheme.typography.bodyMedium,
+                    )
                 )
                 Spacer(Modifier.height(8.dp))
             }

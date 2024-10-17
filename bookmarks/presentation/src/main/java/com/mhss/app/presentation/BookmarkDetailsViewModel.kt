@@ -11,8 +11,10 @@ import com.mhss.app.domain.use_case.DeleteBookmarkUseCase
 import com.mhss.app.domain.use_case.GetBookmarkUseCase
 import com.mhss.app.domain.use_case.UpdateBookmarkUseCase
 import com.mhss.app.util.date.now
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.Named
 
 @KoinViewModel
 class BookmarkDetailsViewModel(
@@ -20,6 +22,7 @@ class BookmarkDetailsViewModel(
     private val updateBookmark: UpdateBookmarkUseCase,
     private val addBookmark: AddBookmarkUseCase,
     private val deleteBookmark: DeleteBookmarkUseCase,
+    @Named("applicationScope") private val applicationScope: CoroutineScope,
     bookmarkId: Int,
 ) : ViewModel() {
 
@@ -40,8 +43,9 @@ class BookmarkDetailsViewModel(
             BookmarkDetailsEvent.ErrorDisplayed -> {
                 bookmarkDetailsUiState = bookmarkDetailsUiState.copy(error = null)
             }
-
-            is BookmarkDetailsEvent.ScreenOnStop -> viewModelScope.launch {
+            // Using applicationScope to avoid cancelling when the user exits the screen
+            // and the view model is cleared before the job finishes
+            is BookmarkDetailsEvent.ScreenOnStop -> applicationScope.launch {
                 if (bookmarkDetailsUiState.bookmark == null) {
                     if (event.bookmark.url.isNotBlank()
                         || event.bookmark.title.isNotBlank()

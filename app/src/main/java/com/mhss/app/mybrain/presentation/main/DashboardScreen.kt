@@ -18,7 +18,10 @@ import com.mhss.app.ui.navigation.Screen
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
+@OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun DashboardScreen(
     navController: NavHostController,
@@ -53,7 +56,7 @@ fun DashboardScreen(
                     onEventClicked = {
                         navController.navigate(
                             Screen.CalendarEventDetailsScreen(
-                                Json.encodeToString(it)
+                                Base64.encode(Json.encodeToString(it).toByteArray())
                             )
                         )
                     }

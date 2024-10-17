@@ -70,6 +70,8 @@ fun CalendarEventSmallItem(
                         allDay = event.allDay,
                     ),
                     style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
             }

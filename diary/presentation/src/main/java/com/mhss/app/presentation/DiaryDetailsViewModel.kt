@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.domain.use_case.*
 import com.mhss.app.util.date.now
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.Named
 
 @KoinViewModel
 class DiaryDetailsViewModel(
@@ -17,6 +19,7 @@ class DiaryDetailsViewModel(
     private val addEntry: AddDiaryEntryUseCase,
     private val updateEntry: UpdateDiaryEntryUseCase,
     private val deleteEntry: DeleteDiaryEntryUseCase,
+    @Named("applicationScope") private val applicationScope: CoroutineScope,
     entryId: Int
 ) : ViewModel() {
 
@@ -43,7 +46,9 @@ class DiaryDetailsViewModel(
             is DiaryDetailsEvent.ToggleReadingMode -> {
                 uiState = uiState.copy(readingMode = !uiState.readingMode)
             }
-            is DiaryDetailsEvent.ScreenOnStop -> viewModelScope.launch {
+            // Using applicationScope to avoid cancelling when the user exits the screen
+            // and the view model is cleared before the job finishes
+            is DiaryDetailsEvent.ScreenOnStop -> applicationScope.launch {
                 if (uiState.entry == null) {
                     if (event.currentEntry.title.isNotBlank() || event.currentEntry.content.isNotBlank()) {
                         val entry = event.currentEntry.copy(

@@ -158,10 +158,10 @@
     <string name="import_failed">İçe aktarırken bir sorun oluştu. Dosya isimleri veya içerikleri bozuk olabilir</string>
     <string name="grant_permission_to_export">Dışa aktarmak için izin ver</string>
     <string name="importing">İçe aktarılıyor....</string>
-    <string name="recurring">Recurring</string>
+    <string name="recurring">Yinelenen</string>
     <string name="repeats_every">Repeats every</string>
     <string name="encrypted">Encrypted</string>
-    <string name="password">Password</string>
+    <string name="password">Şifre</string>
     <string name="every_hour">Every hour</string>
     <string name="every_minute">Every minute</string>
     <string name="lock_app">Lock app</string>
@@ -182,7 +182,7 @@
     <string name="openai">OpenAI</string>
     <string name="model">Model</string>
     <string name="gemini_description">Gemini models from Google</string>
-    <string name="openai_description">"GPT models from OpenAI.\nYou can also use any OpenAI compatible API  like Groq or a self hosted option by adding a custom URL "</string>
+    <string name="openai_description">GPT models from OpenAI.\nYou can also use any OpenAI compatible API like Groq or a self hosted option by adding a custom URL</string>
     <string name="custom_url">Custom URL</string>
     <string name="auto_format">Auto format</string>
     <string name="correct_spelling">Correct spelling</string>

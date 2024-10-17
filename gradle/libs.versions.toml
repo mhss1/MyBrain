@@ -4,7 +4,6 @@ appcompat = "1.7.0"
 biometric = "1.4.0-alpha02"
 calf = "0.5.5"
 composeBom = "2024.09.03"
-composeMarkdown = "0.5.4"
 coreKtx = "1.13.1"
 coroutines = "1.9.0"
 datastorePreferences = "1.1.1"
@@ -18,7 +17,7 @@ lifecycleVersion = "2.8.6"
 navigationCompose = "2.8.2"
 room = "2.6.1"
 workManager = "2.9.1"
-androidGradlePlugin = "8.7.0"
+androidGradlePlugin = "8.7.1"
 kotlin = "2.0.20"
 ksp = "2.0.20-1.0.25"
 koinBOM = "4.0.0"
@@ -28,6 +27,7 @@ kotlinxDatetime = "0.6.1"
 material = "1.12.0"
 ktor = "2.3.12"
 squircleShape = "2.0.0"
+markdownRenderer = "0.26.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -56,7 +56,6 @@ compose-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
-compose-markdown = { module = "com.github.jeziellago:compose-markdown", version.ref = "composeMarkdown" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -78,6 +77,8 @@ ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 squircle-shape = { group = "io.github.stoyan-vuchev", name = "squircle-shape", version.ref = "squircleShape" }
+markdown-renderer = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "markdownRenderer" }
+markdown-coil2 = { module = "com.mikepenz:multiplatform-markdown-renderer-coil2", version.ref = "markdownRenderer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -90,7 +91,7 @@ kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.
 
 [bundles]
 koin = ["koin-core", "koin-annotations"]
-compose = ["compose-ui", "compose-material", "androidx-navigation-compose", "compose-ui-tooling", "androidx-lifecycle-runtime-compose", "compose-ui-tooling-preview", "koin-androidx-compose", "compose-markdown"]
+compose = ["compose-ui", "compose-material", "androidx-navigation-compose", "compose-ui-tooling", "androidx-lifecycle-runtime-compose", "compose-ui-tooling-preview", "koin-androidx-compose", "markdown-renderer", "markdown-coil2"]
 androidx-glance = ["androidx-glance", "androidx-glance-appwidget", "androidx-glance-material", "androidx-glance-preview", "androidx-glance-appwidget-preview"]
 ktor-core = ["ktor-core", "ktor-serialization", "ktor-content-negotiation", "ktor-logging"]
 

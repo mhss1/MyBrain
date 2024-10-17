@@ -74,6 +74,8 @@ fun LazyItemScope.CalendarEventItem(
                         allDay = event.allDay,
                     ),
                     style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
             }
