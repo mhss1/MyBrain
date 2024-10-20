@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -45,9 +45,25 @@ fun DateTimeDialog(
     var showTime by remember {
         mutableStateOf(false)
     }
-    BasicAlertDialog(
+    DatePickerDialog(
         onDismissRequest = onDismissRequest,
-        modifier = Modifier.fillMaxWidth().padding(8.dp)
+        modifier = Modifier.fillMaxWidth(),
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    if (showTime) {
+                        onDatePicked(
+                            datePickerState.selectedDateMillis?.at(
+                                timePickerState.hour,
+                                timePickerState.minute
+                            ) ?: initialDate
+                        )
+                    } else showTime = true
+                },
+            ) {
+                Text(stringResource(R.string.okay))
+            }
+        }
     ) {
         Surface(
             shape = RoundedCornerShape(20.dp)
@@ -67,20 +83,6 @@ fun DateTimeDialog(
                             showModeToggle = false
                         )
                     }
-                }
-                TextButton(
-                    onClick = {
-                        if (showTime) {
-                            onDatePicked(
-                                datePickerState.selectedDateMillis?.at(
-                                    timePickerState.hour,
-                                    timePickerState.minute
-                                ) ?: initialDate
-                            )
-                        } else showTime = true
-                    },
-                ) {
-                    Text(stringResource(R.string.okay))
                 }
             }
         }
