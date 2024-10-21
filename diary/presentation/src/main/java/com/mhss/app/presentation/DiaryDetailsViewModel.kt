@@ -43,30 +43,33 @@ class DiaryDetailsViewModel(
                 deleteEntry(uiState.entry!!)
                 uiState = uiState.copy(navigateUp = true)
             }
+
             is DiaryDetailsEvent.ToggleReadingMode -> {
                 uiState = uiState.copy(readingMode = !uiState.readingMode)
             }
             // Using applicationScope to avoid cancelling when the user exits the screen
             // and the view model is cleared before the job finishes
             is DiaryDetailsEvent.ScreenOnStop -> applicationScope.launch {
-                if (uiState.entry == null) {
-                    if (event.currentEntry.title.isNotBlank() || event.currentEntry.content.isNotBlank()) {
-                        val entry = event.currentEntry.copy(
+                if (!uiState.navigateUp) {
+                    if (uiState.entry == null) {
+                        if (event.currentEntry.title.isNotBlank() || event.currentEntry.content.isNotBlank()) {
+                            val entry = event.currentEntry.copy(
+                                updatedDate = now()
+                            )
+                            val id = addEntry(entry)
+                            uiState = uiState.copy(entry = entry.copy(id = id.toInt()))
+                        }
+                    } else if (entryChanged(uiState.entry!!, event.currentEntry)) {
+                        val newEntry = uiState.entry!!.copy(
+                            title = event.currentEntry.title,
+                            content = event.currentEntry.content,
+                            mood = event.currentEntry.mood,
+                            createdDate = event.currentEntry.createdDate,
                             updatedDate = now()
                         )
-                        val id = addEntry(entry)
-                        uiState = uiState.copy(entry = entry.copy(id = id.toInt()))
+                        updateEntry(newEntry)
+                        uiState = uiState.copy(entry = newEntry)
                     }
-                } else if (entryChanged(uiState.entry!!, event.currentEntry)) {
-                    val newEntry = uiState.entry!!.copy(
-                        title = event.currentEntry.title,
-                        content = event.currentEntry.content,
-                        mood = event.currentEntry.mood,
-                        createdDate = event.currentEntry.createdDate,
-                        updatedDate = now()
-                    )
-                    updateEntry(newEntry)
-                    uiState = uiState.copy(entry = newEntry)
                 }
             }
         }
@@ -75,7 +78,8 @@ class DiaryDetailsViewModel(
     private fun entryChanged(entry: DiaryEntry, newEntry: DiaryEntry): Boolean {
         return entry.title != newEntry.title ||
                 entry.content != newEntry.content ||
-                entry.mood != newEntry.mood
+                entry.mood != newEntry.mood ||
+                entry.createdDate != newEntry.createdDate
     }
 
     data class UiState(

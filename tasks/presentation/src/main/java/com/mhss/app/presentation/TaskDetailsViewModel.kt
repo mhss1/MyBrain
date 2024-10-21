@@ -45,24 +45,26 @@ class TaskDetailsViewModel(
             // Using applicationScope to avoid cancelling when the user exits the screen
             // and the view model is cleared before the job finishes
             is TaskDetailsEvent.ScreenOnStop -> applicationScope.launch {
-                if (taskChanged(taskDetailsUiState.task!!, event.task)) {
-                    val newTask = taskDetailsUiState.task!!.copy(
-                        title = event.task.title.ifBlank { "Untitled" },
-                        description = event.task.description,
-                        dueDate = event.task.dueDate,
-                        priority = event.task.priority,
-                        subTasks = event.task.subTasks,
-                        recurring = event.task.recurring,
-                        frequency = event.task.frequency,
-                        frequencyAmount = event.task.frequencyAmount,
-                        isCompleted = event.task.isCompleted,
-                        updatedDate = now()
-                    )
-                    updateTask(
-                        newTask,
-                        event.task.dueDate != taskDetailsUiState.task!!.dueDate
-                    )
-                    taskDetailsUiState = taskDetailsUiState.copy(task = newTask)
+                if (!taskDetailsUiState.navigateUp) {
+                    if (taskChanged(taskDetailsUiState.task!!, event.task)) {
+                        val newTask = taskDetailsUiState.task!!.copy(
+                            title = event.task.title.ifBlank { "Untitled" },
+                            description = event.task.description,
+                            dueDate = event.task.dueDate,
+                            priority = event.task.priority,
+                            subTasks = event.task.subTasks,
+                            recurring = event.task.recurring,
+                            frequency = event.task.frequency,
+                            frequencyAmount = event.task.frequencyAmount,
+                            isCompleted = event.task.isCompleted,
+                            updatedDate = now()
+                        )
+                        updateTask(
+                            newTask,
+                            event.task.dueDate != taskDetailsUiState.task!!.dueDate
+                        )
+                        taskDetailsUiState = taskDetailsUiState.copy(task = newTask)
+                    }
                 }
             }
 
