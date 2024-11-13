@@ -126,25 +126,27 @@ class NoteDetailsViewModel(
             // Using applicationScope to avoid cancelling when the user exits the screen
             // and the view model is cleared before the job finishes
             is NoteDetailsEvent.ScreenOnStop -> applicationScope.launch {
-                if (noteUiState.note == null) {
-                    if (event.currentNote.title.isNotBlank() || event.currentNote.content.isNotBlank()) {
-                        val note = event.currentNote.copy(
-                            createdDate = now(),
+                if (!noteUiState.navigateUp) {
+                    if (noteUiState.note == null) {
+                        if (event.currentNote.title.isNotBlank() || event.currentNote.content.isNotBlank()) {
+                            val note = event.currentNote.copy(
+                                createdDate = now(),
+                                updatedDate = now()
+                            )
+                            val id = addNote(note)
+                            noteUiState = noteUiState.copy(note = note.copy(id = id.toInt()))
+                        }
+                    } else if (noteChanged(noteUiState.note!!, event.currentNote)) {
+                        val newNote = noteUiState.note!!.copy(
+                            title = event.currentNote.title,
+                            content = event.currentNote.content,
+                            folderId = event.currentNote.folderId,
+                            pinned = event.currentNote.pinned,
                             updatedDate = now()
                         )
-                        val id = addNote(note)
-                        noteUiState = noteUiState.copy(note = note.copy(id = id.toInt()))
+                        updateNote(newNote)
+                        noteUiState = noteUiState.copy(note = newNote)
                     }
-                } else if (noteChanged(noteUiState.note!!, event.currentNote)) {
-                    val newNote = noteUiState.note!!.copy(
-                        title = event.currentNote.title,
-                        content = event.currentNote.content,
-                        folderId = event.currentNote.folderId,
-                        pinned = event.currentNote.pinned,
-                        updatedDate = now()
-                    )
-                    updateNote(newNote)
-                    noteUiState = noteUiState.copy(note = newNote)
                 }
             }
 

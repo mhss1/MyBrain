@@ -46,27 +46,30 @@ class BookmarkDetailsViewModel(
             // Using applicationScope to avoid cancelling when the user exits the screen
             // and the view model is cleared before the job finishes
             is BookmarkDetailsEvent.ScreenOnStop -> applicationScope.launch {
-                if (bookmarkDetailsUiState.bookmark == null) {
-                    if (event.bookmark.url.isNotBlank()
-                        || event.bookmark.title.isNotBlank()
-                        || event.bookmark.description.isNotBlank()
-                    ) {
-                        val bookmark = event.bookmark.copy(
-                            createdDate = now(),
+                if (!bookmarkDetailsUiState.navigateUp) {
+                    if (bookmarkDetailsUiState.bookmark == null) {
+                        if (event.bookmark.url.isNotBlank()
+                            || event.bookmark.title.isNotBlank()
+                            || event.bookmark.description.isNotBlank()
+                        ) {
+                            val bookmark = event.bookmark.copy(
+                                createdDate = now(),
+                                updatedDate = now()
+                            )
+                            val id = addBookmark(bookmark)
+                            bookmarkDetailsUiState =
+                                bookmarkDetailsUiState.copy(bookmark = bookmark.copy(id = id.toInt()))
+                        }
+                    } else if (bookmarkChanged(bookmarkDetailsUiState.bookmark!!, event.bookmark)) {
+                        val newBookmark = bookmarkDetailsUiState.bookmark!!.copy(
+                            title = event.bookmark.title,
+                            description = event.bookmark.description,
+                            url = event.bookmark.url,
                             updatedDate = now()
                         )
-                        val id = addBookmark(bookmark)
-                        bookmarkDetailsUiState = bookmarkDetailsUiState.copy(bookmark = bookmark.copy(id = id.toInt()))
+                        updateBookmark(newBookmark)
+                        bookmarkDetailsUiState = bookmarkDetailsUiState.copy(bookmark = newBookmark)
                     }
-                } else if (bookmarkChanged(bookmarkDetailsUiState.bookmark!!, event.bookmark)) {
-                    val newBookmark = bookmarkDetailsUiState.bookmark!!.copy(
-                        title = event.bookmark.title,
-                        description = event.bookmark.description,
-                        url = event.bookmark.url,
-                        updatedDate = now()
-                    )
-                    updateBookmark(newBookmark)
-                    bookmarkDetailsUiState = bookmarkDetailsUiState.copy(bookmark = newBookmark)
                 }
             }
 
