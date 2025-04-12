@@ -65,11 +65,11 @@ fun NoteDetailsScreen(
     var openFolderDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
-    var title by remember { mutableStateOf("") }
-    var content by remember { mutableStateOf("") }
-    var pinned by remember { mutableStateOf(false) }
+    val title = viewModel.title
+    val content = viewModel.content
+    val pinned = state.pinned
     val readingMode = state.readingMode
-    var folder: NoteFolder? by remember { mutableStateOf(null) }
+    val folder = state.folder
     var lastModified by remember { mutableStateOf("") }
     var wordCountString by remember { mutableStateOf("") }
     val aiEnabled by viewModel.aiEnabled.collectAsStateWithLifecycle()
@@ -77,17 +77,13 @@ fun NoteDetailsScreen(
     val showAiSheet = aiState.showAiSheet
 
     LaunchedEffect(content) {
-        delay(700)
+        delay(500)
         wordCountString = content.words().toString()
     }
-    LaunchedEffect(state.note, state.folder) {
+    LaunchedEffect(state.note) {
         if (state.note != null) {
-            title = state.note.title
-            content = state.note.content
-            pinned = state.note.pinned
             lastModified = state.note.updatedDate.formatDateDependingOnDay(context)
         }
-        folder = state.folder
     }
     LaunchedEffect(state.navigateUp) {
         if (state.navigateUp) {
@@ -98,14 +94,7 @@ fun NoteDetailsScreen(
     LifecycleStartEffect(Unit) {
         onStopOrDispose {
             viewModel.onEvent(
-                NoteDetailsEvent.ScreenOnStop(
-                    Note(
-                        title = title,
-                        content = content,
-                        folderId = folder?.id,
-                        pinned = pinned
-                    )
-                )
+                NoteDetailsEvent.ScreenOnStop
             )
         }
     }
@@ -129,7 +118,7 @@ fun NoteDetailsScreen(
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text = folder?.name!!,
+                                text = folder.name,
                                 modifier = Modifier.padding(end = 8.dp, top = 8.dp, bottom = 8.dp),
                                 style = MaterialTheme.typography.bodyLarge
                             )
@@ -150,7 +139,7 @@ fun NoteDetailsScreen(
                         )
                     }
                     IconButton(onClick = {
-                        pinned = !pinned
+                        viewModel.onEvent(NoteDetailsEvent.UpdatePinned(!pinned))
                     }) {
                         Icon(
                             painter = if (pinned) painterResource(id = R.drawable.ic_pin_filled)
@@ -184,7 +173,7 @@ fun NoteDetailsScreen(
         ) {
             OutlinedTextField(
                 value = title,
-                onValueChange = { title = it },
+                onValueChange = { viewModel.onEvent(NoteDetailsEvent.UpdateTitle(it)) },
                 label = { Text(text = stringResource(R.string.title)) },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -241,7 +230,7 @@ fun NoteDetailsScreen(
             else
                 OutlinedTextField(
                     value = content,
-                    onValueChange = { content = it },
+                    onValueChange = { viewModel.onEvent(NoteDetailsEvent.UpdateContent(it)) },
                     label = {
                         Text(text = stringResource(R.string.note_content))
                     },
@@ -299,11 +288,11 @@ fun NoteDetailsScreen(
                         viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     },
                     onReplaceClick = {
-                        content = aiState.result.toString()
+                        viewModel.onEvent(NoteDetailsEvent.UpdateContent(aiState.result.toString()))
                         viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     },
                     onAddToNoteClick = {
-                        content = aiState.result + "\n" + content
+                        viewModel.onEvent(NoteDetailsEvent.UpdateContent(aiState.result + "\n" + content))
                         viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     }
                 )
@@ -359,7 +348,7 @@ fun NoteDetailsScreen(
                                 .clip(RoundedCornerShape(25.dp))
                                 .border(1.dp, Color.Gray, RoundedCornerShape(25.dp))
                                 .clickable {
-                                    folder = null
+                                    viewModel.onEvent(NoteDetailsEvent.UpdateFolder(null))
                                     openFolderDialog = false
                                 }
                                 .background(if (folder == null) MaterialTheme.colorScheme.onBackground else Color.Transparent),
@@ -379,7 +368,7 @@ fun NoteDetailsScreen(
                                     .clip(RoundedCornerShape(25.dp))
                                     .border(1.dp, Color.Gray, RoundedCornerShape(25.dp))
                                     .clickable {
-                                        folder = it
+                                        viewModel.onEvent(NoteDetailsEvent.UpdateFolder(it))
                                         openFolderDialog = false
                                     }
                                     .background(if (folder?.id == it.id) MaterialTheme.colorScheme.onBackground else Color.Transparent),
