@@ -36,7 +36,6 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
-import com.mhss.app.domain.model.*
 import com.mhss.app.presentation.components.AiResultSheet
 import com.mhss.app.presentation.components.GradientIconButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
@@ -78,7 +77,7 @@ fun NoteDetailsScreen(
 
     LaunchedEffect(content) {
         delay(500)
-        wordCountString = content.words().toString()
+        wordCountString = content.countWords().toString()
     }
     LaunchedEffect(state.note) {
         if (state.note != null) {
@@ -403,12 +402,12 @@ fun NoteDetailsScreen(
     }
 }
 
-private fun String.words(): Int {
+private fun String.countWords(): Int {
     var count = 0
     var inWord = false
 
     forEach { char ->
-        if (char == ' ') {
+        if (char == ' ' || char == '\n') {
             inWord = false
         } else if (!inWord) {
             count++
