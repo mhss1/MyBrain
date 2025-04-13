@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,7 +63,9 @@ fun NoteDetailsScreen(
     val state = viewModel.noteUiState
     var openDeleteDialog by rememberSaveable { mutableStateOf(false) }
     var openFolderDialog by rememberSaveable { mutableStateOf(false) }
+
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val title = viewModel.title
     val content = viewModel.content
@@ -189,19 +192,28 @@ fun NoteDetailsScreen(
                         GradientIconButton(
                             text = stringResource(id = R.string.summarize),
                             iconPainter = painterResource(id = R.drawable.ic_summarize),
-                        ) { viewModel.onEvent(NoteDetailsEvent.Summarize(content)) }
+                        ) {
+                            viewModel.onEvent(NoteDetailsEvent.Summarize(content))
+                            keyboardController?.hide()
+                        }
                     }
                     item {
                         GradientIconButton(
                             text = stringResource(id = R.string.auto_format),
                             iconPainter = painterResource(id = R.drawable.ic_auto_format),
-                        ) { viewModel.onEvent(NoteDetailsEvent.AutoFormat(content)) }
+                        ) {
+                            viewModel.onEvent(NoteDetailsEvent.AutoFormat(content))
+                            keyboardController?.hide()
+                        }
                     }
                     item {
                         GradientIconButton(
                             text = stringResource(id = R.string.correct_spelling),
                             iconPainter = painterResource(id = R.drawable.ic_spelling),
-                        ) { viewModel.onEvent(NoteDetailsEvent.CorrectSpelling(content)) }
+                        ) {
+                            viewModel.onEvent(NoteDetailsEvent.CorrectSpelling(content))
+                            keyboardController?.hide()
+                        }
                     }
                 }
             }
