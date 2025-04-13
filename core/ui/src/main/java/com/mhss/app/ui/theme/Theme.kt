@@ -54,6 +54,7 @@ fun MyBrainTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     useDynamicColors: Boolean = false,
     fontFamily: FontFamily = Rubik,
+    fontSizeScale: Float = 1.0f,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
@@ -66,7 +67,7 @@ fun MyBrainTheme(
     } else {
         LightColorPalette
     }
-    val typography = getTypography(fontFamily)
+    val typography = getTypography(fontFamily, fontSizeScale)
     MaterialTheme(
         colorScheme = colors,
         typography = typography,

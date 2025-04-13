@@ -128,6 +128,11 @@
     <string name="call_mom_tasks_preview">Call mom</string>
     <string name="app_font">App font</string>
     <string name="font_system_default">System default</string>
+    <string name="font_size">Font Size</string>
+    <string name="font_size_small">Small</string>
+    <string name="font_size_normal">Normal</string>
+    <string name="font_size_large">Large</string>
+    <string name="font_size_extra_large">Extra Large</string>
     <string name="delete_event">Delete event</string>
     <string name="location">Location</string>
     <string name="do_not_repeat">Do not repeat</string>

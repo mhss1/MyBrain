@@ -17,6 +17,7 @@ object PrefsConstants {
     const val APP_FONT_KEY = "app_font"
     const val BLOCK_SCREENSHOTS_KEY = "block_screen_shots"
     const val LOCK_APP_KEY = "lock_app"
+    const val FONT_SIZE_KEY = "font_size"
 
     const val OPENAI_URL_KEY = "openai_url"
     const val OPENAI_USE_URL_KEY = "openai_use_url"

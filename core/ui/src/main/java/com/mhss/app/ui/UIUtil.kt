@@ -27,6 +27,13 @@ enum class StartUpScreenSettings(val value: Int) {
     SPACES(1)
 }
 
+enum class FontSizeSettings(@StringRes val title: Int, val value: Int, val scale: Float) {
+    SMALL(R.string.font_size_small, 0, 0.8f),
+    NORMAL(R.string.font_size_normal, 1, 1.0f),
+    LARGE(R.string.font_size_large, 2, 1.2f),
+    EXTRA_LARGE(R.string.font_size_extra_large, 3, 1.5f)
+}
+
 enum class ItemView(@StringRes val title: Int, val value: Int) {
     LIST(R.string.list, 0),
     GRID(R.string.grid, 1)
@@ -53,6 +60,27 @@ fun FontFamily.toInt(): Int {
         FontFamily.Monospace -> 2
         FontFamily.SansSerif -> 3
         else -> 0
+    }
+}
+
+fun Int.toFontSizeScale(): Float {
+    return when (this) {
+        FontSizeSettings.SMALL.value -> FontSizeSettings.SMALL.scale
+        FontSizeSettings.NORMAL.value -> FontSizeSettings.NORMAL.scale
+        FontSizeSettings.LARGE.value -> FontSizeSettings.LARGE.scale
+        FontSizeSettings.EXTRA_LARGE.value -> FontSizeSettings.EXTRA_LARGE.scale
+        else -> FontSizeSettings.NORMAL.scale
+    }
+}
+
+@Composable
+fun Int.getFontSizeName(): String {
+    return when (this) {
+        FontSizeSettings.SMALL.value -> stringResource(R.string.font_size_small)
+        FontSizeSettings.NORMAL.value -> stringResource(R.string.font_size_normal)
+        FontSizeSettings.LARGE.value -> stringResource(R.string.font_size_large)
+        FontSizeSettings.EXTRA_LARGE.value -> stringResource(R.string.font_size_extra_large)
+        else -> stringResource(R.string.font_size_normal)
     }
 }
 

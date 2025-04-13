@@ -12,71 +12,71 @@ val Rubik = FontFamily(
     Font(R.font.rubik_regular),
     Font(R.font.rubik_bold, FontWeight.Bold)
 )
-// Set of Material typography styles to start with
-fun getTypography(font: FontFamily) = Typography(
+
+fun getTypography(font: FontFamily, fontSizeScale: Float = 1.0f) = Typography(
     bodyLarge = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = (16 * fontSizeScale).sp,
         fontFamily = font
     ),
     bodyMedium = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontSize = (14 * fontSizeScale).sp,
         fontFamily = font
     ),
     bodySmall = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 10.sp,
+        fontSize = (10 * fontSizeScale).sp,
         fontFamily = font
     ),
     labelLarge = TextStyle(
         fontWeight = FontWeight.W500,
-        fontSize = 14.sp,
+        fontSize = (14 * fontSizeScale).sp,
         fontFamily = font
     ),
     displayLarge = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 96.sp,
+        fontSize = (96 * fontSizeScale).sp,
         fontFamily = font
     ),
     displayMedium = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 60.sp,
+        fontSize = (60 * fontSizeScale).sp,
         fontFamily = font
     ),
     displaySmall = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 48.sp,
+        fontSize = (48 * fontSizeScale).sp,
         fontFamily = font
     ),
     headlineLarge = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 32.sp,
+        fontSize = (32 * fontSizeScale).sp,
         fontFamily = font
     ),
     headlineMedium = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 28.sp,
+        fontSize = (28 * fontSizeScale).sp,
         fontFamily = font
     ),
     headlineSmall = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
+        fontSize = (24 * fontSizeScale).sp,
         fontFamily = font
     ),
     titleLarge = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 20.sp,
+        fontSize = (20 * fontSizeScale).sp,
         fontFamily = font
     ),
     titleMedium = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = (16 * fontSizeScale).sp,
         fontFamily = font
     ),
     titleSmall = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
+        fontSize = (12 * fontSizeScale).sp,
         fontFamily = font
     )
 )

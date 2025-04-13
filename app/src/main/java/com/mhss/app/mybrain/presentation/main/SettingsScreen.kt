@@ -30,12 +30,14 @@ import com.mhss.app.presentation.SettingsBasicLinkItem
 import com.mhss.app.presentation.SettingsItemCard
 import com.mhss.app.presentation.SettingsSwitchCard
 import com.mhss.app.presentation.SettingsViewModel
+import com.mhss.app.ui.FontSizeSettings
 import com.mhss.app.ui.StartUpScreenSettings
 import com.mhss.app.ui.ThemeSettings
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.getName
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.theme.Rubik
+import com.mhss.app.ui.getFontSizeName
 import com.mhss.app.ui.toFontFamily
 import com.mhss.app.ui.toInt
 import kotlinx.coroutines.launch
@@ -127,6 +129,21 @@ fun SettingsScreen(
                     viewModel.saveSettings(
                         intPreferencesKey(PrefsConstants.APP_FONT_KEY),
                         font
+                    )
+                }
+            }
+            item {
+                val fontSize = viewModel
+                    .getSettings(
+                        intPreferencesKey(PrefsConstants.FONT_SIZE_KEY),
+                        FontSizeSettings.NORMAL.value
+                    ).collectAsStateWithLifecycle(FontSizeSettings.NORMAL.value)
+                FontSizeSettingsItem(
+                    fontSize.value,
+                ) { fontSizeValue ->
+                    viewModel.saveSettings(
+                        intPreferencesKey(PrefsConstants.FONT_SIZE_KEY),
+                        fontSizeValue
                     )
                 }
             }
@@ -462,6 +479,69 @@ fun AppFontSettingsItem(
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         })
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FontSizeSettingsItem(
+    selectedFontSize: Int,
+    onFontSizeChange: (Int) -> Unit = {}
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val fontSizes = FontSizeSettings.entries
+    SettingsItemCard(
+        cornerRadius = 16.dp,
+        onClick = {
+            expanded = true
+        },
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_font_size),
+                contentDescription = stringResource(R.string.font_size),
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = stringResource(R.string.font_size),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = selectedFontSize.getFontSizeName(),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                fontSizes.forEach { fontSizeItem ->
+                    DropdownMenuItem(
+                        onClick = {
+                            onFontSizeChange(fontSizeItem.value)
+                            expanded = false
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(fontSizeItem.title),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
+                    )
                 }
             }
         }
