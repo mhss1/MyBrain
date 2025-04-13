@@ -17,12 +17,14 @@ class SaveBookmarkActivity : ComponentActivity() {
         if (intent != null) {
             if (intent.action == Intent.ACTION_SEND && intent.type == "text/plain") {
                 val url = intent.getStringExtra(Intent.EXTRA_TEXT)
+                val title = intent.getStringExtra(Intent.EXTRA_SUBJECT)
                 if (!url.isNullOrBlank()) {
                     if (url.isValidUrl()) {
                         viewModel.onEvent(
                             BookmarkEvent.AddBookmark(
                                 Bookmark(
                                     url = url.trim(),
+                                    title = title ?: "",
                                     createdDate = now(),
                                     updatedDate = now()
                                 )
