@@ -201,4 +201,6 @@
     <string name="font_size_normal">عادي</string>
     <string name="font_size_large">كبير</string>
     <string name="font_size_extra_large">كبير جداً</string>
+    <string name="plain_text">نص عادي</string>
+    <string name="share_note">مشاركة الملاحظة</string>
 </resources>

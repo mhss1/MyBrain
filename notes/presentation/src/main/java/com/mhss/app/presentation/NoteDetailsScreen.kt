@@ -39,6 +39,7 @@ import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
 import com.mhss.app.presentation.components.AiResultSheet
 import com.mhss.app.presentation.components.GradientIconButton
+import com.mhss.app.presentation.components.ShareNoteAsPlainTextOption
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.ui.toUserMessage
@@ -63,6 +64,7 @@ fun NoteDetailsScreen(
     val state = viewModel.noteUiState
     var openDeleteDialog by rememberSaveable { mutableStateOf(false) }
     var openFolderDialog by rememberSaveable { mutableStateOf(false) }
+    var showShareMenu by rememberSaveable { mutableStateOf(false) }
 
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -130,7 +132,22 @@ fun NoteDetailsScreen(
                             Icon(
                                 painterResource(R.drawable.ic_create_folder),
                                 stringResource(R.string.folders),
-                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
+                    }
+                    IconButton(onClick = { showShareMenu = true }) {
+                        Icon(
+                            painterResource(R.drawable.ic_share),
+                            stringResource(R.string.share_note),
+                        )
+                        DropdownMenu(
+                            expanded = showShareMenu,
+                            onDismissRequest = { showShareMenu = false }
+                        ) {
+                            ShareNoteAsPlainTextOption(
+                                title = title,
+                                content = content,
+                                onOptionSelected = { showShareMenu = false }
                             )
                         }
                     }
