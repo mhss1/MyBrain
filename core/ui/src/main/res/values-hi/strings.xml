@@ -128,6 +128,11 @@
     <string name="call_mom_tasks_preview">कॉल माँ</string>
     <string name="app_font">ऐप फ़ॉन्ट</string>
     <string name="font_system_default">सिस्टम डिफ़ॉल्ट</string>
+    <string name="font_size">Font Size</string>
+    <string name="font_size_small">Small</string>
+    <string name="font_size_normal">Normal</string>
+    <string name="font_size_large">Large</string>
+    <string name="font_size_extra_large">Extra Large</string>
     <string name="delete_event">इवेंट डिलीट करे</string>
     <string name="location">स्थान</string>
     <string name="do_not_repeat">दोहराहे नहीं</string>
@@ -195,4 +200,6 @@
     <string name="assistant">Assistant</string>
     <string name="calendar_events_next_7_days">Next 7 days events</string>
     <string name="ai_not_enabled">AI feature is not enabled\nPlease enable it from Integrations screen in settings</string>
+    <string name="plain_text">Plain Text</string>
+    <string name="share_note">Share Note</string>
 </resources>
