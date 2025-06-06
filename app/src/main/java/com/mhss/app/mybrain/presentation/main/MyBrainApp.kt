@@ -62,6 +62,7 @@ import com.mhss.app.presentation.TaskDetailScreen
 import com.mhss.app.presentation.TasksScreen
 import com.mhss.app.presentation.TasksSearchScreen
 import com.mhss.app.ui.StartUpScreenSettings
+import com.mhss.app.ui.toStartUpScreen
 import org.koin.compose.KoinContext
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -126,9 +127,6 @@ fun MyBrainApp(
                 }
             }
         }
-        if (viewModel.defaultStartUpScreen.first() == StartUpScreenSettings.DASHBOARD.value) {
-            startDestination = Screen.DashboardScreen
-        }
     }
     KoinContext {
         MyBrainTheme(
@@ -138,6 +136,13 @@ fun MyBrainApp(
             fontSizeScale = fontSize.value.toFontSizeScale()
         ) {
             val navController = rememberNavController()
+            LaunchedEffect(Unit) {
+                when (val defaultScreen = viewModel.defaultStartUpScreen.first()) {
+                    StartUpScreenSettings.DASHBOARD.value -> startDestination = Screen.DashboardScreen
+                    StartUpScreenSettings.SPACES.value -> Unit
+                    else -> navController.navigate(defaultScreen.toStartUpScreen().screen)
+                }
+            }
             Scaffold(
                 modifier = modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.background,

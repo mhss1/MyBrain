@@ -96,26 +96,19 @@ fun SettingsScreen(
                 }
             }
             item {
-                val screen = viewModel
+                val screen by viewModel
                     .getSettings(
                         intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY),
                         StartUpScreenSettings.SPACES.value
                     ).collectAsStateWithLifecycle(StartUpScreenSettings.SPACES.value)
                 StartUpScreenSettingsItem(
-                    screen.value,
-                    {
-                        viewModel.saveSettings(
-                            intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY),
-                            StartUpScreenSettings.SPACES.value
-                        )
-                    },
-                    {
-                        viewModel.saveSettings(
-                            intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY),
-                            StartUpScreenSettings.DASHBOARD.value
-                        )
-                    }
-                )
+                    screen
+                ) { screenValue ->
+                    viewModel.saveSettings(
+                        intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY),
+                        screenValue
+                    )
+                }
             }
             item {
                 val screen = viewModel
@@ -349,8 +342,7 @@ fun ThemeSettingsItem(theme: Int = 0, onClick: () -> Unit = {}) {
 @Composable
 fun StartUpScreenSettingsItem(
     screen: Int,
-    onSpacesClick: () -> Unit = {},
-    onDashboardClick: () -> Unit = {}
+    onScreenChange: (Int) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
     SettingsItemCard(
@@ -383,6 +375,12 @@ fun StartUpScreenSettingsItem(
                     text = when (screen) {
                         StartUpScreenSettings.SPACES.value -> stringResource(R.string.spaces)
                         StartUpScreenSettings.DASHBOARD.value -> stringResource(R.string.dashboard)
+                        StartUpScreenSettings.NOTES.value -> stringResource(R.string.notes)
+                        StartUpScreenSettings.TASKS.value -> stringResource(R.string.tasks)
+                        StartUpScreenSettings.DIARY.value -> stringResource(R.string.diary)
+                        StartUpScreenSettings.BOOKMARKS.value -> stringResource(R.string.bookmarks)
+                        StartUpScreenSettings.CALENDAR.value -> stringResource(R.string.calendar)
+                        StartUpScreenSettings.ASSISTANT.value -> stringResource(R.string.assistant)
                         else -> stringResource(R.string.spaces)
                     },
                     style = MaterialTheme.typography.bodyLarge
@@ -394,26 +392,31 @@ fun StartUpScreenSettingsItem(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
             ) {
-                DropdownMenuItem(onClick = {
-                    onSpacesClick()
-                    expanded = false
-                },
-                    text = {
-                        Text(
-                            text = stringResource(id = R.string.spaces),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    })
-                DropdownMenuItem(onClick = {
-                    onDashboardClick()
-                    expanded = false
-                },
-                    text = {
-                        Text(
-                            text = stringResource(id = R.string.dashboard),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    })
+                val options = listOf(
+                    StartUpScreenSettings.SPACES to R.string.spaces,
+                    StartUpScreenSettings.DASHBOARD to R.string.dashboard,
+                    StartUpScreenSettings.NOTES to R.string.notes,
+                    StartUpScreenSettings.TASKS to R.string.tasks,
+                    StartUpScreenSettings.DIARY to R.string.diary,
+                    StartUpScreenSettings.BOOKMARKS to R.string.bookmarks,
+                    StartUpScreenSettings.CALENDAR to R.string.calendar,
+                    StartUpScreenSettings.ASSISTANT to R.string.assistant
+                )
+                
+                options.forEach { (screenOption, stringRes) ->
+                    DropdownMenuItem(
+                        onClick = {
+                            onScreenChange(screenOption.value)
+                            expanded = false
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(id = stringRes),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
+                    )
+                }
             }
         }
     }

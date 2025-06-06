@@ -10,6 +10,7 @@ import com.mhss.app.domain.model.TaskFrequency
 import com.mhss.app.network.NetworkResult
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.theme.Green
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.ui.theme.Red
@@ -22,9 +23,19 @@ enum class ThemeSettings(val value: Int) {
     AUTO(2)
 }
 
-enum class StartUpScreenSettings(val value: Int) {
-    DASHBOARD(0),
-    SPACES(1)
+enum class StartUpScreenSettings(val value: Int, val screen: Screen) {
+    DASHBOARD(0, Screen.DashboardScreen),
+    SPACES(1, Screen.SpacesScreen),
+    NOTES(2, Screen.NotesScreen),
+    TASKS(3, Screen.TasksScreen()),
+    DIARY(4, Screen.DiaryScreen),
+    BOOKMARKS(5, Screen.BookmarksScreen),
+    CALENDAR(6, Screen.CalendarScreen),
+    ASSISTANT(7, Screen.AssistantScreen)
+}
+
+fun Int.toStartUpScreen(): StartUpScreenSettings {
+    return StartUpScreenSettings.entries.first { it.value == this }
 }
 
 enum class FontSizeSettings(@StringRes val title: Int, val value: Int, val scale: Float) {
