@@ -33,6 +33,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.mhss.app.ui.R
+import com.mhss.app.ui.navigation.Screen
+import com.mhss.app.ui.theme.MyBrainTheme
+import com.mhss.app.ui.theme.Rubik
+import com.mhss.app.ui.toFontFamily
+import com.mhss.app.ui.toFontSizeScale
+import com.mhss.app.ui.toInt
 import com.mhss.app.util.Constants
 import com.mhss.app.mybrain.presentation.app_lock.AppLockManager
 import com.mhss.app.mybrain.presentation.app_lock.AuthScreen
@@ -56,11 +62,7 @@ import com.mhss.app.presentation.TaskDetailScreen
 import com.mhss.app.presentation.TasksScreen
 import com.mhss.app.presentation.TasksSearchScreen
 import com.mhss.app.ui.StartUpScreenSettings
-import com.mhss.app.ui.navigation.Screen
-import com.mhss.app.ui.theme.MyBrainTheme
-import com.mhss.app.ui.theme.Rubik
-import com.mhss.app.ui.toFontFamily
-import com.mhss.app.ui.toInt
+import com.mhss.app.ui.toStartUpScreen
 import org.koin.compose.KoinContext
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -83,6 +85,7 @@ fun MyBrainApp(
     val useMaterialYou by viewModel.useMaterialYou.collectAsStateWithLifecycle(false)
     val lifecycleOwner = LocalLifecycleOwner.current
     val font = viewModel.font.collectAsStateWithLifecycle(Rubik.toInt())
+    val fontSize = viewModel.fontSize.collectAsStateWithLifecycle(1)
     var startDestination: Screen by remember { mutableStateOf(Screen.SpacesScreen) }
     LaunchedEffect(Unit) {
         lifecycleOwner.lifecycleScope.launch {
@@ -124,17 +127,22 @@ fun MyBrainApp(
                 }
             }
         }
-        if (viewModel.defaultStartUpScreen.first() == StartUpScreenSettings.DASHBOARD.value) {
-            startDestination = Screen.DashboardScreen
-        }
     }
     KoinContext {
         MyBrainTheme(
             darkTheme = isDarkMode,
             useDynamicColors = useMaterialYou,
-            fontFamily = font.value.toFontFamily()
+            fontFamily = font.value.toFontFamily(),
+            fontSizeScale = fontSize.value.toFontSizeScale()
         ) {
             val navController = rememberNavController()
+            LaunchedEffect(Unit) {
+                when (val defaultScreen = viewModel.defaultStartUpScreen.first()) {
+                    StartUpScreenSettings.DASHBOARD.value -> startDestination = Screen.DashboardScreen
+                    StartUpScreenSettings.SPACES.value -> Unit
+                    else -> navController.navigate(defaultScreen.toStartUpScreen().screen)
+                }
+            }
             Scaffold(
                 modifier = modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.background,

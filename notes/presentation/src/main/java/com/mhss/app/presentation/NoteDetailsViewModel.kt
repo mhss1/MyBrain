@@ -27,6 +27,7 @@ import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.util.date.now
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -54,8 +55,16 @@ class NoteDetailsViewModel(
     folderId: Int,
 ) : ViewModel() {
 
-    var noteUiState by mutableStateOf((UiState()))
+    var noteUiState by mutableStateOf(UiState())
         private set
+
+    var title by mutableStateOf("")
+        private set
+    var content by mutableStateOf("")
+        private set
+
+    private var autoSaveJob: Job? = null
+    private val debounceTime = 2000L
 
     private lateinit var aiKey: String
     private lateinit var aiModel: String
@@ -112,41 +121,28 @@ class NoteDetailsViewModel(
             val note: Note? = if (id != -1) getNote(id) else null
             val folder = getNoteFolder(note?.folderId ?: folderId)
             val folders = getAllFolders().first()
+
+            if (note != null) {
+                title = note.title
+                content = note.content
+            }
+
             noteUiState = noteUiState.copy(
                 note = note,
                 folder = folder,
                 folders = folders,
-                readingMode = note != null
+                readingMode = note != null,
+                pinned = note?.pinned ?: false
             )
         }
     }
 
     fun onEvent(event: NoteDetailsEvent) {
         when (event) {
-            // Using applicationScope to avoid cancelling when the user exits the screen
-            // and the view model is cleared before the job finishes
             is NoteDetailsEvent.ScreenOnStop -> applicationScope.launch {
                 if (!noteUiState.navigateUp) {
-                    if (noteUiState.note == null) {
-                        if (event.currentNote.title.isNotBlank() || event.currentNote.content.isNotBlank()) {
-                            val note = event.currentNote.copy(
-                                createdDate = now(),
-                                updatedDate = now()
-                            )
-                            val id = addNote(note)
-                            noteUiState = noteUiState.copy(note = note.copy(id = id.toInt()))
-                        }
-                    } else if (noteChanged(noteUiState.note!!, event.currentNote)) {
-                        val newNote = noteUiState.note!!.copy(
-                            title = event.currentNote.title,
-                            content = event.currentNote.content,
-                            folderId = event.currentNote.folderId,
-                            pinned = event.currentNote.pinned,
-                            updatedDate = now()
-                        )
-                        updateNote(newNote)
-                        noteUiState = noteUiState.copy(note = newNote)
-                    }
+                    autoSaveJob?.cancel()
+                    saveNote()
                 }
             }
 
@@ -157,6 +153,26 @@ class NoteDetailsViewModel(
 
             NoteDetailsEvent.ToggleReadingMode -> noteUiState =
                 noteUiState.copy(readingMode = !noteUiState.readingMode)
+
+            is NoteDetailsEvent.UpdateTitle -> {
+                title = event.title
+                saveNoteWithDebounce()
+            }
+
+            is NoteDetailsEvent.UpdateContent -> {
+                content = event.content
+                saveNoteWithDebounce()
+            }
+
+            is NoteDetailsEvent.UpdateFolder -> {
+                noteUiState = noteUiState.copy(folder = event.folder)
+                saveNoteWithDebounce()
+            }
+
+            is NoteDetailsEvent.UpdatePinned -> {
+                noteUiState = noteUiState.copy(pinned = event.pinned)
+                saveNoteWithDebounce()
+            }
 
             is AiAction -> aiActionJob = viewModelScope.launch {
                 val prompt = when (event) {
@@ -198,14 +214,51 @@ class NoteDetailsViewModel(
         openaiURL
     )
 
-    private fun noteChanged(
-        note: Note,
-        newNote: Note,
-    ): Boolean {
-        return note.title != newNote.title ||
-                note.content != newNote.content ||
-                note.folderId != newNote.folderId ||
-                note.pinned != newNote.pinned
+    private fun saveNoteWithDebounce() {
+        autoSaveJob?.cancel()
+        autoSaveJob = viewModelScope.launch {
+            delay(debounceTime)
+            saveNote()
+        }
+    }
+
+    private suspend fun saveNote() {
+        if (noteUiState.navigateUp) return
+
+        val folderId = noteUiState.folder?.id
+        val pinned = noteUiState.pinned
+
+        if (noteUiState.note == null) {
+            if (title.isNotBlank() || content.isNotBlank()) {
+                val note = Note(
+                    title = title,
+                    content = content,
+                    folderId = folderId,
+                    pinned = pinned,
+                    createdDate = now(),
+                    updatedDate = now()
+                )
+                val id = addNote(note)
+                noteUiState = noteUiState.copy(note = note.copy(id = id.toInt()))
+            }
+        } else {
+            val currentNote = noteUiState.note!!
+            if (currentNote.title != title ||
+                currentNote.content != content ||
+                currentNote.folderId != folderId ||
+                currentNote.pinned != pinned
+            ) {
+                val newNote = currentNote.copy(
+                    title = title,
+                    content = content,
+                    folderId = folderId,
+                    pinned = pinned,
+                    updatedDate = now()
+                )
+                updateNote(newNote)
+                noteUiState = noteUiState.copy(note = newNote)
+            }
+        }
     }
 
     data class UiState(
@@ -214,6 +267,7 @@ class NoteDetailsViewModel(
         val readingMode: Boolean = false,
         val folders: List<NoteFolder> = emptyList(),
         val folder: NoteFolder? = null,
+        val pinned: Boolean = false
     )
 
     data class AiState(

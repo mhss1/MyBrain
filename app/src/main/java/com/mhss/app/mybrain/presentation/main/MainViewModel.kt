@@ -16,6 +16,7 @@ import com.mhss.app.domain.use_case.UpdateTaskCompletedUseCase
 import com.mhss.app.preferences.domain.model.*
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
+import com.mhss.app.ui.FontSizeSettings
 import com.mhss.app.ui.StartUpScreenSettings
 import com.mhss.app.ui.ThemeSettings
 import com.mhss.app.ui.theme.Rubik
@@ -47,6 +48,7 @@ class MainViewModel(
     val themeMode = getPreference(intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value)
     val defaultStartUpScreen = getPreference(intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY), StartUpScreenSettings.SPACES.value)
     val font = getPreference(intPreferencesKey(PrefsConstants.APP_FONT_KEY), Rubik.toInt())
+    val fontSize = getPreference(intPreferencesKey(PrefsConstants.FONT_SIZE_KEY), FontSizeSettings.NORMAL.value)
     val blockScreenshots = getPreference(booleanPreferencesKey(PrefsConstants.BLOCK_SCREENSHOTS_KEY), false)
     val useMaterialYou = getPreference(booleanPreferencesKey(PrefsConstants.SETTINGS_MATERIAL_YOU), false)
 

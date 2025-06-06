@@ -196,4 +196,11 @@
     <string name="assistant">المساعد الشخصي</string>
     <string name="calendar_events_next_7_days">احداث ال7 ايام القادمة</string>
     <string name="ai_not_enabled">ميزة الذكاء الاصطناعي غير مفعلة\nالرجاء تفعيلها من قائمة الإضافات في الاعدادات</string>
+    <string name="font_size">حجم الخط</string>
+    <string name="font_size_small">صغير</string>
+    <string name="font_size_normal">عادي</string>
+    <string name="font_size_large">كبير</string>
+    <string name="font_size_extra_large">كبير جداً</string>
+    <string name="plain_text">نص عادي</string>
+    <string name="share_note">مشاركة الملاحظة</string>
 </resources>

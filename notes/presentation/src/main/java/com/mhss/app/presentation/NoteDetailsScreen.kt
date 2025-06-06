@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,9 +37,9 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mhss.app.ui.R
-import com.mhss.app.domain.model.*
 import com.mhss.app.presentation.components.AiResultSheet
 import com.mhss.app.presentation.components.GradientIconButton
+import com.mhss.app.presentation.components.ShareNoteAsPlainTextOption
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.ui.toUserMessage
@@ -63,13 +64,16 @@ fun NoteDetailsScreen(
     val state = viewModel.noteUiState
     var openDeleteDialog by rememberSaveable { mutableStateOf(false) }
     var openFolderDialog by rememberSaveable { mutableStateOf(false) }
-    val context = LocalContext.current
+    var showShareMenu by rememberSaveable { mutableStateOf(false) }
 
-    var title by remember { mutableStateOf("") }
-    var content by remember { mutableStateOf("") }
-    var pinned by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val title = viewModel.title
+    val content = viewModel.content
+    val pinned = state.pinned
     val readingMode = state.readingMode
-    var folder: NoteFolder? by remember { mutableStateOf(null) }
+    val folder = state.folder
     var lastModified by remember { mutableStateOf("") }
     var wordCountString by remember { mutableStateOf("") }
     val aiEnabled by viewModel.aiEnabled.collectAsStateWithLifecycle()
@@ -77,17 +81,13 @@ fun NoteDetailsScreen(
     val showAiSheet = aiState.showAiSheet
 
     LaunchedEffect(content) {
-        delay(700)
-        wordCountString = content.words().toString()
+        delay(500)
+        wordCountString = content.countWords().toString()
     }
-    LaunchedEffect(state.note, state.folder) {
+    LaunchedEffect(state.note) {
         if (state.note != null) {
-            title = state.note.title
-            content = state.note.content
-            pinned = state.note.pinned
             lastModified = state.note.updatedDate.formatDateDependingOnDay(context)
         }
-        folder = state.folder
     }
     LaunchedEffect(state.navigateUp) {
         if (state.navigateUp) {
@@ -98,14 +98,7 @@ fun NoteDetailsScreen(
     LifecycleStartEffect(Unit) {
         onStopOrDispose {
             viewModel.onEvent(
-                NoteDetailsEvent.ScreenOnStop(
-                    Note(
-                        title = title,
-                        content = content,
-                        folderId = folder?.id,
-                        pinned = pinned
-                    )
-                )
+                NoteDetailsEvent.ScreenOnStop
             )
         }
     }
@@ -129,7 +122,7 @@ fun NoteDetailsScreen(
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text = folder?.name!!,
+                                text = folder.name,
                                 modifier = Modifier.padding(end = 8.dp, top = 8.dp, bottom = 8.dp),
                                 style = MaterialTheme.typography.bodyLarge
                             )
@@ -139,7 +132,22 @@ fun NoteDetailsScreen(
                             Icon(
                                 painterResource(R.drawable.ic_create_folder),
                                 stringResource(R.string.folders),
-                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
+                    }
+                    IconButton(onClick = { showShareMenu = true }) {
+                        Icon(
+                            painterResource(R.drawable.ic_share),
+                            stringResource(R.string.share_note),
+                        )
+                        DropdownMenu(
+                            expanded = showShareMenu,
+                            onDismissRequest = { showShareMenu = false }
+                        ) {
+                            ShareNoteAsPlainTextOption(
+                                title = title,
+                                content = content,
+                                onOptionSelected = { showShareMenu = false }
                             )
                         }
                     }
@@ -150,7 +158,7 @@ fun NoteDetailsScreen(
                         )
                     }
                     IconButton(onClick = {
-                        pinned = !pinned
+                        viewModel.onEvent(NoteDetailsEvent.UpdatePinned(!pinned))
                     }) {
                         Icon(
                             painter = if (pinned) painterResource(id = R.drawable.ic_pin_filled)
@@ -184,7 +192,7 @@ fun NoteDetailsScreen(
         ) {
             OutlinedTextField(
                 value = title,
-                onValueChange = { title = it },
+                onValueChange = { viewModel.onEvent(NoteDetailsEvent.UpdateTitle(it)) },
                 label = { Text(text = stringResource(R.string.title)) },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -201,19 +209,28 @@ fun NoteDetailsScreen(
                         GradientIconButton(
                             text = stringResource(id = R.string.summarize),
                             iconPainter = painterResource(id = R.drawable.ic_summarize),
-                        ) { viewModel.onEvent(NoteDetailsEvent.Summarize(content)) }
+                        ) {
+                            viewModel.onEvent(NoteDetailsEvent.Summarize(content))
+                            keyboardController?.hide()
+                        }
                     }
                     item {
                         GradientIconButton(
                             text = stringResource(id = R.string.auto_format),
                             iconPainter = painterResource(id = R.drawable.ic_auto_format),
-                        ) { viewModel.onEvent(NoteDetailsEvent.AutoFormat(content)) }
+                        ) {
+                            viewModel.onEvent(NoteDetailsEvent.AutoFormat(content))
+                            keyboardController?.hide()
+                        }
                     }
                     item {
                         GradientIconButton(
                             text = stringResource(id = R.string.correct_spelling),
                             iconPainter = painterResource(id = R.drawable.ic_spelling),
-                        ) { viewModel.onEvent(NoteDetailsEvent.CorrectSpelling(content)) }
+                        ) {
+                            viewModel.onEvent(NoteDetailsEvent.CorrectSpelling(content))
+                            keyboardController?.hide()
+                        }
                     }
                 }
             }
@@ -241,7 +258,7 @@ fun NoteDetailsScreen(
             else
                 OutlinedTextField(
                     value = content,
-                    onValueChange = { content = it },
+                    onValueChange = { viewModel.onEvent(NoteDetailsEvent.UpdateContent(it)) },
                     label = {
                         Text(text = stringResource(R.string.note_content))
                     },
@@ -299,11 +316,11 @@ fun NoteDetailsScreen(
                         viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     },
                     onReplaceClick = {
-                        content = aiState.result.toString()
+                        viewModel.onEvent(NoteDetailsEvent.UpdateContent(aiState.result.toString()))
                         viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     },
                     onAddToNoteClick = {
-                        content = aiState.result + "\n" + content
+                        viewModel.onEvent(NoteDetailsEvent.UpdateContent(aiState.result + "\n" + content))
                         viewModel.onEvent(NoteDetailsEvent.AiResultHandled)
                     }
                 )
@@ -359,7 +376,7 @@ fun NoteDetailsScreen(
                                 .clip(RoundedCornerShape(25.dp))
                                 .border(1.dp, Color.Gray, RoundedCornerShape(25.dp))
                                 .clickable {
-                                    folder = null
+                                    viewModel.onEvent(NoteDetailsEvent.UpdateFolder(null))
                                     openFolderDialog = false
                                 }
                                 .background(if (folder == null) MaterialTheme.colorScheme.onBackground else Color.Transparent),
@@ -379,7 +396,7 @@ fun NoteDetailsScreen(
                                     .clip(RoundedCornerShape(25.dp))
                                     .border(1.dp, Color.Gray, RoundedCornerShape(25.dp))
                                     .clickable {
-                                        folder = it
+                                        viewModel.onEvent(NoteDetailsEvent.UpdateFolder(it))
                                         openFolderDialog = false
                                     }
                                     .background(if (folder?.id == it.id) MaterialTheme.colorScheme.onBackground else Color.Transparent),
@@ -414,12 +431,12 @@ fun NoteDetailsScreen(
     }
 }
 
-private fun String.words(): Int {
+private fun String.countWords(): Int {
     var count = 0
     var inWord = false
 
     forEach { char ->
-        if (char == ' ') {
+        if (char == ' ' || char == '\n') {
             inWord = false
         } else if (!inWord) {
             count++

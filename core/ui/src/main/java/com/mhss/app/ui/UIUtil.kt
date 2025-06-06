@@ -10,6 +10,7 @@ import com.mhss.app.domain.model.TaskFrequency
 import com.mhss.app.network.NetworkResult
 import com.mhss.app.preferences.domain.model.Order
 import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.theme.Green
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.ui.theme.Red
@@ -22,9 +23,26 @@ enum class ThemeSettings(val value: Int) {
     AUTO(2)
 }
 
-enum class StartUpScreenSettings(val value: Int) {
-    DASHBOARD(0),
-    SPACES(1)
+enum class StartUpScreenSettings(val value: Int, val screen: Screen) {
+    DASHBOARD(0, Screen.DashboardScreen),
+    SPACES(1, Screen.SpacesScreen),
+    NOTES(2, Screen.NotesScreen),
+    TASKS(3, Screen.TasksScreen()),
+    DIARY(4, Screen.DiaryScreen),
+    BOOKMARKS(5, Screen.BookmarksScreen),
+    CALENDAR(6, Screen.CalendarScreen),
+    ASSISTANT(7, Screen.AssistantScreen)
+}
+
+fun Int.toStartUpScreen(): StartUpScreenSettings {
+    return StartUpScreenSettings.entries.first { it.value == this }
+}
+
+enum class FontSizeSettings(@StringRes val title: Int, val value: Int, val scale: Float) {
+    SMALL(R.string.font_size_small, 0, 0.8f),
+    NORMAL(R.string.font_size_normal, 1, 1.0f),
+    LARGE(R.string.font_size_large, 2, 1.2f),
+    EXTRA_LARGE(R.string.font_size_extra_large, 3, 1.5f)
 }
 
 enum class ItemView(@StringRes val title: Int, val value: Int) {
@@ -53,6 +71,27 @@ fun FontFamily.toInt(): Int {
         FontFamily.Monospace -> 2
         FontFamily.SansSerif -> 3
         else -> 0
+    }
+}
+
+fun Int.toFontSizeScale(): Float {
+    return when (this) {
+        FontSizeSettings.SMALL.value -> FontSizeSettings.SMALL.scale
+        FontSizeSettings.NORMAL.value -> FontSizeSettings.NORMAL.scale
+        FontSizeSettings.LARGE.value -> FontSizeSettings.LARGE.scale
+        FontSizeSettings.EXTRA_LARGE.value -> FontSizeSettings.EXTRA_LARGE.scale
+        else -> FontSizeSettings.NORMAL.scale
+    }
+}
+
+@Composable
+fun Int.getFontSizeName(): String {
+    return when (this) {
+        FontSizeSettings.SMALL.value -> stringResource(R.string.font_size_small)
+        FontSizeSettings.NORMAL.value -> stringResource(R.string.font_size_normal)
+        FontSizeSettings.LARGE.value -> stringResource(R.string.font_size_large)
+        FontSizeSettings.EXTRA_LARGE.value -> stringResource(R.string.font_size_extra_large)
+        else -> stringResource(R.string.font_size_normal)
     }
 }
 
