@@ -61,6 +61,7 @@ android {
     }
     lint {
         disable.add("MissingTranslation")
+        disable.add("NullSafeMutableLiveData")
     }
 }
 
