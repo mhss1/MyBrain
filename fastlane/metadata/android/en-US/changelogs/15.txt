@@ -1,0 +1,5 @@
+- Added Share note as plain text
+- Added font size settings
+- Added all screens to startup options
+- Improved auto save for notes
+- Bug fixes
