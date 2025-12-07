@@ -1564,3 +1564,211 @@ body {
 .status-dot.online {
   animation: pulse 2s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SOVEREIGN@NEXUS CONSOLE
+   Die Lichtung — The Clearing Where Being Presences
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.console-container {
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+}
+
+.console-header {
+  margin-bottom: var(--spacing-md);
+}
+
+.console-header h1 {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  color: var(--citrinitas);
+  text-shadow: 0 0 10px rgba(214, 158, 46, 0.3);
+}
+
+.console-status-bar {
+  display: flex;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text-secondary);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.status-indicator.armed {
+  background: var(--automation);
+  box-shadow: 0 0 8px var(--automation);
+}
+
+.status-indicator.disarmed {
+  background: var(--critical);
+  box-shadow: 0 0 8px var(--critical);
+}
+
+.status-indicator.online {
+  background: var(--automation);
+}
+
+.console-terminal {
+  flex: 1;
+  background: #0c0c10;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: text;
+}
+
+.terminal-welcome {
+  color: var(--citrinitas);
+  margin-bottom: var(--spacing-md);
+}
+
+.terminal-welcome pre {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.3;
+  margin: 0;
+  white-space: pre;
+}
+
+.terminal-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.terminal-line.command {
+  color: var(--citrinitas);
+  margin-top: var(--spacing-md);
+}
+
+.terminal-line.output {
+  color: var(--text-secondary);
+}
+
+.terminal-line.error {
+  color: var(--critical);
+}
+
+.terminal-line.success {
+  color: var(--automation);
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-md);
+}
+
+.prompt {
+  color: var(--citrinitas);
+  white-space: nowrap;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  outline: none;
+  caret-color: var(--citrinitas);
+}
+
+.terminal-input::selection {
+  background: rgba(214, 158, 46, 0.3);
+}
+
+.console-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.merkle-root {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+/* Console Animations */
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.terminal-input:focus + .cursor-block,
+.console-terminal:focus-within .terminal-input::after {
+  animation: cursor-blink 1s step-end infinite;
+}
+
+/* Enhanced terminal styling for ASCII art */
+.console-terminal pre {
+  font-variant-ligatures: none;
+  -webkit-font-feature-settings: "liga" 0;
+  font-feature-settings: "liga" 0;
+}
+
+/* Terminal selection */
+.console-terminal::selection,
+.console-terminal *::selection {
+  background: rgba(214, 158, 46, 0.3);
+}
+
+/* Responsive console */
+@media (max-width: 1024px) {
+  .console-status-bar {
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .console-terminal {
+    font-size: 11px;
+  }
+
+  .terminal-welcome pre {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .console-status-bar {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .console-footer {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    text-align: center;
+  }
+}

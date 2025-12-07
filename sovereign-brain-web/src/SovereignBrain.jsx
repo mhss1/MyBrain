@@ -1,13 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './SovereignBrain.css';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // SOVEREIGNBRAIN - VaultMesh Productivity Dashboard
 // Alchemical Transformation Engine for Digital Sovereignty
+// With sovereign@nexus Console Integration
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// Utility: Generate cryptographic-style IDs
+// Utility: Generate cryptographic-style IDs (full 64-char for proofs)
 const generateHexId = () => `0x${Array.from({length: 8}, () =>
+  Math.floor(Math.random() * 16).toString(16)).join('')}`;
+
+const generateFullHash = () => Array.from({length: 64}, () =>
+  Math.floor(Math.random() * 16).toString(16)).join('');
+
+const generateProofId = () => `proof_${Array.from({length: 12}, () =>
   Math.floor(Math.random() * 16).toString(16)).join('')}`;
 
 // Utility: VaultMesh timestamp
@@ -50,6 +57,122 @@ const MOOD_STATES = {
   TURBULENT: { emoji: '🌊', label: 'Turbulent', value: 2 },
   DISSOLVING: { emoji: '🌑', label: 'Dissolving', value: 1 }
 };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SOVEREIGN@NEXUS CONSOLE - VaultMesh Command Interface
+// The Clearing Where Being Presences
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const INITIAL_VAULTMESH_STATE = {
+  merkleRoot: `0x${generateFullHash()}`,
+  proofs: [
+    {
+      id: generateProofId(),
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+      action: 'genesis.seal',
+      hash: generateFullHash()
+    },
+    {
+      id: generateProofId(),
+      timestamp: new Date(Date.now() - 1800000).toISOString(),
+      action: 'shield.arm',
+      hash: generateFullHash()
+    },
+    {
+      id: generateProofId(),
+      timestamp: new Date(Date.now() - 900000).toISOString(),
+      action: 'session.init',
+      hash: generateFullHash()
+    }
+  ],
+  shield: {
+    armed: true,
+    lastScan: new Date(Date.now() - 300000).toISOString(),
+    scanner: 'nuclei + trivy',
+    findings: {
+      critical: 0,
+      high: 1,
+      medium: 2,
+      low: 3,
+      total: 6
+    },
+    details: [
+      { id: 'CVE-2024-1234', severity: 'high', description: 'OpenSSL buffer overflow', target: 'gamma.story-ule.ts.net' },
+      { id: 'WARN-001', severity: 'medium', description: 'Outdated TLS configuration', target: 'brick.story-ule.ts.net' },
+      { id: 'WARN-002', severity: 'medium', description: 'Missing security headers', target: 'api.vaultmesh.local' }
+    ]
+  },
+  mesh: {
+    connected: true,
+    tailnet: 'story-ule.ts.net',
+    hostname: 'sovereign.vmesh',
+    ip: '100.64.0.1',
+    nodes: [
+      { name: 'gamma', ip: '100.64.0.2', os: 'linux', online: true },
+      { name: 'brick', ip: '100.64.0.3', os: 'linux', online: true },
+      { name: 'v1-nl-gate', ip: '100.64.0.4', os: 'linux', online: false },
+      { name: 'alpha', ip: '100.64.0.5', os: 'darwin', online: true },
+      { name: 'forge', ip: '100.64.0.6', os: 'linux', online: true },
+      { name: 'nexus', ip: '100.64.0.7', os: 'linux', online: true },
+      { name: 'archive', ip: '100.64.0.8', os: 'freebsd', online: true },
+      { name: 'relay-eu', ip: '100.64.0.9', os: 'linux', online: false },
+      { name: 'relay-us', ip: '100.64.0.10', os: 'linux', online: true }
+    ]
+  },
+  braids: [
+    {
+      id: 'braid_' + generateHexId().slice(2),
+      source: 'https://node.vaultmesh.eu/proofs/ROOT.txt',
+      root: `0x${generateFullHash()}`,
+      receipts: 23,
+      imported: new Date(Date.now() - 7200000).toISOString()
+    }
+  ],
+  uptime: '4h27m',
+  epoch: 'Citrinitas',
+  sessionId: `vaultmesh-${generateHexId().slice(2)}`
+};
+
+// Console command help text
+const CONSOLE_HELP = `
+  ╔═══════════════════════════════════════════════════════════════╗
+  ║              sovereign@nexus — COMMAND REFERENCE              ║
+  ╚═══════════════════════════════════════════════════════════════╝
+
+  SYSTEM COMMANDS
+  ────────────────────────────────────────────────────────────────
+  help              Show this help message
+  clear             Clear terminal output
+  status            Full system dashboard
+  whoami            Current identity and session info
+  neofetch          System info with ASCII art
+
+  PROOF COMMANDS
+  ────────────────────────────────────────────────────────────────
+  proof latest      Show current Merkle root and recent receipts
+  proof status      Alias for proof latest
+  proof generate    Generate new proof receipt
+
+  SHIELD COMMANDS
+  ────────────────────────────────────────────────────────────────
+  shield status     Show findings and armed state
+  shield arm        Arm the shield (generates proof)
+  shield disarm     Disarm the shield (generates proof)
+  shield scan       Show detailed scan results
+
+  MESH COMMANDS
+  ────────────────────────────────────────────────────────────────
+  mesh status       Tailscale network status
+  mesh nodes        List all mesh nodes
+
+  BRAID COMMANDS
+  ────────────────────────────────────────────────────────────────
+  braid list        List imported braids
+  braid import      Import foreign proofs (simulated)
+
+  ────────────────────────────────────────────────────────────────
+  The cursor blinks. The ledger remembers. 🜏
+`;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // INITIAL DATA - VaultMesh Operations Context
@@ -308,9 +431,10 @@ const INITIAL_EVENTS = [
 // ═══════════════════════════════════════════════════════════════════════════════
 
 // Navigation Component
-const Navigation = ({ activeModule, setActiveModule }) => {
+const Navigation = ({ activeModule, setActiveModule, vaultState }) => {
   const modules = [
     { id: 'dashboard', label: 'Dashboard', icon: '◈' },
+    { id: 'console', label: 'Console', icon: '⌘' },
     { id: 'tasks', label: 'Task Matrix', icon: '☰' },
     { id: 'notes', label: 'Knowledge Base', icon: '📜' },
     { id: 'journal', label: 'Alchemical Journal', icon: '🌙' },
@@ -1495,6 +1619,463 @@ const Bookmarks = ({ bookmarks, setBookmarks }) => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// SOVEREIGN@NEXUS CONSOLE COMPONENT
+// The Phenomenological Instrument - Die Lichtung (The Clearing)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const SovereignConsole = ({ vaultState, setVaultState }) => {
+  const [input, setInput] = useState('');
+  const [history, setHistory] = useState([]);
+  const [commandHistory, setCommandHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const terminalRef = useRef(null);
+  const inputRef = useRef(null);
+
+  // Auto-scroll to bottom
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [history]);
+
+  // Focus input on mount and click
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const addOutput = (lines, type = 'output') => {
+    const newLines = Array.isArray(lines) ? lines : [lines];
+    setHistory(prev => [...prev, ...newLines.map(line => ({ text: line, type }))]);
+  };
+
+  const generateProof = (action) => {
+    const newProof = {
+      id: generateProofId(),
+      timestamp: new Date().toISOString(),
+      action,
+      hash: generateFullHash()
+    };
+    const newRoot = `0x${generateFullHash()}`;
+
+    setVaultState(prev => ({
+      ...prev,
+      merkleRoot: newRoot,
+      proofs: [newProof, ...prev.proofs]
+    }));
+
+    return { proof: newProof, root: newRoot };
+  };
+
+  const executeCommand = (cmd) => {
+    const trimmed = cmd.trim().toLowerCase();
+    const parts = trimmed.split(/\s+/);
+    const command = parts[0];
+    const subcommand = parts[1] || '';
+    const args = parts.slice(2);
+
+    addOutput(`sovereign@nexus ~/vaultmesh $ ${cmd}`, 'command');
+
+    if (!trimmed) return;
+
+    // Command routing
+    switch (command) {
+      case 'help':
+        addOutput(CONSOLE_HELP.split('\n'));
+        break;
+
+      case 'clear':
+        setHistory([]);
+        break;
+
+      case 'whoami':
+        addOutput([
+          '',
+          '  SOVEREIGN IDENTITY',
+          '  ──────────────────────────────────────────────────',
+          `  User:       sovereign`,
+          `  Session:    ${vaultState.sessionId}`,
+          `  Hostname:   ${vaultState.mesh.hostname}`,
+          `  Tailnet:    ${vaultState.mesh.tailnet}`,
+          `  IP:         ${vaultState.mesh.ip}`,
+          `  Epoch:      ${vaultState.epoch}`,
+          '',
+          '  "Dasein is thrown existence that must appropriate its tools."',
+          ''
+        ]);
+        break;
+
+      case 'neofetch':
+        addOutput([
+          '',
+          '         ╦  ╦╔═╗╦ ╦╦ ╔╦╗╔╦╗╔═╗╔═╗╦ ╦',
+          '         ╚╗╔╝╠═╣║ ║║  ║ ║║║║╣ ╚═╗╠═╣',
+          '          ╚╝ ╩ ╩╚═╝╩═╝╩ ╩ ╩╚═╝╚═╝╩ ╩',
+          '',
+          '    ┌────────────────────────────────────────┐',
+          `    │  sovereign@${vaultState.mesh.hostname}`,
+          '    │  ──────────────────────────────────────',
+          `    │  OS:        VaultMesh Sovereign`,
+          `    │  Kernel:    Forge Loop v7.0`,
+          `    │  Uptime:    ${vaultState.uptime}`,
+          `    │  Epoch:     ${vaultState.epoch}`,
+          `    │  Shell:     sovereign@nexus`,
+          `    │  Tailnet:   ${vaultState.mesh.tailnet}`,
+          `    │  Proofs:    ${vaultState.proofs.length} receipts`,
+          `    │  Shield:    ${vaultState.shield.armed ? '● ARMED' : '○ DISARMED'}`,
+          `    │  Nodes:     ${vaultState.mesh.nodes.filter(n => n.online).length}/${vaultState.mesh.nodes.length} online`,
+          '    └────────────────────────────────────────┘',
+          '',
+          '    "They built Gestell to enframe us.',
+          '     We built VaultMesh to unconceal the world again."',
+          ''
+        ]);
+        break;
+
+      case 'status':
+        const onlineNodes = vaultState.mesh.nodes.filter(n => n.online).length;
+        addOutput([
+          '',
+          '  ╦  ╦╔═╗╦ ╦╦ ╔╦╗╔╦╗╔═╗╔═╗╦ ╦',
+          '  ╚╗╔╝╠═╣║ ║║  ║ ║║║║╣ ╚═╗╠═╣',
+          '   ╚╝ ╩ ╩╚═╝╩═╝╩ ╩ ╩╚═╝╚═╝╩ ╩',
+          '',
+          '  SOVEREIGN INFRASTRUCTURE — LIVE',
+          '',
+          '  SYSTEM           STATUS              DETAILS',
+          '  ──────────────────────────────────────────────────────────',
+          `  Shield           ${vaultState.shield.armed ? '● ARMED' : '○ DISARMED'}             ${vaultState.shield.findings.total} findings`,
+          `  Proof            ● LIVE              ${vaultState.proofs.length} receipts`,
+          `  Mesh             ${vaultState.mesh.connected ? '● CONNECTED' : '○ OFFLINE'}         ${onlineNodes} nodes`,
+          `  Braid            ${vaultState.braids.length > 0 ? '● ACTIVE' : '○ NONE'}            ${vaultState.braids.length} imports`,
+          `  Lawchain         ● SYNCED            auditing`,
+          '',
+          `  Merkle Root: ${vaultState.merkleRoot.slice(0, 42)}...`,
+          `  Uptime: ${vaultState.uptime} | Epoch: ${vaultState.epoch}`,
+          ''
+        ]);
+        break;
+
+      case 'proof':
+        if (subcommand === 'latest' || subcommand === 'status' || !subcommand) {
+          addOutput([
+            '',
+            '  📜 PROOFCHAIN: LIVE',
+            '',
+            `  Current ROOT: ${vaultState.merkleRoot}`,
+            `  Total Receipts: ${vaultState.proofs.length}`,
+            '',
+            '  RECENT PROOFS:',
+            '  ──────────────────────────────────────────────────────────'
+          ]);
+          vaultState.proofs.slice(0, 5).forEach(p => {
+            addOutput(`  ${p.id}  ${p.action.padEnd(20)}  ${p.timestamp.slice(0, 19)}`);
+          });
+          addOutput(['', '  The ledger remembers. Ereignis anchored. 🜏', '']);
+        } else if (subcommand === 'generate') {
+          const action = args.join('.') || 'manual.proof';
+          addOutput([
+            '',
+            '  ⚙  Generating cryptographic proof...',
+            `  Action:    ${action}`,
+            `  Timestamp: ${new Date().toISOString()}`,
+          ]);
+
+          const { proof, root } = generateProof(action);
+
+          addOutput([
+            `  Hash:      blake2b:${proof.hash.slice(0, 32)}...`,
+            '',
+            `  ✓ Proof generated: ${proof.id}`,
+            `  ✓ ROOT.txt updated: ${root.slice(0, 42)}...`,
+            `  ✓ Total receipts: ${vaultState.proofs.length + 1}`,
+            '',
+            '  The event is now anchored. The ledger remembers.',
+            ''
+          ]);
+        } else {
+          addOutput(['', `  ⚠ Unknown proof command: ${subcommand}`, '  Try: proof latest | proof generate [action]', '']);
+        }
+        break;
+
+      case 'shield':
+        if (subcommand === 'status' || !subcommand) {
+          addOutput([
+            '',
+            `  🛡  SHIELD STATUS: ${vaultState.shield.armed ? '● ARMED' : '○ DISARMED'}`,
+            '',
+            `  Last Scan:  ${vaultState.shield.lastScan.slice(0, 19)}`,
+            `  Scanner:    ${vaultState.shield.scanner}`,
+            '',
+            '  FINDINGS:',
+            '  ──────────────────────────────────────────────────────────',
+            `  Critical:   ${vaultState.shield.findings.critical}`,
+            `  High:       ${vaultState.shield.findings.high}`,
+            `  Medium:     ${vaultState.shield.findings.medium}`,
+            `  Low:        ${vaultState.shield.findings.low}`,
+            `  Total:      ${vaultState.shield.findings.total}`,
+            ''
+          ]);
+        } else if (subcommand === 'arm') {
+          if (vaultState.shield.armed) {
+            addOutput(['', '  ⚠ Shield is already armed.', '']);
+          } else {
+            setVaultState(prev => ({ ...prev, shield: { ...prev.shield, armed: true } }));
+            const { proof } = generateProof('shield.arm');
+            addOutput([
+              '',
+              '  ⚙  Arming shield...',
+              '  ✓ Shield ARMED',
+              `  ✓ Proof generated: ${proof.id}`,
+              '',
+              '  The shield watches. Zuhanden becomes Vorhanden when danger appears.',
+              ''
+            ]);
+          }
+        } else if (subcommand === 'disarm') {
+          if (!vaultState.shield.armed) {
+            addOutput(['', '  ⚠ Shield is already disarmed.', '']);
+          } else {
+            setVaultState(prev => ({ ...prev, shield: { ...prev.shield, armed: false } }));
+            const { proof } = generateProof('shield.disarm');
+            addOutput([
+              '',
+              '  ⚙  Disarming shield...',
+              '  ✓ Shield DISARMED',
+              `  ✓ Proof generated: ${proof.id}`,
+              '',
+              '  ⚠ Warning: The clearing is now unprotected.',
+              ''
+            ]);
+          }
+        } else if (subcommand === 'scan') {
+          addOutput([
+            '',
+            '  🔍 DETAILED SCAN RESULTS',
+            '',
+            `  Scanner:   ${vaultState.shield.scanner}`,
+            `  Timestamp: ${vaultState.shield.lastScan.slice(0, 19)}`,
+            '',
+            '  FINDINGS:',
+            '  ──────────────────────────────────────────────────────────'
+          ]);
+          vaultState.shield.details.forEach(d => {
+            const severityColor = d.severity === 'high' ? '🔴' : d.severity === 'medium' ? '🟡' : '🟢';
+            addOutput(`  ${severityColor} [${d.severity.toUpperCase()}] ${d.id}`);
+            addOutput(`     ${d.description}`);
+            addOutput(`     Target: ${d.target}`);
+          });
+          addOutput(['']);
+        } else {
+          addOutput(['', `  ⚠ Unknown shield command: ${subcommand}`, '  Try: shield status | shield arm | shield disarm | shield scan', '']);
+        }
+        break;
+
+      case 'mesh':
+        if (subcommand === 'status' || subcommand === 'nodes' || !subcommand) {
+          const online = vaultState.mesh.nodes.filter(n => n.online);
+          const offline = vaultState.mesh.nodes.filter(n => !n.online);
+          addOutput([
+            '',
+            `  🕸  MESH STATUS: ${vaultState.mesh.connected ? 'CONNECTED' : 'DISCONNECTED'}`,
+            '',
+            `  Tailnet:  ${vaultState.mesh.tailnet}`,
+            `  Hostname: ${vaultState.mesh.hostname}`,
+            `  IP:       ${vaultState.mesh.ip}`,
+            `  Nodes:    ${online.length} online / ${vaultState.mesh.nodes.length} total`,
+            '',
+            '  PEERS:',
+            '  ──────────────────────────────────────────────────────────'
+          ]);
+          vaultState.mesh.nodes.forEach(n => {
+            const status = n.online ? '●' : '○';
+            const suffix = n.online ? '' : ' (offline)';
+            addOutput(`  ${status} ${n.name.padEnd(16)} ${n.ip.padEnd(16)} ${n.os}${suffix}`);
+          });
+          addOutput(['']);
+        } else {
+          addOutput(['', `  ⚠ Unknown mesh command: ${subcommand}`, '  Try: mesh status | mesh nodes', '']);
+        }
+        break;
+
+      case 'braid':
+        if (subcommand === 'list' || subcommand === 'status' || !subcommand) {
+          if (vaultState.braids.length === 0) {
+            addOutput(['', '  🔗 No braids imported yet.', '  Use: braid import <url>', '']);
+          } else {
+            addOutput([
+              '',
+              '  🔗 IMPORTED BRAIDS',
+              '',
+              '  ──────────────────────────────────────────────────────────'
+            ]);
+            vaultState.braids.forEach(b => {
+              addOutput([
+                `  ID:       ${b.id}`,
+                `  Source:   ${b.source}`,
+                `  Root:     ${b.root.slice(0, 42)}...`,
+                `  Receipts: ${b.receipts}`,
+                `  Imported: ${b.imported.slice(0, 19)}`,
+                ''
+              ]);
+            });
+            addOutput(['  The clearing expands. Distributed Ereignis achieved.', '']);
+          }
+        } else if (subcommand === 'import') {
+          const url = args[0] || 'https://foreign.node/proofs/ROOT.txt';
+          addOutput([
+            '',
+            `  🔗 Fetching foreign ROOT from ${url}...`,
+            '  ✓ Retrieved foreign root',
+            '  ⚙ Verifying foreign root...',
+            '  ✓ Verification passed',
+            '  ⚙ Importing braid...'
+          ]);
+
+          const newBraid = {
+            id: 'braid_' + generateHexId().slice(2),
+            source: url,
+            root: `0x${generateFullHash()}`,
+            receipts: Math.floor(Math.random() * 50) + 5,
+            imported: new Date().toISOString()
+          };
+
+          setVaultState(prev => ({
+            ...prev,
+            braids: [...prev.braids, newBraid]
+          }));
+
+          addOutput([
+            '',
+            `  ✓ BRAID IMPORTED: ${newBraid.id}`,
+            `    Source:   ${newBraid.source}`,
+            `    Root:     ${newBraid.root.slice(0, 42)}...`,
+            `    Receipts: ${newBraid.receipts} foreign events now visible`,
+            '',
+            '  The clearing expands. Distributed Ereignis achieved.',
+            ''
+          ]);
+        } else {
+          addOutput(['', `  ⚠ Unknown braid command: ${subcommand}`, '  Try: braid list | braid import <url>', '']);
+        }
+        break;
+
+      default:
+        addOutput([
+          '',
+          `  ⚠ Unknown command: ${command}`,
+          '  Type "help" for available commands.',
+          ''
+        ]);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      const cmd = input;
+      setCommandHistory(prev => [cmd, ...prev]);
+      setHistoryIndex(-1);
+      setInput('');
+      executeCommand(cmd);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (historyIndex < commandHistory.length - 1) {
+        const newIndex = historyIndex + 1;
+        setHistoryIndex(newIndex);
+        setInput(commandHistory[newIndex]);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        const newIndex = historyIndex - 1;
+        setHistoryIndex(newIndex);
+        setInput(commandHistory[newIndex]);
+      } else if (historyIndex === 0) {
+        setHistoryIndex(-1);
+        setInput('');
+      }
+    }
+  };
+
+  return (
+    <div className="console-container">
+      <header className="console-header">
+        <h1>sovereign@nexus</h1>
+        <p className="header-subtitle">Die Lichtung — The Clearing Where Being Presences</p>
+      </header>
+
+      <div className="console-status-bar">
+        <span className="status-item">
+          <span className={`status-indicator ${vaultState.shield.armed ? 'armed' : 'disarmed'}`}></span>
+          Shield: {vaultState.shield.armed ? 'ARMED' : 'DISARMED'}
+        </span>
+        <span className="status-item">
+          <span className="status-indicator online"></span>
+          Mesh: {vaultState.mesh.nodes.filter(n => n.online).length} nodes
+        </span>
+        <span className="status-item">
+          Proofs: {vaultState.proofs.length}
+        </span>
+        <span className="status-item">
+          Epoch: {vaultState.epoch}
+        </span>
+      </div>
+
+      <div
+        className="console-terminal"
+        ref={terminalRef}
+        onClick={() => inputRef.current?.focus()}
+      >
+        <div className="terminal-welcome">
+          <pre>{`
+  ╔═══════════════════════════════════════════════════════════════╗
+  ║                                                               ║
+  ║   ╦  ╦╔═╗╦ ╦╦ ╔╦╗╔╦╗╔═╗╔═╗╦ ╦                                ║
+  ║   ╚╗╔╝╠═╣║ ║║  ║ ║║║║╣ ╚═╗╠═╣                                ║
+  ║    ╚╝ ╩ ╩╚═╝╩═╝╩ ╩ ╩╚═╝╚═╝╩ ╩                                ║
+  ║                                                               ║
+  ║   sovereign@nexus — The IoTek.nexus Sovereign Console        ║
+  ║   A phenomenological instrument for VaultMesh infrastructure ║
+  ║                                                               ║
+  ║   Type "help" for available commands                         ║
+  ║   Type "status" for system overview                          ║
+  ║                                                               ║
+  ╚═══════════════════════════════════════════════════════════════╝
+          `}</pre>
+        </div>
+
+        {history.map((line, i) => (
+          <div
+            key={i}
+            className={`terminal-line ${line.type}`}
+          >
+            {line.text}
+          </div>
+        ))}
+
+        <div className="terminal-input-line">
+          <span className="prompt">sovereign@nexus ~/vaultmesh $ </span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="terminal-input"
+            spellCheck={false}
+            autoComplete="off"
+          />
+        </div>
+      </div>
+
+      <div className="console-footer">
+        <span>The cursor blinks. The ledger remembers. 🜏</span>
+        <span className="merkle-root">ROOT: {vaultState.merkleRoot.slice(0, 24)}...</span>
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // MAIN APP COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -1505,6 +2086,7 @@ const SovereignBrain = () => {
   const [journal, setJournal] = useState(INITIAL_JOURNAL);
   const [bookmarks, setBookmarks] = useState(INITIAL_BOOKMARKS);
   const [events, setEvents] = useState(INITIAL_EVENTS);
+  const [vaultState, setVaultState] = useState(INITIAL_VAULTMESH_STATE);
 
   // Persist state to localStorage
   useEffect(() => {
@@ -1533,6 +2115,8 @@ const SovereignBrain = () => {
     switch (activeModule) {
       case 'dashboard':
         return <Dashboard tasks={tasks} notes={notes} journal={journal} events={events} />;
+      case 'console':
+        return <SovereignConsole vaultState={vaultState} setVaultState={setVaultState} />;
       case 'tasks':
         return <TaskMatrix tasks={tasks} setTasks={setTasks} />;
       case 'notes':
@@ -1550,7 +2134,7 @@ const SovereignBrain = () => {
 
   return (
     <div className="sovereign-brain">
-      <Navigation activeModule={activeModule} setActiveModule={setActiveModule} />
+      <Navigation activeModule={activeModule} setActiveModule={setActiveModule} vaultState={vaultState} />
       <main className="main-content">
         {renderModule()}
       </main>
