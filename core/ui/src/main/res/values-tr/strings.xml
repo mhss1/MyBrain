@@ -97,7 +97,7 @@
     <string name="event_time">%1$s - %2$s</string>
     <string name="all_day">Bütün gün</string>
     <string name="no_read_calendar_permission_message">Bu özelliğin kullanılabilmesi için takvim izni gerekiyor.\nLütfen izni onaylayın</string>
-    <string name="no_write_calendar_permission_message">Bu özelliğin kullanılabilmesi için takvim izni gerekiyor.\Lütfen izni onaylayın</string>
+    <string name="no_write_calendar_permission_message">Bu özelliğin kullanılabilmesi için takvim izni gerekiyor.\nLütfen izni onaylayın</string>
     <string name="grant_permission">İzin ver</string>
     <string name="go_to_settings">Ayarlara git</string>
     <string name="add_event">Olay ekle</string>
@@ -240,4 +240,8 @@
     <string name="tool_call_limit_exceeded">The assistant has stopped after many consecutive actions. If you expect this, you can send \"Continue\" to the assistant.</string>
     <string name="ask_assistant">Ask Assistant…</string>
     <string name="error_item_not_found">Something went wrong. The item could not be found</string>
+    <string name="first_day_of_week">First day of week</string>
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="saturday">Saturday</string>
 </resources>
