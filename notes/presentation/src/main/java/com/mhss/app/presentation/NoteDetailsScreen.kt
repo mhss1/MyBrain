@@ -274,7 +274,7 @@ fun NoteDetailsScreen(
             }
             if (readingMode)
                 Markdown(
-                    content = content,
+                    content = content.preserveLineBreaks(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 6.dp)
@@ -474,4 +474,13 @@ private fun String.countWords(): Int {
     }
 
     return count
+}
+
+private fun String.preserveLineBreaks(): String {
+    // Convert single newlines to markdown line breaks (two spaces + newline)
+    // but preserve existing double newlines as paragraph breaks
+    return this
+        .replace("\r\n", "\n") // Normalize line endings
+        .replace("\r", "\n") // Handle old Mac line endings
+        .replace(Regex("\n(?!\n)"), "  \n") // Convert single newlines to markdown line breaks
 }
