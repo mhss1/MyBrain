@@ -1,7 +1,7 @@
 <p align="center">
-  <img alt="Stars" src="https://img.shields.io/github/stars/mhss1/mybrain?style=social" />
-  <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg" /></a>
-  <a href="https://crowdin.com/project/my-brain-app"><img alt="Crowdin" src="https://badges.crowdin.net/my-brain-app/localized.svg" /></a>
+  <img alt="Stars" src="https://img.shields.io/github/stars/mhss1/mybrain?color=d48600&style=for-the-badge" />
+  <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge" /></a>
+  <a href="https://github.com/mhss1/MyBrain/releases"><img src="https://img.shields.io/github/downloads/mhss1/MyBrain/total?logo=github&style=for-the-badge" alt="Downloads"></a>
 </p>
 
 
