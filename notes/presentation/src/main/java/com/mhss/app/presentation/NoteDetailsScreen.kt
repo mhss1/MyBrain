@@ -70,6 +70,7 @@ import com.mhss.app.presentation.components.ShareNoteAsPlainTextOption
 import com.mhss.app.ui.R
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.common.defaultMarkdownTypography
+import com.mhss.app.ui.components.common.withHardLineBreaks
 import com.mhss.app.ui.snackbar.LocalisedSnackbarHost
 import com.mhss.app.ui.theme.Orange
 import com.mhss.app.util.date.formatDateDependingOnDay
@@ -274,7 +275,7 @@ fun NoteDetailsScreen(
             }
             if (readingMode)
                 Markdown(
-                    content = content,
+                    content = content.withHardLineBreaks(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 6.dp)

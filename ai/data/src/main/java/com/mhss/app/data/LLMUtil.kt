@@ -67,7 +67,8 @@ fun String.toLLModel(provider: AiProvider, withTools: Boolean): LLModel {
         provider = llmProvider,
         id = this,
         capabilities = buildList {
-            if (withTools) {
+            // Koog internally throws if an Anthropic model doesn't declare tool capabilities
+            if (withTools || provider == AiProvider.Anthropic) {
                 add(LLMCapability.Tools)
                 add(LLMCapability.ToolChoice)
             }
