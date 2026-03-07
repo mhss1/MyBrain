@@ -234,7 +234,7 @@
     <string name="import_confirmation_title">استيراد البيانات؟</string>
     <string name="import_confirmation_message">البيانات المستوردة التي لها نفس المعرف (ID) ستستبدل البيانات الموجودة حالياً في التطبيق. هل تريد المتابعة؟</string>
     <string name="auto_backup">النسخ الاحتياطي التلقائي</string>
-    <string name="auto_backup_description">تمكين النسخ الاحتياطي التلقائي لحفظ بيانات التطبيق بشكل دوري.</string>
+    <string name="auto_backup_description">تمكين النسخ الاحتياطي التلقائي لحفظ بيانات التطبيق بشكل دوري بصيغة JSON.</string>
     <string name="backup_frequency">تكرار النسخ الاحتياطي</string>
     <string name="backup_folder">مجلد النسخ الاحتياطي</string>
     <string name="select_backup_folder">اختر مجلد النسخ الاحتياطي</string>
@@ -245,4 +245,9 @@
     <string name="sunday">الأحد</string>
     <string name="monday">الإثنين</string>
     <string name="saturday">السبت</string>
+    <string name="export_format">صيغة التصدير</string>
+    <string name="import_format">صيغة الاستيراد</string>
+    <string name="export_types">محتوى التصدير</string>
+    <string name="export_format_json">ملف JSON</string>
+    <string name="export_format_markdown">ملفات Markdown</string>
 </resources>

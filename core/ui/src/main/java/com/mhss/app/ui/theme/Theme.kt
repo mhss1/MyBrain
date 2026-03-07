@@ -41,15 +41,16 @@ private val LightColorPalette = lightColorScheme(
     background = LightBackgroundColor,
     onBackground = DarkGray,
     onSurfaceVariant = DarkGray,
-    surfaceTint = LightBackgroundColor,
-    surfaceVariant = LightBackgroundColor,
-    surfaceContainerHighest = LightBackgroundColor,
-    surfaceContainerLow = LightBackgroundColor,
-    surfaceContainerLowest = LightBackgroundColor,
-    surfaceContainer = LightBackgroundColor,
-    surfaceContainerHigh = LightBackgroundColor,
-    surfaceDim = LightBackgroundColor,
-    surfaceBright = LightBackgroundColor
+    surface = LightCardColor,
+    surfaceTint = LightCardColor,
+    surfaceVariant = LightCardColor,
+    surfaceContainerHighest = LightCardColor,
+    surfaceContainerLow = LightCardColor,
+    surfaceContainerLowest = LightCardColor,
+    surfaceContainer = LightCardColor,
+    surfaceContainerHigh = LightCardColor,
+    surfaceDim = LightCardColor,
+    surfaceBright = LightCardColor
 )
 
 @Composable

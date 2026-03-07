@@ -15,5 +15,6 @@ class ImportDataUseCase(
         password: String
     ) = when (format) {
         BackupFormat.JSON -> importJsonData(fileUri, encrypted, password)
+        BackupFormat.MARKDOWN -> false
     }
 }

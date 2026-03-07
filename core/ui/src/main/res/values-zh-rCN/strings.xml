@@ -244,4 +244,9 @@
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>
     <string name="saturday">Saturday</string>
+    <string name="export_format">Export format</string>
+    <string name="import_format">Import format</string>
+    <string name="export_types">Export content</string>
+    <string name="export_format_json">JSON file</string>
+    <string name="export_format_markdown">Markdown files</string>
 </resources>

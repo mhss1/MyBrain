@@ -233,7 +233,7 @@
     <string name="import_confirmation_title">Import data?</string>
     <string name="import_confirmation_message">Imported data with the same ID will override existing data currently stored in the app. Do you want to continue?</string>
     <string name="auto_backup">Auto backup</string>
-    <string name="auto_backup_description">Enable automatic backups to save app data periodically.</string>
+    <string name="auto_backup_description">Enable automatic backups to save app data periodically in JSON format.</string>
     <string name="backup_frequency">Backup frequency</string>
     <string name="backup_folder">Backup folder</string>
     <string name="select_backup_folder">Select backup folder</string>
@@ -244,4 +244,9 @@
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>
     <string name="saturday">Saturday</string>
+    <string name="export_format">Export format</string>
+    <string name="import_format">Import format</string>
+    <string name="export_types">Export content</string>
+    <string name="export_format_json">JSON file</string>
+    <string name="export_format_markdown">Markdown files</string>
 </resources>
