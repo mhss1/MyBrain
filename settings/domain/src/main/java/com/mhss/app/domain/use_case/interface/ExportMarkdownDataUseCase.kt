@@ -9,5 +9,5 @@ interface ExportMarkdownDataUseCase {
         exportBookmarks: Boolean,
         encrypted: Boolean,
         password: String?,
-    ): Boolean
+    )
 }

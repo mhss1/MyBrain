@@ -158,6 +158,12 @@
     <string name="import_data">İçe aktar</string>
     <string name="import_success">İçe aktarma başarılı %1$s</string>
     <string name="import_failed">İçe aktarırken bir sorun oluştu. Dosya isimleri veya içerikleri bozuk olabilir</string>
+    <string name="backup_error_invalid_location">Couldn\'t access backup location \"%1$s\"</string>
+    <string name="backup_error_create_directory">Couldn\'t create folder \"%1$s\"</string>
+    <string name="backup_error_create_file">Couldn\'t create file \"%1$s\"</string>
+    <string name="backup_error_read_file">Couldn\'t read the selected file</string>
+    <string name="backup_error_write_file">Couldn\'t write file \"%1$s\"</string>
+    <string name="backup_error_generic">Something went wrong while processing the backup data</string>
     <string name="grant_permission_to_export">Dışa aktarmak için izin ver</string>
     <string name="importing">İçe aktarılıyor....</string>
     <string name="recurring">Yinelenen</string>
@@ -229,7 +235,7 @@
     <string name="error_note_invalid_uri">Invalid folder location</string>
     <string name="error_note_permission_denied">Permission denied</string>
     <string name="error_note_unknown_error">An unknown error occurred while saving note</string>
-    <string name="error_note_invalid_file_name">Invalid file name. Avoid characters: \\ / : * ? &quot; &lt; &gt; | and don't start or end with dots or spaces</string>
+    <string name="error_note_invalid_file_name">Invalid file name. Avoid characters: \\ / : * ? &quot; &lt; &gt; | and don\'t start or end with dots or spaces</string>
     <string name="import_confirmation_title">Import data?</string>
     <string name="import_confirmation_message">Imported data with the same ID will override existing data currently stored in the app. Do you want to continue?</string>
     <string name="auto_backup">Auto backup</string>

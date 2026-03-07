@@ -163,6 +163,12 @@
     <string name="import_data">Import data</string>
     <string name="import_success">Successfully imported data</string>
     <string name="import_failed">Something went wrong while importing. Make sure the file content are not corrupted</string>
+    <string name="backup_error_invalid_location">Couldn\'t access backup location \"%1$s\"</string>
+    <string name="backup_error_create_directory">Couldn\'t create folder \"%1$s\"</string>
+    <string name="backup_error_create_file">Couldn\'t create file \"%1$s\"</string>
+    <string name="backup_error_read_file">Couldn\'t read the selected file</string>
+    <string name="backup_error_write_file">Couldn\'t write file \"%1$s\"</string>
+    <string name="backup_error_generic">Something went wrong while processing the backup data</string>
     <string name="grant_permission_to_export">Grant permission to export</string>
     <string name="importing">Importing....</string>
     <string name="recurring">Recurring</string>

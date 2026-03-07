@@ -37,14 +37,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mhss.app.domain.model.BackupFormat
 import com.mhss.app.domain.model.BackupFrequency
+import com.mhss.app.preferences.PrefsConstants
+import com.mhss.app.preferences.domain.model.PrefsKey.BooleanKey
+import com.mhss.app.preferences.domain.model.PrefsKey.IntKey
 import com.mhss.app.presentation.backup.components.AutoBackupCard
 import com.mhss.app.presentation.backup.components.BackupFormatCard
 import com.mhss.app.presentation.backup.components.BackupStatusMessage
 import com.mhss.app.presentation.backup.components.ExportTypesCard
 import com.mhss.app.presentation.backup.components.SectionHeader
-import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.preferences.domain.model.PrefsKey.BooleanKey
-import com.mhss.app.preferences.domain.model.PrefsKey.IntKey
 import com.mhss.app.ui.R
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mohamedrejeb.calf.core.LocalPlatformContext
@@ -138,6 +138,8 @@ fun ImportExportScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
         ) {
+            BackupStatusMessage(backupResult = backupResult)
+
             SectionHeader(
                 title = stringResource(R.string.export),
                 iconRes = R.drawable.ic_export
@@ -179,14 +181,6 @@ fun ImportExportScreen(
                     modifier = Modifier.padding(vertical = 6.dp)
                 )
             }
-            BackupStatusMessage(
-                backupResult = backupResult,
-                successResult = BackupResult.ExportSuccess,
-                failureResult = BackupResult.ExportFailed,
-                successText = stringResource(R.string.export_success),
-                failureText = stringResource(R.string.export_failed)
-            )
-
             Spacer(Modifier.height(20.dp))
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
             Spacer(Modifier.height(20.dp))
@@ -221,14 +215,6 @@ fun ImportExportScreen(
                     modifier = Modifier.padding(vertical = 6.dp)
                 )
             }
-            BackupStatusMessage(
-                backupResult = backupResult,
-                successResult = BackupResult.ImportSuccess,
-                failureResult = BackupResult.ImportFailed,
-                successText = stringResource(R.string.import_success),
-                failureText = stringResource(R.string.import_failed)
-            )
-
             if (backupResult == BackupResult.Loading) {
                 Spacer(Modifier.height(12.dp))
                 CircularProgressIndicator(

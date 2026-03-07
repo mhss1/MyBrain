@@ -158,6 +158,12 @@
     <string name="import_data">Importă date</string>
     <string name="import_success">%1$s importat cu succes</string>
     <string name="import_failed">Ceva nu a mers în timpul importării. Asigurați-vă că numele fișerului și conținutul nu sunt corupte</string>
+    <string name="backup_error_invalid_location">Couldn\'t access backup location \"%1$s\"</string>
+    <string name="backup_error_create_directory">Couldn\'t create folder \"%1$s\"</string>
+    <string name="backup_error_create_file">Couldn\'t create file \"%1$s\"</string>
+    <string name="backup_error_read_file">Couldn\'t read the selected file</string>
+    <string name="backup_error_write_file">Couldn\'t write file \"%1$s\"</string>
+    <string name="backup_error_generic">Something went wrong while processing the backup data</string>
     <string name="grant_permission_to_export">Acordă permisiunea pentru a exporta</string>
     <string name="importing">Se importă....</string>
     <string name="recurring">Recurring</string>

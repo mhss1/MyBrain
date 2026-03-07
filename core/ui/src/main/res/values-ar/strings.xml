@@ -159,6 +159,12 @@
     <string name="import_data">استيراد البيانات</string>
     <string name="import_success">تم تصدير البيانات</string>
     <string name="import_failed">حدث خطأ أثناء الاستيراد. تأكد من عدم تخريب محتوى الملف</string>
+    <string name="backup_error_invalid_location">تعذر الوصول إلى موقع النسخ الاحتياطي \"%1$s\"</string>
+    <string name="backup_error_create_directory">تعذر إنشاء المجلد \"%1$s\"</string>
+    <string name="backup_error_create_file">تعذر إنشاء الملف \"%1$s\"</string>
+    <string name="backup_error_read_file">تعذر قراءة الملف المحدد</string>
+    <string name="backup_error_write_file">تعذر كتابة الملف \"%1$s\"</string>
+    <string name="backup_error_generic">حدث خطأ أثناء معالجة بيانات النسخ الاحتياطي</string>
     <string name="grant_permission_to_export">منح اذن التخزين للتصدير</string>
     <string name="importing">يتم الاستيراد....</string>
     <string name="recurring">متكرر</string>

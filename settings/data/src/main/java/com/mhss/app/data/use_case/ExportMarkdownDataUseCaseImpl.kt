@@ -9,6 +9,7 @@ import com.mhss.app.database.entity.DiaryEntryEntity
 import com.mhss.app.database.entity.NoteEntity
 import com.mhss.app.database.entity.NoteFolderEntity
 import com.mhss.app.database.entity.TaskEntity
+import com.mhss.app.domain.exception.BackupDataException
 import com.mhss.app.domain.model.Mood
 import com.mhss.app.domain.model.Priority
 import com.mhss.app.domain.model.SubTask
@@ -40,14 +41,18 @@ class ExportMarkdownDataUseCaseImpl(
         exportBookmarks: Boolean,
         encrypted: Boolean,
         password: String?
-    ): Boolean {
-        return withContext(ioDispatcher) {
+    ) {
+        withContext(ioDispatcher) {
             try {
                 val pickedDir = DocumentFile.fromTreeUri(context, directoryUri.toUri())
-                    ?: return@withContext false
-                val exportRoot = pickedDir.createUniqueDirectory("MyBrain_Backup_${System.currentTimeMillis()}")
-                    ?: return@withContext false
- 
+                    ?: throw BackupDataException.InvalidBackupLocation(directoryUri)
+                val exportRootName = "MyBrain_Backup_${System.currentTimeMillis()}"
+                val exportRoot = pickedDir.createUniqueDirectory(exportRootName)
+                    ?: throw BackupDataException.CouldNotCreateDirectory(
+                        directoryName = exportRootName,
+                        parent = pickedDir.displayName(directoryUri)
+                    )
+
                 val notes = if (exportNotes) database.noteDao().getAllFullNotes() else emptyList()
                 val noteFolders = if (exportNotes) database.noteDao().getAllNoteFolders().first() else emptyList()
                 val tasks = if (exportTasks) database.taskDao().getAllFullTasks() else emptyList()
@@ -61,11 +66,10 @@ class ExportMarkdownDataUseCaseImpl(
                 if (exportDiary) exportDiaryMarkdown(rootDir = exportRoot, diaryEntries = diaryEntries)
                 yield()
                 if (exportBookmarks) exportBookmarksMarkdown(rootDir = exportRoot, bookmarks = bookmarks)
- 
-                true
+            } catch (e: BackupDataException) {
+                throw e
             } catch (e: Exception) {
-                e.printStackTrace()
-                false
+                throw BackupDataException.GenericError()
             }
         }
     }
@@ -75,8 +79,12 @@ class ExportMarkdownDataUseCaseImpl(
         notes: List<NoteEntity>,
         folders: List<NoteFolderEntity>
     ) {
-        val notesDir = rootDir.createUniqueDirectory("Notes")
-            ?: error("Failed to create notes directory")
+        val notesDirName = "Notes"
+        val notesDir = rootDir.createUniqueDirectory(notesDirName)
+            ?: throw BackupDataException.CouldNotCreateDirectory(
+                directoryName = notesDirName,
+                parent = rootDir.displayName()
+            )
         val folderById = folders.associateBy { it.id }
         val notesDirFileNames = notesDir.listFiles()
             .mapNotNull { it.name.takeIf { _ -> it.isFile } }
@@ -90,10 +98,14 @@ class ExportMarkdownDataUseCaseImpl(
             )
             yield()
         }
- 
+
         folders.forEach { folder ->
-            val folderDir = notesDir.createUniqueDirectory(folder.name.ifBlank { "Untitled Folder" })
-                ?: error("Failed to create folder directory: ${folder.name}")
+            val folderName = folder.name.ifBlank { "Untitled Folder" }
+            val folderDir = notesDir.createUniqueDirectory(folderName)
+                ?: throw BackupDataException.CouldNotCreateDirectory(
+                    directoryName = folderName,
+                    parent = notesDir.displayName()
+                )
             val folderFileNames = folderDir.listFiles()
                 .mapNotNull { it.name.takeIf { _ -> it.isFile } }
                 .toHashSet()
@@ -113,8 +125,12 @@ class ExportMarkdownDataUseCaseImpl(
         rootDir: DocumentFile,
         tasks: List<TaskEntity>
     ) {
-        val tasksDir = rootDir.createUniqueDirectory("Tasks")
-            ?: error("Failed to create tasks directory")
+        val tasksDirName = "Tasks"
+        val tasksDir = rootDir.createUniqueDirectory(tasksDirName)
+            ?: throw BackupDataException.CouldNotCreateDirectory(
+                directoryName = tasksDirName,
+                parent = rootDir.displayName()
+            )
         val tasksDirFileNames = tasksDir.listFiles()
             .mapNotNull { it.name.takeIf { _ -> it.isFile } }
             .toHashSet()
@@ -132,8 +148,12 @@ class ExportMarkdownDataUseCaseImpl(
         rootDir: DocumentFile,
         diaryEntries: List<DiaryEntryEntity>
     ) {
-        val diaryDir = rootDir.createUniqueDirectory("Diary")
-            ?: error("Failed to create diary directory")
+        val diaryDirName = "Diary"
+        val diaryDir = rootDir.createUniqueDirectory(diaryDirName)
+            ?: throw BackupDataException.CouldNotCreateDirectory(
+                directoryName = diaryDirName,
+                parent = rootDir.displayName()
+            )
         val diaryDirFileNames = diaryDir.listFiles()
             .mapNotNull { it.name.takeIf { _ -> it.isFile } }
             .toHashSet()
@@ -151,8 +171,12 @@ class ExportMarkdownDataUseCaseImpl(
         rootDir: DocumentFile,
         bookmarks: List<BookmarkEntity>
     ) {
-        val bookmarksDir = rootDir.createUniqueDirectory("Bookmarks")
-            ?: error("Failed to create bookmarks directory")
+        val bookmarksDirName = "Bookmarks"
+        val bookmarksDir = rootDir.createUniqueDirectory(bookmarksDirName)
+            ?: throw BackupDataException.CouldNotCreateDirectory(
+                directoryName = bookmarksDirName,
+                parent = rootDir.displayName()
+            )
         val bookmarksDirFileNames = bookmarksDir.listFiles()
             .mapNotNull { it.name.takeIf { _ -> it.isFile } }
             .toHashSet()
@@ -287,10 +311,26 @@ class ExportMarkdownDataUseCaseImpl(
             baseName = safeName,
             existingFileNames = existingFileNames
         )
-            ?: error("Failed to create markdown file: $safeName")
-        context.contentResolver.openOutputStream(file.uri)?.bufferedWriter()?.use { writer ->
-            writer.write(content)
-        } ?: error("Failed to open output stream for: $safeName")
+            ?: throw BackupDataException.CouldNotCreateFile(
+                fileName = "$safeName.md",
+                parent = displayName()
+            )
+
+        try {
+            context.contentResolver.openOutputStream(file.uri)?.bufferedWriter()?.use { writer ->
+                writer.write(content)
+            } ?: throw BackupDataException.CouldNotWriteFile(
+                fileName = file.name ?: "$safeName.md",
+                parent = displayName()
+            )
+        } catch (e: BackupDataException) {
+            throw e
+        } catch (e: Exception) {
+            throw BackupDataException.CouldNotWriteFile(
+                fileName = file.name ?: "$safeName.md",
+                parent = displayName()
+            )
+        }
     }
  
     private fun DocumentFile.createUniqueMarkdownFile(
@@ -325,7 +365,11 @@ class ExportMarkdownDataUseCaseImpl(
         }
         return createDirectory(candidate)
     }
- 
+
+    private fun DocumentFile.displayName(fallback: String = uri.toString()): String {
+        return name?.takeIf { it.isNotBlank() } ?: fallback
+    }
+
     private fun String.sanitizeForFileName(): String = trim()
         .replace(FILE_NAME_INVALID_CHARS_REGEX, "_")
         .replace(WHITESPACE_REGEX, " ")

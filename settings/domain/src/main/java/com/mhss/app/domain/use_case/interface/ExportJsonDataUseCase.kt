@@ -9,5 +9,5 @@ interface ExportJsonDataUseCase {
         exportBookmarks: Boolean,
         encrypted: Boolean,
         password: String?,
-    ): Boolean
+    )
 }

@@ -1,5 +1,6 @@
 package com.mhss.app.domain.use_case
 
+import com.mhss.app.domain.exception.BackupDataException
 import com.mhss.app.domain.model.BackupFormat
 import com.mhss.app.domain.use_case.`interface`.ImportJsonDataUseCase
 import org.koin.core.annotation.Factory
@@ -15,6 +16,8 @@ class ImportDataUseCase(
         password: String
     ) = when (format) {
         BackupFormat.JSON -> importJsonData(fileUri, encrypted, password)
-        BackupFormat.MARKDOWN -> false
+        BackupFormat.MARKDOWN -> throw BackupDataException.GenericError(
+            details = "Markdown import is not supported",
+        )
     }
 }

@@ -158,6 +158,12 @@
     <string name="import_data">Import danych</string>
     <string name="import_success">Pomyślnie zaimportowano %1$s</string>
     <string name="import_failed">Podczas importowania danych wystąpił błąd. Upewnij się, że plik nie jest uszkodzony, a jego nazwa jest prawidłowa</string>
+    <string name="backup_error_invalid_location">Couldn\'t access backup location \"%1$s\"</string>
+    <string name="backup_error_create_directory">Couldn\'t create folder \"%1$s\"</string>
+    <string name="backup_error_create_file">Couldn\'t create file \"%1$s\"</string>
+    <string name="backup_error_read_file">Couldn\'t read the selected file</string>
+    <string name="backup_error_write_file">Couldn\'t write file \"%1$s\"</string>
+    <string name="backup_error_generic">Something went wrong while processing the backup data</string>
     <string name="grant_permission_to_export">Udziel zezwolenia, aby wyeksportować dane</string>
     <string name="importing">Importowanie....</string>
     <string name="recurring">Recurring</string>
