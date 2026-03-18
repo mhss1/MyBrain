@@ -38,7 +38,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarDay
@@ -56,13 +56,17 @@ import com.mhss.app.ui.R
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.navigation.Screen
+import com.mhss.app.util.date.HOUR_MILLIS
 import com.mhss.app.util.date.currentLocalDate
 import com.mhss.app.util.date.monthName
+import com.mhss.app.util.date.now
+import com.mhss.app.util.date.withTimeFrom
 import com.mhss.app.util.permissions.Permission
 import com.mhss.app.util.permissions.rememberPermissionState
 import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
 import kotlinx.coroutines.launch
+import kotlinx.datetime.number
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -79,12 +83,21 @@ fun CalendarScreen(
         permission = Permission.READ_CALENDAR
     )
     val today = remember { currentLocalDate() }
-    var selectedDate by remember { mutableStateOf(CalendarDay(today, true, emptyList())) }
     val viewMode = if (state.isMonthView) CalendarViewMode.Month else CalendarViewMode.List
 
     val months = state.months
     val loadedMonths = state.loadedMonths
     val currentMonth = state.currentMonth
+    val selectedDate = state.selectedDate
+    
+    val selectedDay = remember(selectedDate, currentMonth, loadedMonths[selectedDate.month.number]) {
+        loadedMonths[selectedDate.month.number]?.days?.firstOrNull { it.date == selectedDate }
+            ?: CalendarDay(
+                date = selectedDate,
+                isCurrentMonth = selectedDate.year == currentMonth.year && selectedDate.month == currentMonth.month,
+                events = emptyList()
+            )
+    }
 
     val scope = rememberCoroutineScope()
     val liquidState = rememberLiquidState()
@@ -161,9 +174,13 @@ fun CalendarScreen(
             if (readCalendarPermissionState.isGranted) {
                 LiquidFloatingActionButton(
                     onClick = {
+                        val createEventStartMillis =
+                            if (viewMode == CalendarViewMode.Month) selectedDate.withTimeFrom(now() + HOUR_MILLIS)
+                            else null
                         navController.navigate(
                             Screen.CalendarEventDetailsScreen(
-                                null
+                                eventId = null,
+                                initialStartMillis = createEventStartMillis
                             )
                         )
                     },
@@ -226,11 +243,12 @@ fun CalendarScreen(
                             .padding(horizontal = 12.dp),
                         loadedMonths = loadedMonths,
                         onLoadMonth = viewModel::loadMonth,
+                        initialMonth = currentMonth,
                         selectedDate = selectedDate,
                         today = today,
                         firstDayOfWeek = state.firstDayOfWeek,
                         onDaySelected = { date ->
-                            selectedDate = date
+                            viewModel.onEvent(CalendarViewModelEvent.SelectedDateChanged(date))
                         },
                         onMonthChanged = {
                             viewModel.onEvent(CalendarViewModelEvent.MonthChanged(it))
@@ -241,7 +259,7 @@ fun CalendarScreen(
                         modifier = Modifier
                             .fillMaxSize(),
                         state = dayEventsState,
-                        selectedDate = selectedDate,
+                        selectedDate = selectedDay,
                         onEventClick = { event ->
                             navController.navigate(
                                 Screen.CalendarEventDetailsScreen(

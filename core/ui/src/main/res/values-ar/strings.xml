@@ -138,7 +138,6 @@
     <string name="every_week">كل اسبوع</string>
     <string name="every_month">كل شهر</string>
     <string name="every_year">كل سنة</string>
-    <string name="error_future_event">الحدث لا يمكن أن يكون في الماضي</string>
     <string name="delete_event_confirmation_title">حذف الحدث؟</string>
     <string name="delete_event_confirmation_message">هل أنت متأكد من حذف هذا الحدث؟</string>
     <string name="folders">الملفات</string>
@@ -247,6 +246,7 @@
     <string name="tool_call_limit_exceeded">توقف المساعد بعد العديد من الإجراءات المتتالية. إذا كنت تتوقع ذلك، يمكنك إرسال كلمة \"Continue\" للمساعد.</string>
     <string name="ask_assistant">اسأل المساعد…</string>
     <string name="error_item_not_found">حدث خطأ, لم يتم العثور على العنصر</string>
+    <string name="error_invalid_event_time_range">يجب أن يكون وقت النهاية بعد وقت البداية</string>
     <string name="first_day_of_week">أول يوم في الأسبوع</string>
     <string name="sunday">الأحد</string>
     <string name="monday">الإثنين</string>

@@ -293,7 +293,8 @@ fun MyBrainApp(
                     val args = it.toRoute<Screen.CalendarEventDetailsScreen>()
                     CalendarEventDetailsScreen(
                         navController = navController,
-                        eventId = args.eventId
+                        eventId = args.eventId,
+                        initialStartMillis = args.initialStartMillis
                     )
                 }
                 composable<Screen.NoteFolderDetailsScreen>(

@@ -58,8 +58,9 @@ import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.model.CalendarEventFrequency
 import com.mhss.app.ui.R
-import com.mhss.app.ui.components.common.DateTimeDialog
+import com.mhss.app.ui.components.common.DateDialog
 import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.components.common.TimeDialog
 import com.mhss.app.ui.snackbar.LocalisedSnackbarHost
 import com.mhss.app.util.date.HOUR_MILLIS
 import com.mhss.app.util.date.formatDate
@@ -74,6 +75,7 @@ import org.koin.core.parameter.parametersOf
 fun CalendarEventDetailsScreen(
     navController: NavHostController,
     eventId: Long?,
+    initialStartMillis: Long? = null,
     viewModel: CalendarEventDetailsViewModel = koinViewModel(
         parameters = { parametersOf(eventId) }
     )
@@ -86,14 +88,14 @@ fun CalendarEventDetailsScreen(
     val event = state.event
     var title by rememberSaveable(event) { mutableStateOf(event?.title ?: "") }
     var description by rememberSaveable(event) { mutableStateOf(event?.description ?: "") }
-    var startDate by rememberSaveable(event) {
+    var startDate by rememberSaveable(event, initialStartMillis) {
         mutableLongStateOf(
-            event?.start ?: (now() + HOUR_MILLIS)
+            event?.start ?: initialStartMillis ?: (now() + HOUR_MILLIS)
         )
     }
-    var endDate by rememberSaveable(event) {
+    var endDate by rememberSaveable(event, initialStartMillis) {
         mutableLongStateOf(
-            event?.end ?: (now() + 2 * HOUR_MILLIS)
+            event?.end ?: (initialStartMillis?.plus(HOUR_MILLIS) ?: (now() + 2 * HOUR_MILLIS))
         )
     }
     var frequency by rememberSaveable(event) {
@@ -368,13 +370,13 @@ fun EventTimeSection(
 ) {
     val context = LocalContext.current
     val formattedStartDate by remember(startMillis) {
-        derivedStateOf { startMillis.formatDate() }
+        derivedStateOf { startMillis.formatDate(forceShowYear = true) }
     }
     val formattedStartTime by remember(startMillis) {
         derivedStateOf { startMillis.formatTime(context) }
     }
     val formattedEndDate by remember(endMillis) {
-        derivedStateOf { endMillis.formatDate() }
+        derivedStateOf { endMillis.formatDate(forceShowYear = true) }
     }
     val formattedEndTime by remember(endMillis) {
         derivedStateOf { endMillis.formatTime(context) }
@@ -383,6 +385,12 @@ fun EventTimeSection(
         mutableStateOf(false)
     }
     var showEndDateDialog by remember {
+        mutableStateOf(false)
+    }
+    var showStartTimeDialog by remember {
+        mutableStateOf(false)
+    }
+    var showEndTimeDialog by remember {
         mutableStateOf(false)
     }
     Column {
@@ -427,7 +435,7 @@ fun EventTimeSection(
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
-                        showStartDateDialog = true
+                        showStartTimeDialog = true
                     }
                     .padding(horizontal = 18.dp, vertical = 16.dp)
             )
@@ -451,34 +459,50 @@ fun EventTimeSection(
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
-                        showEndDateDialog = true
+                        showEndTimeDialog = true
                     }
                     .padding(horizontal = 18.dp, vertical = 16.dp)
             )
         }
-        if (showStartDateDialog) DateTimeDialog(
+        if (showStartDateDialog) DateDialog(
             onDismissRequest = { showStartDateDialog = false },
             initialDate = startMillis
         ) {
-            onStartDateSelected(
-                it
-            )
+            onStartDateSelected(it)
             if (it > endMillis) {
-                onEndDateSelected(endMillis + HOUR_MILLIS)
+                onEndDateSelected(it + HOUR_MILLIS)
             }
             showStartDateDialog = false
         }
-        if (showEndDateDialog) DateTimeDialog(
+        if (showStartTimeDialog) TimeDialog(
+            onDismissRequest = { showStartTimeDialog = false },
+            initialDate = startMillis
+        ) {
+            onStartDateSelected(it)
+            if (it > endMillis) {
+                onEndDateSelected(it + HOUR_MILLIS)
+            }
+            showStartTimeDialog = false
+        }
+        if (showEndDateDialog) DateDialog(
             onDismissRequest = { showEndDateDialog = false },
             initialDate = endMillis
         ) {
-            onEndDateSelected(
-                it
-            )
+            onEndDateSelected(it)
             if (it < startMillis) {
                 onStartDateSelected(it - HOUR_MILLIS)
             }
             showEndDateDialog = false
+        }
+        if (showEndTimeDialog) TimeDialog(
+            onDismissRequest = { showEndTimeDialog = false },
+            initialDate = endMillis
+        ) {
+            onEndDateSelected(it)
+            if (it < startMillis) {
+                onStartDateSelected(it - HOUR_MILLIS)
+            }
+            showEndTimeDialog = false
         }
         var openDialog by remember { mutableStateOf(false) }
         Row(

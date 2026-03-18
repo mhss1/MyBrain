@@ -137,7 +137,6 @@
     <string name="every_week">Hàng tuần</string>
     <string name="every_month">Hàng tháng</string>
     <string name="every_year">Hàng năm</string>
-    <string name="error_future_event">Sự kiện không nên ở trong quá khứ</string>
     <string name="delete_event_confirmation_title">Xóa sự kiện?</string>
     <string name="delete_event_confirmation_message">Bạn có chắc chắn muốn xóa sự kiện này không?</string>
     <string name="folders">Thư mục</string>
@@ -246,6 +245,7 @@
     <string name="tool_call_limit_exceeded">The assistant has stopped after many consecutive actions. If you expect this, you can send "Continue" to the assistant.</string>
     <string name="ask_assistant">Ask Assistant…</string>
     <string name="error_item_not_found">Something went wrong. The item could not be found</string>
+    <string name="error_invalid_event_time_range">End time must be after start time</string>
     <string name="first_day_of_week">First day of week</string>
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>

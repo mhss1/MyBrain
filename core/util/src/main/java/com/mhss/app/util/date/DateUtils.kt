@@ -5,6 +5,7 @@ package com.mhss.app.util.date
 import android.content.Context
 import android.text.format.DateFormat.is24HourFormat
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
@@ -14,7 +15,6 @@ import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.yearsUntil
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
@@ -25,7 +25,7 @@ import kotlin.time.Instant
 
 val CALENDAR_EVENTS_DAY_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE, MMM d", Locale.getDefault())
 
-val kotlinx.datetime.LocalDate.formattedEventsDayName: String
+val LocalDate.formattedEventsDayName: String
     get() = CALENDAR_EVENTS_DAY_FORMATTER.format(toJavaLocalDate())
 
 fun currentLocalDate() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
@@ -40,7 +40,7 @@ fun Long.formatDateDependingOnDay(context: Context): String {
     val hourPatternString = if (is24HourFormat(context)) "H:mm" else "h:mm a"
     val datePattern = if (localDT.isToday()) {
         hourPatternString
-    } else "MMM dd,yyyy $hourPatternString"
+    } else "MMM dd, yyyy $hourPatternString"
 
     return DateTimeFormatter
         .ofPattern(datePattern, Locale.getDefault())
@@ -51,7 +51,7 @@ fun Long.fullDate(context: Context): String {
     val localDT = localDateTime
     val hourPattern = if (is24HourFormat(context)) "H:mm" else "h:mm a"
     return DateTimeFormatter
-        .ofPattern("MMM dd,yyyy $hourPattern", Locale.getDefault())
+        .ofPattern("MMM dd, yyyy $hourPattern", Locale.getDefault())
         .format(localDT.toJavaLocalDateTime())
 }
 
@@ -73,10 +73,16 @@ fun Long.formatTime(context: Context): String {
         .format(localDateTime.toJavaLocalDateTime())
 }
 
-fun Long.formatDate(): String {
+fun Long.formatDate(forceShowYear: Boolean = false): String {
+    val localDT = localDateTime
+    val pattern = if (localDT.isCurrentYear() && !forceShowYear) {
+        "EEE, MMM dd"
+    } else {
+        "EEE, MMM dd, yyyy"
+    }
     return DateTimeFormatter
-        .ofPattern("EEE, MMM dd, yyyy", Locale.getDefault())
-        .format(localDateTime.toJavaLocalDateTime())
+        .ofPattern(pattern, Locale.getDefault())
+        .format(localDT.toJavaLocalDateTime())
 }
 
 fun Long.monthName(): String {
@@ -96,7 +102,7 @@ fun DayOfWeek.getDisplayName(): String {
     )
 }
 
-fun kotlinx.datetime.LocalDate.monthName(): String {
+fun LocalDate.monthName(): String {
     val javaDateTime = toJavaLocalDate()
     val formatter = if (javaDateTime.isCurrentYear()) {
         DateTimeFormatter.ofPattern("MMMM", Locale.getDefault())
@@ -131,7 +137,7 @@ fun LocalDateTime.isCurrentYear(): Boolean {
     return year == now().localDateTime.year
 }
 
-fun LocalDate.isCurrentYear(): Boolean {
+fun java.time.LocalDate.isCurrentYear(): Boolean {
     return year == now().localDateTime.year
 }
 
@@ -200,6 +206,19 @@ fun is24HourFormat(context: Context): Boolean {
         is24Hour = is24HourFormat(context)
     }
     return is24Hour!!
+}
+
+fun LocalDate.withTimeFrom(timestamp: Long): Long {
+    val time = timestamp.localDateTime
+    return LocalDateTime(
+        year = year,
+        month = month,
+        day = day,
+        hour = time.hour,
+        minute = time.minute,
+        second = 0,
+        nanosecond = 0
+    ).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
 }
 
 const val HOUR_MILLIS = 60 * 60 * 1000L

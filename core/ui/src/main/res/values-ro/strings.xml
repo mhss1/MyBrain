@@ -137,7 +137,6 @@
     <string name="every_week">În fiecare săptămână</string>
     <string name="every_month">În fiecare lună</string>
     <string name="every_year">În fiecare an</string>
-    <string name="error_future_event">Evenimentul nu ar trebui să fie în trecut</string>
     <string name="delete_event_confirmation_title">Ștergeți evenimentul?</string>
     <string name="delete_event_confirmation_message">Sigur dorești ștergerea acestui eveniment?</string>
     <string name="folders">Dosare</string>
@@ -246,6 +245,7 @@
     <string name="tool_call_limit_exceeded">The assistant has stopped after many consecutive actions. If you expect this, you can send \"Continue\" to the assistant.</string>
     <string name="ask_assistant">Ask Assistant…</string>
     <string name="error_item_not_found">Something went wrong. The item could not be found</string>
+    <string name="error_invalid_event_time_range">End time must be after start time</string>
     <string name="first_day_of_week">First day of week</string>
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>

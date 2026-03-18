@@ -15,7 +15,6 @@ import com.mhss.app.domain.use_case.GetCalendarEventByIdUseCase
 import com.mhss.app.domain.use_case.UpdateCalendarEventUseCase
 import com.mhss.app.ui.R
 import com.mhss.app.ui.snackbar.showSnackbar
-import com.mhss.app.util.date.now
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
@@ -51,11 +50,11 @@ class CalendarEventDetailsViewModel(
         when (event) {
             is CalendarEventDetailsEvent.AddEvent -> viewModelScope.launch {
                 if (event.event.title.isNotBlank()) {
-                    if (event.event.start > now()) {
+                    if (event.event.end <= event.event.start) {
+                        uiState.snackbarHostState.showSnackbar(R.string.error_invalid_event_time_range)
+                    } else {
                         addEvent(event.event)
                         uiState = uiState.copy(navigateUp = true)
-                    } else {
-                        uiState.snackbarHostState.showSnackbar(R.string.error_future_event)
                     }
                 } else {
                     uiState.snackbarHostState.showSnackbar(R.string.error_empty_title)
@@ -64,11 +63,11 @@ class CalendarEventDetailsViewModel(
 
             is CalendarEventDetailsEvent.EditEvent -> viewModelScope.launch {
                 if (event.event.title.isNotBlank()) {
-                    if (event.event.start > now()) {
+                    if (event.event.end <= event.event.start) {
+                        uiState.snackbarHostState.showSnackbar(R.string.error_invalid_event_time_range)
+                    } else {
                         updateEvent(event.event)
                         uiState = uiState.copy(navigateUp = true)
-                    } else {
-                        uiState.snackbarHostState.showSnackbar(R.string.error_future_event)
                     }
                 } else {
                     uiState.snackbarHostState.showSnackbar(R.string.error_empty_title)

@@ -137,7 +137,6 @@
     <string name="every_week">Toda semana</string>
     <string name="every_month">Todo mês</string>
     <string name="every_year">Todo ano</string>
-    <string name="error_future_event">O Evento não deve ser no passado</string>
     <string name="delete_event_confirmation_title">Remover Evento?</string>
     <string name="delete_event_confirmation_message">Você tem certeza que deseja remover o evento?</string>
     <string name="folders">Pastas</string>
@@ -246,6 +245,7 @@
     <string name="tool_call_limit_exceeded">The assistant has stopped after many consecutive actions. If you expect this, you can send \"Continue\" to the assistant.</string>
     <string name="ask_assistant">Ask Assistant…</string>
     <string name="error_item_not_found">Something went wrong. The item could not be found</string>
+    <string name="error_invalid_event_time_range">End time must be after start time</string>
     <string name="first_day_of_week">First day of week</string>
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>

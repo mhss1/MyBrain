@@ -70,7 +70,8 @@ sealed class Screen {
     data object CalendarScreen : Screen()
     @Serializable
     data class CalendarEventDetailsScreen(
-        val eventId: Long? = null
+        val eventId: Long? = null,
+        val initialStartMillis: Long? = null
     ) : Screen()
     @Serializable
     data class NoteFolderDetailsScreen(
