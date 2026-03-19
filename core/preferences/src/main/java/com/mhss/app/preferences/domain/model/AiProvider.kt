@@ -21,7 +21,7 @@ enum class AiProvider(
         id = 2,
         keyPref = PrefsConstants.OPENAI_KEY,
         modelPref = PrefsConstants.OPENAI_MODEL_KEY,
-        defaultModel = "gpt-5.2",
+        defaultModel = "gpt-5.4",
         keyInfoUrl = "https://platform.openai.com/api-keys",
         modelsInfoUrl = "https://platform.openai.com/docs/models",
         supportsCustomUrl = true,
@@ -33,7 +33,7 @@ enum class AiProvider(
         id = 1,
         keyPref = PrefsConstants.GEMINI_KEY,
         modelPref = PrefsConstants.GEMINI_MODEL_KEY,
-        defaultModel = "gemini-3-pro-preview",
+        defaultModel = "gemini-3.1-pro-preview",
         keyInfoUrl = "https://aistudio.google.com/apikey",
         modelsInfoUrl = "https://ai.google.dev/gemini-api/docs/models"
     ),
@@ -41,7 +41,7 @@ enum class AiProvider(
         id = 3,
         keyPref = PrefsConstants.ANTHROPIC_KEY,
         modelPref = PrefsConstants.ANTHROPIC_MODEL_KEY,
-        defaultModel = "claude-opus-4-5",
+        defaultModel = "claude-opus-4-6",
         keyInfoUrl = "https://console.anthropic.com/settings/keys",
         modelsInfoUrl = "https://platform.claude.com/docs/en/about-claude/models/overview"
     ),

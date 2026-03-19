@@ -5,6 +5,7 @@ import ai.koog.prompt.llm.LLMCapability
 import ai.koog.prompt.llm.LLMProvider
 import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.message.Message
+import ai.koog.prompt.message.ResponseMetaInfo
 import ai.koog.prompt.params.LLMParams
 import com.mhss.app.domain.baseChatSystemMessage
 import com.mhss.app.domain.model.AiMessage
@@ -28,25 +29,39 @@ fun List<AiMessage>.buildChatPrompt(systemMessage: String) = prompt("chat_prompt
         when (message) {
             is AiMessage.UserMessage -> user(message.content + message.attachmentsText)
             is AiMessage.AssistantMessage -> assistant(message.content)
-            is AiMessage.ToolCall -> tool {
-                call(
-                    id = message.id,
-                    tool = message.name,
-                    content = message.rawContent
-                )
-                result(
-                    id = message.id,
-                    tool = message.name,
-                    content = message.resultRawContent
-                )
+            is AiMessage.ToolCall -> {
+                if (message.thoughtSignature != null) {
+                    message(
+                        Message.Reasoning(
+                            encrypted = message.thoughtSignature,
+                            content = "",
+                            metaInfo = ResponseMetaInfo.Empty
+                        )
+                    )
+                }
+                tool {
+                    call(
+                        id = message.id,
+                        tool = message.name,
+                        content = message.rawContent
+                    )
+                    result(
+                        id = message.id,
+                        tool = message.name,
+                        content = message.resultRawContent
+                    )
+                }
             }
         }
     }
 }
 
 
-fun Message.Tool.Call.toAiMessage(toolCallResult: Result<AiMessage.ToolCall>): AiMessage {
-    return toolCallResult.getOrNull()
+fun Message.Tool.Call.toAiMessage(
+    toolCallResult: Result<AiMessage.ToolCall>,
+    thoughtSignature: String? = null
+): AiMessage {
+    return toolCallResult.getOrNull()?.copy(thoughtSignature = thoughtSignature)
         ?: AiMessage.ToolCall(
             uuid = Uuid.random().toString(),
             id = id,
@@ -57,7 +72,8 @@ fun Message.Tool.Call.toAiMessage(toolCallResult: Result<AiMessage.ToolCall>): A
                 ?.toString()
                 ?: "Error executing tool",
             time = nowMillis(),
-            isFailed = true
+            isFailed = true,
+            thoughtSignature = thoughtSignature
         )
 }
 
