@@ -18,18 +18,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -38,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,15 +56,18 @@ import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.model.CalendarEventFrequency
 import com.mhss.app.ui.R
-import com.mhss.app.ui.components.common.DateTimeDialog
+import com.mhss.app.ui.components.common.DateDialog
 import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.components.common.TimeDialog
 import com.mhss.app.ui.snackbar.LocalisedSnackbarHost
 import com.mhss.app.util.date.HOUR_MILLIS
 import com.mhss.app.util.date.formatDate
 import com.mhss.app.util.date.formatTime
 import com.mhss.app.util.date.now
+import com.mhss.app.util.date.toDayOfWeek
 import com.mhss.app.util.permissions.Permission
 import com.mhss.app.util.permissions.rememberPermissionState
+import kotlinx.datetime.DayOfWeek
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -74,6 +75,7 @@ import org.koin.core.parameter.parametersOf
 fun CalendarEventDetailsScreen(
     navController: NavHostController,
     eventId: Long?,
+    initialStartMillis: Long? = null,
     viewModel: CalendarEventDetailsViewModel = koinViewModel(
         parameters = { parametersOf(eventId) }
     )
@@ -86,20 +88,26 @@ fun CalendarEventDetailsScreen(
     val event = state.event
     var title by rememberSaveable(event) { mutableStateOf(event?.title ?: "") }
     var description by rememberSaveable(event) { mutableStateOf(event?.description ?: "") }
-    var startDate by rememberSaveable(event) {
+    var startDate by rememberSaveable(event, initialStartMillis) {
         mutableLongStateOf(
-            event?.start ?: (now() + HOUR_MILLIS)
+            event?.start ?: initialStartMillis ?: (now() + HOUR_MILLIS)
         )
     }
-    var endDate by rememberSaveable(event) {
+    var endDate by rememberSaveable(event, initialStartMillis) {
         mutableLongStateOf(
-            event?.end ?: (now() + 2 * HOUR_MILLIS)
+            event?.end ?: (initialStartMillis?.plus(HOUR_MILLIS) ?: (now() + 2 * HOUR_MILLIS))
         )
     }
     var frequency by rememberSaveable(event) {
         mutableStateOf(
             event?.frequency ?: CalendarEventFrequency.NEVER
         )
+    }
+    var interval by rememberSaveable(event) {
+        mutableIntStateOf(event?.interval?.coerceAtLeast(1) ?: 1)
+    }
+    var weekDays by rememberSaveable(event, stateSaver = dayOfWeekSetSaver) {
+        mutableStateOf(event?.weekDays ?: emptySet())
     }
     var calendar by remember {
         mutableStateOf(
@@ -127,16 +135,14 @@ fun CalendarEventDetailsScreen(
 
     var allDay by rememberSaveable(event) { mutableStateOf(event?.allDay ?: false) }
     var location by rememberSaveable(event) { mutableStateOf(event?.location ?: "") }
-    val snackbarHostState = state.snackbarHostState
     if (writeCalendarPermissionState.isGranted) {
         LaunchedEffect(state) {
             if (state.navigateUp) {
-                openDeleteDialog = false
                 navController.navigateUp()
             }
         }
         Scaffold(
-            snackbarHost = { LocalisedSnackbarHost(snackbarHostState) },
+            snackbarHost = { LocalisedSnackbarHost(state.snackbarHostState) },
             topBar = {
                 if (event != null) MyBrainAppBar(
                     title = "",
@@ -162,7 +168,13 @@ fun CalendarEventDetailsScreen(
                         location = location,
                         calendarId = calendar.id,
                         recurring = frequency != CalendarEventFrequency.NEVER,
-                        frequency = frequency
+                        frequency = frequency,
+                        interval = interval.coerceAtLeast(1),
+                        weekDays = if (frequency == CalendarEventFrequency.WEEKLY) {
+                            weekDays.ifEmpty { setOf(startDate.toDayOfWeek()) }
+                        } else {
+                            emptySet()
+                        }
                     )
                     if (event != null) {
                         viewModel.onEvent(CalendarEventDetailsEvent.EditEvent(newEvent))
@@ -211,7 +223,11 @@ fun CalendarEventDetailsScreen(
                     allDay = allDay,
                     onAllDayChange = { allDay = it },
                     frequency = frequency,
-                    onFrequencySelected = { frequency = it }
+                    onFrequencySelected = { frequency = it },
+                    interval = interval,
+                    onIntervalSelected = { interval = it },
+                    weekDays = weekDays,
+                    onWeekDaysSelected = { weekDays = it }
                 )
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
@@ -364,17 +380,22 @@ fun EventTimeSection(
     allDay: Boolean,
     onAllDayChange: (Boolean) -> Unit,
     frequency: CalendarEventFrequency,
-    onFrequencySelected: (CalendarEventFrequency) -> Unit
+    onFrequencySelected: (CalendarEventFrequency) -> Unit,
+    interval: Int,
+    onIntervalSelected: (Int) -> Unit,
+    weekDays: Set<DayOfWeek>,
+    onWeekDaysSelected: (Set<DayOfWeek>) -> Unit
 ) {
     val context = LocalContext.current
+    val startDayOfWeek = remember(startMillis) { startMillis.toDayOfWeek() }
     val formattedStartDate by remember(startMillis) {
-        derivedStateOf { startMillis.formatDate() }
+        derivedStateOf { startMillis.formatDate(forceShowYear = true) }
     }
     val formattedStartTime by remember(startMillis) {
         derivedStateOf { startMillis.formatTime(context) }
     }
     val formattedEndDate by remember(endMillis) {
-        derivedStateOf { endMillis.formatDate() }
+        derivedStateOf { endMillis.formatDate(forceShowYear = true) }
     }
     val formattedEndTime by remember(endMillis) {
         derivedStateOf { endMillis.formatTime(context) }
@@ -383,6 +404,12 @@ fun EventTimeSection(
         mutableStateOf(false)
     }
     var showEndDateDialog by remember {
+        mutableStateOf(false)
+    }
+    var showStartTimeDialog by remember {
+        mutableStateOf(false)
+    }
+    var showEndTimeDialog by remember {
         mutableStateOf(false)
     }
     Column {
@@ -427,7 +454,7 @@ fun EventTimeSection(
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
-                        showStartDateDialog = true
+                        showStartTimeDialog = true
                     }
                     .padding(horizontal = 18.dp, vertical = 16.dp)
             )
@@ -451,34 +478,50 @@ fun EventTimeSection(
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .clickable {
-                        showEndDateDialog = true
+                        showEndTimeDialog = true
                     }
                     .padding(horizontal = 18.dp, vertical = 16.dp)
             )
         }
-        if (showStartDateDialog) DateTimeDialog(
+        if (showStartDateDialog) DateDialog(
             onDismissRequest = { showStartDateDialog = false },
             initialDate = startMillis
         ) {
-            onStartDateSelected(
-                it
-            )
+            onStartDateSelected(it)
             if (it > endMillis) {
-                onEndDateSelected(endMillis + HOUR_MILLIS)
+                onEndDateSelected(it + HOUR_MILLIS)
             }
             showStartDateDialog = false
         }
-        if (showEndDateDialog) DateTimeDialog(
+        if (showStartTimeDialog) TimeDialog(
+            onDismissRequest = { showStartTimeDialog = false },
+            initialDate = startMillis
+        ) {
+            onStartDateSelected(it)
+            if (it > endMillis) {
+                onEndDateSelected(it + HOUR_MILLIS)
+            }
+            showStartTimeDialog = false
+        }
+        if (showEndDateDialog) DateDialog(
             onDismissRequest = { showEndDateDialog = false },
             initialDate = endMillis
         ) {
-            onEndDateSelected(
-                it
-            )
+            onEndDateSelected(it)
             if (it < startMillis) {
                 onStartDateSelected(it - HOUR_MILLIS)
             }
             showEndDateDialog = false
+        }
+        if (showEndTimeDialog) TimeDialog(
+            onDismissRequest = { showEndTimeDialog = false },
+            initialDate = endMillis
+        ) {
+            onEndDateSelected(it)
+            if (it < startMillis) {
+                onStartDateSelected(it - HOUR_MILLIS)
+            }
+            showEndTimeDialog = false
         }
         var openDialog by remember { mutableStateOf(false) }
         Row(
@@ -491,13 +534,21 @@ fun EventTimeSection(
             Icon(painter = painterResource(id = R.drawable.ic_refresh), null)
             Spacer(Modifier.width(8.dp))
             Text(
-                frequency.getCalendarFrequencyTitleRes(),
+                frequency.getCalendarFrequencyTitle(
+                    interval = interval,
+                    weekDays = weekDays
+                ),
                 style = MaterialTheme.typography.bodyLarge
             )
             FrequencyDialog(
                 selectedFrequency = frequency,
-                onFrequencySelected = {
-                    onFrequencySelected(it)
+                selectedInterval = interval,
+                selectedWeekDays = weekDays,
+                fallbackDay = startDayOfWeek,
+                onApply = { selectedFrequency, selectedInterval, selectedWeekDays ->
+                    onFrequencySelected(selectedFrequency)
+                    onIntervalSelected(selectedInterval)
+                    onWeekDaysSelected(selectedWeekDays)
                     openDialog = false
                 },
                 open = openDialog,
@@ -506,55 +557,6 @@ fun EventTimeSection(
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun FrequencyDialog(
-    selectedFrequency: CalendarEventFrequency,
-    onFrequencySelected: (CalendarEventFrequency) -> Unit,
-    open: Boolean,
-    onClose: () -> Unit,
-) {
-    val frequencies = remember {
-        CalendarEventFrequency.entries
-    }
-    if (open) BasicAlertDialog(
-        onDismissRequest = { onClose() },
-        content = {
-            Column(
-                modifier = Modifier.padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                frequencies.forEach { frequency ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = frequency.getCalendarFrequencyTitleRes(),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        RadioButton(
-                            selected = frequency == selectedFrequency,
-                            onClick = { onFrequencySelected(frequency) }
-                        )
-                    }
-                }
-            }
-        }
-    )
-}
-
-@Composable
-fun CalendarEventFrequency.getCalendarFrequencyTitleRes(): String = when (this) {
-    CalendarEventFrequency.DAILY -> stringResource(R.string.every_day)
-    CalendarEventFrequency.WEEKLY -> stringResource(R.string.every_week)
-    CalendarEventFrequency.MONTHLY -> stringResource(R.string.every_month)
-    CalendarEventFrequency.YEARLY -> stringResource(R.string.every_year)
-    else -> stringResource(R.string.do_not_repeat)
-}
-
 
 @Composable
 fun DeleteEventDialog(

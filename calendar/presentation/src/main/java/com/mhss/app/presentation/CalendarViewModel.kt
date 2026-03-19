@@ -66,14 +66,14 @@ class CalendarViewModel(
     private var updateEventsJob: Job? = null
     private var viewModeJob: Job? = null
 
-    fun loadMonth(month: YearMonth) {
+    fun loadMonth(month: YearMonth, forceRefresh: Boolean = false) {
         val loadedMonthValue = month.month.number
         val loadedMonths = _uiState.value.loadedMonths
         val firstDayOfWeek = _uiState.value.firstDayOfWeek
         viewModelScope.launch {
             loadMutex.withLock {
                 val monthData = async {
-                    if (loadedMonths.containsKey(loadedMonthValue)) null
+                    if (!forceRefresh && loadedMonths.containsKey(loadedMonthValue)) null
                     else {
                         val days = getMonthEventsUseCase(month, _uiState.value.excludedCalendars, firstDayOfWeek)
                         CalendarMonth(month.month.number, days)
@@ -81,7 +81,7 @@ class CalendarViewModel(
                 }
                 val prevMonthData = async {
                     val prevMonth = month.minusMonth()
-                    if (loadedMonths.containsKey(prevMonth.month.number)) null
+                    if (!forceRefresh && loadedMonths.containsKey(prevMonth.month.number)) null
                     else {
                         val prevMonth = month.minus(1, DateTimeUnit.MONTH)
                         val days =
@@ -91,7 +91,7 @@ class CalendarViewModel(
                 }
                 val nextMonthData = async {
                     val nextMonth = month.plusMonth()
-                    if (loadedMonths.containsKey(nextMonth.month.number)) null
+                    if (!forceRefresh && loadedMonths.containsKey(nextMonth.month.number)) null
                     else {
                         val days =
                             getMonthEventsUseCase(nextMonth, _uiState.value.excludedCalendars, firstDayOfWeek)
@@ -148,6 +148,10 @@ class CalendarViewModel(
                 _uiState.update { it.copy(currentMonth = event.newMonth) }
             }
 
+            is CalendarViewModelEvent.SelectedDateChanged -> {
+                _uiState.update { it.copy(selectedDate = event.newDate) }
+            }
+
             is CalendarViewModelEvent.ViewModeChanged -> {
                 viewModelScope.launch {
                     savePreference(
@@ -199,7 +203,7 @@ class CalendarViewModel(
 
     private fun loadEvents() {
         if (_uiState.value.isMonthView) {
-            loadMonth(_uiState.value.currentMonth.yearMonth)
+            loadMonth(_uiState.value.currentMonth.yearMonth, forceRefresh = true)
             _uiState.update { it.copy(events = emptyMap()) }
         } else {
             loadListEvents()
@@ -226,6 +230,7 @@ class CalendarViewModel(
         val months: List<String> = emptyList(),
         val isMonthView: Boolean = false,
         val currentMonth: LocalDate = currentLocalDate(),
+        val selectedDate: LocalDate = currentLocalDate(),
         val loadedMonths: SnapshotStateMap<Int, CalendarMonth> = mutableStateMapOf(),
         val firstDayOfWeek: DayOfWeek = DayOfWeek.SUNDAY
     )

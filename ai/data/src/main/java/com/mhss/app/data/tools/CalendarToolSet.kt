@@ -16,8 +16,10 @@ import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.preferences.domain.model.stringSetPreferencesKey
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.datetime.DayOfWeek
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Factory
+import java.util.Locale
 
 @Factory
 class CalendarToolSet(
@@ -75,7 +77,9 @@ class CalendarToolSet(
         location: String? = null,
         allDay: Boolean = false,
         recurring: Boolean = false,
-        frequency: CalendarEventFrequency = CalendarEventFrequency.NEVER
+        frequency: CalendarEventFrequency = CalendarEventFrequency.NEVER,
+        @LLMDescription("Repeat interval. Minimum value is 1.") interval: Int = 1,
+        @LLMDescription("Only for weekly repeats. Use weekday names or RFC codes such as MONDAY or MO.") weekDays: List<String> = emptyList()
     ): CalendarEventIdResult {
         val startMillis = start.parseDateTimeFromLLM()
             ?: throw IllegalArgumentException("Invalid start date format. The event was not created.")
@@ -91,7 +95,9 @@ class CalendarToolSet(
             allDay = allDay,
             calendarId = calendarId,
             recurring = recurring,
-            frequency = frequency
+            frequency = frequency,
+            interval = interval.coerceAtLeast(1),
+            weekDays = weekDays.mapNotNull { it.toDayOfWeekOrNull() }.toHashSet()
         )
         return CalendarEventIdResult(createdEventId = addCalendarEvent(event))
     }
@@ -116,7 +122,9 @@ class CalendarToolSet(
                 allDay = input.allDay,
                 calendarId = input.calendarId,
                 recurring = input.recurring,
-                frequency = input.frequency
+                frequency = input.frequency,
+                interval = input.interval.coerceAtLeast(1),
+                weekDays = input.weekDays.mapNotNull { it.toDayOfWeekOrNull() }.toHashSet()
             )
             addCalendarEvent(event)
         }
@@ -135,6 +143,19 @@ class CalendarToolSet(
     }
 }
 
+private fun String.toDayOfWeekOrNull(): DayOfWeek? {
+    return when (trim().uppercase(Locale.US)) {
+        "MONDAY", "MON", "MO" -> DayOfWeek.MONDAY
+        "TUESDAY", "TUE", "TU" -> DayOfWeek.TUESDAY
+        "WEDNESDAY", "WED", "WE" -> DayOfWeek.WEDNESDAY
+        "THURSDAY", "THU", "TH" -> DayOfWeek.THURSDAY
+        "FRIDAY", "FRI", "FR" -> DayOfWeek.FRIDAY
+        "SATURDAY", "SAT", "SA" -> DayOfWeek.SATURDAY
+        "SUNDAY", "SUN", "SU" -> DayOfWeek.SUNDAY
+        else -> null
+    }
+}
+
 @Serializable
 data class CalendarEventInput(
     val title: String,
@@ -145,7 +166,9 @@ data class CalendarEventInput(
     val location: String? = null,
     val allDay: Boolean = false,
     val recurring: Boolean = false,
-    val frequency: CalendarEventFrequency = CalendarEventFrequency.NEVER
+    val frequency: CalendarEventFrequency = CalendarEventFrequency.NEVER,
+    val interval: Int = 1,
+    val weekDays: List<String> = emptyList()
 )
 
 @Serializable

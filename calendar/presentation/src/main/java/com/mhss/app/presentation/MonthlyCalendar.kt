@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mhss.app.domain.MONTH_GRID_CELL_COUNT
-import com.mhss.app.domain.model.CalendarDay
 import com.mhss.app.presentation.model.CalendarMonth
 import com.mhss.app.util.date.getDisplayName
 import kotlinx.coroutines.launch
@@ -57,14 +56,18 @@ fun MonthlyCalendar(
     modifier: Modifier = Modifier,
     loadedMonths: SnapshotStateMap<Int, CalendarMonth>,
     onLoadMonth: (YearMonth) -> Unit,
-    selectedDate: CalendarDay,
+    initialMonth: LocalDate,
+    selectedDate: LocalDate,
     today: LocalDate,
     firstDayOfWeek: DayOfWeek = DayOfWeek.SUNDAY,
-    onDaySelected: (CalendarDay) -> Unit,
+    onDaySelected: (LocalDate) -> Unit,
     onMonthChanged: (LocalDate) -> Unit
 ) {
     val weekDays = remember(firstDayOfWeek) { getOrderedWeekDays(firstDayOfWeek) }
-    val initialPage = CALENDAR_START_PAGE
+    val anchorMonth = remember { initialMonth }
+    val initialPage = remember(anchorMonth, today) {
+        CALENDAR_START_PAGE + ((anchorMonth.year - today.year) * 12 + (anchorMonth.month.number - today.month.number))
+    }
     val pagerState = rememberPagerState(
         initialPage = initialPage,
         pageCount = { CALENDAR_TOTAL_PAGES }
@@ -73,13 +76,13 @@ fun MonthlyCalendar(
 
     LaunchedEffect(pagerState.settledPage) {
         val offset = pagerState.settledPage - initialPage
-        val month = today.yearMonth.plus(offset, DateTimeUnit.MONTH)
+        val month = anchorMonth.yearMonth.plus(offset, DateTimeUnit.MONTH)
         onLoadMonth(month)
     }
 
     LaunchedEffect(pagerState.currentPage) {
         val offset = pagerState.currentPage - initialPage
-        val month = today.plus(offset, DateTimeUnit.MONTH)
+        val month = anchorMonth.plus(offset, DateTimeUnit.MONTH)
         onMonthChanged(month)
     }
 
@@ -104,19 +107,19 @@ fun MonthlyCalendar(
             modifier = Modifier.fillMaxWidth(),
         ) { page ->
             val offset = page - initialPage
-            val month = remember(offset) { today.yearMonth.plus(offset, DateTimeUnit.MONTH) }
+            val month = remember(offset) { anchorMonth.yearMonth.plus(offset, DateTimeUnit.MONTH) }
 
             val monthData = loadedMonths[month.month.number]
 
-            LaunchedEffect(monthData, pagerState.settledPage) {
+            LaunchedEffect(monthData, pagerState.settledPage, selectedDate) {
                 val data = monthData ?: return@LaunchedEffect
                 if (pagerState.settledPage == page) {
-                    if (data.monthNumber == today.month.number) {
-                        data.days.firstOrNull { it.date.day == today.day }?.let { onDaySelected(it) }
+                    if (data.days.any { it.date == selectedDate }) return@LaunchedEffect
+
+                    if (month.month == today.month && month.year == today.year) {
+                        data.days.firstOrNull { it.date == today }?.let { onDaySelected(it.date) }
                     } else {
-                        data.days.firstOrNull { it.isCurrentMonth }?.let {
-                            if (selectedDate.date.month != month.month) onDaySelected(it)
-                        }
+                        data.days.firstOrNull { it.isCurrentMonth }?.let { onDaySelected(it.date) }
                     }
                 }
             }
@@ -135,10 +138,10 @@ fun MonthlyCalendar(
                     ) { day ->
                         CalendarDayCell(
                             day = day,
-                            isSelected = day.date == selectedDate.date,
+                            isSelected = day.date == selectedDate,
                             isToday = day.date == today,
                             onDaySelected = {
-                                onDaySelected(it)
+                                onDaySelected(it.date)
                                 if (!it.isCurrentMonth) {
                                     scope.launch {
                                         if (it.date.yearMonth < month) pagerState.animateScrollToPage(page - 1)

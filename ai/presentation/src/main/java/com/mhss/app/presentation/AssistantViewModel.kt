@@ -210,7 +210,7 @@ class AssistantViewModel(
                 is AiMessageAttachment.CalenderEvents -> {
                     builder.appendLine("Next 7 days events:")
                     builder.appendLine(Json.encodeToString(getEventsForNext7Days()))
-                    builder.appendLine("(Today's date: ${now().formatDate()})")
+                    builder.appendLine("(Today's date: ${now().formatDate(forceShowYear = true)})")
                 }
             }
         }

@@ -5,6 +5,7 @@ import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import com.mhss.app.data.model.JsonBackupData
 import com.mhss.app.database.MyBrainDatabase
+import com.mhss.app.domain.exception.BackupDataException
 import com.mhss.app.domain.use_case.`interface`.ExportJsonDataUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
@@ -30,12 +31,14 @@ class ExportJsonDataUseCaseImpl(
         exportBookmarks: Boolean,
         encrypted: Boolean,
         password: String?
-    ): Boolean {
-        return withContext(ioDispatcher) {
+    ) {
+        withContext(ioDispatcher) {
             try {
                 val fileName = "MyBrain_Backup_${System.currentTimeMillis()}.json"
-                val pickedDir = DocumentFile.fromTreeUri(context, directoryUri.toUri()) ?: return@withContext false
+                val pickedDir = DocumentFile.fromTreeUri(context, directoryUri.toUri())
+                    ?: throw BackupDataException.GenericError()
                 val destination = pickedDir.createFile("application/json", fileName)
+                    ?: throw BackupDataException.GenericError()
 
                 val notes = if (exportNotes) database.noteDao().getAllFullNotes() else emptyList()
                 val noteFolders =
@@ -49,16 +52,16 @@ class ExportJsonDataUseCaseImpl(
 
                 val backupData = JsonBackupData(notes, noteFolders, tasks, diary, bookmarks)
 
-                val outputStream = destination?.let { context.contentResolver.openOutputStream(it.uri) }
-                        ?: return@withContext false
+                val outputStream = context.contentResolver.openOutputStream(destination.uri)
+                    ?: throw BackupDataException.GenericError()
 
                 outputStream.use {
                     Json.encodeToStream(backupData, it)
                 }
-                true
+            } catch (e: BackupDataException) {
+                throw e
             } catch (e: Exception) {
-                e.printStackTrace()
-                false
+                throw BackupDataException.GenericError()
             }
         }
     }

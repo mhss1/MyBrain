@@ -6,6 +6,7 @@ import ai.koog.agents.core.tools.annotations.InternalAgentToolsApi
 import ai.koog.agents.core.tools.reflect.tools
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.LLMClientException
+import ai.koog.prompt.executor.clients.anthropic.AnthropicClientSettings
 import ai.koog.prompt.executor.clients.anthropic.AnthropicLLMClient
 import ai.koog.prompt.executor.clients.google.GoogleLLMClient
 import ai.koog.prompt.executor.clients.openai.OpenAIClientSettings
@@ -142,8 +143,6 @@ class AiRepositoryImpl(
                 ""
             }
 
-            llmExecutor = aiProvider.getExecutor(key, customUrl)
-
             val model = getPreferenceUseCase(
                 stringPreferencesKey(aiProvider.modelPref ?: ""),
                 ""
@@ -151,6 +150,10 @@ class AiRepositoryImpl(
 
             if (model.isNotBlank()) {
                 llModel = model.toLLModel(aiProvider, withTools = toolsEnabledPreferenceValue)
+            }
+
+            llModel?.let {
+                llmExecutor = aiProvider.getExecutor(key, customUrl, it)
             }
 
             chatSystemMessage = buildChatSystemMessage(toolsEnabledPreferenceValue)
@@ -181,10 +184,10 @@ class AiRepositoryImpl(
 
     @OptIn(InternalAgentToolsApi::class)
     override fun sendMessage(messages: List<AiMessage>): Flow<AiMessage> = flow {
-        val executor = llmExecutor
-            ?: throw AiRepositoryException(AssistantResult.OtherError("AI Client not initialized"))
         val model =
             llModel ?: throw AiRepositoryException(AssistantResult.OtherError("Model not selected"))
+        val executor = llmExecutor
+            ?: throw AiRepositoryException(AssistantResult.OtherError("AI Client not initialized"))
 
         var currentMessages = messages
         var consecutiveToolCalls = 0
@@ -323,14 +326,19 @@ class AiRepositoryImpl(
 
 }
 
-private fun AiProvider.getExecutor(key: String, customUrl: String): PromptExecutor {
+private fun AiProvider.getExecutor(key: String, customUrl: String, llModel: LLModel): PromptExecutor {
     val client = when (this) {
         AiProvider.OpenAI -> OpenAILLMClient(
             apiKey = key,
             settings = if (customUrl.isBlank()) OpenAIClientSettings() else OpenAIClientSettings(baseUrl = customUrl)
         )
         AiProvider.Gemini -> GoogleLLMClient(apiKey = key)
-        AiProvider.Anthropic -> AnthropicLLMClient(apiKey = key)
+        AiProvider.Anthropic -> AnthropicLLMClient(
+            apiKey = key,
+            settings = AnthropicClientSettings(
+                modelVersionsMap = mapOf(llModel to llModel.id)
+            )
+        )
         AiProvider.OpenRouter -> OpenRouterLLMClient(apiKey = key)
         AiProvider.Ollama -> if (customUrl.isBlank()) OllamaClient() else OllamaClient(customUrl)
         AiProvider.LmStudio -> OpenAILLMClient(

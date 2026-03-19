@@ -65,14 +65,16 @@ import com.mhss.app.domain.model.TaskFrequency
 import com.mhss.app.ui.R
 import com.mhss.app.ui.color
 import com.mhss.app.ui.components.common.AnimatedTabIndicator
-import com.mhss.app.ui.components.common.DateTimeDialog
+import com.mhss.app.ui.components.common.DateDialog
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.common.NumberPicker
+import com.mhss.app.ui.components.common.TimeDialog
 import com.mhss.app.ui.components.tasks.TaskCheckBox
 import com.mhss.app.ui.snackbar.LocalisedSnackbarHost
 import com.mhss.app.ui.snackbar.showSnackbar
 import com.mhss.app.ui.titleRes
-import com.mhss.app.util.date.formatDateDependingOnDay
+import com.mhss.app.util.date.formatDate
+import com.mhss.app.util.date.formatTime
 import com.mhss.app.util.date.now
 import com.mhss.app.util.permissions.Permission
 import com.mhss.app.util.permissions.rememberPermissionState
@@ -104,7 +106,10 @@ fun TaskDetailScreen(
     val subTasks = remember { mutableStateListOf<SubTask>() }
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
     val formattedDate by remember {
-        derivedStateOf { dueDate.formatDateDependingOnDay(context) }
+        derivedStateOf { dueDate.formatDate() }
+    }
+    val formattedTime by remember {
+        derivedStateOf { dueDate.formatTime(context) }
     }
 
     LaunchedEffect(uiState.task) {
@@ -140,7 +145,7 @@ fun TaskDetailScreen(
     LifecycleStartEffect(Unit) {
         onStopOrDispose {
             if (!viewModel.taskDetailsUiState.value.navigateUp) {
-                viewModel.taskDetailsUiState.value.task?.let {task ->
+                viewModel.taskDetailsUiState.value.task?.let { task ->
                     viewModel.onEvent(
                         TaskDetailsEvent.ScreenOnStop(
                             task.copy(
@@ -190,6 +195,7 @@ fun TaskDetailScreen(
             subTasks = subTasks,
             priorities = priorities,
             formattedDate = formattedDate,
+            formattedTime = formattedTime,
             onTitleChange = { title = it },
             onDescriptionChange = { description = it },
             onPriorityChange = { priority = it },
@@ -260,6 +266,7 @@ fun TaskDetailsContent(
     subTasks: MutableList<SubTask>,
     priorities: List<Priority>,
     formattedDate: String,
+    formattedTime: String,
     focusRequester: FocusRequester? = null,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
@@ -369,39 +376,59 @@ fun TaskDetailsContent(
         var showDateDialog by remember {
             mutableStateOf(false)
         }
-        if (showDateDialog) DateTimeDialog(
+        var showTimeDialog by remember {
+            mutableStateOf(false)
+        }
+        if (showDateDialog) DateDialog(
             onDismissRequest = { showDateDialog = false },
             initialDate = dueDate
         ) {
             onDueDateChange(it)
             showDateDialog = false
         }
+        if (showTimeDialog) TimeDialog(
+            onDismissRequest = { showTimeDialog = false },
+            initialDate = dueDate
+        ) {
+            onDueDateChange(it)
+            showTimeDialog = false
+        }
         AnimatedVisibility(dueDateExists) {
             Column {
                 Row(
                     Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            showDateDialog = true
-                        }
                         .padding(vertical = 8.dp, horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_alarm),
-                            stringResource(R.string.due_date),
-                            modifier = Modifier.size(22.dp)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.due_date),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(R.drawable.ic_alarm),
+                        stringResource(R.string.due_date),
+                        modifier = Modifier.size(22.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.due_date),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(
                         text = formattedDate,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier
+                            .clickable { showDateDialog = true }
+                            .padding(horizontal = 28.dp, vertical = 16.dp)
+                    )
+                    Text(
+                        text = formattedTime,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier
+                            .clickable { showTimeDialog = true }
+                            .padding(horizontal = 18.dp, vertical = 16.dp)
                     )
                 }
                 Row(
@@ -437,7 +464,7 @@ fun TaskDetailsContent(
                             },
                             onClick = {
                                 frequencyMenuVisible = true
-                           })
+                            })
                         Spacer(Modifier.height(8.dp))
                         Row(
                             Modifier

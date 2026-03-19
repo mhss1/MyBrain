@@ -2,6 +2,7 @@ package com.mhss.app.presentation.backup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mhss.app.domain.exception.BackupDataException
 import com.mhss.app.domain.model.BackupFormat
 import com.mhss.app.domain.model.BackupFrequency
 import com.mhss.app.domain.repository.BackupScheduler
@@ -16,6 +17,7 @@ import com.mhss.app.preferences.domain.model.PrefsKey.StringKey
 import com.mhss.app.preferences.domain.model.stringPreferencesKey
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,6 +40,11 @@ class BackupViewModel(
 
     private val _backupResult = MutableStateFlow<BackupResult>(BackupResult.Idle)
     val backupResult: StateFlow<BackupResult> = _backupResult
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        val backupError = throwable as? BackupDataException ?: BackupDataException.GenericError()
+        _backupResult.update { BackupResult.Error(backupError) }
+    }
 
     fun <T> getSettings(key: PrefsKey<T>, defaultValue: T): Flow<T> {
         return getPreference(key, defaultValue)
@@ -149,19 +156,15 @@ class BackupViewModel(
         encrypted: Boolean,
         password: String
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             _backupResult.update { BackupResult.Loading }
-            val importSuccess = importData(
+            importData(
                 fileUri = uri,
                 format = format,
                 encrypted = encrypted,
                 password = password
             )
-            if (importSuccess) {
-                _backupResult.update { BackupResult.ImportSuccess }
-            } else {
-                _backupResult.update { BackupResult.ImportFailed }
-            }
+            _backupResult.update { BackupResult.ImportSuccess }
         }
     }
 
@@ -175,10 +178,10 @@ class BackupViewModel(
         encrypted: Boolean,
         password: String
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             _backupResult.update { BackupResult.Loading }
             fileUtilsRepository.takePersistablePermission(uri)
-            val result = exportData(
+            exportData(
                 directoryUri = uri,
                 exportNotes = exportNotes,
                 exportTasks = exportTasks,
@@ -188,13 +191,8 @@ class BackupViewModel(
                 encrypted = encrypted,
                 password = password
             )
-            if (result) {
-                _backupResult.update { BackupResult.ExportSuccess }
-            } else {
-                _backupResult.update { BackupResult.ExportFailed }
-            }
+            _backupResult.update { BackupResult.ExportSuccess }
         }
     }
-
 
 }

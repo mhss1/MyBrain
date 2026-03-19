@@ -13,12 +13,15 @@ import com.mhss.app.domain.repository.CalendarRepository
 import com.mhss.app.ui.R
 import com.mhss.app.util.date.at
 import com.mhss.app.util.date.now
+import com.mhss.app.util.date.toDayOfWeek
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.DayOfWeek
 import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
-import java.util.TimeZone
+import java.util.Locale
 import kotlin.time.Duration.Companion.days
+import java.util.TimeZone as JavaTimeZone
 
 @Single
 class CalendarRepositoryImpl(
@@ -201,8 +204,10 @@ class CalendarRepositoryImpl(
                     val color: Int = it.getInt(7)
                     val calendarId: Long = it.getLong(8)
                     val rrule: String = it.getString(9) ?: ""
-                    val recurring: Boolean = rrule.isNotBlank()
                     val frequency: CalendarEventFrequency = rrule.extractFrequency()
+                    val recurring: Boolean = frequency != CalendarEventFrequency.NEVER
+                    val interval: Int = rrule.extractInterval()
+                    val weekDays: Set<DayOfWeek> = rrule.extractWeekDays(start, frequency)
 
                     CalendarEvent(
                         id = eventId,
@@ -215,6 +220,8 @@ class CalendarRepositoryImpl(
                         color = color,
                         calendarId = calendarId,
                         frequency = frequency,
+                        interval = interval,
+                        weekDays = weekDays,
                         recurring = recurring,
                     )
                 } else null
@@ -231,13 +238,13 @@ class CalendarRepositoryImpl(
                 put(CalendarContract.Events.DTSTART, event.start)
                 put(CalendarContract.Events.ALL_DAY, event.allDay)
                 put(CalendarContract.Events.EVENT_LOCATION, event.location)
-                if (event.recurring){
+                if (event.frequency != CalendarEventFrequency.NEVER) {
                     put(CalendarContract.Events.RRULE, event.getEventRRule())
                     put(CalendarContract.Events.DURATION, event.getEventDuration())
                 } else {
                     put(CalendarContract.Events.DTEND, event.end)
                 }
-                put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
+                put(CalendarContract.Events.EVENT_TIMEZONE, JavaTimeZone.getDefault().id)
             }
             val uri = context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
             uri?.let { ContentUris.parseId(it) }
@@ -251,7 +258,7 @@ class CalendarRepositoryImpl(
                 put(CalendarContract.Events.TITLE, event.title)
                 put(CalendarContract.Events.DESCRIPTION, event.description)
                 put(CalendarContract.Events.DTSTART, event.start)
-                if (event.recurring && event.frequency != CalendarEventFrequency.NEVER){
+                if (event.frequency != CalendarEventFrequency.NEVER) {
                     val end: Long? = null
                     put(CalendarContract.Events.RRULE, event.getEventRRule())
                     put(CalendarContract.Events.DURATION, event.getEventDuration())
@@ -302,16 +309,38 @@ class CalendarRepositoryImpl(
     }
 
     private fun String.extractFrequency(): CalendarEventFrequency {
-        return if (this.contains("FREQ=")) {
-            val freq = this.substringAfter("FREQ=").substringBefore(";")
-            when (freq) {
-                "DAILY" -> CalendarEventFrequency.DAILY
-                "WEEKLY" -> CalendarEventFrequency.WEEKLY
-                "MONTHLY" -> CalendarEventFrequency.MONTHLY
-                "YEARLY" -> CalendarEventFrequency.YEARLY
-                else -> CalendarEventFrequency.NEVER
-            }
-        } else CalendarEventFrequency.NEVER
+        return when (getRuleParts()["FREQ"]) {
+            "DAILY" -> CalendarEventFrequency.DAILY
+            "WEEKLY" -> CalendarEventFrequency.WEEKLY
+            "MONTHLY" -> CalendarEventFrequency.MONTHLY
+            "YEARLY" -> CalendarEventFrequency.YEARLY
+            else -> CalendarEventFrequency.NEVER
+        }
+    }
+
+    private fun String.extractInterval(): Int {
+        return getRuleParts()["INTERVAL"]?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+    }
+
+    private fun String.extractByDay(): Set<DayOfWeek>? {
+        val byDayValue = getRuleParts()["BYDAY"] ?: return null
+        val byDayTokens = byDayValue.split(",")
+        if (byDayTokens.isEmpty()) return null
+
+        val days = HashSet<DayOfWeek>(byDayTokens.size)
+        for (token in byDayTokens) {
+            token.toDayOfWeekFromRRuleToken()?.let { day -> days.add(day) }
+        }
+
+        return days.ifEmpty { null }
+    }
+
+    private fun String.extractWeekDays(
+        start: Long,
+        frequency: CalendarEventFrequency
+    ): Set<DayOfWeek> {
+        if (frequency != CalendarEventFrequency.WEEKLY) return emptySet()
+        return extractByDay() ?: setOf(start.toDayOfWeek())
     }
 
     private fun CalendarEvent.getEventDuration(): String {
@@ -328,19 +357,65 @@ class CalendarRepositoryImpl(
     }
 
     private fun CalendarEvent.getEventRRule(): String {
+        if (frequency == CalendarEventFrequency.NEVER) return ""
         return buildString {
-            append("FREQ=${frequency}")
-            // will be implemented later
-//       if (until > 0) {
-//           val formattedUntil = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.US).format(until)
-//           append(";UNTIL=${formattedUntil}")
-//       }
-//       if (count > 0) {
-//           append(";COUNT=${count}")
-//       }
-//       if (interval > 0) {
-//           append(";INTERVAL=${interval}")
-//       }
+            append("FREQ=${frequency.name}")
+            append(";INTERVAL=${interval.coerceAtLeast(1)}")
+            if (frequency == CalendarEventFrequency.WEEKLY) {
+                val recurringDays = weekDays
+                    .ifEmpty { setOf(start.toDayOfWeek()) }
+                    .joinToString(",") { it.toRRuleByDayToken() }
+                append(";BYDAY=$recurringDays")
+            }
+        }
+    }
+
+    private fun String.getRuleParts(): Map<String, String> {
+        val parts = HashMap<String, String>()
+        val splits = split(";")
+
+        for (item in splits) {
+            val trimmed = item.trim()
+            if (!trimmed.contains("=")) continue
+
+            val key = trimmed.substringBefore("=").trim().uppercase(Locale.US)
+            val value = trimmed.substringAfter("=").trim().uppercase(Locale.US)
+            if (key.isBlank() || value.isBlank()) continue
+
+            parts[key] = value
+        }
+
+        return parts
+    }
+
+    private fun String.toDayOfWeekFromRRuleToken(): DayOfWeek? {
+        val normalized = trim().uppercase(Locale.US)
+        if (normalized.length < 2) return null
+        return normalized.takeLast(2).toDayOfWeekFromRRule()
+    }
+
+    private fun String.toDayOfWeekFromRRule(): DayOfWeek? {
+        return when (this) {
+            "MO" -> DayOfWeek.MONDAY
+            "TU" -> DayOfWeek.TUESDAY
+            "WE" -> DayOfWeek.WEDNESDAY
+            "TH" -> DayOfWeek.THURSDAY
+            "FR" -> DayOfWeek.FRIDAY
+            "SA" -> DayOfWeek.SATURDAY
+            "SU" -> DayOfWeek.SUNDAY
+            else -> null
+        }
+    }
+
+    private fun DayOfWeek.toRRuleByDayToken(): String {
+        return when (this) {
+            DayOfWeek.MONDAY -> "MO"
+            DayOfWeek.TUESDAY -> "TU"
+            DayOfWeek.WEDNESDAY -> "WE"
+            DayOfWeek.THURSDAY -> "TH"
+            DayOfWeek.FRIDAY -> "FR"
+            DayOfWeek.SATURDAY -> "SA"
+            DayOfWeek.SUNDAY -> "SU"
         }
     }
 
@@ -374,8 +449,10 @@ class CalendarRepositoryImpl(
             val calendarColor: Int = getInt(CALENDAR_COLOR_INDEX)
             val calendarId: Long = getLong(EVENT_CALENDAR_ID_INDEX)
             val rrule: String = getString(EVENT_RRULE_INDEX) ?: ""
-            val recurring: Boolean = rrule.isNotBlank()
             val frequency: CalendarEventFrequency = rrule.extractFrequency()
+            val recurring: Boolean = frequency != CalendarEventFrequency.NEVER
+            val interval: Int = rrule.extractInterval()
+            val weekDays: Set<DayOfWeek> = rrule.extractWeekDays(start, frequency)
             events.add(
                 CalendarEvent(
                     id = eventId,
@@ -388,6 +465,8 @@ class CalendarRepositoryImpl(
                     color = if (color != 0) color else calendarColor,
                     calendarId = calendarId,
                     frequency = frequency,
+                    interval = interval,
+                    weekDays = weekDays,
                     recurring = recurring,
                 )
             )

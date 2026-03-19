@@ -1,0 +1,6 @@
+- Added Markdown export and improved backup/import flow
+- Added advanced repeat options for calendar events (custom intervals and multiple weekdays)
+- Added separate date and time pickers for calendar events and tasks
+- Repeated tasks now automatically schedule the next reminder when marked complete
+- Improved AI assistant chat UI and fixed Anthropic tool-call and Markdown rendering issues
+- Bug fixes and stability improvements

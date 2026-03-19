@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":core:alarm"))
     implementation(project(":core:widget"))
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.datetime)
     implementation(libs.uuid)
     implementation(libs.kotlinx.serialization.json)
 

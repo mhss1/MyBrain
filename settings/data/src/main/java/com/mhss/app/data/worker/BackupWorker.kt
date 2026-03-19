@@ -3,6 +3,7 @@ package com.mhss.app.data.worker
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.mhss.app.domain.exception.BackupDataException
 import com.mhss.app.domain.model.BackupFormat
 import com.mhss.app.domain.use_case.ExportDataUseCase
 import com.mhss.app.preferences.PrefsConstants
@@ -28,21 +29,20 @@ class BackupWorker(
 
         if (folderUri.isNullOrBlank()) return Result.failure()
 
-        val success = exportData(
-            directoryUri = folderUri,
-            exportNotes = true,
-            exportTasks = true,
-            exportDiary = true,
-            exportBookmarks = true,
-            format = BackupFormat.JSON,
-            encrypted = false,
-            password = null
-        )
-        
-        return when {
-            success -> Result.success()
-            runAttemptCount < 3 -> Result.retry()
-            else -> Result.failure()
+        return try {
+            exportData(
+                directoryUri = folderUri,
+                exportNotes = true,
+                exportTasks = true,
+                exportDiary = true,
+                exportBookmarks = true,
+                format = BackupFormat.JSON,
+                encrypted = false,
+                password = null
+            )
+            Result.success()
+        } catch (_: BackupDataException) {
+            if (runAttemptCount < 3) Result.retry() else Result.failure()
         }
     }
 
@@ -50,4 +50,3 @@ class BackupWorker(
         const val WORK_NAME = "auto_backup_work"
     }
 }
-

@@ -52,6 +52,7 @@ import com.mhss.app.ui.R
 import com.mhss.app.ui.components.common.DateTimeDialog
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.common.defaultMarkdownTypography
+import com.mhss.app.ui.components.common.withHardLineBreaks
 import com.mhss.app.ui.snackbar.LocalisedSnackbarHost
 import com.mhss.app.util.date.fullDate
 import com.mhss.app.util.date.now
@@ -173,7 +174,7 @@ fun DiaryEntryDetailsScreen(
             Spacer(Modifier.height(8.dp))
             if (readingMode) {
                 Markdown(
-                    content = content,
+                    content = content.withHardLineBreaks(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 6.dp)

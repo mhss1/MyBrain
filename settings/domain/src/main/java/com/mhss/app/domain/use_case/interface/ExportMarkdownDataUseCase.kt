@@ -1,6 +1,6 @@
 package com.mhss.app.domain.use_case.`interface`
-
-interface ExportJsonDataUseCase {
+ 
+interface ExportMarkdownDataUseCase {
     suspend operator fun invoke(
         directoryUri: String,
         exportNotes: Boolean,

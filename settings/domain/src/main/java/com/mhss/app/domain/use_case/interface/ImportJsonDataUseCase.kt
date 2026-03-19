@@ -5,5 +5,5 @@ interface ImportJsonDataUseCase {
         fileUri: String,
         encrypted: Boolean,
         password: String?
-    ): Boolean
+    )
 }

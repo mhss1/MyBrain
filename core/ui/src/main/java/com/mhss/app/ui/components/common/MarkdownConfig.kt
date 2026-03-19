@@ -7,6 +7,59 @@ import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.font.FontWeight
 import com.mikepenz.markdown.m3.markdownTypography
 
+
+/**
+ * Preserves blank-line spacing for the Markdown renderer by inserting
+ * non-breaking-space paragraphs for consecutive blank lines (which Markdown normally
+ * collapses into one). Regular newlines between content lines are left untouched.
+ * Fenced code blocks are passed through unchanged.
+ */
+fun String.withHardLineBreaks(): String = buildString(length + length / 2) {
+    val content = this@withHardLineBreaks
+    var inFencedBlock = false
+    var pendingBlanks = 0
+    var isFirst = true
+    var i = 0
+
+    fun flushBlanks() {
+        append("\n\n")
+        repeat(maxOf(0, pendingBlanks - 1)) { append("\u00A0\n\n") }
+        pendingBlanks = 0
+    }
+
+    while (i <= content.length) {
+        val eol = content.indexOf('\n', i).let { if (it == -1) content.length else it }
+        val isFence = content.isFenceAt(i, eol)
+
+        if (inFencedBlock) {
+            append('\n')
+            append(content, i, eol)
+            if (isFence) inFencedBlock = false
+        } else if (i == eol) {
+            pendingBlanks++
+        } else {
+            if (!isFirst) {
+                appendLine()
+                if (pendingBlanks > 0) flushBlanks() else append('\n')
+            }
+            isFirst = false
+            append(content, i, eol)
+            if (isFence) inFencedBlock = true
+        }
+
+        i = eol + 1
+    }
+
+    if (pendingBlanks > 0) flushBlanks()
+}
+
+/** Checks if the line at [start]..[end] starts with a ``` fence marker (ignoring leading spaces). */
+private fun String.isFenceAt(start: Int, end: Int): Boolean {
+    var i = start
+    while (i < end && this[i] == ' ') i++
+    return i + 3 <= end && this[i] == '`' && this[i + 1] == '`' && this[i + 2] == '`'
+}
+
 @Composable
 fun defaultMarkdownTypography() = markdownTypography(
     text = MaterialTheme.typography.bodyMedium,
