@@ -199,6 +199,13 @@ fun Long.at(hours: Int, minutes: Int): Long {
     ).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
 }
 
+fun Long.toDayOfWeek(): DayOfWeek {
+    return Instant
+        .fromEpochMilliseconds(this)
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .dayOfWeek
+}
+
 private var is24Hour: Boolean? = null
 
 fun is24HourFormat(context: Context): Boolean {

@@ -41,6 +41,7 @@
     <string name="date_created">Data creării</string>
     <string name="date_modified">Data modificării</string>
     <string name="done">Done</string>
+    <string name="ok">OK</string>
     <string name="ascending">Crescător</string>
     <string name="descending">Descrescător</string>
     <string name="show_completed_tasks">Arată sarcinile completate</string>
@@ -137,6 +138,18 @@
     <string name="every_week">În fiecare săptămână</string>
     <string name="every_month">În fiecare lună</string>
     <string name="every_year">În fiecare an</string>
+    <string name="every_week_on">Every week on %1$s</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_every_interval">Every %1$d %2$s</string>
+    <string name="repeat_every_interval_on">Every %1$d %2$s on %3$s</string>
+    <string name="day">day</string>
+    <string name="days">days</string>
+    <string name="week">week</string>
+    <string name="weeks">weeks</string>
+    <string name="month">month</string>
+    <string name="months">months</string>
+    <string name="year">year</string>
+    <string name="years">years</string>
     <string name="delete_event_confirmation_title">Ștergeți evenimentul?</string>
     <string name="delete_event_confirmation_message">Sigur dorești ștergerea acestui eveniment?</string>
     <string name="folders">Dosare</string>

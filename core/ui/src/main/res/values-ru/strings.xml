@@ -41,6 +41,7 @@
     <string name="date_created">По дате создания</string>
     <string name="date_modified">По последнему изменению</string>
     <string name="done">Done</string>
+    <string name="ok">OK</string>
     <string name="ascending">По возрастанию</string>
     <string name="descending">По убыванию</string>
     <string name="show_completed_tasks">Показать выполненные задачи</string>
@@ -137,6 +138,18 @@
     <string name="every_week">Каждую неделю</string>
     <string name="every_month">Каждый месяц</string>
     <string name="every_year">Каждый год</string>
+    <string name="every_week_on">Every week on %1$s</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_every_interval">Every %1$d %2$s</string>
+    <string name="repeat_every_interval_on">Every %1$d %2$s on %3$s</string>
+    <string name="day">day</string>
+    <string name="days">days</string>
+    <string name="week">week</string>
+    <string name="weeks">weeks</string>
+    <string name="month">month</string>
+    <string name="months">months</string>
+    <string name="year">year</string>
+    <string name="years">years</string>
     <string name="delete_event_confirmation_title">Удалить событие?</string>
     <string name="delete_event_confirmation_message">Вы уверены, что хотите удалить это событие?</string>
     <string name="folders">Папки</string>

@@ -41,6 +41,7 @@
     <string name="date_created">Data utworzenia</string>
     <string name="date_modified">Data modyfikacji</string>
     <string name="done">Done</string>
+    <string name="ok">OK</string>
     <string name="ascending">Rosnąco</string>
     <string name="descending">Malejąco</string>
     <string name="show_completed_tasks">Pokaż wykonane zadania</string>
@@ -137,6 +138,18 @@
     <string name="every_week">Co tydzień</string>
     <string name="every_month">Co miesiąc</string>
     <string name="every_year">Co rok</string>
+    <string name="every_week_on">Every week on %1$s</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_every_interval">Every %1$d %2$s</string>
+    <string name="repeat_every_interval_on">Every %1$d %2$s on %3$s</string>
+    <string name="day">day</string>
+    <string name="days">days</string>
+    <string name="week">week</string>
+    <string name="weeks">weeks</string>
+    <string name="month">month</string>
+    <string name="months">months</string>
+    <string name="year">year</string>
+    <string name="years">years</string>
     <string name="delete_event_confirmation_title">Usunąć wydarzenie?</string>
     <string name="delete_event_confirmation_message">Czy na pewno chcesz usunąć to wydarzenie?</string>
     <string name="folders">Foldery</string>

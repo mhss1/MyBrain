@@ -41,6 +41,7 @@
     <string name="date_created">Date created</string>
     <string name="date_modified">Date modified</string>
     <string name="done">Done</string>
+    <string name="ok">OK</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
     <string name="show_completed_tasks">Show completed tasks</string>
@@ -142,6 +143,18 @@
     <string name="every_week">Every week</string>
     <string name="every_month">Every month</string>
     <string name="every_year">Every year</string>
+    <string name="every_week_on">Every week on %1$s</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_every_interval">Every %1$d %2$s</string>
+    <string name="repeat_every_interval_on">Every %1$d %2$s on %3$s</string>
+    <string name="day">day</string>
+    <string name="days">days</string>
+    <string name="week">week</string>
+    <string name="weeks">weeks</string>
+    <string name="month">month</string>
+    <string name="months">months</string>
+    <string name="year">year</string>
+    <string name="years">years</string>
     <string name="delete_event_confirmation_title">Delete event?</string>
     <string name="delete_event_confirmation_message">Are you sure you want do delete this event?</string>
     <string name="folders">Folders</string>

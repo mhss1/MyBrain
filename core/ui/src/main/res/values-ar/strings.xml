@@ -42,6 +42,7 @@
     <string name="date_created">تاريخ الإنشاء</string>
     <string name="date_modified">تاريخ التعديل</string>
     <string name="done">مكمل</string>
+    <string name="ok">تم</string>
     <string name="ascending">تصاعدي</string>
     <string name="descending">تنازلي</string>
     <string name="show_completed_tasks">إظهار المهام المكملة</string>
@@ -138,6 +139,18 @@
     <string name="every_week">كل اسبوع</string>
     <string name="every_month">كل شهر</string>
     <string name="every_year">كل سنة</string>
+    <string name="every_week_on">كل أسبوع في %1$s</string>
+    <string name="repeat">تكرار</string>
+    <string name="repeat_every_interval">كل %1$d %2$s</string>
+    <string name="repeat_every_interval_on">كل %1$d %2$s في %3$s</string>
+    <string name="day">يوم</string>
+    <string name="days">أيام</string>
+    <string name="week">أسبوع</string>
+    <string name="weeks">أسابيع</string>
+    <string name="month">شهر</string>
+    <string name="months">أشهر</string>
+    <string name="year">سنة</string>
+    <string name="years">سنوات</string>
     <string name="delete_event_confirmation_title">حذف الحدث؟</string>
     <string name="delete_event_confirmation_message">هل أنت متأكد من حذف هذا الحدث؟</string>
     <string name="folders">الملفات</string>

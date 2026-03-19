@@ -62,7 +62,7 @@ fun DateTimeDialog(
                     } else showTime = true
                 },
             ) {
-                Text(stringResource(R.string.okay))
+                Text(stringResource(R.string.ok))
             }
         }
     ) {
@@ -115,7 +115,7 @@ fun DateDialog(
                     )
                 },
             ) {
-                Text(stringResource(R.string.okay))
+                Text(stringResource(R.string.ok))
             }
         }
     ) {
@@ -161,7 +161,7 @@ fun TimeDialog(
                         .align(Alignment.End)
                         .padding(end = 12.dp, bottom = 8.dp)
                 ) {
-                    Text(stringResource(R.string.okay))
+                    Text(stringResource(R.string.ok))
                 }
             }
         }
