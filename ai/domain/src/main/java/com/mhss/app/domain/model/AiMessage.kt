@@ -22,7 +22,8 @@ sealed interface AiMessage {
         val resultRawContent: String,
         val time: Long,
         val isFailed: Boolean = false,
-        val resultObject: ToolCallResultObject? = null
+        val resultObject: ToolCallResultObject? = null,
+        val thoughtSignature: String? = null
     ): AiMessage
 }
 

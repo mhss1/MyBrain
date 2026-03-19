@@ -216,9 +216,10 @@ class AiRepositoryImpl(
 
                 consecutiveToolCalls++
 
+                val thoughtSignatures = extractThoughtSignatures(result)
                 val toolCallMessages = toolCalls.map { toolCall ->
                     val toolCallMessageResult = executeToolCall(toolCall)
-                    toolCall.toAiMessage(toolCallMessageResult).also {
+                    toolCall.toAiMessage(toolCallMessageResult, thoughtSignatures[toolCall]).also {
                         emit(it)
                     }
                 }
@@ -243,6 +244,24 @@ class AiRepositoryImpl(
             val message = e.getRootCause().message ?: e.message
             throw AiRepositoryException(AssistantResult.OtherError(message))
         }
+    }
+
+    private fun extractThoughtSignatures(
+        result: List<Message.Response>
+    ): Map<Message.Tool.Call, String?> {
+        val signatures = HashMap<Message.Tool.Call, String?>()
+        var lastSignature: String? = null
+        for (msg in result) {
+            when (msg) {
+                is Message.Reasoning -> lastSignature = msg.encrypted
+                is Message.Tool.Call -> {
+                    signatures[msg] = lastSignature
+                    lastSignature = null
+                }
+                is Message.Assistant -> lastSignature = null
+            }
+        }
+        return signatures
     }
 
     private suspend fun executeToolCall(
