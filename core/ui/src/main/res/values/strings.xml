@@ -170,7 +170,7 @@
     <string name="block_screenshots">Block screenshots</string>
     <string name="export_import">Export/Import</string>
     <string name="export">Export data</string>
-    <string name="export_success">Successfully exported data"</string>
+    <string name="export_success">Successfully exported data</string>
     <string name="export_failed">Something went wrong while exporting</string>
     <string name="import_data">Import data</string>
     <string name="import_success">Successfully imported data</string>
