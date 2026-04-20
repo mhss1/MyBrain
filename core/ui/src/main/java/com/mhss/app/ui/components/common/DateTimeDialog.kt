@@ -28,6 +28,7 @@ import com.mhss.app.ui.R
 import com.mhss.app.util.date.at
 import com.mhss.app.util.date.hour
 import com.mhss.app.util.date.minute
+import com.mhss.app.util.date.utcDateAt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +55,7 @@ fun DateTimeDialog(
                 onClick = {
                     if (showTime) {
                         onDatePicked(
-                            datePickerState.selectedDateMillis?.at(
+                            datePickerState.selectedDateMillis?.utcDateAt(
                                 timePickerState.hour,
                                 timePickerState.minute
                             ) ?: initialDate
@@ -108,7 +109,7 @@ fun DateDialog(
             TextButton(
                 onClick = {
                     onDatePicked(
-                        datePickerState.selectedDateMillis?.at(
+                        datePickerState.selectedDateMillis?.utcDateAt(
                             initialDate.hour,
                             initialDate.minute
                         ) ?: initialDate

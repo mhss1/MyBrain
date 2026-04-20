@@ -199,6 +199,19 @@ fun Long.at(hours: Int, minutes: Int): Long {
     ).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
 }
 
+fun Long.utcDateAt(hours: Int, minutes: Int): Long {
+    val date = Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.UTC).date
+    return LocalDateTime(
+        year = date.year,
+        month = date.month,
+        day = date.day,
+        hour = hours,
+        minute = minutes,
+        second = 0,
+        nanosecond = 0
+    ).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+}
+
 fun Long.toDayOfWeek(): DayOfWeek {
     return Instant
         .fromEpochMilliseconds(this)
