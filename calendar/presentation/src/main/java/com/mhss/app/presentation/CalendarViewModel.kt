@@ -21,6 +21,13 @@ import com.mhss.app.ui.toIntList
 import com.mhss.app.util.date.currentLocalDate
 import com.mhss.app.util.date.formatDateForMapping
 import com.mhss.app.util.date.monthName
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atTime
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -211,14 +218,37 @@ class CalendarViewModel(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun loadListEvents() {
         viewModelScope.launch {
-            val events = getAllEventsUseCase(_uiState.value.excludedCalendars) {
-                it.start.formatDateForMapping()
+            val tz = TimeZone.currentSystemDefault()
+            val rawEvents = getAllEventsUseCase(_uiState.value.excludedCalendars) { "" }
+                .values.flatten()
+
+            val byDate = sortedMapOf<LocalDate, MutableList<CalendarEvent>>()
+            rawEvents.forEach { event ->
+                val zone = if (event.allDay) TimeZone.UTC else tz
+                val startDate = Instant.fromEpochMilliseconds(event.start).toLocalDateTime(zone).date
+                val endDateTime = Instant.fromEpochMilliseconds(event.end).toLocalDateTime(zone)
+                val rawEndDate = endDateTime.date
+                val endDate = if (rawEndDate > startDate && endDateTime.time == LocalTime(0, 0))
+                    rawEndDate.minus(1, DateTimeUnit.DAY) else rawEndDate
+                var d = startDate
+                while (d <= endDate) {
+                    byDate.getOrPut(d) { mutableListOf() }.add(event)
+                    d = d.plus(1, DateTimeUnit.DAY)
+                }
             }
-            val months = events.map {
-                it.value.first().start.monthName()
-            }.distinct()
+
+            val events = LinkedHashMap<String, List<CalendarEvent>>()
+            byDate.forEach { (date, list) ->
+                val dayMillis = date.atTime(0, 0).toInstant(tz).toEpochMilliseconds()
+                val sorted = list.sortedBy { ev ->
+                    if (ev.start < dayMillis) dayMillis else ev.start
+                }
+                events[dayMillis.formatDateForMapping()] = sorted
+            }
+            val months = byDate.keys.map { it.monthName() }.distinct()
             _uiState.update { it.copy(events = events, months = months) }
         }
     }
