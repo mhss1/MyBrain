@@ -206,6 +206,7 @@
     <string name="gemini">Gemini</string>
     <string name="anthropic" translatable="false">Anthropic</string>
     <string name="openrouter" translatable="false">OpenRouter</string>
+    <string name="requesty" translatable="false">Requesty</string>
     <string name="ollama" translatable="false">Ollama</string>
     <string name="lm_studio" translatable="false">LM Studio</string>
     <string name="openai">OpenAI</string>

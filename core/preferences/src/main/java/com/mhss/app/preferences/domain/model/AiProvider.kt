@@ -53,6 +53,15 @@ enum class AiProvider(
         keyInfoUrl = "https://openrouter.ai/keys",
         modelsInfoUrl = "https://openrouter.ai/models"
     ),
+    Requesty(
+        id = 7,
+        keyPref = PrefsConstants.REQUESTY_KEY,
+        modelPref = PrefsConstants.REQUESTY_MODEL_KEY,
+        defaultModel = "openai/gpt-4o-mini",
+        keyInfoUrl = "https://app.requesty.ai/api-keys",
+        modelsInfoUrl = "https://app.requesty.ai/router/list",
+        defaultBaseUrl = "https://router.requesty.ai/v1"
+    ),
     LmStudio(
         id = 5,
         keyPref = null,

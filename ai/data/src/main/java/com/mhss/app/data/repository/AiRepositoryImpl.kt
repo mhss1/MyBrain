@@ -359,6 +359,12 @@ private fun AiProvider.getExecutor(key: String, customUrl: String, llModel: LLMo
             )
         )
         AiProvider.OpenRouter -> OpenRouterLLMClient(apiKey = key)
+        AiProvider.Requesty -> OpenAILLMClient(
+            apiKey = key,
+            settings = OpenAIClientSettings(
+                baseUrl = if (customUrl.isBlank()) "https://router.requesty.ai/v1" else customUrl
+            )
+        )
         AiProvider.Ollama -> if (customUrl.isBlank()) OllamaClient() else OllamaClient(customUrl)
         AiProvider.LmStudio -> OpenAILLMClient(
             apiKey = "",

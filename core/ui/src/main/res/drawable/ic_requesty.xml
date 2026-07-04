@@ -1,0 +1,10 @@
+<!-- PLACEHOLDER icon for Requesty provider. Neutral generic AI/API glyph, not the official Requesty brand mark. Replace with the real logo when available. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M12,2L2,7v10l10,5l10,-5V7L12,2zM12,4.236L19.5,8L12,11.764L4.5,8L12,4.236zM4,9.618l7,3.5v6.264l-7,-3.5V9.618zM13,19.382v-6.264l7,-3.5v6.264L13,19.382z"
+      android:fillColor="#FFFFFF"/>
+</vector>

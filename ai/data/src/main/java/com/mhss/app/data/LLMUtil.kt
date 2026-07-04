@@ -104,6 +104,7 @@ fun AiProvider.toLLMProvider() = when (this) {
     AiProvider.Gemini -> LLMProvider.Google
     AiProvider.Anthropic -> LLMProvider.Anthropic
     AiProvider.OpenRouter -> LLMProvider.OpenRouter
+    AiProvider.Requesty -> LLMProvider.OpenAI // Requesty is OpenAI-compatible
     AiProvider.Ollama -> LLMProvider.Ollama
     AiProvider.LmStudio -> LLMProvider.OpenAI
     AiProvider.None -> LLMProvider.OpenAI // just a placeholder
