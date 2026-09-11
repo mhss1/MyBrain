@@ -1,6 +1,8 @@
 package com.mhss.app.data
 
 import com.mhss.app.database.dao.DiaryDao
+import com.mhss.app.database.dao.DiaryOrder
+import com.mhss.app.database.dao.QueryOrder
 import com.mhss.app.database.dao.SyncDao
 import com.mhss.app.database.dao.incrementAndGet
 import com.mhss.app.database.entity.DeletedEntityEntity
@@ -9,6 +11,8 @@ import com.mhss.app.database.entity.toDiaryEntry
 import com.mhss.app.database.entity.toDiaryEntryEntity
 import com.mhss.app.domain.model.DiaryEntry
 import com.mhss.app.domain.repository.DiaryRepository
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.database.sync.LocalChangeObserver
 import com.mhss.app.database.helpers.DatabaseTransactionProvider
 import com.mhss.app.datetime.now
@@ -30,12 +34,15 @@ class DiaryRepositoryImpl(
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : DiaryRepository {
 
-    override fun getAllEntries(): Flow<List<DiaryEntry>> {
-        return diaryDao.getAllEntries()
+    override fun getAllEntries(sortOrder: SortOrder): Flow<List<DiaryEntry>> {
+        val sortOrderBy = when (sortOrder) {
+            is SortOrder.Alphabetical -> DiaryOrder.TITLE
+            is SortOrder.DateCreated -> DiaryOrder.CREATED_DATE
+            else -> DiaryOrder.UPDATED_DATE
+        }
+        return diaryDao.getAllEntries(sortOrderBy, sortOrder.sortType.toQueryOrder())
+            .map { entries -> entries.map { it.toDiaryEntry() } }
             .flowOn(ioDispatcher)
-            .map { entries ->
-                entries.map { it.toDiaryEntry() }
-            }
     }
 
     override suspend fun getAllFullEntries(): List<DiaryEntry> {
@@ -103,4 +110,9 @@ class DiaryRepositoryImpl(
             changeObserver.notifyChange()
         }
     }
+}
+
+private fun SortType.toQueryOrder() = when (this) {
+    SortType.ASC -> QueryOrder.ASC
+    SortType.DESC -> QueryOrder.DESC
 }

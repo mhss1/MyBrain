@@ -5,6 +5,8 @@ import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import androidx.room3.RawQuery
+import androidx.room3.RoomRawQuery
 import androidx.room3.Update
 import androidx.room3.Upsert
 import com.mhss.app.database.entity.BookmarkEntity
@@ -13,8 +15,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BookmarkDao {
 
-    @Query("SELECT * FROM bookmarks")
-    fun getAllBookmarks(): Flow<List<BookmarkEntity>>
+    @RawQuery(observedEntities = [BookmarkEntity::class])
+    fun observeBookmarks(query: RoomRawQuery): Flow<List<BookmarkEntity>>
+
+    fun getAllBookmarks(orderBy: BookmarkOrder, order: QueryOrder): Flow<List<BookmarkEntity>> {
+        val orderBySql = when (orderBy) {
+            BookmarkOrder.TITLE -> "title COLLATE NOCASE ${order.sql}"
+            else -> "${orderBy.column} ${order.sql}"
+        }
+        return observeBookmarks(RoomRawQuery("SELECT * FROM bookmarks ORDER BY $orderBySql"))
+    }
 
     @Query("SELECT * FROM bookmarks")
     suspend fun getAllFullBookmarks(): List<BookmarkEntity>
@@ -49,4 +59,10 @@ interface BookmarkDao {
     @Upsert
     suspend fun upsertBookmarks(bookmarks: List<BookmarkEntity>)
 
+}
+
+enum class BookmarkOrder(val column: String) {
+    TITLE("title"),
+    CREATED_DATE("created_date"),
+    UPDATED_DATE("updated_date")
 }

@@ -1,11 +1,16 @@
 package com.mhss.app.domain.repository
 
 import com.mhss.app.domain.model.Task
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface TaskRepository {
 
-    fun getAllTasks(): Flow<List<Task>>
+    fun getAllTasks(
+        sortOrder: SortOrder = SortOrder.DueDate(SortType.ASC),
+        showCompleted: Boolean = true
+    ): Flow<List<Task>>
 
     suspend fun getTaskById(id: String): Task?
 

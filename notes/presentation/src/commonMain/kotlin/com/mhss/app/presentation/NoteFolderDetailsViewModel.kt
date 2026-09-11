@@ -11,8 +11,8 @@ import com.mhss.app.domain.use_case.GetNoteFolderUseCase
 import com.mhss.app.domain.use_case.GetNotesByFolderUseCase
 import com.mhss.app.domain.use_case.UpdateNoteFolderUseCase
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
 import com.mhss.app.preferences.domain.model.toOrder
@@ -71,7 +71,7 @@ class NoteFolderDetailsViewModel(
                 combine(
                     getPreference(
                         intPreferencesKey(PrefsConstants.NOTES_ORDER_KEY),
-                        Order.DateModified(OrderType.ASC).toInt()
+                        SortOrder.DateModified(SortType.DESC).toInt()
                     ),
                     getPreference(
                         intPreferencesKey(PrefsConstants.NOTE_VIEW_KEY),
@@ -81,7 +81,7 @@ class NoteFolderDetailsViewModel(
                     val nextOrder = order.toOrder()
                     _uiState.update {
                         it.copy(
-                            notesOrder = nextOrder,
+                            notesSortOrder = nextOrder,
                             noteView = view.toNotesView(),
                         )
                     }
@@ -114,12 +114,12 @@ class NoteFolderDetailsViewModel(
         }
     }
 
-    private fun getNotesFromFolder(notesOrder: Order) {
+    private fun getNotesFromFolder(notesSortOrder: SortOrder) {
         getFolderNotesJob?.cancel()
-        getFolderNotesJob = getFolderNotes(folderId, notesOrder)
+        getFolderNotesJob = getFolderNotes(folderId, notesSortOrder)
             .onEach { notes ->
                 _uiState.update {
-                    it.copy(folderNotes = notes, notesOrder = notesOrder)
+                    it.copy(folderNotes = notes, notesSortOrder = notesSortOrder)
                 }
             }
             .launchIn(viewModelScope)
@@ -129,7 +129,7 @@ class NoteFolderDetailsViewModel(
         val folder: NoteFolder? = null,
         val folderNotes: List<Note> = emptyList(),
         val noteView: ItemView = ItemView.LIST,
-        val notesOrder: Order = Order.DateModified(OrderType.ASC),
+        val notesSortOrder: SortOrder = SortOrder.DateModified(SortType.DESC),
         val navigateUp: Boolean = false,
         val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     )

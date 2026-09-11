@@ -10,8 +10,8 @@ import com.mhss.app.domain.model.Bookmark
 import com.mhss.app.domain.use_case.AddBookmarkUseCase
 import com.mhss.app.domain.use_case.GetAllBookmarksUseCase
 import com.mhss.app.domain.use_case.SearchBookmarksUseCase
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
 import com.mhss.app.preferences.domain.model.toOrder
@@ -46,14 +46,14 @@ class BookmarksViewModel(
             combine(
                 getPreference(
                     intPreferencesKey(PrefsConstants.BOOKMARK_ORDER_KEY),
-                    Order.DateModified(OrderType.ASC).toInt()
+                    SortOrder.DateModified(SortType.DESC).toInt()
                 ),
                 getPreference(
                     intPreferencesKey(PrefsConstants.BOOKMARK_VIEW_KEY),
                     ItemView.LIST.value
                 )
             ) { order, view ->
-                uiState = uiState.copy(bookmarksOrder = order.toOrder())
+                uiState = uiState.copy(bookmarksSortOrder = order.toOrder())
                 getBookmarks(order.toOrder())
                 if (uiState.bookmarksView.value != view) {
                     uiState = uiState.copy(bookmarksView = view.toNotesView())
@@ -76,7 +76,7 @@ class BookmarksViewModel(
             is BookmarkEvent.UpdateOrder -> viewModelScope.launch {
                 savePreference(
                     intPreferencesKey(PrefsConstants.BOOKMARK_ORDER_KEY),
-                    event.order.toInt()
+                    event.sortOrder.toInt()
                 )
             }
 
@@ -93,19 +93,19 @@ class BookmarksViewModel(
 
     data class UiState(
         val bookmarks: List<Bookmark> = emptyList(),
-        val bookmarksOrder: Order = Order.DateModified(OrderType.ASC),
+        val bookmarksSortOrder: SortOrder = SortOrder.DateModified(SortType.DESC),
         val bookmarksView: ItemView = ItemView.LIST,
         val error: Int? = null,
         val searchBookmarks: List<Bookmark> = emptyList(),
     )
 
-    private fun getBookmarks(order: Order) {
+    private fun getBookmarks(sortOrder: SortOrder) {
         getBookmarksJob?.cancel()
-        getBookmarksJob = getAlBookmarks(order)
+        getBookmarksJob = getAlBookmarks(sortOrder)
             .onEach { bookmarks ->
                 uiState = uiState.copy(
                     bookmarks = bookmarks,
-                    bookmarksOrder = order
+                    bookmarksSortOrder = sortOrder
                 )
             }.launchIn(viewModelScope)
     }

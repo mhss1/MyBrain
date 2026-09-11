@@ -9,7 +9,11 @@ import com.mhss.app.domain.model.Mood
 
 @Entity(
     tableName = "diary",
-    indices = [Index(value = ["sync_seq"])]
+    indices = [
+        Index(value = ["sync_seq"]),
+        Index(value = ["updated_date"]),
+        Index(value = ["created_date"])
+    ]
 )
 data class DiaryEntryEntity(
     val title: String = "",

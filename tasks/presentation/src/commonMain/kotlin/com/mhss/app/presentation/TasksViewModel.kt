@@ -14,8 +14,8 @@ import com.mhss.app.domain.use_case.SearchTasksUseCase
 import com.mhss.app.domain.use_case.UpdateTaskCompletedUseCase
 import com.mhss.app.domain.use_case.UpsertTaskUseCase
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
@@ -30,7 +30,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
@@ -61,7 +60,7 @@ class TasksViewModel(
             combine(
                 getPreference(
                     intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
-                    Order.DateModified(OrderType.ASC).toInt()
+                    SortOrder.DueDate(SortType.ASC).toInt()
                 ),
                 getPreference(
                     booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
@@ -109,7 +108,7 @@ class TasksViewModel(
             is TaskEvent.UpdateOrder -> viewModelScope.launch {
                 savePreference(
                     intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
-                    event.order.toInt()
+                    event.sortOrder.toInt()
                 )
             }
 
@@ -130,25 +129,20 @@ class TasksViewModel(
 
     data class UiState(
         val tasks: List<Task> = emptyList(),
-        val taskOrder: Order = Order.DateModified(OrderType.ASC),
+        val taskSortOrder: SortOrder = SortOrder.DueDate(SortType.ASC),
         val showCompletedTasks: Boolean = false,
         val alarmError: Boolean = false,
         val searchTasks: List<Task> = emptyList(),
         val snackbarHostState: SnackbarHostState = SnackbarHostState()
     )
 
-    private fun getTasks(order: Order, showCompleted: Boolean) {
+    private fun getTasks(sortOrder: SortOrder, showCompleted: Boolean) {
         getTasksJob?.cancel()
-        getTasksJob = getAllTasks(order)
-            .map { list ->
-                if (showCompleted)
-                    list
-                else
-                    list.filter { !it.isCompleted }
-            }.onEach { tasks ->
+        getTasksJob = getAllTasks(sortOrder, showCompleted)
+            .onEach { tasks ->
                 tasksUiState = tasksUiState.copy(
                     tasks = tasks,
-                    taskOrder = order,
+                    taskSortOrder = sortOrder,
                     showCompletedTasks = showCompleted
                 )
             }.launchIn(viewModelScope)

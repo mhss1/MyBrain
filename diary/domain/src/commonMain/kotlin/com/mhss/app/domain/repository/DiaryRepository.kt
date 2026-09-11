@@ -1,11 +1,15 @@
 package com.mhss.app.domain.repository
 
 import com.mhss.app.domain.model.DiaryEntry
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface DiaryRepository {
 
-    fun getAllEntries(): Flow<List<DiaryEntry>>
+    fun getAllEntries(
+        sortOrder: SortOrder = SortOrder.DateCreated(SortType.DESC)
+    ): Flow<List<DiaryEntry>>
 
     suspend fun getAllFullEntries(): List<DiaryEntry>
 

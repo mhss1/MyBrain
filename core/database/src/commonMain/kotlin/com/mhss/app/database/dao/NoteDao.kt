@@ -5,6 +5,8 @@ import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import androidx.room3.RawQuery
+import androidx.room3.RoomRawQuery
 import androidx.room3.Transaction
 import androidx.room3.Update
 import androidx.room3.Upsert
@@ -15,11 +17,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
 
-    @Query("SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes WHERE folder_id IS NULL")
-    fun getAllFolderlessNotes(): Flow<List<NoteEntity>>
+    @RawQuery(observedEntities = [NoteEntity::class])
+    fun observeNotes(query: RoomRawQuery): Flow<List<NoteEntity>>
 
-    @Query("SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes")
-    fun getAllNotes(): Flow<List<NoteEntity>>
+    fun getAllFolderlessNotes(orderBy: NoteOrder, order: QueryOrder): Flow<List<NoteEntity>> =
+        observeNotes(noteQuery("folder_id IS NULL", orderBy, order))
+
+    fun getAllNotes(orderBy: NoteOrder, order: QueryOrder): Flow<List<NoteEntity>> =
+        observeNotes(noteQuery(null, orderBy, order))
 
     @Query("SELECT * FROM notes")
     suspend fun getAllFullNotes(): List<NoteEntity>
@@ -42,8 +47,13 @@ interface NoteDao {
     @Query("SELECT title, SUBSTR(content, 1, 100) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
     suspend fun getNotesByTitle(query: String): List<NoteEntity>
 
-    @Query("SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes WHERE folder_id = :folderId")
-    fun getNotesByFolder(folderId: String): Flow<List<NoteEntity>>
+    fun getNotesByFolder(
+        folderId: String,
+        orderBy: NoteOrder,
+        order: QueryOrder
+    ): Flow<List<NoteEntity>> = observeNotes(
+        noteQuery("folder_id = ?", orderBy, order) { it.bindText(1, folderId) }
+    )
 
     @Query("DELETE FROM notes WHERE folder_id = :folderId")
     suspend fun deleteNotesByFolderId(folderId: String)
@@ -98,4 +108,27 @@ interface NoteDao {
 
     @Query("SELECT * FROM note_folders WHERE name LIKE '%' || :name || '%'")
     suspend fun searchFolderByName(name: String): List<NoteFolderEntity>
+}
+
+private fun noteQuery(
+    where: String?,
+    orderBy: NoteOrder,
+    order: QueryOrder,
+    bind: (androidx.sqlite.SQLiteStatement) -> Unit = {}
+): RoomRawQuery {
+    val whereSql = where?.let { " WHERE $it" }.orEmpty()
+    val column = when (orderBy) {
+        NoteOrder.TITLE -> "title COLLATE NOCASE"
+        else -> orderBy.column
+    }
+    return RoomRawQuery(
+        "SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes$whereSql ORDER BY pinned DESC, $column ${order.sql}",
+        bind
+    )
+}
+
+enum class NoteOrder(val column: String) {
+    TITLE("title"),
+    CREATED_DATE("created_date"),
+    UPDATED_DATE("updated_date")
 }

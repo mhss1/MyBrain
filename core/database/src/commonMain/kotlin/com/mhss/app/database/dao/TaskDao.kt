@@ -3,6 +3,8 @@ package com.mhss.app.database.dao
 import androidx.room3.Dao
 import androidx.room3.Delete
 import androidx.room3.Query
+import androidx.room3.RawQuery
+import androidx.room3.RoomRawQuery
 import androidx.room3.Update
 import androidx.room3.Upsert
 import com.mhss.app.database.entity.TaskEntity
@@ -11,8 +13,22 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TaskDao {
 
-    @Query("SELECT * FROM tasks")
-    fun getAllTasks(): Flow<List<TaskEntity>>
+    @RawQuery(observedEntities = [TaskEntity::class])
+    fun observeTasks(query: RoomRawQuery): Flow<List<TaskEntity>>
+
+    fun getAllTasks(
+        orderBy: TaskOrder,
+        order: QueryOrder,
+        showCompleted: Boolean
+    ): Flow<List<TaskEntity>> {
+        val where = if (showCompleted) "" else " WHERE is_completed = 0"
+        val orderBySql = when (orderBy) {
+            TaskOrder.TITLE -> "title COLLATE NOCASE ${order.sql}"
+            TaskOrder.DUE_DATE -> "dueDate = 0 ASC, dueDate ${order.sql}"
+            else -> "${orderBy.column} ${order.sql}"
+        }
+        return observeTasks(RoomRawQuery("SELECT * FROM tasks$where ORDER BY $orderBySql"))
+    }
 
     @Query("SELECT * FROM tasks")
     suspend fun getAllFullTasks(): List<TaskEntity>
@@ -53,4 +69,13 @@ interface TaskDao {
     @Query("UPDATE tasks SET is_completed = :completed, sync_seq = :syncSeq, updated_date = :updatedDate WHERE id = :id")
     suspend fun updateCompleted(id: String, completed: Boolean, syncSeq: Long, updatedDate: Long)
 
+}
+
+enum class TaskOrder(val column: String) {
+    TITLE("title"),
+    CREATED_DATE("created_date"),
+    UPDATED_DATE("updated_date"),
+    PRIORITY("priority"),
+    DUE_DATE("dueDate"),
+    COMPLETED("is_completed")
 }

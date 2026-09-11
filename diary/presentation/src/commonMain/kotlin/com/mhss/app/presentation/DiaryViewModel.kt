@@ -10,8 +10,8 @@ import com.mhss.app.domain.use_case.GetAllEntriesUseCase
 import com.mhss.app.domain.use_case.GetDiaryForChartUseCase
 import com.mhss.app.domain.use_case.SearchEntriesUseCase
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
 import com.mhss.app.preferences.domain.model.toOrder
@@ -49,7 +49,7 @@ class DiaryViewModel(
         viewModelScope.launch {
             getPreference(
                 intPreferencesKey(PrefsConstants.DIARY_ORDER_KEY),
-                Order.DateModified(OrderType.ASC).toInt()
+                SortOrder.DateCreated(SortType.DESC).toInt()
             ).collect {
                 getEntries(it.toOrder())
             }
@@ -67,7 +67,7 @@ class DiaryViewModel(
             is DiaryEvent.UpdateOrder -> viewModelScope.launch {
                 savePreference(
                     intPreferencesKey(PrefsConstants.DIARY_ORDER_KEY),
-                    event.order.toInt()
+                    event.sortOrder.toInt()
                 )
             }
             is DiaryEvent.ChangeChartEntriesRange -> viewModelScope.launch {
@@ -81,20 +81,20 @@ class DiaryViewModel(
 
     data class UiState(
         val entries: Map<String, List<DiaryEntry>> = emptyMap(),
-        val entriesOrder: Order = Order.DateModified(OrderType.ASC),
+        val entriesSortOrder: SortOrder = SortOrder.DateCreated(SortType.DESC),
         val searchEntries: List<DiaryEntry> = emptyList(),
         val chartEntries : List<DiaryEntry> = emptyList()
     )
 
-    private fun getEntries(order: Order) {
+    private fun getEntries(sortOrder: SortOrder) {
         getEntriesJob?.cancel()
-        getEntriesJob = getAlEntries(order)
+        getEntriesJob = getAlEntries(sortOrder)
             .onEach { entries ->
                 uiState = uiState.copy(
                     entries = entries.groupBy {
                         dateTimeFormatter.formatDateForMapping(it.createdDate)
                     },
-                    entriesOrder = order
+                    entriesSortOrder = sortOrder
                 )
             }
             .flowOn(defaultDispatcher)

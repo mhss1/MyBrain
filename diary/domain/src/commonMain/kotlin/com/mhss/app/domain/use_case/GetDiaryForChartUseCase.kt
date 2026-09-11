@@ -2,6 +2,8 @@ package com.mhss.app.domain.use_case
 
 import com.mhss.app.domain.repository.DiaryRepository
 import com.mhss.app.domain.model.DiaryEntry
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -17,10 +19,9 @@ class GetDiaryForChartUseCase(
     suspend operator fun invoke(filterSelector: (DiaryEntry) -> Boolean) : List<DiaryEntry>{
         return withContext(defaultDispatcher) {
             diaryRepository
-                .getAllEntries()
+                .getAllEntries(SortOrder.DateCreated(SortType.ASC))
                 .first()
                 .filter(filterSelector)
-                .sortedBy { it.createdDate }
         }
     }
 }

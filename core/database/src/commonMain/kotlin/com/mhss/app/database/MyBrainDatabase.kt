@@ -40,7 +40,7 @@ import com.mhss.app.database.entity.TaskEntity
         DeletedEntityEntity::class,
         SyncStateEntity::class
     ],
-    version = 6
+    version = 7
 )
 
 

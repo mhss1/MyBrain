@@ -303,3 +303,15 @@ val MIGRATION_5_6 = object : Migration(5, 6) {
         connection.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_deleted_entities_entity_type_entity_id` ON `deleted_entities` (`entity_type`, `entity_id`)")
     }
 }
+
+val MIGRATION_6_7 = object : Migration(6, 7) {
+    override suspend fun migrate(connection: SQLiteConnection) {
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_notes_pinned_updated_date` ON `notes` (`pinned` ASC, `updated_date` ASC)")
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_notes_folder_id_pinned_updated_date` ON `notes` (`folder_id` ASC, `pinned` ASC, `updated_date` ASC)")
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_tasks_updated_date` ON `tasks` (`updated_date` ASC)")
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_tasks_is_completed_updated_date` ON `tasks` (`is_completed` ASC, `updated_date` ASC)")
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_diary_updated_date` ON `diary` (`updated_date` ASC)")
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_diary_created_date` ON `diary` (`created_date` ASC)")
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_bookmarks_updated_date` ON `bookmarks` (`updated_date` ASC)")
+    }
+}

@@ -17,6 +17,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.core.database)
+                implementation(projects.core.preferences)
                 implementation(projects.core.alarm)
                 implementation(projects.tasks.domain)
                 implementation(projects.core.datetime)

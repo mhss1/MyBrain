@@ -48,8 +48,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_bookmark
@@ -131,7 +131,7 @@ fun BookmarksScreen(
             }
             AnimatedVisibility(visible = orderSettingsVisible) {
                 BookmarksSettingsSection(
-                    uiState.bookmarksOrder,
+                    uiState.bookmarksSortOrder,
                     uiState.bookmarksView,
                     onOrderChange = {
                         viewModel.onEvent(BookmarkEvent.UpdateOrder(it))
@@ -202,22 +202,22 @@ fun BookmarksScreen(
 
 @Composable
 fun BookmarksSettingsSection(
-    order: Order,
+    sortOrder: SortOrder,
     view: ItemView,
-    onOrderChange: (Order) -> Unit,
+    onOrderChange: (SortOrder) -> Unit,
     onViewChange: (ItemView) -> Unit
 ) {
-    val orders = remember {
+    val sortOrders = remember {
         listOf(
-            Order.DateModified(),
-            Order.DateCreated(),
-            Order.Alphabetical()
+            SortOrder.DateModified(),
+            SortOrder.DateCreated(),
+            SortOrder.Alphabetical()
         )
     }
-    val orderTypes = remember {
+    val sortTypes = remember {
         listOf(
-            OrderType.ASC,
-            OrderType.DESC
+            SortType.ASC,
+            SortType.DESC
         )
     }
     val views = remember {
@@ -237,14 +237,14 @@ fun BookmarksSettingsSection(
         FlowRow(
             modifier = Modifier.padding(end = 8.dp)
         ) {
-            orders.forEach {
+            sortOrders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order::class == it::class,
+                        selected = sortOrder::class == it::class,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    it.copyOrder(orderType = order.orderType)
+                                    it.copyOrder(sortType = sortOrder.sortType)
                                 )
                         }
                     )
@@ -254,14 +254,14 @@ fun BookmarksSettingsSection(
         }
         HorizontalDivider()
         FlowRow {
-            orderTypes.forEach {
+            sortTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderType == it,
+                        selected = sortOrder.sortType == it,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    order.copyOrder(it)
+                                    sortOrder.copyOrder(it)
                                 )
                         }
                     )

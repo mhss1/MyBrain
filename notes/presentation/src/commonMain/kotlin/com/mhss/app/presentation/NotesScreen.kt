@@ -64,8 +64,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mhss.app.domain.model.NoteFolder
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_note
@@ -195,7 +195,7 @@ fun NotesScreen(
                 }
                 AnimatedVisibility(visible = orderSettingsVisible) {
                     NotesSettingsSection(
-                        uiState.notesOrder,
+                        uiState.notesSortOrder,
                         uiState.noteView,
                         uiState.showAllNotes,
                         onOrderChange = {
@@ -338,24 +338,24 @@ fun FoldersTab(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun NotesSettingsSection(
-    order: Order,
+    sortOrder: SortOrder,
     view: ItemView,
     showAllNotes: Boolean,
-    onOrderChange: (Order) -> Unit,
+    onOrderChange: (SortOrder) -> Unit,
     onViewChange: (ItemView) -> Unit,
     onShowAllNotesChange: (Boolean) -> Unit
 ) {
-    val orders = remember {
+    val sortOrders = remember {
         listOf(
-            Order.DateModified(),
-            Order.DateCreated(),
-            Order.Alphabetical()
+            SortOrder.DateModified(),
+            SortOrder.DateCreated(),
+            SortOrder.Alphabetical()
         )
     }
-    val orderTypes = remember {
+    val sortTypes = remember {
         listOf(
-            OrderType.ASC,
-            OrderType.DESC
+            SortType.ASC,
+            SortType.DESC
         )
     }
     val noteViews = remember {
@@ -375,14 +375,14 @@ fun NotesSettingsSection(
         FlowRow(
             modifier = Modifier.padding(end = 8.dp)
         ) {
-            orders.forEach {
+            sortOrders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order::class == it::class,
+                        selected = sortOrder::class == it::class,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    it.copyOrder(orderType = order.orderType)
+                                    it.copyOrder(sortType = sortOrder.sortType)
                                 )
                         }
                     )
@@ -395,14 +395,14 @@ fun NotesSettingsSection(
         }
         HorizontalDivider()
         FlowRow {
-            orderTypes.forEach {
+            sortTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderType == it,
+                        selected = sortOrder.sortType == it,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    order.copyOrder(it)
+                                    sortOrder.copyOrder(it)
                                 )
                         }
                     )

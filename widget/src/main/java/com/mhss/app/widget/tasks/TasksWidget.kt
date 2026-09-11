@@ -18,8 +18,8 @@ import com.mhss.app.datetime.DateTimeFormatter
 import com.mhss.app.datetime.LocalDateTimeFormatter
 import com.mhss.app.domain.use_case.GetAllTasksUseCase
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
@@ -44,10 +44,10 @@ class TasksWidget : GlanceAppWidget(), KoinComponent {
         provideContent {
             val widgetPreferences = currentState<Preferences>()
             val backgroundOpacity = WidgetSettings.backgroundOpacity(widgetPreferences)
-            val order by getSettings(
+            val sortOrder by getSettings(
                 intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
-                Order.DateModified(OrderType.ASC).toInt()
-            ).collectAsState(Order.DateModified(OrderType.ASC).toInt())
+                SortOrder.DueDate(SortType.ASC).toInt()
+            ).collectAsState(SortOrder.DueDate(SortType.ASC).toInt())
             val showCompletedTasks by getSettings(
                 booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
                 false
@@ -70,7 +70,7 @@ class TasksWidget : GlanceAppWidget(), KoinComponent {
                     (themeSetting == ThemeSettings.AUTO.value && isSystemDarkMode)
             }
             val tasks by getAllTasks(
-                order.toOrder(),
+                sortOrder.toOrder(),
                 showCompletedTasks
             ).collectAsState(emptyList())
 

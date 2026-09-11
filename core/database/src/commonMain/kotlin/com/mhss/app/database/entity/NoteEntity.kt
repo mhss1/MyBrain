@@ -8,7 +8,11 @@ import com.mhss.app.domain.model.Note
 
 @Entity(
     tableName = "notes",
-    indices = [Index(value = ["sync_seq"])]
+    indices = [
+        Index(value = ["sync_seq"]),
+        Index(value = ["pinned", "updated_date"]),
+        Index(value = ["folder_id", "pinned", "updated_date"])
+    ]
 )
 data class NoteEntity(
     val title: String = "",

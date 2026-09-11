@@ -5,6 +5,8 @@ import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import androidx.room3.RawQuery
+import androidx.room3.RoomRawQuery
 import androidx.room3.Update
 import androidx.room3.Upsert
 import com.mhss.app.database.entity.DiaryEntryEntity
@@ -13,8 +15,20 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface DiaryDao {
 
-    @Query("SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, mood, id, sync_seq FROM diary")
-    fun getAllEntries(): Flow<List<DiaryEntryEntity>>
+    @RawQuery(observedEntities = [DiaryEntryEntity::class])
+    fun observeEntries(query: RoomRawQuery): Flow<List<DiaryEntryEntity>>
+
+    fun getAllEntries(orderBy: DiaryOrder, order: QueryOrder): Flow<List<DiaryEntryEntity>> {
+        val orderBySql = when (orderBy) {
+            DiaryOrder.TITLE -> "title COLLATE NOCASE ${order.sql}"
+            else -> "${orderBy.column} ${order.sql}"
+        }
+        return observeEntries(
+            RoomRawQuery(
+                "SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, mood, id, sync_seq FROM diary ORDER BY $orderBySql"
+            )
+        )
+    }
 
     @Query("SELECT * FROM diary")
     suspend fun getAllFullEntries(): List<DiaryEntryEntity>
@@ -49,4 +63,10 @@ interface DiaryDao {
     @Query("DELETE FROM diary WHERE id = :id")
     suspend fun deleteEntryById(id: String)
 
+}
+
+enum class DiaryOrder(val column: String) {
+    TITLE("title"),
+    CREATED_DATE("created_date"),
+    UPDATED_DATE("updated_date")
 }

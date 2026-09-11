@@ -15,8 +15,8 @@ import androidx.glance.currentState
 import androidx.glance.material3.ColorProviders
 import com.mhss.app.domain.use_case.GetAllNotesUseCase
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
@@ -40,10 +40,10 @@ class NotesWidget : GlanceAppWidget(), KoinComponent {
         provideContent {
             val widgetPreferences = currentState<Preferences>()
             val backgroundOpacity = WidgetSettings.backgroundOpacity(widgetPreferences)
-            val order by getSettings(
+            val sortOrder by getSettings(
                 intPreferencesKey(PrefsConstants.NOTES_ORDER_KEY),
-                Order.DateModified(OrderType.ASC).toInt()
-            ).collectAsState(Order.DateModified(OrderType.ASC).toInt())
+                SortOrder.DateModified(SortType.DESC).toInt()
+            ).collectAsState(SortOrder.DateModified(SortType.DESC).toInt())
             val useMaterialYou by getSettings(
                 booleanPreferencesKey(PrefsConstants.SETTINGS_MATERIAL_YOU),
                 false
@@ -66,7 +66,7 @@ class NotesWidget : GlanceAppWidget(), KoinComponent {
                     (themeSetting == ThemeSettings.AUTO.value && isSystemDarkMode)
             }
             val notes by getAllNotes(
-                order.toOrder(),
+                sortOrder.toOrder(),
                 showAllNotes
             ).collectAsState(emptyList())
             val limitedNotes = remember(notes) { notes.take(10) }

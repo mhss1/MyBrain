@@ -10,8 +10,8 @@ import com.mhss.app.domain.use_case.GetAllNoteFoldersUseCase
 import com.mhss.app.domain.use_case.GetAllNotesUseCase
 import com.mhss.app.domain.use_case.SearchNotesUseCase
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
@@ -66,7 +66,7 @@ class NotesViewModel(
                 combine(
                     getPreference(
                         intPreferencesKey(PrefsConstants.NOTES_ORDER_KEY),
-                        Order.DateModified(OrderType.ASC).toInt()
+                        SortOrder.DateModified(SortType.DESC).toInt()
                     ),
                     getPreference(
                         intPreferencesKey(PrefsConstants.NOTE_VIEW_KEY),
@@ -81,7 +81,7 @@ class NotesViewModel(
                     getNotes(nextOrder, showAllNotes)
                     _notesUiState.update {
                         it.copy(
-                            notesOrder = nextOrder,
+                            notesSortOrder = nextOrder,
                             showAllNotes = showAllNotes,
                             noteView = view.toNotesView()
                         )
@@ -115,7 +115,7 @@ class NotesViewModel(
             is NoteEvent.UpdateOrder -> viewModelScope.launch {
                 savePreference(
                     intPreferencesKey(PrefsConstants.NOTES_ORDER_KEY),
-                    event.order.toInt()
+                    event.sortOrder.toInt()
                 )
             }
 
@@ -146,7 +146,7 @@ class NotesViewModel(
 
     data class UiState(
         val notes: List<Note> = emptyList(),
-        val notesOrder: Order = Order.DateModified(OrderType.ASC),
+        val notesSortOrder: SortOrder = SortOrder.DateModified(SortType.DESC),
         val noteView: ItemView = ItemView.LIST,
         val navigateUp: Boolean = false,
         val searchNotes: List<Note> = emptyList(),
@@ -156,14 +156,14 @@ class NotesViewModel(
         val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     )
 
-    private fun getNotes(order: Order, showAllNotes: Boolean) {
+    private fun getNotes(sortOrder: SortOrder, showAllNotes: Boolean) {
         getNotesJob?.cancel()
-        getNotesJob = getAllNotes(order, showAllNotes)
+        getNotesJob = getAllNotes(sortOrder, showAllNotes)
             .onEach { notes ->
                 _notesUiState.update {
                     it.copy(
                         notes = notes,
-                        notesOrder = order
+                        notesSortOrder = sortOrder
                     )
                 }
             }.launchIn(viewModelScope)

@@ -11,7 +11,11 @@ import com.mhss.app.domain.model.TaskFrequency
 
 @Entity(
     tableName = "tasks",
-    indices = [Index(value = ["sync_seq"])]
+    indices = [
+        Index(value = ["sync_seq"]),
+        Index(value = ["updated_date"]),
+        Index(value = ["is_completed", "updated_date"])
+    ]
 )
 data class TaskEntity(
     val title: String,

@@ -1,11 +1,15 @@
 package com.mhss.app.domain.repository
 
 import com.mhss.app.domain.model.Bookmark
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface BookmarkRepository {
 
-    fun getAllBookmarks(): Flow<List<Bookmark>>
+    fun getAllBookmarks(
+        sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)
+    ): Flow<List<Bookmark>>
 
     suspend fun getBookmark(id: String): Bookmark
 

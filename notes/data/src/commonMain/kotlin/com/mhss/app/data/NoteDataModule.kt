@@ -39,6 +39,6 @@ val noteRoomModule = module {
 
 fun noteMarkdownModule(rootId: String) = module {
     factory<NoteRepository> {
-        MarkdownNoteRepositoryImpl(get(), rootId)
+        MarkdownNoteRepositoryImpl(get(), rootId, get(named("defaultDispatcher")))
     }
 }

@@ -2,13 +2,19 @@ package com.mhss.app.domain.repository
 
 import com.mhss.app.domain.model.Note
 import com.mhss.app.domain.model.NoteFolder
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    fun getAllFolderlessNotes(): Flow<List<Note>>
+    fun getAllFolderlessNotes(
+        sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)
+    ): Flow<List<Note>>
 
-    fun getAllNotes(): Flow<List<Note>>
+    fun getAllNotes(
+        sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)
+    ): Flow<List<Note>>
 
     suspend fun getAllFullNotes(): List<Note>
 
@@ -16,7 +22,10 @@ interface NoteRepository {
 
     suspend fun searchNotes(query: String): List<Note>
 
-    fun getNotesByFolder(folderId: String): Flow<List<Note>>
+    fun getNotesByFolder(
+        folderId: String,
+        sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)
+    ): Flow<List<Note>>
 
     suspend fun upsertNote(note: Note, currentFolderId: String? = null): String
 

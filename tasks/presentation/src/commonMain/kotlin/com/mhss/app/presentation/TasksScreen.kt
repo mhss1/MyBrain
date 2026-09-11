@@ -48,8 +48,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_task
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
@@ -164,7 +164,7 @@ fun TasksScreen(
                     }
                     AnimatedVisibility(visible = orderSettingsVisible) {
                         TasksSettingsSection(
-                            uiState.taskOrder,
+                            uiState.taskSortOrder,
                             uiState.showCompletedTasks,
                             onShowCompletedChange = {
                                 viewModel.onEvent(
@@ -251,25 +251,25 @@ fun NoTasksMessage() {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TasksSettingsSection(
-    order: Order,
+    sortOrder: SortOrder,
     showCompleted: Boolean,
-    onOrderChange: (Order) -> Unit,
+    onOrderChange: (SortOrder) -> Unit,
     onShowCompletedChange: (Boolean) -> Unit
 ) {
-    val orders = remember {
+    val sortOrders = remember {
         listOf(
-            Order.DateModified(),
-            Order.DueDate(),
-            Order.DateCreated(),
-            Order.Alphabetical(),
-            Order.Priority(),
-            Order.Done()
+            SortOrder.DateModified(),
+            SortOrder.DueDate(),
+            SortOrder.DateCreated(),
+            SortOrder.Alphabetical(),
+            SortOrder.Priority(),
+            SortOrder.Done()
         )
     }
-    val orderTypes = remember {
+    val sortTypes = remember {
         listOf(
-            OrderType.ASC,
-            OrderType.DESC
+            SortType.ASC,
+            SortType.DESC
         )
     }
     Column(
@@ -283,14 +283,14 @@ fun TasksSettingsSection(
         FlowRow(
             modifier = Modifier.padding(end = 8.dp)
         ) {
-            orders.forEach {
+            sortOrders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order::class == it::class,
+                        selected = sortOrder::class == it::class,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    it.copyOrder(orderType = order.orderType)
+                                    it.copyOrder(sortType = sortOrder.sortType)
                                 )
                         }
                     )
@@ -303,14 +303,14 @@ fun TasksSettingsSection(
         }
         HorizontalDivider()
         FlowRow {
-            orderTypes.forEach {
+            sortTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderType == it,
+                        selected = sortOrder.sortType == it,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    order.copyOrder(it)
+                                    sortOrder.copyOrder(it)
                                 )
                         }
                     )

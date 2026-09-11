@@ -14,8 +14,8 @@ import com.mhss.app.domain.use_case.GetAllEventsUseCase
 import com.mhss.app.domain.use_case.GetAllTasksUseCase
 import com.mhss.app.domain.use_case.UpdateTaskCompletedUseCase
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.stringSetPreferencesKey
@@ -105,13 +105,13 @@ class MainViewModel(
         combine(
             getPreference(
                 intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
-                Order.DateModified(OrderType.ASC).toInt()
+                SortOrder.DueDate(SortType.ASC).toInt()
             ),
             getPreference(
                 booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
                 false
             ),
-            getAllEntriesUseCase(Order.DateCreated(OrderType.ASC))
+            getAllEntriesUseCase(SortOrder.DateCreated(SortType.ASC))
         ) { order, showCompleted, entries ->
             uiState = uiState.copy(
                 dashBoardEntries = entries,
@@ -120,9 +120,9 @@ class MainViewModel(
         }.collect()
     }
 
-    private fun refreshTasks(order: Order, showCompleted: Boolean) {
+    private fun refreshTasks(sortOrder: SortOrder, showCompleted: Boolean) {
         refreshTasksJob?.cancel()
-        refreshTasksJob = getAllTasks(order).onEach { tasks ->
+        refreshTasksJob = getAllTasks(sortOrder).onEach { tasks ->
                 uiState = uiState.copy(
                     dashBoardTasks = if (showCompleted) tasks else tasks.filter { !it.isCompleted },
                     summaryTasks = tasks.filter { it.createdDate.inTheLastWeek() }

@@ -1,6 +1,8 @@
 package com.mhss.app.data
 
 import com.mhss.app.database.dao.TaskDao
+import com.mhss.app.database.dao.TaskOrder
+import com.mhss.app.database.dao.QueryOrder
 import com.mhss.app.database.dao.SyncDao
 import com.mhss.app.database.dao.incrementAndGet
 import com.mhss.app.database.entity.DeletedEntityEntity
@@ -9,6 +11,8 @@ import com.mhss.app.database.entity.toTask
 import com.mhss.app.database.entity.toTaskEntity
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.repository.TaskRepository
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.database.sync.LocalChangeObserver
 import com.mhss.app.database.helpers.DatabaseTransactionProvider
 import com.mhss.app.datetime.now
@@ -30,12 +34,18 @@ class TaskRepositoryImpl(
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : TaskRepository {
 
-    override fun getAllTasks(): Flow<List<Task>> {
-        return taskDao.getAllTasks()
+    override fun getAllTasks(sortOrder: SortOrder, showCompleted: Boolean): Flow<List<Task>> {
+        val sortOrderBy = when (sortOrder) {
+            is SortOrder.Alphabetical -> TaskOrder.TITLE
+            is SortOrder.DateCreated -> TaskOrder.CREATED_DATE
+            is SortOrder.DateModified -> TaskOrder.UPDATED_DATE
+            is SortOrder.Priority -> TaskOrder.PRIORITY
+            is SortOrder.DueDate -> TaskOrder.DUE_DATE
+            is SortOrder.Done -> TaskOrder.COMPLETED
+        }
+        return taskDao.getAllTasks(sortOrderBy, sortOrder.sortType.toQueryOrder(), showCompleted)
+            .map { tasks -> tasks.map { it.toTask() } }
             .flowOn(ioDispatcher)
-            .map { tasks ->
-                tasks.map { it.toTask() }
-            }
     }
 
     override suspend fun getTaskById(id: String): Task? {
@@ -115,4 +125,9 @@ class TaskRepositoryImpl(
             changeObserver.notifyChange()
         }
     }
+}
+
+private fun SortType.toQueryOrder() = when (this) {
+    SortType.ASC -> QueryOrder.ASC
+    SortType.DESC -> QueryOrder.DESC
 }
