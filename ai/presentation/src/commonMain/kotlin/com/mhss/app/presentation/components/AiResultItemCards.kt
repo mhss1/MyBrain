@@ -111,7 +111,7 @@ fun AiTaskCard(
     val formatter = LocalDateTimeFormatter.current
     val formattedDate by remember(task.dueDate) {
         derivedStateOf {
-            if (task.dueDate != 0L) formatter.formatDateDependingOnDay(task.dueDate) else ""
+            task.dueDate?.let { formatter.formatDateDependingOnDay(it) } ?: ""
         }
     }
     Card(
@@ -151,14 +151,14 @@ fun AiTaskCard(
                     overflow = TextOverflow.Ellipsis,
                     textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
                 )
-                if (task.subTasks.isNotEmpty() || task.dueDate != 0L) {
+                if (task.subTasks.isNotEmpty() || task.dueDate != null) {
                     Spacer(Modifier.height(4.dp))
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         if (task.subTasks.isNotEmpty()) {
                             SubTasksProgressBar(subTasks = task.subTasks)
                         }
                         Spacer(Modifier.width(6.dp))
-                        if (task.dueDate != 0L) {
+                        if (task.dueDate != null) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     modifier = Modifier.size(10.dp),

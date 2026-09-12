@@ -9,6 +9,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.mhss.app.database.migrations.MIGRATION_6_7
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -30,6 +32,7 @@ class Migration6To7Test {
 
     @Before
     fun deleteTestDatabase() {
+        instrumentation.targetContext.getDatabasePath(databaseName).parentFile?.mkdirs()
         instrumentation.targetContext.deleteDatabase(databaseName)
     }
 
@@ -66,6 +69,21 @@ class Migration6To7Test {
             before.forEach { (table, rows) ->
                 assertEquals("Data changed in $table", rows, connection.readRows(table))
             }
+            connection.prepare("SELECT dueDate FROM tasks WHERE id = 'task-2'").use { statement ->
+                assertTrue(statement.step())
+                assertTrue(statement.isNull(0))
+            }
+            for (direction in listOf("ASC", "DESC")) {
+                for (where in listOf("", " WHERE is_completed = 0")) {
+                    connection.prepare(
+                        "EXPLAIN QUERY PLAN SELECT * FROM tasks$where ORDER BY dueDate $direction NULLS LAST"
+                    ).use { statement ->
+                        while (statement.step()) {
+                            assertFalse(statement.getText(3), statement.getText(3).contains("TEMP B-TREE"))
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -75,7 +93,12 @@ class Migration6To7Test {
                 while (statement.step()) {
                     add(
                         List(statement.getColumnCount()) { column ->
-                            if (statement.isNull(column)) null else statement.getText(column)
+                            val value = if (statement.isNull(column)) null else statement.getText(column)
+                            if (table == "tasks" && statement.getColumnName(column) == "dueDate" && value == "0") {
+                                null
+                            } else {
+                                value
+                            }
                         }
                     )
                 }

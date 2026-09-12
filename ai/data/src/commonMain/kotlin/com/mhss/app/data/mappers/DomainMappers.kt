@@ -135,7 +135,7 @@ private fun ToolCallResultObject.toToolPreviews(): List<ToolPreview> = when (thi
             title = it.title,
             isCompleted = it.isCompleted,
             priority = it.priority.name,
-            dueDate = it.dueDate,
+            dueDate = it.dueDate ?: 0L,
             completedSubTasks = it.subTasks.count { subTask -> subTask.isCompleted },
             totalSubTasks = it.subTasks.size
         )
@@ -176,7 +176,7 @@ private fun List<ToolPreview>.toResultObject(): ToolCallResultObject? = when (fi
                 isCompleted = it.isCompleted,
                 priority = Priority.entries.firstOrNull { priority -> priority.name == it.priority }
                     ?: Priority.LOW,
-                dueDate = it.dueDate,
+                dueDate = it.dueDate.takeUnless { date -> date == 0L },
                 subTasks = List(it.totalSubTasks) { index ->
                     SubTask(isCompleted = index < it.completedSubTasks)
                 }

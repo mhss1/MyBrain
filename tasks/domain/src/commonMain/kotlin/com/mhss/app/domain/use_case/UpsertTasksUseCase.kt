@@ -20,7 +20,7 @@ class UpsertTasksUseCase(
     ) {
         val nowMillis = now().toEpochMilliseconds()
         val finalTasks = tasks.map { task ->
-            if (task.dueDate != 0L && task.dueDate > nowMillis) {
+            if (task.dueDate != null && task.dueDate > nowMillis) {
                 val alarmId = upsertAlarm(task.alarmId ?: 0, task.dueDate)
                 task.copy(alarmId = alarmId)
             } else {

@@ -24,7 +24,7 @@ interface TaskDao {
         val where = if (showCompleted) "" else " WHERE is_completed = 0"
         val orderBySql = when (orderBy) {
             TaskOrder.TITLE -> "title COLLATE NOCASE ${order.sql}"
-            TaskOrder.DUE_DATE -> "dueDate = 0 ASC, dueDate ${order.sql}"
+            TaskOrder.DUE_DATE -> "dueDate ${order.sql} NULLS LAST"
             else -> "${orderBy.column} ${order.sql}"
         }
         return observeTasks(RoomRawQuery("SELECT * FROM tasks$where ORDER BY $orderBySql"))

@@ -54,7 +54,7 @@ fun TaskSmallCard(
     val formatter = LocalDateTimeFormatter.current
     val formattedDate by remember(task.dueDate) {
         derivedStateOf {
-            if (task.dueDate != 0L) formatter.formatDateDependingOnDay(task.dueDate) else ""
+            task.dueDate?.let { formatter.formatDateDependingOnDay(it) } ?: ""
         }
     }
     val isOverdue by remember(task.dueDate) {
@@ -90,7 +90,7 @@ fun TaskSmallCard(
                     textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
                 )
             }
-            if (task.dueDate != 0L) {
+            if (task.dueDate != null) {
                 Spacer(Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(

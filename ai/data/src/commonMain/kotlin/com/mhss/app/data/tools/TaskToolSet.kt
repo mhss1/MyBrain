@@ -61,7 +61,7 @@ class TaskToolSet(
                 dueDate = if (args.dueDate != null) {
                     args.dueDate.parseDateTimeFromLLM()
                         ?: throw IllegalArgumentException("Invalid due date format for date: ${args.dueDate}. The task was not created.")
-                } else 0L,
+                } else null,
                 subTasks = args.subTasks?.map { SubTask(it.title, it.isCompleted) } ?: emptyList(),
                 recurring = args.recurring,
                 frequency = args.frequency,
@@ -105,7 +105,7 @@ class TaskToolSet(
                     dueDate = input.dueDate?.let {
                         it.parseDateTimeFromLLM()
                             ?: throw IllegalArgumentException("Invalid date format for task: ${input.title}. The tasks were not created.")
-                    } ?: 0L,
+                    },
                     subTasks = input.subTasks?.map { SubTask(it.title, it.isCompleted) } ?: emptyList(),
                     recurring = input.recurring,
                     frequency = input.frequency,

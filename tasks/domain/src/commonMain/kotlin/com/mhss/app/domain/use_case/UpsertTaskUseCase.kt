@@ -41,7 +41,7 @@ class UpsertTaskUseCase(
             }
 
             shouldScheduleAlarm(taskWithResolvedRecurrence, nowMillis) -> {
-                val alarmId = upsertAlarm(taskWithResolvedRecurrence.alarmId ?: 0, taskWithResolvedRecurrence.dueDate)
+                val alarmId = upsertAlarm(taskWithResolvedRecurrence.alarmId ?: 0, requireNotNull(taskWithResolvedRecurrence.dueDate))
                 taskWithResolvedRecurrence.copy(alarmId = alarmId)
             }
 
@@ -59,7 +59,7 @@ class UpsertTaskUseCase(
             isCompleted &&
             previousTask?.isCompleted == false &&
             recurring &&
-            dueDate != 0L
+            dueDate != null
         ) {
             val timeZone = TimeZone.currentSystemDefault()
             var nextDueInstant = Instant.fromEpochMilliseconds(dueDate)
@@ -91,7 +91,7 @@ class UpsertTaskUseCase(
 
     private fun shouldScheduleAlarm(task: Task, nowMillis: Long): Boolean {
         return !task.isCompleted &&
-                task.dueDate != 0L &&
+                task.dueDate != null &&
                 task.dueDate > nowMillis
     }
 
@@ -101,11 +101,11 @@ class UpsertTaskUseCase(
         nowMillis: Long
     ): Boolean {
         if (previousTask?.alarmId == null) return false
-        return task.dueDate <= nowMillis || // due date is now in the past, so keeping an alarm no longer makes sense.
+        return task.dueDate == null || task.dueDate <= nowMillis || // due date is now in the past, so keeping an alarm no longer makes sense.
                 (task.isCompleted && !previousTask.isCompleted) // task has just been marked completed, so its alarm must be cleared.
     }
     
     private fun isAlarmSchedulingValid(task: Task): Boolean {
-        return task.isCompleted || task.alarmId != null || task.dueDate == 0L
+        return task.isCompleted || task.alarmId != null || task.dueDate == null
     }
 }

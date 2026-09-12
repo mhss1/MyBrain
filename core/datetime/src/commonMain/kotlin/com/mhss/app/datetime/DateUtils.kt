@@ -47,8 +47,8 @@ fun LocalDateTime.isCurrentYear(): Boolean {
     return year == now().localDateTime.year
 }
 
-fun Long.isDueDateOverdue(): Boolean {
-    return this < now()
+fun Long?.isDueDateOverdue(): Boolean {
+    return this != null && this < now()
 }
 
 fun todayPlusDays(days: Int): Long {

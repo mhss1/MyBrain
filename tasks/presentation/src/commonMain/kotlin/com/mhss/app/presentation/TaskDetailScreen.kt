@@ -38,7 +38,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -109,20 +108,19 @@ fun TaskDetailScreen(
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var priority by remember { mutableStateOf(Priority.LOW) }
-    var dueDate by remember { mutableLongStateOf(0L) }
+    var dueDate by remember { mutableStateOf<Long?>(null) }
     var recurring by remember { mutableStateOf(false) }
     var frequency by remember { mutableStateOf(TaskFrequency.DAILY) }
     var frequencyAmount by remember { mutableIntStateOf(1) }
-    var dueDateExists by remember { mutableStateOf(false) }
     var completed by remember { mutableStateOf(false) }
     val subTasks = remember { mutableStateListOf<SubTask>() }
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
     val formatter = LocalDateTimeFormatter.current
     val formattedDate by remember {
-        derivedStateOf { formatter.formatDate(dueDate) }
+        derivedStateOf { dueDate?.let(formatter::formatDate) ?: "" }
     }
     val formattedTime by remember {
-        derivedStateOf { formatter.formatTime(dueDate) }
+        derivedStateOf { dueDate?.let(formatter::formatTime) ?: "" }
     }
 
     LaunchedEffect(uiState.task) {
@@ -132,7 +130,6 @@ fun TaskDetailScreen(
             description = task.description
             priority = task.priority
             dueDate = task.dueDate
-            dueDateExists = task.dueDate != 0L
             completed = task.isCompleted
             recurring = task.recurring
             frequency = task.frequency
@@ -147,7 +144,7 @@ fun TaskDetailScreen(
             navController.navigateUp()
         }
         if (uiState.alarmError) {
-            dueDateExists = false
+            dueDate = null
             val snackbarResult = snackbarHostState.showSnackbar(Res.string.no_alarm_permission, Res.string.grant_permission)
             if (snackbarResult == SnackbarResult.ActionPerformed) {
                 alarmPermissionState.launchRequest()
@@ -165,7 +162,7 @@ fun TaskDetailScreen(
                                 title = title,
                                 description = description,
                                 isCompleted = completed,
-                                dueDate = if (dueDateExists) dueDate else 0L,
+                                dueDate = dueDate,
                                 priority = priority,
                                 subTasks = subTasks.toList(),
                                 recurring = recurring,
@@ -201,7 +198,7 @@ fun TaskDetailScreen(
             description = description,
             priority = priority,
             dueDate = dueDate,
-            dueDateExists = dueDateExists,
+            dueDateExists = dueDate != null,
             recurring = recurring,
             frequency = frequency,
             frequencyAmount = frequencyAmount,
@@ -213,9 +210,8 @@ fun TaskDetailScreen(
             onDescriptionChange = { description = it },
             onPriorityChange = { priority = it },
             onDueDateExist = { checked ->
-                dueDateExists = checked
+                dueDate = if (checked) now() else null
                 if (checked) {
-                    dueDate = now()
                     viewModel.onEvent(TaskDetailsEvent.DueDateEnabled)
                 }
             },
@@ -272,7 +268,7 @@ fun TaskDetailsContent(
     title: String,
     description: String,
     priority: Priority,
-    dueDate: Long,
+    dueDate: Long?,
     dueDateExists: Boolean,
     recurring: Boolean,
     frequency: TaskFrequency,
@@ -383,14 +379,14 @@ fun TaskDetailsContent(
         }
         if (showDateDialog) DateDialog(
             onDismissRequest = { showDateDialog = false },
-            initialDate = dueDate
+            initialDate = dueDate ?: now()
         ) {
             onDueDateChange(it)
             showDateDialog = false
         }
         if (showTimeDialog) TimeDialog(
             onDismissRequest = { showTimeDialog = false },
-            initialDate = dueDate
+            initialDate = dueDate ?: now()
         ) {
             onDueDateChange(it)
             showTimeDialog = false

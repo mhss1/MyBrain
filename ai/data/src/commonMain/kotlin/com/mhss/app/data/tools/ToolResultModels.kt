@@ -103,7 +103,7 @@ internal fun Task.toToolResult() = TaskToolResult(
     description = description,
     completed = isCompleted,
     priority = priority.name,
-    dueAt = dueDate.takeIf { it > 0 }?.formatDateTimeForLLM(),
+    dueAt = dueDate?.formatDateTimeForLLM(),
     subTasks = subTasks.map { SubTaskToolResult(it.title, it.isCompleted) },
     recurrence = if (recurring) taskRecurrenceText() else null
 )

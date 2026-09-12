@@ -16,6 +16,6 @@ sealed class TaskEvent {
 data class AddTaskInput(
     val title: String,
     val priority: Priority = Priority.LOW,
-    val dueDate: Long = 0L,
+    val dueDate: Long? = null,
     val subTasks: List<String> = emptyList(),
 )

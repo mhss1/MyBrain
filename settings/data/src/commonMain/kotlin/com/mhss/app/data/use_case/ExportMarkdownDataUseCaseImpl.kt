@@ -257,7 +257,7 @@ class ExportMarkdownDataUseCaseImpl(
         appendLine("${if (isCompleted) "- [x]" else "- [ ]"} **${title.ifBlank { "Untitled Task" }}**")
         appendLine()
         appendLine("- **Priority**: ${priority.displayName()}")
-        dueDate.takeIf { it > 0L }?.let {
+        dueDate?.let {
             appendLine("- **Due date**: ${it.toReadableDateTime()}")
         }
         appendLine("- **Recurring**: ${if (recurring) "Yes" else "No"}")
