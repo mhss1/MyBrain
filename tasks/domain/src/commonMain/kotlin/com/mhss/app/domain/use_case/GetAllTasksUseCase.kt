@@ -10,6 +10,8 @@ import org.koin.core.annotation.Single
 class GetAllTasksUseCase(
     private val tasksRepository: TaskRepository
 ) {
+    fun paged(sortOrder: SortOrder, showCompleted: Boolean) = tasksRepository.getPagedTasks(sortOrder, showCompleted)
+
     operator fun invoke(sortOrder: SortOrder, showCompleted: Boolean = true): Flow<List<Task>> {
         return tasksRepository.getAllTasks(sortOrder, showCompleted)
     }

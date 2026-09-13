@@ -19,6 +19,7 @@ kotlin {
             dependencies {
                 implementation(projects.core.preferences)
 
+                api(libs.androidx.paging.common)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
 

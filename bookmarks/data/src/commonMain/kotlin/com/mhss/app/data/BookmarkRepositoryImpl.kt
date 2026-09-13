@@ -2,6 +2,10 @@
 
 package com.mhss.app.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.mhss.app.database.DefaultPagingConfig
 import com.mhss.app.database.dao.BookmarkDao
 import com.mhss.app.database.dao.BookmarkOrder
 import com.mhss.app.database.dao.QueryOrder
@@ -18,6 +22,8 @@ import com.mhss.app.domain.model.Bookmark
 import com.mhss.app.domain.repository.BookmarkRepository
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -25,8 +31,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Single
 class BookmarkRepositoryImpl(
@@ -36,6 +40,22 @@ class BookmarkRepositoryImpl(
     private val transactionProvider: DatabaseTransactionProvider,
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : BookmarkRepository {
+
+    override fun getPagedBookmarks(sortOrder: SortOrder): Flow<PagingData<Bookmark>> {
+        val sortOrderBy = when (sortOrder) {
+            is SortOrder.Alphabetical -> BookmarkOrder.TITLE
+            is SortOrder.DateCreated -> BookmarkOrder.CREATED_DATE
+            else -> BookmarkOrder.UPDATED_DATE
+        }
+        return Pager(config = DefaultPagingConfig) {
+            bookmarkDao.getPagedBookmarks(sortOrderBy, sortOrder.sortType.toQueryOrder())
+        }.flow.map { page -> page.map { it.toBookmark() } }
+    }
+
+    override fun searchPagedBookmarks(query: String): Flow<PagingData<Bookmark>> =
+        Pager(config = DefaultPagingConfig) {
+            bookmarkDao.searchPagedBookmarks(query)
+        }.flow.map { page -> page.map { it.toBookmark() } }
 
     override fun getAllBookmarks(sortOrder: SortOrder): Flow<List<Bookmark>> {
         val sortOrderBy = when (sortOrder) {

@@ -1,6 +1,8 @@
 package com.mhss.app.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room3.Dao
+import androidx.room3.DaoReturnTypeConverters
 import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
@@ -10,12 +12,26 @@ import androidx.room3.RoomRawQuery
 import androidx.room3.Transaction
 import androidx.room3.Update
 import androidx.room3.Upsert
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import com.mhss.app.database.entity.NoteEntity
 import com.mhss.app.database.entity.NoteFolderEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 interface NoteDao {
+
+    @RawQuery(observedEntities = [NoteEntity::class])
+    fun pageNotes(query: RoomRawQuery): PagingSource<Int, NoteEntity>
+
+    fun getPagedNotes(orderBy: NoteOrder, order: QueryOrder, showAllNotes: Boolean): PagingSource<Int, NoteEntity> =
+        pageNotes(noteQuery(if (showAllNotes) null else "folder_id IS NULL", orderBy, order))
+
+    fun getPagedNotesByFolder(folderId: String, orderBy: NoteOrder, order: QueryOrder): PagingSource<Int, NoteEntity> =
+        pageNotes(noteQuery("folder_id = ?", orderBy, order) { it.bindText(1, folderId) })
+
+    @Query("SELECT title, SUBSTR(content, 1, 100) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%' ORDER BY pinned DESC, updated_date DESC")
+    fun searchPagedNotes(query: String): PagingSource<Int, NoteEntity>
 
     @RawQuery(observedEntities = [NoteEntity::class])
     fun observeNotes(query: RoomRawQuery): Flow<List<NoteEntity>>

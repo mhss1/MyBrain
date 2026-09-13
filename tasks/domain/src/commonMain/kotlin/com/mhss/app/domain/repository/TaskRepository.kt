@@ -1,11 +1,17 @@
 package com.mhss.app.domain.repository
 
+import androidx.paging.PagingData
 import com.mhss.app.domain.model.Task
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface TaskRepository {
+
+    fun getPagedTasks(sortOrder: SortOrder, showCompleted: Boolean): Flow<PagingData<Task>>
+
+    fun searchPagedTasks(query: String): Flow<PagingData<Task>>
+
 
     fun getAllTasks(
         sortOrder: SortOrder = SortOrder.DueDate(SortType.ASC),

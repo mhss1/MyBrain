@@ -1,5 +1,8 @@
 package com.mhss.app.data.impl
 
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
 import com.mhss.app.data.storage.MarkdownFileManager
 import com.mhss.app.domain.model.Note
 import com.mhss.app.domain.model.NoteFolder
@@ -9,6 +12,7 @@ import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
@@ -17,6 +21,17 @@ class MarkdownNoteRepositoryImpl(
     private val rootId: String,
     private val defaultDispatcher: CoroutineDispatcher,
 ) : NoteRepository {
+
+    override fun getPagedNotes(sortOrder: SortOrder, showAllNotes: Boolean): Flow<PagingData<Note>> =
+        (if (showAllNotes) getAllNotes(sortOrder) else getAllFolderlessNotes(sortOrder))
+            .map { it.toPagingData() }
+
+    override fun searchPagedNotes(query: String): Flow<PagingData<Note>> = flow {
+        emit(searchNotes(query).toPagingData())
+    }
+
+    override fun getPagedNotesByFolder(folderId: String, sortOrder: SortOrder): Flow<PagingData<Note>> =
+        getNotesByFolder(folderId, sortOrder).map { it.toPagingData() }
 
     override fun getAllFolderlessNotes(sortOrder: SortOrder): Flow<List<Note>> {
         return markdownFileManager.getFolderNotesFlow(rootId)
@@ -108,3 +123,12 @@ private fun List<Note>.sorted(sortOrder: SortOrder): List<Note> {
     }
     return sortedWith(compareByDescending<Note> { it.pinned }.then(comparator))
 }
+
+private fun List<Note>.toPagingData(): PagingData<Note> = PagingData.from(
+    data = this,
+    sourceLoadStates = LoadStates(
+        refresh = LoadState.NotLoading(false),
+        prepend = LoadState.NotLoading(true),
+        append = LoadState.NotLoading(true)
+    )
+)

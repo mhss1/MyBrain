@@ -22,6 +22,7 @@ kotlin {
                 implementation(projects.core.widget)
                 implementation(projects.core.datetime)
 
+                api(libs.androidx.paging.common)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)

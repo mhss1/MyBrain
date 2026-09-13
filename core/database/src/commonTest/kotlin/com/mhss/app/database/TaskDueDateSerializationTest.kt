@@ -2,16 +2,15 @@ package com.mhss.app.database
 
 import com.mhss.app.domain.model.Task
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
-class TaskDueDateSerializationTest {
+class TaskDueDateSerializationTest : PlatformTest() {
     @Test
-    fun missingNullAndLegacyZeroDatesDecodeAsUndated() {
+    fun `missing null and legacy zero dates decode as undated`() {
         for (date in listOf("", ",\"dueDate\":null", ",\"dueDate\":0")) {
             val task = Json.decodeFromString<Task>("{\"title\":\"Task\",\"id\":\"task\"$date}")
             assertEquals(null, task.dueDate)
@@ -19,7 +18,7 @@ class TaskDueDateSerializationTest {
     }
 
     @Test
-    fun dueDatesRoundTrip() {
+    fun `due dates round trip`() {
         for (json in listOf(Json, Json { encodeDefaults = true })) {
             for (date in listOf(null, -100L, 500L)) {
                 val task = Task(title = "Task", id = "task", dueDate = date)
@@ -30,7 +29,7 @@ class TaskDueDateSerializationTest {
     }
 
     @Test
-    fun newUndatedTaskSyncsToLegacyClient() {
+    fun `new undated task syncs to legacy client`() {
         val json = syncJson()
         val encoded = json.encodeToString(Task(title = "Task", id = "task"))
 
@@ -39,7 +38,7 @@ class TaskDueDateSerializationTest {
     }
 
     @Test
-    fun legacyTasksSyncToNewClient() {
+    fun `legacy tasks sync to new client`() {
         val json = syncJson()
 
         assertEquals(

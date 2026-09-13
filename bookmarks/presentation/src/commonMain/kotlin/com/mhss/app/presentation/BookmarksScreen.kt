@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,12 +40,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.ui.ItemView
@@ -55,8 +53,11 @@ import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_bookmark
 import com.mhss.app.ui.bookmarks
 import com.mhss.app.ui.bookmarks_img
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.components.isEmpty
 import com.mhss.app.ui.ic_add
 import com.mhss.app.ui.ic_search
 import com.mhss.app.ui.ic_settings_sliders
@@ -71,14 +72,17 @@ import com.mhss.app.ui.view_as
 import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.stringResource as cmpStringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun BookmarksScreen(
     navController: NavHostController,
     viewModel: BookmarksViewModel = koinViewModel()
 ) {
+    val bookmarks = viewModel.bookmarks.collectAsLazyPagingItems()
     val uiState = viewModel.uiState
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -102,7 +106,7 @@ fun BookmarksScreen(
             )
         },
     ) { paddingValues ->
-        if (uiState.bookmarks.isEmpty())
+        if (bookmarks.isEmpty)
             NoBookmarksMessage()
         Column(Modifier.fillMaxSize().liquefiable(liquidState)) {
             Row(
@@ -141,39 +145,14 @@ fun BookmarksScreen(
                     }
                 )
             }
+            PagingLoadState(bookmarks)
             if (uiState.bookmarksView == ItemView.LIST) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    items(uiState.bookmarks, key = { it.id }) { bookmark ->
-                        BookmarkItem(
-                            bookmark = bookmark,
-                            onClick = {
-                                navController.navigate(
-                                    Screen.BookmarkDetailScreen(
-                                        bookmarkId = bookmark.id
-                                    )
-                                )
-                            },
-                            onInvalidUrl = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(Res.string.invalid_url)
-                                }
-                            },
-                            modifier = Modifier.animateItem()
-                        )
-                    }
-                }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(150.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(12.dp)
-                ) {
-                    items(uiState.bookmarks) { bookmark ->
-                        key(bookmark.id) {
+                    items(bookmarks.itemCount, key = bookmarks.itemKey { it.id }) { index ->
+                        bookmarks[index]?.let { bookmark ->
                             BookmarkItem(
                                 bookmark = bookmark,
                                 onClick = {
@@ -188,11 +167,41 @@ fun BookmarksScreen(
                                         snackbarHostState.showSnackbar(Res.string.invalid_url)
                                     }
                                 },
-                                modifier = Modifier
-                                    .animateItem()
-                                    .height(220.dp)
+                                modifier = Modifier.animateItem()
                             )
-                        }
+                        } ?: PagingPlaceholder()
+                    }
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(150.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(12.dp)
+                ) {
+                    items(bookmarks.itemCount, key = bookmarks.itemKey { it.id }) { index ->
+                        bookmarks[index]?.let { bookmark ->
+                            key(bookmark.id) {
+                                BookmarkItem(
+                                    bookmark = bookmark,
+                                    onClick = {
+                                        navController.navigate(
+                                            Screen.BookmarkDetailScreen(
+                                                bookmarkId = bookmark.id
+                                            )
+                                        )
+                                    },
+                                    onInvalidUrl = {
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(Res.string.invalid_url)
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .animateItem()
+                                        .height(220.dp)
+                                )
+                            }
+                        } ?: PagingPlaceholder()
                     }
                 }
             }

@@ -10,6 +10,8 @@ import org.koin.core.annotation.Single
 class GetAllBookmarksUseCase(
     private val bookmarksRepository: BookmarkRepository
 ) {
+    fun paged(sortOrder: SortOrder) = bookmarksRepository.getPagedBookmarks(sortOrder)
+
     operator fun invoke(sortOrder: SortOrder) : Flow<List<Bookmark>>{
         return bookmarksRepository.getAllBookmarks(sortOrder)
     }

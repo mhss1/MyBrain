@@ -8,5 +8,7 @@ import org.koin.core.annotation.Factory
 class GetNotesByFolderUseCase(
     private val notesRepository: NoteRepository
 ) {
+    fun paged(id: String, sortOrder: SortOrder) = notesRepository.getPagedNotesByFolder(id, sortOrder)
+
     operator fun invoke(id: String, sortOrder: SortOrder) = notesRepository.getNotesByFolder(id, sortOrder)
 }

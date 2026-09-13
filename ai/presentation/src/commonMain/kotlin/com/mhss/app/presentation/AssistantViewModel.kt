@@ -4,6 +4,7 @@ package com.mhss.app.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.mhss.app.datetime.now
 import com.mhss.app.datetime.todayPlusDays
 import com.mhss.app.domain.model.AiMessage
@@ -11,8 +12,6 @@ import com.mhss.app.domain.model.AiMessageAttachment
 import com.mhss.app.domain.model.AiRepositoryException
 import com.mhss.app.domain.model.AssistantResult
 import com.mhss.app.domain.model.AssistantThread
-import com.mhss.app.domain.model.Note
-import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.use_case.CalendarEventsDay
 import com.mhss.app.domain.use_case.DeleteAllAssistantThreadsUseCase
 import com.mhss.app.domain.use_case.DeleteAssistantMessageUseCase
@@ -101,8 +100,18 @@ class AssistantViewModel(
         _uiState.update { it.copy(error = error) }
     }
 
-    private var searchNotesJob: Job? = null
-    private var searchTasksJob: Job? = null
+    private val noteSearchQuery = MutableStateFlow("")
+    val noteSearchResults = noteSearchQuery.flatMapLatest { query ->
+        delay(300)
+        searchNotes.paged(query)
+    }.cachedIn(viewModelScope)
+
+    private val taskSearchQuery = MutableStateFlow("")
+    val taskSearchResults = taskSearchQuery.flatMapLatest { query ->
+        delay(300)
+        searchTasks.paged(query)
+    }.cachedIn(viewModelScope)
+
     private var sendMessageJob: Job? = null
 
     init {
@@ -196,23 +205,11 @@ class AssistantViewModel(
             }
 
             is AssistantEvent.SearchNotes -> {
-                searchNotesJob?.cancel()
-                searchNotesJob = viewModelScope.launch {
-                    delay(300)
-                    searchNotes(event.query).let { notes ->
-                        _uiState.update { it.copy(searchNotes = notes) }
-                    }
-                }
+                noteSearchQuery.value = event.query
             }
 
             is AssistantEvent.SearchTasks -> {
-                searchTasksJob?.cancel()
-                searchTasksJob = viewModelScope.launch {
-                    delay(300)
-                    searchTasks(event.query).first().let { tasks ->
-                        _uiState.update { it.copy(searchTasks = tasks) }
-                    }
-                }
+                taskSearchQuery.value = event.query
             }
 
             AssistantEvent.AddAttachmentEvents -> {
@@ -336,8 +333,6 @@ class AssistantViewModel(
         val error: AssistantResult.Failure? = null,
         val aiEnabled: Boolean = false,
         val noteView: ItemView = ItemView.LIST,
-        val searchNotes: List<Note> = emptyList(),
-        val searchTasks: List<Task> = emptyList(),
         val attachments: List<AiMessageAttachment> = emptyList(),
     )
 }

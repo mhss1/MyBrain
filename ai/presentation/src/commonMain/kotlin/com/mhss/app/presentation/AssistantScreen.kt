@@ -77,6 +77,12 @@ import com.mhss.app.ui.preview.BasePreview
 import com.mhss.app.util.clipboard.copyText
 import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.mhss.app.domain.model.Note
+import com.mhss.app.domain.model.Task
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -94,6 +100,8 @@ fun AssistantScreen(
 
     AssistantScreenContent(
         uiState = uiState,
+        noteSearchResults = viewModel.noteSearchResults,
+        taskSearchResults = viewModel.taskSearchResults,
         messages = messages,
         threads = threads,
         currentThreadId = currentThreadId,
@@ -106,6 +114,8 @@ fun AssistantScreen(
 @Composable
 fun AssistantScreenContent(
     uiState: AssistantViewModel.UiState,
+    noteSearchResults: Flow<PagingData<Note>>,
+    taskSearchResults: Flow<PagingData<Task>>,
     messages: List<AiMessage>,
     threads: List<AssistantThread>,
     currentThreadId: String?,
@@ -241,7 +251,7 @@ fun AssistantScreenContent(
             if (openNoteSheet) AttachNoteSheet(
                 state = noteSheetState,
                 onDismissRequest = { openNoteSheet = false },
-                notes = uiState.searchNotes,
+                notes = noteSearchResults.collectAsLazyPagingItems(),
                 view = uiState.noteView,
                 onQueryChange = { onEvent(AssistantEvent.SearchNotes(it)) }
             ) {
@@ -251,7 +261,7 @@ fun AssistantScreenContent(
             if (openTaskSheet) AttachTaskSheet(
                 state = taskSheetState,
                 onDismissRequest = { openTaskSheet = false },
-                tasks = uiState.searchTasks,
+                tasks = taskSearchResults.collectAsLazyPagingItems(),
                 onQueryChange = { onEvent(AssistantEvent.SearchTasks(it)) }
             ) {
                 onEvent(AssistantEvent.AddAttachmentTask(it.id))
@@ -362,6 +372,8 @@ fun AssistantScreenContent(
 private fun AssistantScreenContentPreviewInner() {
     AssistantScreenContent(
         uiState = AssistantViewModel.UiState(aiEnabled = true),
+        noteSearchResults = remember { flowOf(PagingData.empty<Note>()) },
+        taskSearchResults = remember { flowOf(PagingData.empty<Task>()) },
         messages = listOf(
             AiMessage.AssistantMessage(
                 content = "After carefully reviewing the collection of notes you provided, I detected several recurring themes and insights that could be valuable for your upcoming projects. In addition to the summary I mentioned, I can also suggest specific actionable steps, categorize the information by priority, and highlight any hidden patterns that might inform your strategy. Let me know if you’d like a detailed report, a visual diagram, or a concise bullet‑point overview.",

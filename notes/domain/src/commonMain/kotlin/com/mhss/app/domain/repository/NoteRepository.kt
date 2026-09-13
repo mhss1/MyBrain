@@ -1,5 +1,6 @@
 package com.mhss.app.domain.repository
 
+import androidx.paging.PagingData
 import com.mhss.app.domain.model.Note
 import com.mhss.app.domain.model.NoteFolder
 import com.mhss.app.preferences.domain.model.SortOrder
@@ -7,6 +8,13 @@ import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
+
+    fun getPagedNotes(sortOrder: SortOrder, showAllNotes: Boolean): Flow<PagingData<Note>>
+
+    fun searchPagedNotes(query: String): Flow<PagingData<Note>>
+
+    fun getPagedNotesByFolder(folderId: String, sortOrder: SortOrder): Flow<PagingData<Note>>
+
 
     fun getAllFolderlessNotes(
         sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)

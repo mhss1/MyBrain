@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.mhss.app.ui.components.tasks.TaskSearchContent
 import com.mhss.app.ui.navigation.Screen
 import org.koin.compose.viewmodel.koinViewModel
@@ -16,10 +17,9 @@ fun TasksSearchScreen(
     navController: NavHostController,
     viewModel: TasksViewModel = koinViewModel()
 ) {
-    val state = viewModel.tasksUiState
     TaskSearchContent(
         modifier = Modifier.padding(WindowInsets.statusBars.asPaddingValues()),
-        tasks = state.searchTasks,
+        tasks = viewModel.searchResults.collectAsLazyPagingItems(),
         onQueryChange = { viewModel.onEvent(TaskEvent.SearchTasks(it)) },
         onTaskClick = {
             navController.navigate(

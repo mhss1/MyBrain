@@ -6,6 +6,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.compositeOver
+import androidx.paging.compose.LazyPagingItems
 import com.mhss.app.domain.model.Task
 import com.mhss.app.ui.components.tasks.TaskSearchContent
 
@@ -14,7 +15,7 @@ import com.mhss.app.ui.components.tasks.TaskSearchContent
 fun AttachTaskSheet(
     state: SheetState,
     onDismissRequest: () -> Unit,
-    tasks: List<Task>,
+    tasks: LazyPagingItems<Task>,
     onQueryChange: (String) -> Unit,
     onTaskClick: (Task) -> Unit
 ) {

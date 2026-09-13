@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -48,12 +47,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_task
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.components.isEmpty
 import com.mhss.app.ui.components.tasks.TaskCard
 import com.mhss.app.ui.grant_permission
 import com.mhss.app.ui.ic_add
@@ -76,8 +80,8 @@ import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 import org.jetbrains.compose.resources.stringResource as cmpStringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,6 +90,7 @@ fun TasksScreen(
     addTask: Boolean = false,
     viewModel: TasksViewModel = koinViewModel()
 ) {
+    val tasks = viewModel.tasks.collectAsLazyPagingItems()
     var orderSettingsVisible by remember { mutableStateOf(false) }
     val uiState = viewModel.tasksUiState
     val snackbarHostState = remember { SnackbarHostState() }
@@ -131,7 +136,7 @@ fun TasksScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (uiState.tasks.isEmpty()) NoTasksMessage()
+            if (tasks.isEmpty) NoTasksMessage()
             Column(
                 Modifier
                     .fillMaxSize()
@@ -179,29 +184,32 @@ fun TasksScreen(
                         )
                     }
                 }
+                PagingLoadState(tasks)
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
                 ) {
-                    items(uiState.tasks, key = { it.id }) { task ->
-                        TaskCard(
-                            task = task,
-                            onComplete = {
-                                viewModel.onEvent(
-                                    TaskEvent.CompleteTask(
-                                        task,
-                                        !task.isCompleted
+                    items(tasks.itemCount, key = tasks.itemKey { it.id }) { index ->
+                        tasks[index]?.let { task ->
+                            TaskCard(
+                                task = task,
+                                onComplete = {
+                                    viewModel.onEvent(
+                                        TaskEvent.CompleteTask(
+                                            task,
+                                            !task.isCompleted
+                                        )
                                     )
-                                )
-                            },
-                            onClick = {
-                                navController.navigate(
-                                    Screen.TaskDetailScreen(
-                                        taskId = task.id
+                                },
+                                onClick = {
+                                    navController.navigate(
+                                        Screen.TaskDetailScreen(
+                                            taskId = task.id
+                                        )
                                     )
-                                )
-                            },
-                        )
+                                },
+                            )
+                        } ?: PagingPlaceholder(Modifier.padding(horizontal = 8.dp))
                     }
                 }
             }

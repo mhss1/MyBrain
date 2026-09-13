@@ -36,6 +36,7 @@ kotlin {
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.bundles.koin)
                 implementation(libs.bundles.compose)
+                implementation(libs.androidx.paging.compose)
 
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.androidx.lifecycle.viewmodel.ktx)

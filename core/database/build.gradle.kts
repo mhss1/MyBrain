@@ -15,8 +15,8 @@ kotlin {
         }
         minSdk = libs.versions.minSdk.get().toInt()
         androidResources.enable = true
-        withDeviceTest {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        withHostTest {
+            isIncludeAndroidResources = true
         }
     }
 
@@ -31,11 +31,20 @@ kotlin {
 
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.androidx.room3.runtime)
+                implementation(libs.androidx.room3.paging)
                 implementation(libs.androidx.sqlite.bundled)
                 implementation(libs.kotlinx.serialization.json)
 
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.bundles.koin)
+            }
+        }
+
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.androidx.room3.testing)
             }
         }
 
@@ -45,11 +54,14 @@ kotlin {
             }
         }
 
-        getByName("androidDeviceTest") {
+        getByName("androidHostTest") {
+            dependsOn(commonTest.get())
             dependencies {
-                implementation(libs.androidx.room3.testing)
-                implementation(libs.androidx.junit)
+                implementation(libs.androidx.test.core)
                 implementation(libs.androidx.test.runner)
+                implementation(libs.androidx.sqlite.framework)
+                implementation(libs.junit)
+                implementation(libs.robolectric)
             }
         }
     }
@@ -65,7 +77,7 @@ room3 {
 
 androidComponents {
     onVariants { variant ->
-        variant.deviceTests.values.forEach { test ->
+        variant.hostTests.values.forEach { test ->
             test.sources.assets?.addStaticSourceDirectory("$projectDir/schemas")
         }
     }

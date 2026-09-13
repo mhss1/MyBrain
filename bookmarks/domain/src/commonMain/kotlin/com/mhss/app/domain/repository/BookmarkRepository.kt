@@ -1,11 +1,17 @@
 package com.mhss.app.domain.repository
 
+import androidx.paging.PagingData
 import com.mhss.app.domain.model.Bookmark
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface BookmarkRepository {
+
+    fun getPagedBookmarks(sortOrder: SortOrder): Flow<PagingData<Bookmark>>
+
+    fun searchPagedBookmarks(query: String): Flow<PagingData<Bookmark>>
+
 
     fun getAllBookmarks(
         sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)

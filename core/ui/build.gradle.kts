@@ -35,6 +35,7 @@ kotlin {
                 implementation(project.dependencies.platform(libs.koin.bom))
 
                 implementation(libs.bundles.compose)
+                api(libs.androidx.paging.compose)
 
                 implementation(libs.kotlinx.serialization.json)
 

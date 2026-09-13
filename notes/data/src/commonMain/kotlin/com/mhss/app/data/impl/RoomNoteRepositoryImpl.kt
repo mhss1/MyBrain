@@ -1,5 +1,9 @@
 package com.mhss.app.data.impl
 
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.mhss.app.database.DefaultPagingConfig
 import com.mhss.app.database.dao.NoteDao
 import com.mhss.app.database.dao.NoteOrder
 import com.mhss.app.database.dao.QueryOrder
@@ -21,14 +25,14 @@ import com.mhss.app.domain.model.NoteFolder
 import com.mhss.app.domain.repository.NoteRepository
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Named
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class RoomNoteRepositoryImpl(
@@ -38,6 +42,22 @@ class RoomNoteRepositoryImpl(
     private val transactionProvider: DatabaseTransactionProvider,
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : NoteRepository {
+
+    override fun getPagedNotes(sortOrder: SortOrder, showAllNotes: Boolean): Flow<PagingData<Note>> {
+        return Pager(config = DefaultPagingConfig) {
+            noteDao.getPagedNotes(sortOrder.toNoteOrder(), sortOrder.sortType.toQueryOrder(), showAllNotes)
+        }.flow.map { page -> page.map { it.toNote() } }
+    }
+
+    override fun searchPagedNotes(query: String): Flow<PagingData<Note>> =
+        Pager(config = DefaultPagingConfig) {
+            noteDao.searchPagedNotes(query)
+        }.flow.map { page -> page.map { it.toNote() } }
+
+    override fun getPagedNotesByFolder(folderId: String, sortOrder: SortOrder): Flow<PagingData<Note>> =
+        Pager(config = DefaultPagingConfig) {
+            noteDao.getPagedNotesByFolder(folderId, sortOrder.toNoteOrder(), sortOrder.sortType.toQueryOrder())
+        }.flow.map { page -> page.map { it.toNote() } }
 
     override fun getAllFolderlessNotes(sortOrder: SortOrder): Flow<List<Note>> {
         return noteDao.getAllFolderlessNotes(sortOrder.toNoteOrder(), sortOrder.sortType.toQueryOrder())

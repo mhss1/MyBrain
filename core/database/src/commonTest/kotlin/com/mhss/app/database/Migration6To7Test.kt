@@ -2,42 +2,33 @@ package com.mhss.app.database
 
 import androidx.room3.testing.MigrationTestHelper
 import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.mhss.app.database.migrations.MIGRATION_6_7
-import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
 
-@RunWith(AndroidJUnit4::class)
-class Migration6To7Test {
-    private val instrumentation = InstrumentationRegistry.getInstrumentation()
+class Migration6To7Test : PlatformTest() {
     private val databaseName = "migration-6-to-7-test.db"
+    private lateinit var helper: MigrationTestHelper
 
-    @get:Rule
-    val helper = MigrationTestHelper(
-        instrumentation = instrumentation,
-        file = instrumentation.targetContext.getDatabasePath(databaseName),
-        driver = BundledSQLiteDriver(),
-        databaseClass = MyBrainDatabase::class,
-        databaseFactory = { MyBrainDatabaseConstructor.initialize() }
-    )
+    @BeforeTest
+    fun prepareDatabase() {
+        deleteTestDatabase(databaseName)
+        helper = createMigrationTestHelper(databaseName)
+    }
 
-    @Before
-    fun deleteTestDatabase() {
-        instrumentation.targetContext.getDatabasePath(databaseName).parentFile?.mkdirs()
-        instrumentation.targetContext.deleteDatabase(databaseName)
+    @AfterTest
+    fun cleanUpDatabase() {
+        deleteTestDatabase(databaseName)
     }
 
     @Test
-    fun migration6To7ValidatesSchemaAndPreservesData() = runBlocking {
+    fun `migration 6 to 7 validates schema and preserves data`() = runTest {
         val before = helper.createDatabase(6).use { connection ->
             connection.execSQL(
                 "INSERT INTO note_folders (name, id, sync_seq, updated_date) VALUES ('Folder', 'folder-1', 11, 200)"
@@ -67,7 +58,7 @@ class Migration6To7Test {
 
         helper.runMigrationsAndValidate(7, listOf(MIGRATION_6_7)).use { connection ->
             before.forEach { (table, rows) ->
-                assertEquals("Data changed in $table", rows, connection.readRows(table))
+                assertEquals(rows, connection.readRows(table), "Data changed in $table")
             }
             connection.prepare("SELECT dueDate FROM tasks WHERE id = 'task-2'").use { statement ->
                 assertTrue(statement.step())
@@ -75,13 +66,11 @@ class Migration6To7Test {
             }
             for (direction in listOf("ASC", "DESC")) {
                 for (where in listOf("", " WHERE is_completed = 0")) {
-                    connection.prepare(
+                    val plan = readQueryPlan(
+                        databaseName,
                         "EXPLAIN QUERY PLAN SELECT * FROM tasks$where ORDER BY dueDate $direction NULLS LAST"
-                    ).use { statement ->
-                        while (statement.step()) {
-                            assertFalse(statement.getText(3), statement.getText(3).contains("TEMP B-TREE"))
-                        }
-                    }
+                    )
+                    assertFalse(plan.any { it.contains("TEMP B-TREE") }, plan.joinToString())
                 }
             }
         }

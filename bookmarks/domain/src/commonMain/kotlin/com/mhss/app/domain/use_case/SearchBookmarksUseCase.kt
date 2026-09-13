@@ -7,5 +7,7 @@ import org.koin.core.annotation.Single
 class SearchBookmarksUseCase(
     private val bookmarksRepository: BookmarkRepository
 ) {
+    fun paged(query: String) = bookmarksRepository.searchPagedBookmarks(query)
+
     suspend operator fun invoke(query: String) = bookmarksRepository.searchBookmarks(query)
 }

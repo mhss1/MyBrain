@@ -1,17 +1,30 @@
 package com.mhss.app.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room3.Dao
+import androidx.room3.DaoReturnTypeConverters
 import androidx.room3.Delete
 import androidx.room3.Query
 import androidx.room3.RawQuery
 import androidx.room3.RoomRawQuery
 import androidx.room3.Update
 import androidx.room3.Upsert
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import com.mhss.app.database.entity.TaskEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 interface TaskDao {
+
+    @RawQuery(observedEntities = [TaskEntity::class])
+    fun pageTasks(query: RoomRawQuery): PagingSource<Int, TaskEntity>
+
+    fun getPagedTasks(orderBy: TaskOrder, order: QueryOrder, showCompleted: Boolean): PagingSource<Int, TaskEntity> =
+        pageTasks(taskQuery(orderBy, order, showCompleted))
+
+    @Query("SELECT * FROM tasks WHERE title LIKE '%' || :query || '%' ORDER BY updated_date DESC")
+    fun searchPagedTasks(query: String): PagingSource<Int, TaskEntity>
 
     @RawQuery(observedEntities = [TaskEntity::class])
     fun observeTasks(query: RoomRawQuery): Flow<List<TaskEntity>>
@@ -21,13 +34,7 @@ interface TaskDao {
         order: QueryOrder,
         showCompleted: Boolean
     ): Flow<List<TaskEntity>> {
-        val where = if (showCompleted) "" else " WHERE is_completed = 0"
-        val orderBySql = when (orderBy) {
-            TaskOrder.TITLE -> "title COLLATE NOCASE ${order.sql}"
-            TaskOrder.DUE_DATE -> "dueDate ${order.sql} NULLS LAST"
-            else -> "${orderBy.column} ${order.sql}"
-        }
-        return observeTasks(RoomRawQuery("SELECT * FROM tasks$where ORDER BY $orderBySql"))
+        return observeTasks(taskQuery(orderBy, order, showCompleted))
     }
 
     @Query("SELECT * FROM tasks")
@@ -78,4 +85,14 @@ enum class TaskOrder(val column: String) {
     PRIORITY("priority"),
     DUE_DATE("dueDate"),
     COMPLETED("is_completed")
+}
+
+private fun taskQuery(orderBy: TaskOrder, order: QueryOrder, showCompleted: Boolean): RoomRawQuery {
+    val where = if (showCompleted) "" else " WHERE is_completed = 0"
+    val orderBySql = when (orderBy) {
+    TaskOrder.TITLE -> "title COLLATE NOCASE ${order.sql}"
+    TaskOrder.DUE_DATE -> "dueDate ${order.sql} NULLS LAST"
+    else -> "${orderBy.column} ${order.sql}"
+    }
+    return RoomRawQuery("SELECT * FROM tasks$where ORDER BY $orderBySql")
 }

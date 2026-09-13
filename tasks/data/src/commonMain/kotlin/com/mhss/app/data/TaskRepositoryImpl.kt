@@ -1,21 +1,26 @@
 package com.mhss.app.data
 
-import com.mhss.app.database.dao.TaskDao
-import com.mhss.app.database.dao.TaskOrder
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.mhss.app.database.DefaultPagingConfig
 import com.mhss.app.database.dao.QueryOrder
 import com.mhss.app.database.dao.SyncDao
+import com.mhss.app.database.dao.TaskDao
+import com.mhss.app.database.dao.TaskOrder
 import com.mhss.app.database.dao.incrementAndGet
 import com.mhss.app.database.entity.DeletedEntityEntity
 import com.mhss.app.database.entity.DeletedEntityType
 import com.mhss.app.database.entity.toTask
 import com.mhss.app.database.entity.toTaskEntity
+import com.mhss.app.database.helpers.DatabaseTransactionProvider
+import com.mhss.app.database.sync.LocalChangeObserver
+import com.mhss.app.datetime.now
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.repository.TaskRepository
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
-import com.mhss.app.database.sync.LocalChangeObserver
-import com.mhss.app.database.helpers.DatabaseTransactionProvider
-import com.mhss.app.datetime.now
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -23,7 +28,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
-import kotlin.uuid.Uuid
 
 @Single
 class TaskRepositoryImpl(
@@ -33,6 +37,25 @@ class TaskRepositoryImpl(
     private val transactionProvider: DatabaseTransactionProvider,
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : TaskRepository {
+
+    override fun getPagedTasks(sortOrder: SortOrder, showCompleted: Boolean): Flow<PagingData<Task>> {
+        val sortOrderBy = when (sortOrder) {
+            is SortOrder.Alphabetical -> TaskOrder.TITLE
+            is SortOrder.DateCreated -> TaskOrder.CREATED_DATE
+            is SortOrder.DateModified -> TaskOrder.UPDATED_DATE
+            is SortOrder.Priority -> TaskOrder.PRIORITY
+            is SortOrder.DueDate -> TaskOrder.DUE_DATE
+            is SortOrder.Done -> TaskOrder.COMPLETED
+        }
+        return Pager(config = DefaultPagingConfig) {
+            taskDao.getPagedTasks(sortOrderBy, sortOrder.sortType.toQueryOrder(), showCompleted)
+        }.flow.map { page -> page.map { it.toTask() } }
+    }
+
+    override fun searchPagedTasks(query: String): Flow<PagingData<Task>> =
+        Pager(config = DefaultPagingConfig) {
+            taskDao.searchPagedTasks(query)
+        }.flow.map { page -> page.map { it.toTask() } }
 
     override fun getAllTasks(sortOrder: SortOrder, showCompleted: Boolean): Flow<List<Task>> {
         val sortOrderBy = when (sortOrder) {

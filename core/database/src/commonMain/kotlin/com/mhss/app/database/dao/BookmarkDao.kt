@@ -1,6 +1,8 @@
 package com.mhss.app.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room3.Dao
+import androidx.room3.DaoReturnTypeConverters
 import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
@@ -9,21 +11,28 @@ import androidx.room3.RawQuery
 import androidx.room3.RoomRawQuery
 import androidx.room3.Update
 import androidx.room3.Upsert
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import com.mhss.app.database.entity.BookmarkEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 interface BookmarkDao {
+
+    @RawQuery(observedEntities = [BookmarkEntity::class])
+    fun pageBookmarks(query: RoomRawQuery): PagingSource<Int, BookmarkEntity>
+
+    fun getPagedBookmarks(orderBy: BookmarkOrder, order: QueryOrder): PagingSource<Int, BookmarkEntity> =
+        pageBookmarks(bookmarkQuery(orderBy, order))
+
+    @Query("SELECT * FROM bookmarks WHERE title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%' OR url LIKE '%' || :query || '%' ORDER BY updated_date DESC")
+    fun searchPagedBookmarks(query: String): PagingSource<Int, BookmarkEntity>
 
     @RawQuery(observedEntities = [BookmarkEntity::class])
     fun observeBookmarks(query: RoomRawQuery): Flow<List<BookmarkEntity>>
 
     fun getAllBookmarks(orderBy: BookmarkOrder, order: QueryOrder): Flow<List<BookmarkEntity>> {
-        val orderBySql = when (orderBy) {
-            BookmarkOrder.TITLE -> "title COLLATE NOCASE ${order.sql}"
-            else -> "${orderBy.column} ${order.sql}"
-        }
-        return observeBookmarks(RoomRawQuery("SELECT * FROM bookmarks ORDER BY $orderBySql"))
+        return observeBookmarks(bookmarkQuery(orderBy, order))
     }
 
     @Query("SELECT * FROM bookmarks")
@@ -65,4 +74,12 @@ enum class BookmarkOrder(val column: String) {
     TITLE("title"),
     CREATED_DATE("created_date"),
     UPDATED_DATE("updated_date")
+}
+
+private fun bookmarkQuery(orderBy: BookmarkOrder, order: QueryOrder): RoomRawQuery {
+    val orderBySql = when (orderBy) {
+    BookmarkOrder.TITLE -> "title COLLATE NOCASE ${order.sql}"
+    else -> "${orderBy.column} ${order.sql}"
+    }
+    return RoomRawQuery("SELECT * FROM bookmarks ORDER BY $orderBySql")
 }

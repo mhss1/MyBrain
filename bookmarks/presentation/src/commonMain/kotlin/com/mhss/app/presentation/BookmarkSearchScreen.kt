@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -28,17 +26,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.Res
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.invalid_url
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.search_bookmarks
 import com.mhss.app.ui.snackbar.LocalisedSnackbarHost
 import com.mhss.app.ui.snackbar.showSnackbar
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -46,6 +48,7 @@ fun BookmarkSearchScreen(
     navController: NavHostController,
     viewModel: BookmarksViewModel = koinViewModel()
 ) {
+    val bookmarks = viewModel.searchResults.collectAsLazyPagingItems()
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -73,38 +76,14 @@ fun BookmarkSearchScreen(
                     .padding(16.dp)
                     .focusRequester(focusRequester)
             )
+            PagingLoadState(bookmarks)
             if (state.bookmarksView == ItemView.LIST) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    items(state.searchBookmarks, key = { it.id }) { bookmark ->
-                        BookmarkItem(
-                            bookmark = bookmark,
-                            onClick = {
-                                navController.navigate(
-                                    Screen.BookmarkDetailScreen(
-                                        bookmarkId = bookmark.id
-                                    )
-                                )
-                            },
-                            onInvalidUrl = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(Res.string.invalid_url)
-                                }
-                            }
-                        )
-                    }
-                }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(150.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(12.dp)
-                ) {
-                    items(state.searchBookmarks) { bookmark ->
-                        key(bookmark.id) {
+                    items(bookmarks.itemCount, key = bookmarks.itemKey { it.id }) { index ->
+                        bookmarks[index]?.let { bookmark ->
                             BookmarkItem(
                                 bookmark = bookmark,
                                 onClick = {
@@ -118,10 +97,39 @@ fun BookmarkSearchScreen(
                                     scope.launch {
                                         snackbarHostState.showSnackbar(Res.string.invalid_url)
                                     }
-                                },
-                                modifier = Modifier.animateItem()
+                                }
                             )
-                        }
+                        } ?: PagingPlaceholder()
+                    }
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(150.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(12.dp)
+                ) {
+                    items(bookmarks.itemCount, key = bookmarks.itemKey { it.id }) { index ->
+                        bookmarks[index]?.let { bookmark ->
+                            key(bookmark.id) {
+                                BookmarkItem(
+                                    bookmark = bookmark,
+                                    onClick = {
+                                        navController.navigate(
+                                            Screen.BookmarkDetailScreen(
+                                                bookmarkId = bookmark.id
+                                            )
+                                        )
+                                    },
+                                    onInvalidUrl = {
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(Res.string.invalid_url)
+                                        }
+                                    },
+                                    modifier = Modifier.animateItem()
+                                )
+                            }
+                        } ?: PagingPlaceholder()
                     }
                 }
             }

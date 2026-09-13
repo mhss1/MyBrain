@@ -20,6 +20,7 @@ kotlin {
                 implementation(projects.core.preferences)
                 implementation(projects.core.storage)
 
+                api(libs.androidx.paging.common)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
 

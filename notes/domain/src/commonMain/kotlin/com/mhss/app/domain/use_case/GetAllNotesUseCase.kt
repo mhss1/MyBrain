@@ -10,6 +10,8 @@ import org.koin.core.annotation.Factory
 class GetAllNotesUseCase(
     private val notesRepository: NoteRepository
 ) {
+    fun paged(sortOrder: SortOrder, showAllNotes: Boolean) = notesRepository.getPagedNotes(sortOrder, showAllNotes)
+
     operator fun invoke(sortOrder: SortOrder, showAllNotes: Boolean): Flow<List<Note>> {
         return if (showAllNotes) {
             notesRepository.getAllNotes(sortOrder)

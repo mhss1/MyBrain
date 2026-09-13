@@ -3,7 +3,7 @@ package com.mhss.app.presentation
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.domain.model.Note
+import androidx.paging.cachedIn
 import com.mhss.app.domain.model.NoteException
 import com.mhss.app.domain.model.NoteFolder
 import com.mhss.app.domain.use_case.DeleteNoteFolderUseCase
@@ -24,18 +24,18 @@ import com.mhss.app.ui.errors.toMessageResId
 import com.mhss.app.ui.snackbar.showSnackbar
 import com.mhss.app.ui.toNotesView
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
 import org.koin.core.annotation.Provided
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @KoinViewModel
 class NoteFolderDetailsViewModel(
     private val getFolderNotes: GetNotesByFolderUseCase,
@@ -58,7 +58,8 @@ class NoteFolderDetailsViewModel(
     var uiState = _uiState.asStateFlow()
 
     private val folderId = id
-    private var getFolderNotesJob: Job? = null
+    private val pagingOrder = MutableStateFlow<SortOrder>(SortOrder.DateModified(SortType.DESC))
+    val folderNotes = pagingOrder.flatMapLatest { getFolderNotes.paged(folderId, it) }.cachedIn(viewModelScope)
 
     init {
         viewModelScope.launch {
@@ -85,7 +86,7 @@ class NoteFolderDetailsViewModel(
                             noteView = view.toNotesView(),
                         )
                     }
-                    getNotesFromFolder(nextOrder)
+                    pagingOrder.value = nextOrder
                 }.collect()
             }
         }
@@ -114,20 +115,8 @@ class NoteFolderDetailsViewModel(
         }
     }
 
-    private fun getNotesFromFolder(notesSortOrder: SortOrder) {
-        getFolderNotesJob?.cancel()
-        getFolderNotesJob = getFolderNotes(folderId, notesSortOrder)
-            .onEach { notes ->
-                _uiState.update {
-                    it.copy(folderNotes = notes, notesSortOrder = notesSortOrder)
-                }
-            }
-            .launchIn(viewModelScope)
-    }
-
     data class UiState(
         val folder: NoteFolder? = null,
-        val folderNotes: List<Note> = emptyList(),
         val noteView: ItemView = ItemView.LIST,
         val notesSortOrder: SortOrder = SortOrder.DateModified(SortType.DESC),
         val navigateUp: Boolean = false,

@@ -55,14 +55,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mhss.app.domain.model.NoteFolder
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
@@ -70,8 +70,11 @@ import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_note
 import com.mhss.app.ui.cancel
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.components.isEmpty
 import com.mhss.app.ui.components.notes.NoteCard
 import com.mhss.app.ui.create_folder
 import com.mhss.app.ui.folders
@@ -93,8 +96,10 @@ import com.mhss.app.ui.titleRes
 import com.mhss.app.ui.view_as
 import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
-import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.stringResource as cmpStringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Suppress("AssignedValueIsNeverRead")
 @Composable
@@ -102,6 +107,7 @@ fun NotesScreen(
     navController: NavHostController,
     viewModel: NotesViewModel = koinViewModel()
 ) {
+    val notes = viewModel.notes.collectAsLazyPagingItems()
     val uiState by viewModel.notesUiState.collectAsStateWithLifecycle()
     var orderSettingsVisible by remember { mutableStateOf(false) }
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
@@ -169,7 +175,7 @@ fun NotesScreen(
                 )
             }
             if (selectedTab == 0) {
-                if (uiState.notes.isEmpty())
+                if (notes.isEmpty)
                     NoNotesMessage()
                 Row(
                     Modifier.fillMaxWidth(),
@@ -209,6 +215,7 @@ fun NotesScreen(
                         }
                     )
                 }
+                PagingLoadState(notes)
                 if (uiState.noteView == ItemView.LIST) {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -220,30 +227,8 @@ fun NotesScreen(
                         ),
                         modifier = Modifier.weight(1f)
                     ) {
-                        items(uiState.notes, key = { it.id }) { note ->
-                            NoteCard(
-                                note = note,
-                                onClick = {
-                                    navController.navigate(
-                                        Screen.NoteDetailsScreen(
-                                            noteId = note.id,
-                                            folderId = note.folderId
-                                        )
-                                    )
-                                },
-                                modifier = Modifier.animateItem()
-                            )
-                        }
-                    }
-                } else {
-                    LazyVerticalStaggeredGrid(
-                        columns = StaggeredGridCells.Adaptive(150.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(12.dp),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        items(uiState.notes) { note ->
-                            key(note.id) {
+                        items(notes.itemCount, key = notes.itemKey { it.id }) { index ->
+                            notes[index]?.let { note ->
                                 NoteCard(
                                     note = note,
                                     onClick = {
@@ -254,9 +239,35 @@ fun NotesScreen(
                                             )
                                         )
                                     },
-                                    modifier = Modifier.padding(bottom = 12.dp)
+                                    modifier = Modifier.animateItem()
                                 )
-                            }
+                            } ?: PagingPlaceholder()
+                        }
+                    }
+                } else {
+                    LazyVerticalStaggeredGrid(
+                        columns = StaggeredGridCells.Adaptive(150.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(12.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        items(notes.itemCount, key = notes.itemKey { it.id }) { index ->
+                            notes[index]?.let { note ->
+                                key(note.id) {
+                                    NoteCard(
+                                        note = note,
+                                        onClick = {
+                                            navController.navigate(
+                                                Screen.NoteDetailsScreen(
+                                                    noteId = note.id,
+                                                    folderId = note.folderId
+                                                )
+                                            )
+                                        },
+                                        modifier = Modifier.padding(bottom = 12.dp)
+                                    )
+                                }
+                            } ?: PagingPlaceholder(Modifier.padding(bottom = 12.dp))
                         }
                     }
                 }
