@@ -29,13 +29,18 @@ import com.mhss.app.ui.StartUpScreenSettings
 import com.mhss.app.ui.ThemeSettings
 import com.mhss.app.ui.toIntList
 import com.mhss.app.mybrain.sync.SyncOrchestrator
+import androidx.paging.PagingData
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import androidx.paging.cachedIn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
@@ -62,6 +67,22 @@ class MainViewModel(
 
     private var refreshTasksJob : Job? = null
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val dashboardTasks: Flow<PagingData<Task>> = combine(
+        getPreference(
+            intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
+            SortOrder.DueDate(SortType.ASC).toInt()
+        ),
+        getPreference(
+            booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
+            false
+        )
+    ) { order, showCompleted ->
+        order.toSortOrder() to showCompleted
+    }.flatMapLatest { (sortOrder, showCompleted) ->
+        getAllTasks.paged(sortOrder, showCompleted)
+    }.cachedIn(viewModelScope)
+
     val lockApp = getPreference(booleanPreferencesKey(PrefsConstants.LOCK_APP_KEY), false)
     val themeMode = getPreference(intPreferencesKey(PrefsConstants.SETTINGS_THEME_KEY), ThemeSettings.AUTO.value)
     val defaultStartUpScreen = getPreference(intPreferencesKey(PrefsConstants.DEFAULT_START_UP_SCREEN_KEY), StartUpScreenSettings.SPACES.value)
@@ -84,7 +105,6 @@ class MainViewModel(
     }
 
     data class UiState(
-        val dashBoardTasks: List<Task> = emptyList(),
         val dashBoardEvents: List<CalendarEventsDay> = emptyList(),
         val summaryTasks: List<Task> = emptyList(),
         val dashBoardEntries: List<DiaryChartPoint> = emptyList()
@@ -124,7 +144,6 @@ class MainViewModel(
         refreshTasksJob?.cancel()
         refreshTasksJob = getAllTasks(sortOrder).onEach { tasks ->
                 uiState = uiState.copy(
-                    dashBoardTasks = if (showCompleted) tasks else tasks.filter { !it.isCompleted },
                     summaryTasks = tasks.filter { it.createdDate.inTheLastWeek() }
                 )
             }.launchIn(viewModelScope)
