@@ -2,6 +2,8 @@
 
 package com.mhss.app.presentation
 
+import androidx.paging.compose.LazyPagingItems
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -272,7 +274,7 @@ fun NotesScreen(
                     }
                 }
             } else {
-                FoldersTab(uiState.folders) {
+                FoldersTab(viewModel.folders.collectAsLazyPagingItems()) {
                     navController.navigate(
                         Screen.NoteFolderDetailsScreen(
                             folderId = it.id
@@ -298,9 +300,10 @@ fun NotesScreen(
 
 @Composable
 fun FoldersTab(
-    folders: List<NoteFolder>,
+    folders: LazyPagingItems<NoteFolder>,
     onItemClick: (NoteFolder) -> Unit
 ) {
+    PagingLoadState(folders)
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -312,36 +315,38 @@ fun FoldersTab(
             end = 12.dp
         )
     ) {
-        items(folders) { folder ->
-            Card(
-                modifier = Modifier.height(180.dp),
-                shape = RoundedCornerShape(20.dp),
-                elevation = CardDefaults.elevatedCardElevation(
-                    8.dp
-                )
-            ) {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .clickable { onItemClick(folder) },
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+        items(folders.itemCount, key = folders.itemKey { it.id }) { index ->
+            folders[index]?.let { folder ->
+                Card(
+                    modifier = Modifier.height(180.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    elevation = CardDefaults.elevatedCardElevation(
+                        8.dp
+                    )
                 ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_folder),
-                        contentDescription = folder.name,
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Text(
-                        text = folder.name,
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .clickable { onItemClick(folder) },
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_folder),
+                            contentDescription = folder.name,
+                            modifier = Modifier.size(100.dp)
+                        )
+                        Text(
+                            text = folder.name,
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
-            }
+            } ?: PagingPlaceholder()
         }
     }
 }

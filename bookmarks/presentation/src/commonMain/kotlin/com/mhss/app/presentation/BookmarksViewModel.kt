@@ -14,7 +14,7 @@ import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
-import com.mhss.app.preferences.domain.model.toOrder
+import com.mhss.app.preferences.domain.model.toSortOrder
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
 import com.mhss.app.ui.ItemView
@@ -62,8 +62,8 @@ class BookmarksViewModel(
                     ItemView.LIST.value
                 )
             ) { order, view ->
-                uiState = uiState.copy(bookmarksSortOrder = order.toOrder())
-                getBookmarks(order.toOrder())
+                uiState = uiState.copy(bookmarksSortOrder = order.toSortOrder())
+                getBookmarks(order.toSortOrder())
                 if (uiState.bookmarksView.value != view) {
                     uiState = uiState.copy(bookmarksView = view.toNotesView())
                 }

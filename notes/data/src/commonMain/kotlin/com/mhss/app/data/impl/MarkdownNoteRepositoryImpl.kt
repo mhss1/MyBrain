@@ -95,6 +95,9 @@ class MarkdownNoteRepositoryImpl(
         markdownFileManager.deleteFolder(folder.id, rootId)
     }
 
+    override fun getPagedNoteFolders(): Flow<PagingData<NoteFolder>> =
+        getAllNoteFolders().map { it.toPagingData() }
+
     override fun getAllNoteFolders(): Flow<List<NoteFolder>> {
         return markdownFileManager.getFolderFoldersFlow(rootId)
     }
@@ -124,7 +127,7 @@ private fun List<Note>.sorted(sortOrder: SortOrder): List<Note> {
     return sortedWith(compareByDescending<Note> { it.pinned }.then(comparator))
 }
 
-private fun List<Note>.toPagingData(): PagingData<Note> = PagingData.from(
+private fun <T : Any> List<T>.toPagingData(): PagingData<T> = PagingData.from(
     data = this,
     sourceLoadStates = LoadStates(
         refresh = LoadState.NotLoading(false),

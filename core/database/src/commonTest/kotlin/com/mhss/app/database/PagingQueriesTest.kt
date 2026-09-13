@@ -1,6 +1,12 @@
 package com.mhss.app.database
 
 import androidx.paging.PagingSource
+import com.mhss.app.database.dao.DiaryOrder
+import com.mhss.app.database.entity.AssistantThreadEntity
+import com.mhss.app.database.entity.DiaryEntryEntity
+import com.mhss.app.database.entity.NoteFolderEntity
+import com.mhss.app.domain.model.Mood
+import kotlinx.coroutines.flow.first
 import com.mhss.app.database.dao.BookmarkOrder
 import com.mhss.app.database.dao.NoteOrder
 import com.mhss.app.database.dao.QueryOrder
@@ -106,6 +112,96 @@ class PagingQueriesTest : PlatformTest() {
         assertEquals(listOf("pinned-folder"), search.map { it.id })
         assertEquals(100, search.single().content.length)
         assertTrue(dao.getPagedNotesByFolder("missing", NoteOrder.TITLE, QueryOrder.ASC).readAll().isEmpty())
+    }
+
+    @Test
+    fun `thread pages sort by activity and refresh after activity and deletion`() = runTest {
+        val dao = database.assistantDao()
+        dao.upsertThreads((4 downTo 0).map {
+            AssistantThreadEntity(id = "thread-$it", title = "Chat", createdAt = 0, updatedAt = 100L - it)
+        })
+        val source = dao.getPagedThreads()
+        val invalidated = CompletableDeferred<Unit>()
+        source.registerInvalidatedCallback { invalidated.complete(Unit) }
+        assertEquals((0..4).map { "thread-$it" }, source.readAll().map { it.id })
+        dao.updateThreadLastActive("thread-4", 200)
+        withContext(Dispatchers.Default) { withTimeout(5_000) { invalidated.await() } }
+        val updatedSource = dao.getPagedThreads()
+        assertEquals(listOf("thread-4", "thread-0", "thread-1", "thread-2", "thread-3"),
+            updatedSource.readAll().map { it.id })
+        updatedSource.awaitInvalidation { dao.deleteThread("thread-2") }
+        val remainingSource = dao.getPagedThreads()
+        assertEquals(4, remainingSource.readAll().size)
+        remainingSource.awaitInvalidation { dao.deleteAllThreads() }
+        assertTrue(dao.getPagedThreads().readAll().isEmpty())
+    }
+
+    @Test
+    fun `folder pages preserve insertion order across updates and deletion`() = runTest {
+        val dao = database.noteDao()
+        val ids = listOf("z", "a", "c", "b", "d")
+        dao.upsertNoteFolders(ids.map { NoteFolderEntity(id = it, name = "Folder") })
+        val source = dao.getPagedNoteFolders()
+        assertEquals(ids, source.readAll().map { it.id })
+        source.awaitInvalidation {
+            dao.upsertNoteFolders(listOf(NoteFolderEntity(id = "a", name = "Renamed")))
+        }
+        val updatedSource = dao.getPagedNoteFolders()
+        val updated = updatedSource.readAll()
+        assertEquals(ids, updated.map { it.id })
+        assertEquals("Renamed", updated[1].name)
+        updatedSource.awaitInvalidation { dao.deleteNoteFolderById("c") }
+        assertEquals(listOf("z", "a", "b", "d"), dao.getPagedNoteFolders().readAll().map { it.id })
+    }
+
+    @Test
+    fun `diary pages sort consistently and search content beyond previews`() = runTest {
+        val dao = database.diaryDao()
+        dao.upsertEntries(listOf(
+            DiaryEntryEntity(id = "b", title = "Some", createdDate = 101, updatedDate = 300, mood = Mood.GOOD),
+            DiaryEntryEntity(id = "a", title = "same", createdDate = 100, updatedDate = 400, mood = Mood.BAD),
+            DiaryEntryEntity(id = "c", title = "Alpha", createdDate = 200, updatedDate = 200,
+                content = "x".repeat(200) + "needle", mood = Mood.OKAY),
+            DiaryEntryEntity(id = "d", title = "Needle", createdDate = 300, updatedDate = 100, mood = Mood.AWESOME)
+        ))
+        assertEquals(listOf("a", "b", "c", "d"),
+            dao.getPagedEntries(DiaryOrder.CREATED_DATE, QueryOrder.ASC).readAll().map { it.id })
+        val descending = dao.getPagedEntries(DiaryOrder.CREATED_DATE, QueryOrder.DESC).readAll()
+        assertEquals(listOf("d", "c", "b", "a"), descending.map { it.id })
+        assertEquals(150, descending[1].content.length)
+        assertEquals(listOf("c", "d", "a", "b"),
+            dao.getPagedEntries(DiaryOrder.TITLE, QueryOrder.ASC).readAll().map { it.id })
+        assertEquals(listOf("b", "a", "d", "c"),
+            dao.getPagedEntries(DiaryOrder.TITLE, QueryOrder.DESC).readAll().map { it.id })
+        assertEquals(listOf("a", "b", "c", "d"),
+            dao.getPagedEntries(DiaryOrder.UPDATED_DATE, QueryOrder.DESC).readAll().map { it.id })
+        val search = dao.searchPagedEntries("needle").readAll()
+        assertEquals(listOf("d", "c"), search.map { it.id })
+        assertEquals(100, search[1].content.length)
+        assertTrue(dao.searchPagedEntries("missing").readAll().isEmpty())
+        assertEquals(4, dao.searchPagedEntries("").readAll().size)
+    }
+
+    @Test
+    fun `chart query includes range boundaries and excludes old and future entries`() = runTest {
+        val dao = database.diaryDao()
+        dao.upsertEntries(listOf(99L, 100L, 150L, 200L, 201L).map {
+            DiaryEntryEntity(id = "$it", title = "Title", content = "x".repeat(500),
+                createdDate = it, mood = if (it == 150L) Mood.BAD else Mood.GOOD)
+        })
+        val points = dao.getChartPoints(100, 200).first()
+        assertEquals(listOf(100L, 150L, 200L), points.map { it.createdDate })
+        assertEquals(listOf(Mood.GOOD, Mood.BAD, Mood.GOOD), points.map { it.mood })
+        assertEquals(listOf(100L), dao.getChartPoints(100, 100).first().map { it.createdDate })
+        assertTrue(dao.getChartPoints(300, 400).first().isEmpty())
+        assertTrue(dao.getChartPoints(200, 100).first().isEmpty())
+    }
+
+    private suspend fun <T : Any> PagingSource<Int, T>.awaitInvalidation(write: suspend () -> Unit) {
+        val invalidated = CompletableDeferred<Unit>()
+        registerInvalidatedCallback { invalidated.complete(Unit) }
+        write()
+        withContext(Dispatchers.Default) { withTimeout(5_000) { invalidated.await() } }
     }
 
     private suspend fun <T : Any> PagingSource<Int, T>.readAll(): List<T> {

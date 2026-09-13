@@ -21,6 +21,7 @@ kotlin {
                 implementation(projects.tasks.domain)
                 implementation(projects.calendar.domain)
 
+                api(libs.androidx.paging.common)
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(project.dependencies.platform(libs.koin.bom))

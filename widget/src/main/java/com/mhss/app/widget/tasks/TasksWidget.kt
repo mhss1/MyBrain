@@ -23,7 +23,7 @@ import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
-import com.mhss.app.preferences.domain.model.toOrder
+import com.mhss.app.preferences.domain.model.toSortOrder
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.ui.ThemeSettings
 import com.mhss.app.widget.WidgetSettings
@@ -70,7 +70,7 @@ class TasksWidget : GlanceAppWidget(), KoinComponent {
                     (themeSetting == ThemeSettings.AUTO.value && isSystemDarkMode)
             }
             val tasks by getAllTasks(
-                sortOrder.toOrder(),
+                sortOrder.toSortOrder(),
                 showCompletedTasks
             ).collectAsState(emptyList())
 

@@ -7,5 +7,7 @@ import org.koin.core.annotation.Factory
 class GetAllNoteFoldersUseCase(
     private val repository: NoteRepository
 ) {
+    fun paged() = repository.getPagedNoteFolders()
+
     operator fun invoke() = repository.getAllNoteFolders()
 }

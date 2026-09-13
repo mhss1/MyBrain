@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhss.app.ui.preview.BasePreview
-import com.mhss.app.domain.model.DiaryEntry
+import com.mhss.app.domain.model.DiaryChartPoint
 import com.mhss.app.domain.model.Mood
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.mood_during_month
@@ -45,7 +45,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MoodFlowChart(
-    entries: List<DiaryEntry>,
+    entries: List<DiaryChartPoint>,
     monthly: Boolean = true
 ) {
     Card(
@@ -80,7 +80,7 @@ fun MoodFlowChart(
                         // if multiple ones with the same frequency, return the most positive one
                         val entriesGrouped = entries
                             .groupBy { it.mood }
-                        val max = entriesGrouped.maxOf { it.value.size }
+                        val max = entriesGrouped.maxOfOrNull { it.value.size }
                         entriesGrouped
                             .filter { it.value.size == max }
                             .maxByOrNull {
@@ -191,47 +191,17 @@ fun MoodFlowChartPreview() {
     BasePreview {
         MoodFlowChart(
             entries = listOf(
-            DiaryEntry(
-                id = "1",
-                mood = Mood.AWESOME
-            ),
-            DiaryEntry(
-                id = "1",
-                mood = Mood.AWESOME
-            ),
-            DiaryEntry(
-                id = "2",
-                mood = Mood.GOOD,
-            ),
-            DiaryEntry(
-                id = "3",
-                mood = Mood.OKAY,
-            ),
-            DiaryEntry(
-                id = "4",
-                mood = Mood.GOOD,
-            ),
-            DiaryEntry(
-                id = "5",
-                mood = Mood.BAD,
-            ),
-            DiaryEntry(
-                id = "6",
-                mood = Mood.BAD,
-            ),
-            DiaryEntry(
-                id = "7",
-                mood = Mood.TERRIBLE,
-            ),
-            DiaryEntry(
-                id = "8",
-                mood = Mood.GOOD,
-            ),
-            DiaryEntry(
-                id = "8",
-                mood = Mood.BAD,
+                DiaryChartPoint(mood = Mood.AWESOME),
+                DiaryChartPoint(mood = Mood.AWESOME),
+                DiaryChartPoint(mood = Mood.GOOD),
+                DiaryChartPoint(mood = Mood.OKAY),
+                DiaryChartPoint(mood = Mood.GOOD),
+                DiaryChartPoint(mood = Mood.BAD),
+                DiaryChartPoint(mood = Mood.BAD),
+                DiaryChartPoint(mood = Mood.TERRIBLE),
+                DiaryChartPoint(mood = Mood.GOOD),
+                DiaryChartPoint(mood = Mood.BAD),
             )
         )
-    )
     }
 }

@@ -1,5 +1,11 @@
 package com.mhss.app.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.mhss.app.database.DefaultPagingConfig
+import com.mhss.app.domain.model.DiaryChartPoint
+
 import com.mhss.app.database.dao.DiaryDao
 import com.mhss.app.database.dao.DiaryOrder
 import com.mhss.app.database.dao.QueryOrder
@@ -33,6 +39,24 @@ class DiaryRepositoryImpl(
     private val transactionProvider: DatabaseTransactionProvider,
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : DiaryRepository {
+
+    override fun getPagedEntries(sortOrder: SortOrder): Flow<PagingData<DiaryEntry>> {
+        val orderBy = when (sortOrder) {
+            is SortOrder.Alphabetical -> DiaryOrder.TITLE
+            is SortOrder.DateCreated -> DiaryOrder.CREATED_DATE
+            else -> DiaryOrder.UPDATED_DATE
+        }
+        return Pager(config = DefaultPagingConfig) {
+            diaryDao.getPagedEntries(orderBy, sortOrder.sortType.toQueryOrder())
+        }.flow.map { page -> page.map { it.toDiaryEntry() } }
+    }
+
+    override fun searchPagedEntries(query: String): Flow<PagingData<DiaryEntry>> =
+        Pager(config = DefaultPagingConfig) { diaryDao.searchPagedEntries(query) }
+            .flow.map { page -> page.map { it.toDiaryEntry() } }
+
+    override fun getChartPoints(from: Long, to: Long): Flow<List<DiaryChartPoint>> =
+        diaryDao.getChartPoints(from, to).flowOn(ioDispatcher)
 
     override fun getAllEntries(sortOrder: SortOrder): Flow<List<DiaryEntry>> {
         val sortOrderBy = when (sortOrder) {

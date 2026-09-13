@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.mhss.app.domain.model.NoteException
-import com.mhss.app.domain.model.NoteFolder
 import com.mhss.app.domain.use_case.CreateNoteFolderUseCase
 import com.mhss.app.domain.use_case.GetAllNoteFoldersUseCase
 import com.mhss.app.domain.use_case.GetAllNotesUseCase
@@ -16,7 +15,7 @@ import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
-import com.mhss.app.preferences.domain.model.toOrder
+import com.mhss.app.preferences.domain.model.toSortOrder
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
 import com.mhss.app.ui.ItemView
@@ -36,6 +35,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @KoinViewModel
@@ -62,9 +62,11 @@ class NotesViewModel(
     private val pagingRequest = MutableStateFlow<Pair<SortOrder, Boolean>>(SortOrder.DateModified(SortType.DESC) to false)
     val notes = pagingRequest.flatMapLatest { getAllNotes.paged(it.first, it.second) }.cachedIn(viewModelScope)
 
+    val folders = getAllFolders.paged().cachedIn(viewModelScope)
+
     private val searchQuery = MutableStateFlow("")
     val searchResults = searchQuery.flatMapLatest {
-        delay(250)
+        delay(300.milliseconds)
         searchNotes.paged(it)
     }.cachedIn(viewModelScope)
 
@@ -85,7 +87,7 @@ class NotesViewModel(
                         false
                     )
                 ) { order, view, showAllNotes ->
-                    val nextOrder = order.toOrder()
+                    val nextOrder = order.toSortOrder()
                     getNotes(nextOrder, showAllNotes)
                     _notesUiState.update {
                         it.copy(
@@ -97,15 +99,6 @@ class NotesViewModel(
                 }.collect()
             }
 
-            launch {
-                getAllFolders().collect { folders ->
-                    _notesUiState.update {
-                        it.copy(
-                            folders = folders
-                        )
-                    }
-                }
-            }
         }
     }
 
@@ -150,7 +143,6 @@ class NotesViewModel(
         val notesSortOrder: SortOrder = SortOrder.DateModified(SortType.DESC),
         val noteView: ItemView = ItemView.LIST,
         val navigateUp: Boolean = false,
-        val folders: List<NoteFolder> = emptyList(),
         val showAllNotes: Boolean = false,
         val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     )

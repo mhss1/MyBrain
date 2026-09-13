@@ -107,6 +107,9 @@ interface NoteDao {
         deleteNoteFolderById(folderId)
     }
 
+    @Query("SELECT * FROM note_folders ORDER BY rowid ASC")
+    fun getPagedNoteFolders(): PagingSource<Int, NoteFolderEntity>
+
     @Query("SELECT * FROM note_folders")
     fun getAllNoteFolders(): Flow<List<NoteFolderEntity>>
 

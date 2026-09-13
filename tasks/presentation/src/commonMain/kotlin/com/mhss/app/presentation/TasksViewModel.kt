@@ -20,7 +20,7 @@ import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
-import com.mhss.app.preferences.domain.model.toOrder
+import com.mhss.app.preferences.domain.model.toSortOrder
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
 import com.mhss.app.ui.Res
@@ -75,7 +75,7 @@ class TasksViewModel(
                     false
                 )
             ) { order, showCompleted ->
-                getTasks(order.toOrder(), showCompleted)
+                getTasks(order.toSortOrder(), showCompleted)
             }.collect()
         }
     }

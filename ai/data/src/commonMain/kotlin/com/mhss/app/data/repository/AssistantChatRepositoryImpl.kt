@@ -1,5 +1,10 @@
 package com.mhss.app.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.mhss.app.database.DefaultPagingConfig
+
 import com.mhss.app.data.mappers.toAiMessage
 import com.mhss.app.data.mappers.toAssistantMessageEntity
 import com.mhss.app.database.dao.AssistantDao
@@ -34,6 +39,10 @@ class AssistantChatRepositoryImpl(
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher,
     @Named("defaultDispatcher") private val defaultDispatcher: CoroutineDispatcher,
 ) : AssistantChatRepository {
+
+    override fun getPagedThreads(): Flow<PagingData<AssistantThread>> =
+        Pager(config = DefaultPagingConfig) { assistantDao.getPagedThreads() }
+            .flow.map { page -> page.map { it.toAssistantThread() } }
 
     override fun getAllThreads(): Flow<List<AssistantThread>> {
         return assistantDao.getAllThreads().map { entities ->

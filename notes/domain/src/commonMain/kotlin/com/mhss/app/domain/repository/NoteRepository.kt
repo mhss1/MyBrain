@@ -49,6 +49,8 @@ interface NoteRepository {
 
     suspend fun deleteNoteFolder(folder: NoteFolder)
 
+    fun getPagedNoteFolders(): Flow<PagingData<NoteFolder>>
+
     fun getAllNoteFolders(): Flow<List<NoteFolder>>
 
     suspend fun getNoteFolder(folderId: String): NoteFolder?

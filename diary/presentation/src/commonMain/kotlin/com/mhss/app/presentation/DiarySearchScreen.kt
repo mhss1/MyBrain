@@ -1,5 +1,10 @@
 package com.mhss.app.presentation
 
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -37,7 +41,7 @@ fun DiarySearchScreen(
     navController: NavHostController,
     viewModel: DiaryViewModel = koinViewModel()
 ) {
-    val state = viewModel.uiState
+    val entries = viewModel.searchResults.collectAsLazyPagingItems()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -59,21 +63,24 @@ fun DiarySearchScreen(
                 .padding(16.dp)
                 .focusRequester(focusRequester)
         )
+        PagingLoadState(entries)
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(12.dp)
         ) {
-            items(state.searchEntries, key = { it.id }) { entry ->
-                DiaryEntryItem(
-                    entry = entry,
-                    onClick = {
-                        navController.navigate(
-                            Screen.DiaryDetailScreen(
-                                entry.id
+            items(entries.itemCount, key = entries.itemKey { it.id }) { index ->
+                entries[index]?.let { entry ->
+                    DiaryEntryItem(
+                        entry = entry,
+                        onClick = {
+                            navController.navigate(
+                                Screen.DiaryDetailScreen(
+                                    entry.id
+                                )
                             )
-                        )
-                    }
-                )
+                        }
+                    )
+                } ?: PagingPlaceholder()
             }
         }
     }

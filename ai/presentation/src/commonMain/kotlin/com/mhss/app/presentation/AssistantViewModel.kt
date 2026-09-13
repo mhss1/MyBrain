@@ -88,8 +88,7 @@ class AssistantViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val threads: StateFlow<List<AssistantThread>> = getAssistantThreads()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val threads = getAssistantThreads.paged().cachedIn(viewModelScope)
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()

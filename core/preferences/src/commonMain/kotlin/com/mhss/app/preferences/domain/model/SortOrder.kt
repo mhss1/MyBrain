@@ -44,7 +44,7 @@ sealed class SortOrder(val sortType: SortType) {
     }
 }
 
-fun Int.toOrder(): SortOrder {
+fun Int.toSortOrder(): SortOrder {
     return when(this){
         0 -> SortOrder.Alphabetical(SortType.ASC)
         1 -> SortOrder.DateCreated(SortType.ASC)

@@ -1,5 +1,11 @@
 package com.mhss.app.presentation.components
 
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
+import com.mhss.app.ui.components.isEmpty
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -52,7 +57,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ChatHistoryPanel(
-    threads: List<AssistantThread>,
+    threads: LazyPagingItems<AssistantThread>,
     currentThreadId: String?,
     onDismiss: () -> Unit,
     onThreadSelected: (String) -> Unit,
@@ -79,7 +84,7 @@ fun ChatHistoryPanel(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
-            if (threads.isNotEmpty()) {
+            if (threads.itemCount > 0) {
                 IconButton(onClick = { showDeleteAllDialog = true }) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_delete),
@@ -91,8 +96,9 @@ fun ChatHistoryPanel(
         }
 
         Spacer(Modifier.height(8.dp))
+        PagingLoadState(threads)
 
-        if (threads.isEmpty()) {
+        if (threads.isEmpty) {
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -110,70 +116,72 @@ fun ChatHistoryPanel(
                     .weight(1f)
                     .fillMaxWidth()
             ) {
-                items(threads, key = { it.id }) { thread ->
-                    val isSelected = thread.id == currentThreadId
-                    val formatter = LocalDateTimeFormatter.current
-                    val dateStr = formatter.formatDateDependingOnDay(thread.updatedAt)
+                items(threads.itemCount, key = threads.itemKey { it.id }) { index ->
+                    threads[index]?.let { thread ->
+                        val isSelected = thread.id == currentThreadId
+                        val formatter = LocalDateTimeFormatter.current
+                        val dateStr = formatter.formatDateDependingOnDay(thread.updatedAt)
 
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 4.dp),
-                        onClick = {
-                            onThreadSelected(thread.id)
-                            onDismiss()
-                        },
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (isSelected) {
-                                MaterialTheme.colorScheme.primaryContainer
-                            } else {
-                                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                            }
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Row(
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                                .padding(horizontal = 12.dp, vertical = 4.dp),
+                            onClick = {
+                                onThreadSelected(thread.id)
+                                onDismiss()
+                            },
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (isSelected) {
+                                    MaterialTheme.colorScheme.primaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                }
+                            ),
+                            shape = RoundedCornerShape(12.dp)
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = thread.title.ifBlank { stringResource(Res.string.new_chat) },
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color = if (isSelected) {
-                                        MaterialTheme.colorScheme.onPrimaryContainer
-                                    } else {
-                                        MaterialTheme.colorScheme.onSurface
-                                    }
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = dateStr,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                            Spacer(Modifier.width(4.dp))
-                            IconButton(
-                                onClick = { threadToDelete = thread },
-                                modifier = Modifier.size(24.dp)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    painter = painterResource(Res.drawable.ic_delete),
-                                    contentDescription = stringResource(Res.string.delete_chat),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                        alpha = 0.6f
-                                    ),
-                                    modifier = Modifier.size(18.dp)
-                                )
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = thread.title.ifBlank { stringResource(Res.string.new_chat) },
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        color = if (isSelected) {
+                                            MaterialTheme.colorScheme.onPrimaryContainer
+                                        } else {
+                                            MaterialTheme.colorScheme.onSurface
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = dateStr,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                                Spacer(Modifier.width(4.dp))
+                                IconButton(
+                                    onClick = { threadToDelete = thread },
+                                    modifier = Modifier.size(24.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(Res.drawable.ic_delete),
+                                        contentDescription = stringResource(Res.string.delete_chat),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.6f
+                                        ),
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
                             }
                         }
-                    }
+                    } ?: PagingPlaceholder(Modifier.padding(horizontal = 12.dp, vertical = 4.dp))
                 }
             }
         }

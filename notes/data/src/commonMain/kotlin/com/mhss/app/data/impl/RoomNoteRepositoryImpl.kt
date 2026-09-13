@@ -224,6 +224,10 @@ class RoomNoteRepositoryImpl(
         }
     }
 
+    override fun getPagedNoteFolders(): Flow<PagingData<NoteFolder>> =
+        Pager(config = DefaultPagingConfig) { noteDao.getPagedNoteFolders() }
+            .flow.map { page -> page.map { it.toNoteFolder() } }
+
     override fun getAllNoteFolders(): Flow<List<NoteFolder>> {
         return noteDao.getAllNoteFolders()
             .flowOn(ioDispatcher)

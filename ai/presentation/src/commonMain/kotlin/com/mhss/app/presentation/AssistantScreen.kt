@@ -2,6 +2,8 @@
 
 package com.mhss.app.presentation
 
+import androidx.paging.compose.LazyPagingItems
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -95,7 +97,7 @@ fun AssistantScreen(
 ) {
     val messages by viewModel.messages.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val threads by viewModel.threads.collectAsStateWithLifecycle()
+    val threads = viewModel.threads.collectAsLazyPagingItems()
     val currentThreadId by viewModel.currentThreadId.collectAsStateWithLifecycle()
 
     AssistantScreenContent(
@@ -117,7 +119,7 @@ fun AssistantScreenContent(
     noteSearchResults: Flow<PagingData<Note>>,
     taskSearchResults: Flow<PagingData<Task>>,
     messages: List<AiMessage>,
-    threads: List<AssistantThread>,
+    threads: LazyPagingItems<AssistantThread>,
     currentThreadId: String?,
     onEvent: (AssistantEvent) -> Unit,
     navController: NavHostController,
@@ -404,10 +406,10 @@ private fun AssistantScreenContentPreviewInner() {
                 uuid = "1"
             )
         ),
-        threads = listOf(
+        threads = remember { flowOf(PagingData.from(listOf(
             AssistantThread(id = "1", title = "First Chat", createdAt = 0L, updatedAt = 0L),
             AssistantThread(id = "2", title = "Second Chat", createdAt = 0L, updatedAt = 0L)
-        ),
+        ))) }.collectAsLazyPagingItems(),
         currentThreadId = "1",
         onEvent = {},
         navController = rememberNavController()

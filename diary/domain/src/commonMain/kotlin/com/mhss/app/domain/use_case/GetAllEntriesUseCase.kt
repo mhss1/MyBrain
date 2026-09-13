@@ -10,6 +10,8 @@ import org.koin.core.annotation.Single
 class GetAllEntriesUseCase(
     private val diaryRepository: DiaryRepository
 ) {
+    fun paged(sortOrder: SortOrder) = diaryRepository.getPagedEntries(sortOrder)
+
     operator fun invoke(sortOrder: SortOrder) : Flow<List<DiaryEntry>> {
         return diaryRepository.getAllEntries(sortOrder)
     }

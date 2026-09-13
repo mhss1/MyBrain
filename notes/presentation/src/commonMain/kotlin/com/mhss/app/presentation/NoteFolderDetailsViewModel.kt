@@ -15,7 +15,7 @@ import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
-import com.mhss.app.preferences.domain.model.toOrder
+import com.mhss.app.preferences.domain.model.toSortOrder
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.Res
@@ -79,7 +79,7 @@ class NoteFolderDetailsViewModel(
                         ItemView.LIST.value
                     ),
                 ) { order, view ->
-                    val nextOrder = order.toOrder()
+                    val nextOrder = order.toSortOrder()
                     _uiState.update {
                         it.copy(
                             notesSortOrder = nextOrder,

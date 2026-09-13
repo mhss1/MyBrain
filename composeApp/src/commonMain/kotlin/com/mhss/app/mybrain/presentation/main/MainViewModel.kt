@@ -6,10 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mhss.app.datetime.inTheLastWeek
-import com.mhss.app.domain.model.DiaryEntry
+import com.mhss.app.domain.model.DiaryChartPoint
 import com.mhss.app.domain.model.Task
 import com.mhss.app.domain.use_case.CalendarEventsDay
-import com.mhss.app.domain.use_case.GetAllEntriesUseCase
+import com.mhss.app.domain.use_case.GetDiaryForChartUseCase
 import com.mhss.app.domain.use_case.GetAllEventsUseCase
 import com.mhss.app.domain.use_case.GetAllTasksUseCase
 import com.mhss.app.domain.use_case.UpdateTaskCompletedUseCase
@@ -20,7 +20,7 @@ import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.stringSetPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
-import com.mhss.app.preferences.domain.model.toOrder
+import com.mhss.app.preferences.domain.model.toSortOrder
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
 import com.mhss.app.ui.AppFont
@@ -43,7 +43,7 @@ class MainViewModel(
     private val getPreference: GetPreferenceUseCase,
     private val savePreference: SavePreferenceUseCase,
     private val getAllTasks: GetAllTasksUseCase,
-    private val getAllEntriesUseCase: GetAllEntriesUseCase,
+    private val getDiaryForChart: GetDiaryForChartUseCase,
     private val completeTask: UpdateTaskCompletedUseCase,
     private val getAllEventsUseCase: GetAllEventsUseCase,
     private val syncOrchestrator: SyncOrchestrator
@@ -87,7 +87,7 @@ class MainViewModel(
         val dashBoardTasks: List<Task> = emptyList(),
         val dashBoardEvents: List<CalendarEventsDay> = emptyList(),
         val summaryTasks: List<Task> = emptyList(),
-        val dashBoardEntries: List<DiaryEntry> = emptyList()
+        val dashBoardEntries: List<DiaryChartPoint> = emptyList()
     )
 
     private fun getCalendarEvents() = viewModelScope.launch {
@@ -111,12 +111,12 @@ class MainViewModel(
                 booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
                 false
             ),
-            getAllEntriesUseCase(SortOrder.DateCreated(SortType.ASC))
+            getDiaryForChart(Long.MIN_VALUE, Long.MAX_VALUE)
         ) { order, showCompleted, entries ->
             uiState = uiState.copy(
                 dashBoardEntries = entries,
             )
-            refreshTasks(order.toOrder(), showCompleted)
+            refreshTasks(order.toSortOrder(), showCompleted)
         }.collect()
     }
 

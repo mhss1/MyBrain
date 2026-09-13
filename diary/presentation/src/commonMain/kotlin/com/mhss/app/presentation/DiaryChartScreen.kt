@@ -1,5 +1,7 @@
 package com.mhss.app.presentation
 
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -44,14 +46,14 @@ fun DiaryChartScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val state = viewModel.uiState
+        val entries by viewModel.chartEntries.collectAsStateWithLifecycle()
         var monthly by remember { mutableStateOf(true) }
         MonthlyOrYearlyTab {
             viewModel.onEvent(DiaryEvent.ChangeChartEntriesRange(it))
             monthly = it
         }
-        MoodCircularBar(entries = state.chartEntries)
-        MoodFlowChart(entries = state.chartEntries, monthly)
+        MoodCircularBar(entries = entries)
+        MoodFlowChart(entries = entries, monthly)
     }
 }
 
