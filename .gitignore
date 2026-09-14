@@ -5,6 +5,7 @@
 !/.idea/.name
 .DS_Store
 /build
+/build-logic/build
 /captures
 .externalNativeBuild
 .cxx
