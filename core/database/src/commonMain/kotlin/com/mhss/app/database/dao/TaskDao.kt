@@ -37,6 +37,13 @@ interface TaskDao {
         return observeTasks(taskQuery(orderBy, order, showCompleted))
     }
 
+    fun getLimitedTasks(
+        orderBy: TaskOrder,
+        order: QueryOrder,
+        showCompleted: Boolean,
+        limit: Int
+    ): Flow<List<TaskEntity>> = observeTasks(taskQuery(orderBy, order, showCompleted, limit))
+
     @Query("SELECT * FROM tasks")
     suspend fun getAllFullTasks(): List<TaskEntity>
 
@@ -87,12 +94,21 @@ enum class TaskOrder(val column: String) {
     COMPLETED("is_completed")
 }
 
-private fun taskQuery(orderBy: TaskOrder, order: QueryOrder, showCompleted: Boolean): RoomRawQuery {
+private fun taskQuery(
+    orderBy: TaskOrder,
+    order: QueryOrder,
+    showCompleted: Boolean,
+    limit: Int? = null
+): RoomRawQuery {
     val where = if (showCompleted) "" else " WHERE is_completed = 0"
     val orderBySql = when (orderBy) {
     TaskOrder.TITLE -> "title COLLATE NOCASE ${order.sql}"
     TaskOrder.DUE_DATE -> "dueDate ${order.sql} NULLS LAST"
     else -> "${orderBy.column} ${order.sql}"
     }
-    return RoomRawQuery("SELECT * FROM tasks$where ORDER BY $orderBySql")
+    val limitSql = limit?.let {
+        require(it >= 0)
+        " LIMIT $it"
+    }.orEmpty()
+    return RoomRawQuery("SELECT * FROM tasks$where ORDER BY $orderBySql$limitSql")
 }

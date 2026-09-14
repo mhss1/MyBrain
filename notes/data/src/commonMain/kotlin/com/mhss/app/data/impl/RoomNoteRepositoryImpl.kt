@@ -79,6 +79,20 @@ class RoomNoteRepositoryImpl(
             .flowOn(ioDispatcher)
     }
 
+    override fun getLimitedNotes(
+        sortOrder: SortOrder,
+        showAllNotes: Boolean,
+        limit: Int
+    ): Flow<List<Note>> {
+        return noteDao.getLimitedNotes(
+            sortOrder.toNoteOrder(),
+            sortOrder.sortType.toQueryOrder(),
+            showAllNotes,
+            limit
+        ).map { notes -> notes.map { it.toNote() } }
+            .flowOn(ioDispatcher)
+    }
+
     override suspend fun getAllFullNotes(): List<Note> {
         return withContext(ioDispatcher) {
             noteDao.getAllFullNotes().map { it.toNote() }

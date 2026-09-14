@@ -24,6 +24,8 @@ interface NoteRepository {
         sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)
     ): Flow<List<Note>>
 
+    fun getLimitedNotes(sortOrder: SortOrder, showAllNotes: Boolean, limit: Int): Flow<List<Note>>
+
     suspend fun getAllFullNotes(): List<Note>
 
     suspend fun getNote(id: String): Note?

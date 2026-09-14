@@ -13,7 +13,7 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
 import androidx.glance.currentState
 import androidx.glance.material3.ColorProviders
-import com.mhss.app.domain.use_case.GetAllNotesUseCase
+import com.mhss.app.domain.use_case.GetWidgetNotesUseCase
 import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
@@ -33,7 +33,7 @@ import org.koin.core.component.inject
 class NotesWidget : GlanceAppWidget(), KoinComponent {
 
     private val getSettings: GetPreferenceUseCase by inject()
-    private val getAllNotes: GetAllNotesUseCase by inject()
+    private val getWidgetNotes: GetWidgetNotesUseCase by inject()
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
@@ -65,11 +65,10 @@ class NotesWidget : GlanceAppWidget(), KoinComponent {
                 themeSetting == ThemeSettings.DARK.value ||
                     (themeSetting == ThemeSettings.AUTO.value && isSystemDarkMode)
             }
-            val notes by getAllNotes(
-                sortOrder.toSortOrder(),
-                showAllNotes
-            ).collectAsState(emptyList())
-            val limitedNotes = remember(notes) { notes.take(10) }
+            val notesFlow = remember(sortOrder, showAllNotes) {
+                getWidgetNotes(sortOrder.toSortOrder(), showAllNotes)
+            }
+            val notes by notesFlow.collectAsState(emptyList())
 
             WidgetTheme(
                 if (useMaterialYou) GlanceTheme.colors
@@ -77,7 +76,7 @@ class NotesWidget : GlanceAppWidget(), KoinComponent {
                 else ColorProviders(widgetLightColorScheme)
             ) {
                 NotesHomeScreenWidget(
-                    notes = limitedNotes,
+                    notes = notes,
                     backgroundOpacity = backgroundOpacity
                 )
             }

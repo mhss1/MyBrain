@@ -42,7 +42,7 @@ kotlin {
 
         commonTest {
             dependencies {
-                implementation(kotlin("test"))
+                implementation(libs.kotlin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.androidx.room3.testing)
             }
@@ -54,15 +54,13 @@ kotlin {
             }
         }
 
-        getByName("androidHostTest") {
-            dependsOn(commonTest.get())
-            dependencies {
-                implementation(libs.androidx.test.core)
-                implementation(libs.androidx.test.runner)
-                implementation(libs.androidx.sqlite.framework)
-                implementation(libs.junit)
-                implementation(libs.robolectric)
-            }
+        val androidHostTest by getting
+        androidHostTest.dependencies {
+            implementation(libs.androidx.test.core)
+            implementation(libs.androidx.test.runner)
+            implementation(libs.androidx.sqlite.framework)
+            implementation(libs.junit)
+            implementation(libs.robolectric)
         }
     }
 }

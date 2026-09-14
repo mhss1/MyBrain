@@ -16,7 +16,7 @@ import androidx.glance.currentState
 import androidx.datastore.preferences.core.Preferences
 import com.mhss.app.datetime.DateTimeFormatter
 import com.mhss.app.datetime.LocalDateTimeFormatter
-import com.mhss.app.domain.use_case.GetAllTasksUseCase
+import com.mhss.app.domain.use_case.GetWidgetTasksUseCase
 import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
@@ -36,7 +36,7 @@ import org.koin.core.component.inject
 class TasksWidget : GlanceAppWidget(), KoinComponent {
 
     private val getSettings: GetPreferenceUseCase by inject()
-    private val getAllTasks: GetAllTasksUseCase by inject()
+    private val getWidgetTasks: GetWidgetTasksUseCase by inject()
     private val dateTimeFormatter: DateTimeFormatter by inject()
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -69,10 +69,10 @@ class TasksWidget : GlanceAppWidget(), KoinComponent {
                 themeSetting == ThemeSettings.DARK.value ||
                     (themeSetting == ThemeSettings.AUTO.value && isSystemDarkMode)
             }
-            val tasks by getAllTasks(
-                sortOrder.toSortOrder(),
-                showCompletedTasks
-            ).collectAsState(emptyList())
+            val tasksFlow = remember(sortOrder, showCompletedTasks) {
+                getWidgetTasks(sortOrder.toSortOrder(), showCompletedTasks)
+            }
+            val tasks by tasksFlow.collectAsState(emptyList())
 
             CompositionLocalProvider(
                 LocalDateTimeFormatter provides dateTimeFormatter

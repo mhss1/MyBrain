@@ -5,6 +5,8 @@ import com.mhss.app.datetime.currentLocalDate
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.model.effectiveDateRange
 import com.mhss.app.domain.repository.CalendarRepository
+import com.mhss.app.widget.WIDGET_ITEM_LIMIT
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.DateTimeUnit
@@ -34,8 +36,8 @@ class GetAllEventsUseCase(
     ): GetAllEventsResult {
         return withContext(defaultDispatcher) {
             try {
-                val events = calendarRepository.getEvents(excluded, until)
-                    .let { if (fromWidget) it.take(25) else it }
+                val itemLimit = if (fromWidget) WIDGET_ITEM_LIMIT else null
+                val events = calendarRepository.getEvents(excluded, until, itemLimit)
 
                 val tz = TimeZone.currentSystemDefault()
                 val today = currentLocalDate()
@@ -86,6 +88,8 @@ class GetAllEventsUseCase(
                 }
 
                 GetAllEventsResult(eventDays, months)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 e.printStackTrace()
                 GetAllEventsResult(emptyList(), emptyList())

@@ -115,6 +115,64 @@ class PagingQueriesTest : PlatformTest() {
     }
 
     @Test
+    fun `limited notes apply pins folders sort and preview before limit`() = runTest {
+        val dao = database.noteDao()
+        dao.upsertNotes(
+            buildList {
+                add(NoteEntity(id = "pinned-new", title = "Pinned", pinned = true, updatedDate = 2,
+                    content = "x".repeat(200)))
+                add(NoteEntity(id = "pinned-old", title = "Pinned", pinned = true, updatedDate = 1))
+                addAll((1L..18L).map {
+                    NoteEntity(id = "root-$it", title = "Root", updatedDate = it)
+                })
+                addAll((100L..102L).map {
+                    NoteEntity(id = "folder-$it", title = "Folder", folderId = "folder", updatedDate = it)
+                })
+            }
+        )
+
+        assertTrue(dao.getLimitedNotes(NoteOrder.UPDATED_DATE, QueryOrder.DESC, false, 0).first().isEmpty())
+        val folderless = dao.getLimitedNotes(NoteOrder.UPDATED_DATE, QueryOrder.DESC, false, 15).first()
+        assertEquals(15, folderless.size)
+        assertEquals(
+            listOf("pinned-new", "pinned-old") + (18L downTo 6L).map { "root-$it" },
+            folderless.map { it.id }
+        )
+        assertEquals(150, folderless.first().content.length)
+        assertEquals(
+            listOf("pinned-new", "pinned-old", "folder-102", "folder-101", "folder-100"),
+            dao.getLimitedNotes(NoteOrder.UPDATED_DATE, QueryOrder.DESC, true, 5).first().map { it.id }
+        )
+    }
+
+    @Test
+    fun `limited tasks filter completed and keep undated last before limit`() = runTest {
+        val dao = database.taskDao()
+        assertTrue(dao.getLimitedTasks(TaskOrder.DUE_DATE, QueryOrder.ASC, false, 15).first().isEmpty())
+        dao.upsertTasks(
+            listOf(
+                TaskEntity(id = "done-first", title = "Done", dueDate = -1, isCompleted = true),
+                TaskEntity(id = "done-second", title = "Done", dueDate = 0, isCompleted = true),
+                TaskEntity(id = "undated", title = "Undated")
+            ) + (1L..17L).map {
+                TaskEntity(id = "active-$it", title = "Active", dueDate = it)
+            }
+        )
+
+        val active = dao.getLimitedTasks(TaskOrder.DUE_DATE, QueryOrder.ASC, false, 15).first()
+        assertEquals(15, active.size)
+        assertEquals((1L..15L).map { "active-$it" }, active.map { it.id })
+        assertEquals(
+            listOf("done-first", "done-second", "active-1"),
+            dao.getLimitedTasks(TaskOrder.DUE_DATE, QueryOrder.ASC, true, 3).first().map { it.id }
+        )
+        assertEquals(
+            (17L downTo 1L).map { "active-$it" } + "undated",
+            dao.getLimitedTasks(TaskOrder.DUE_DATE, QueryOrder.DESC, false, 18).first().map { it.id }
+        )
+    }
+
+    @Test
     fun `thread pages sort by activity and refresh after activity and deletion`() = runTest {
         val dao = database.assistantDao()
         dao.upsertThreads((4 downTo 0).map {

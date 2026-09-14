@@ -12,6 +12,7 @@ kotlin {
             version = release(libs.versions.compileSdk.get().toInt())
         }
         minSdk = libs.versions.minSdk.get().toInt()
+        withHostTest {}
     }
 
     sourceSets {
@@ -27,6 +28,13 @@ kotlin {
 
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.bundles.koin)
+            }
+        }
+
+        commonTest {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
     }

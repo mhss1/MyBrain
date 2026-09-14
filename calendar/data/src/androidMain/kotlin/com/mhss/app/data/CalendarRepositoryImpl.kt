@@ -29,7 +29,11 @@ class CalendarRepositoryImpl(
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : CalendarRepository {
 
-    override suspend fun getEvents(excludedCalendars: List<Int>, until: Long?): List<CalendarEvent> {
+    override suspend fun getEvents(
+        excludedCalendars: List<Int>,
+        until: Long?,
+        limit: Int?
+    ): List<CalendarEvent> {
         return withContext(ioDispatcher) {
             val instancesProjection = getCalendarEventsProjection()
             val contentResolver = context.contentResolver
@@ -54,7 +58,7 @@ class CalendarRepositoryImpl(
                 instancesSelectionArgs,
                 "${CalendarContract.Instances.BEGIN} ASC"
             )
-            curI?.use { it.getEvents() } ?: emptyList()
+            curI?.use { it.getEvents(limit) } ?: emptyList()
         }
     }
 
@@ -434,9 +438,9 @@ class CalendarRepositoryImpl(
         CalendarContract.Instances.CALENDAR_COLOR
     )
 
-    private fun Cursor.getEvents(): List<CalendarEvent> {
+    private fun Cursor.getEvents(limit: Int? = null): List<CalendarEvent> {
         val events = mutableListOf<CalendarEvent>()
-        while (moveToNext()) {
+        while ((limit == null || events.size < limit) && moveToNext()) {
             val eventId: Long = getLong(ID_INDEX)
             val title: String = getString(TITLE_INDEX) ?: continue
             val description: String? = getString(DESC_INDEX)

@@ -71,6 +71,24 @@ class TaskRepositoryImpl(
             .flowOn(ioDispatcher)
     }
 
+    override fun getLimitedTasks(
+        sortOrder: SortOrder,
+        showCompleted: Boolean,
+        limit: Int
+    ): Flow<List<Task>> {
+        val sortOrderBy = when (sortOrder) {
+            is SortOrder.Alphabetical -> TaskOrder.TITLE
+            is SortOrder.DateCreated -> TaskOrder.CREATED_DATE
+            is SortOrder.DateModified -> TaskOrder.UPDATED_DATE
+            is SortOrder.Priority -> TaskOrder.PRIORITY
+            is SortOrder.DueDate -> TaskOrder.DUE_DATE
+            is SortOrder.Done -> TaskOrder.COMPLETED
+        }
+        return taskDao.getLimitedTasks(sortOrderBy, sortOrder.sortType.toQueryOrder(), showCompleted, limit)
+            .map { tasks -> tasks.map { it.toTask() } }
+            .flowOn(ioDispatcher)
+    }
+
     override suspend fun getTaskById(id: String): Task? {
         return withContext(ioDispatcher) {
             taskDao.getTask(id)?.toTask()

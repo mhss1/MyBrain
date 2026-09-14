@@ -19,6 +19,7 @@ kotlin {
             dependencies {
                 implementation(projects.core.preferences)
                 implementation(projects.core.storage)
+                implementation(projects.core.widget)
 
                 api(libs.androidx.paging.common)
                 implementation(libs.kotlinx.coroutines.core)

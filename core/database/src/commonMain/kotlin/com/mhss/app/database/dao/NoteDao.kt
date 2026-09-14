@@ -42,6 +42,15 @@ interface NoteDao {
     fun getAllNotes(orderBy: NoteOrder, order: QueryOrder): Flow<List<NoteEntity>> =
         observeNotes(noteQuery(null, orderBy, order))
 
+    fun getLimitedNotes(
+        orderBy: NoteOrder,
+        order: QueryOrder,
+        showAllNotes: Boolean,
+        limit: Int
+    ): Flow<List<NoteEntity>> = observeNotes(
+        noteQuery(if (showAllNotes) null else "folder_id IS NULL", orderBy, order, limit = limit)
+    )
+
     @Query("SELECT * FROM notes")
     suspend fun getAllFullNotes(): List<NoteEntity>
 
@@ -133,6 +142,7 @@ private fun noteQuery(
     where: String?,
     orderBy: NoteOrder,
     order: QueryOrder,
+    limit: Int? = null,
     bind: (androidx.sqlite.SQLiteStatement) -> Unit = {}
 ): RoomRawQuery {
     val whereSql = where?.let { " WHERE $it" }.orEmpty()
@@ -140,8 +150,12 @@ private fun noteQuery(
         NoteOrder.TITLE -> "title COLLATE NOCASE"
         else -> orderBy.column
     }
+    val limitSql = limit?.let {
+        require(it >= 0)
+        " LIMIT $it"
+    }.orEmpty()
     return RoomRawQuery(
-        "SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes$whereSql ORDER BY pinned DESC, $column ${order.sql}",
+        "SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes$whereSql ORDER BY pinned DESC, $column ${order.sql}$limitSql",
         bind
     )
 }

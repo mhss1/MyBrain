@@ -45,6 +45,14 @@ class MarkdownNoteRepositoryImpl(
             .flowOn(defaultDispatcher)
     }
 
+    override fun getLimitedNotes(
+        sortOrder: SortOrder,
+        showAllNotes: Boolean,
+        limit: Int
+    ): Flow<List<Note>> =
+        (if (showAllNotes) getAllNotes(sortOrder) else getAllFolderlessNotes(sortOrder))
+            .map { it.take(limit) }
+
     override suspend fun getAllFullNotes(): List<Note> {
         return getAllNotes().first()
     }

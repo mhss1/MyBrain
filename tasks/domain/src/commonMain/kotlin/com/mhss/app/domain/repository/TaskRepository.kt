@@ -18,6 +18,8 @@ interface TaskRepository {
         showCompleted: Boolean = true
     ): Flow<List<Task>>
 
+    fun getLimitedTasks(sortOrder: SortOrder, showCompleted: Boolean, limit: Int): Flow<List<Task>>
+
     suspend fun getTaskById(id: String): Task?
 
     suspend fun getTaskByAlarm(alarmId: Int): Task?
