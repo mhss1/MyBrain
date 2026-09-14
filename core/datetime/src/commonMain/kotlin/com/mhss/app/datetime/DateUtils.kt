@@ -3,10 +3,12 @@
 package com.mhss.app.datetime
 
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
+import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.yearsUntil
@@ -41,6 +43,13 @@ fun Long.inTheLastWeek(): Boolean {
         Clock.System.now(),
         TimeZone.currentSystemDefault()
     ) <= 7
+}
+
+fun lastWeekCutoff(): Long {
+    val timeZone = TimeZone.currentSystemDefault()
+    return Clock.System.now()
+        .minus(8, DateTimeUnit.DAY, timeZone)
+        .toEpochMilliseconds()
 }
 
 fun LocalDateTime.isCurrentYear(): Boolean {

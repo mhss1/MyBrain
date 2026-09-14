@@ -105,7 +105,7 @@ fun DashboardScreen(
                     )
                     TasksSummaryCard(
                         modifier = Modifier.weight(1f, fill = true),
-                        tasks = viewModel.uiState.summaryTasks
+                        summary = viewModel.uiState.taskSummary
                     )
                 }
             }

@@ -17,6 +17,7 @@ import com.mhss.app.database.helpers.DatabaseTransactionProvider
 import com.mhss.app.database.sync.LocalChangeObserver
 import com.mhss.app.datetime.now
 import com.mhss.app.domain.model.Task
+import com.mhss.app.domain.model.TaskSummary
 import com.mhss.app.domain.repository.TaskRepository
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
@@ -88,6 +89,9 @@ class TaskRepositoryImpl(
             .map { tasks -> tasks.map { it.toTask() } }
             .flowOn(ioDispatcher)
     }
+
+    override fun getTaskSummary(createdAfter: Long): Flow<TaskSummary> =
+        taskDao.getTaskSummary(createdAfter).flowOn(ioDispatcher)
 
     override suspend fun getTaskById(id: String): Task? {
         return withContext(ioDispatcher) {

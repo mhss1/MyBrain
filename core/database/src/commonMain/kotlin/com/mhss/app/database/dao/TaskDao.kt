@@ -11,6 +11,7 @@ import androidx.room3.Update
 import androidx.room3.Upsert
 import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import com.mhss.app.database.entity.TaskEntity
+import com.mhss.app.domain.model.TaskSummary
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -43,6 +44,9 @@ interface TaskDao {
         showCompleted: Boolean,
         limit: Int
     ): Flow<List<TaskEntity>> = observeTasks(taskQuery(orderBy, order, showCompleted, limit))
+
+    @Query("SELECT COUNT(*) AS total, COALESCE(SUM(CASE WHEN is_completed = 1 THEN 1 ELSE 0 END), 0) AS completed FROM tasks WHERE created_date > :createdAfter")
+    fun getTaskSummary(createdAfter: Long): Flow<TaskSummary>
 
     @Query("SELECT * FROM tasks")
     suspend fun getAllFullTasks(): List<TaskEntity>

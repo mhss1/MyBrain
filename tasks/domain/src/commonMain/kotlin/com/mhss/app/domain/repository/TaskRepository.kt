@@ -2,6 +2,7 @@ package com.mhss.app.domain.repository
 
 import androidx.paging.PagingData
 import com.mhss.app.domain.model.Task
+import com.mhss.app.domain.model.TaskSummary
 import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,8 @@ interface TaskRepository {
     ): Flow<List<Task>>
 
     fun getLimitedTasks(sortOrder: SortOrder, showCompleted: Boolean, limit: Int): Flow<List<Task>>
+
+    fun getTaskSummary(createdAfter: Long): Flow<TaskSummary>
 
     suspend fun getTaskById(id: String): Task?
 

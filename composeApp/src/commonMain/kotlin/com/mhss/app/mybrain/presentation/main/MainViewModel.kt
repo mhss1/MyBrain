@@ -5,13 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhss.app.datetime.inTheLastWeek
 import com.mhss.app.domain.model.DiaryChartPoint
 import com.mhss.app.domain.model.Task
+import com.mhss.app.domain.model.TaskSummary
 import com.mhss.app.domain.use_case.CalendarEventsDay
 import com.mhss.app.domain.use_case.GetDiaryForChartUseCase
 import com.mhss.app.domain.use_case.GetAllEventsUseCase
 import com.mhss.app.domain.use_case.GetAllTasksUseCase
+import com.mhss.app.domain.use_case.GetTaskSummaryUseCase
 import com.mhss.app.domain.use_case.UpdateTaskCompletedUseCase
 import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.preferences.domain.model.SortOrder
@@ -30,14 +31,11 @@ import com.mhss.app.ui.ThemeSettings
 import com.mhss.app.ui.toIntList
 import com.mhss.app.mybrain.sync.SyncOrchestrator
 import androidx.paging.PagingData
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,6 +46,7 @@ class MainViewModel(
     private val getPreference: GetPreferenceUseCase,
     private val savePreference: SavePreferenceUseCase,
     private val getAllTasks: GetAllTasksUseCase,
+    private val getTaskSummary: GetTaskSummaryUseCase,
     private val getDiaryForChart: GetDiaryForChartUseCase,
     private val completeTask: UpdateTaskCompletedUseCase,
     private val getAllEventsUseCase: GetAllEventsUseCase,
@@ -64,8 +63,6 @@ class MainViewModel(
     fun startNetworkDiscovery() {
         syncOrchestrator.startNetworkDiscovery()
     }
-
-    private var refreshTasksJob : Job? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val dashboardTasks: Flow<PagingData<Task>> = combine(
@@ -106,7 +103,7 @@ class MainViewModel(
 
     data class UiState(
         val dashBoardEvents: List<CalendarEventsDay> = emptyList(),
-        val summaryTasks: List<Task> = emptyList(),
+        val taskSummary: TaskSummary = TaskSummary(0, 0),
         val dashBoardEntries: List<DiaryChartPoint> = emptyList()
     )
 
@@ -123,30 +120,14 @@ class MainViewModel(
 
     private fun collectDashboardData() = viewModelScope.launch {
         combine(
-            getPreference(
-                intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
-                SortOrder.DueDate(SortType.ASC).toInt()
-            ),
-            getPreference(
-                booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
-                false
-            ),
+            getTaskSummary(),
             getDiaryForChart(Long.MIN_VALUE, Long.MAX_VALUE)
-        ) { order, showCompleted, entries ->
+        ) { summary, entries ->
             uiState = uiState.copy(
                 dashBoardEntries = entries,
+                taskSummary = summary
             )
-            refreshTasks(order.toSortOrder(), showCompleted)
         }.collect()
-    }
-
-    private fun refreshTasks(sortOrder: SortOrder, showCompleted: Boolean) {
-        refreshTasksJob?.cancel()
-        refreshTasksJob = getAllTasks(sortOrder).onEach { tasks ->
-                uiState = uiState.copy(
-                    summaryTasks = tasks.filter { it.createdDate.inTheLastWeek() }
-                )
-            }.launchIn(viewModelScope)
     }
 
     fun disableAppLock() = viewModelScope.launch {
