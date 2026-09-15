@@ -4,6 +4,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.database.ContentObserver
 import android.net.Uri
 import android.provider.CalendarContract
 import com.mhss.app.domain.model.Calendar
@@ -15,6 +16,10 @@ import com.mhss.app.datetime.at
 import com.mhss.app.datetime.now
 import com.mhss.app.datetime.toDayOfWeek
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.DayOfWeek
 import org.koin.core.annotation.Named
@@ -28,6 +33,17 @@ class CalendarRepositoryImpl(
     private val context: Context,
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : CalendarRepository {
+
+    override fun observeChanges(): Flow<Unit> = callbackFlow {
+        val resolver = context.contentResolver
+        val observer = object : ContentObserver(null) {
+            override fun onChange(selfChange: Boolean) {
+                trySend(Unit)
+            }
+        }
+        resolver.registerContentObserver(CalendarContract.CONTENT_URI, true, observer)
+        awaitClose { resolver.unregisterContentObserver(observer) }
+    }.conflate()
 
     override suspend fun getEvents(
         excludedCalendars: List<Int>,

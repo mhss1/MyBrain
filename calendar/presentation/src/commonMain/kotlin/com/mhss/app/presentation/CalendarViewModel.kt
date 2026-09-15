@@ -4,12 +4,14 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.mhss.app.datetime.currentLocalDate
 import com.mhss.app.domain.model.Calendar
-import com.mhss.app.domain.use_case.CalendarEventsDay
+import com.mhss.app.domain.use_case.CalendarListMonth
 import com.mhss.app.domain.use_case.GetAllCalendarsUseCase
-import com.mhss.app.domain.use_case.GetAllEventsUseCase
 import com.mhss.app.domain.use_case.GetMonthEventsUseCase
+import com.mhss.app.domain.use_case.GetPagedCalendarEventsUseCase
 import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
@@ -19,13 +21,18 @@ import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
 import com.mhss.app.presentation.model.CalendarMonth
 import com.mhss.app.ui.FirstDayOfWeekSettings
 import com.mhss.app.ui.toIntList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -43,14 +50,16 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.plusMonth
 import kotlinx.datetime.yearMonth
 import org.koin.core.annotation.KoinViewModel
+import kotlin.time.Duration.Companion.milliseconds
 
 
 const val CALENDAR_START_PAGE = 24000
 const val CALENDAR_TOTAL_PAGES = 48000
 
 @KoinViewModel
+@OptIn(ExperimentalCoroutinesApi::class)
 class CalendarViewModel(
-    private val getAllEventsUseCase: GetAllEventsUseCase,
+    private val getPagedCalendarEventsUseCase: GetPagedCalendarEventsUseCase,
     private val getMonthEventsUseCase: GetMonthEventsUseCase,
     private val getAllCalendarsUseCase: GetAllCalendarsUseCase,
     private val savePreference: SavePreferenceUseCase,
@@ -61,6 +70,23 @@ class CalendarViewModel(
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     private val loadMutex = Mutex()
+    private val calendarListRequests = MutableSharedFlow<CalendarListRequest>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    ).apply { tryEmit(CalendarListRequest()) }
+
+    val listEvents = calendarListRequests.flatMapLatest { request ->
+        if (!request.enabled) {
+            flowOf(PagingData.empty())
+        } else {
+            getPagedCalendarEventsUseCase(
+                excludedCalendars = request.excludedCalendars,
+                initialMonthIndex = request.initialMonthIndex
+            ).also { result ->
+                _uiState.update { it.copy(months = result.months) }
+            }.events
+        }
+    }.cachedIn(viewModelScope)
 
     private var updateEventsJob: Job? = null
     private var viewModeJob: Job? = null
@@ -139,8 +165,14 @@ class CalendarViewModel(
             )
 
             is CalendarViewModelEvent.ReadPermissionChanged -> {
-                if (event.hasPermission) collectSettings()
-                else updateEventsJob?.cancel()
+                if (event.hasPermission) {
+                    if (updateEventsJob?.isActive != true) collectSettings()
+                }
+                else {
+                    updateEventsJob?.cancel()
+                    updateCalendarListRequest { it.copy(hasPermission = false) }
+                    _uiState.update { it.copy(months = emptyList()) }
+                }
             }
 
             is CalendarViewModelEvent.MonthChanged -> {
@@ -149,6 +181,13 @@ class CalendarViewModel(
 
             is CalendarViewModelEvent.SelectedDateChanged -> {
                 _uiState.update { it.copy(selectedDate = event.newDate) }
+            }
+
+            is CalendarViewModelEvent.DropdownMonthSelected -> {
+                _uiState.update { it.copy(selectedDropdownMonthIndex = event.monthIndex) }
+                updateCalendarListRequest {
+                    it.copy(initialMonthIndex = event.monthIndex)
+                }
             }
 
             is CalendarViewModelEvent.ViewModeChanged -> {
@@ -174,6 +213,7 @@ class CalendarViewModel(
     }
 
     private fun collectSettings() {
+        updateEventsJob?.cancel()
         updateEventsJob = getPreference(
             stringSetPreferencesKey(PrefsConstants.EXCLUDED_CALENDARS_KEY),
             emptySet()
@@ -185,7 +225,8 @@ class CalendarViewModel(
                     calendars = calendars
                 )
             }
-            delay(100)
+            delay(250.milliseconds)
+            updateCalendarListRequest { it.copy(hasPermission = true) }
             loadEvents()
         }.launchIn(viewModelScope)
     }
@@ -204,25 +245,24 @@ class CalendarViewModel(
     private fun loadEvents() {
         if (_uiState.value.isMonthView) {
             loadMonth(_uiState.value.currentMonth.yearMonth, forceRefresh = true)
-            _uiState.update { it.copy(events = emptyList()) }
+            _uiState.update { it.copy(months = emptyList()) }
         } else {
-            loadListEvents()
             _uiState.value.loadedMonths.clear()
         }
-    }
-
-    private fun loadListEvents() {
-        viewModelScope.launch {
-            val result = getAllEventsUseCase(_uiState.value.excludedCalendars)
-            _uiState.update { it.copy(events = result.eventDays, months = result.months) }
+        updateCalendarListRequest {
+            it.copy(
+                excludedCalendars = _uiState.value.excludedCalendars,
+                initialMonthIndex = _uiState.value.selectedDropdownMonthIndex,
+                isListView = !_uiState.value.isMonthView
+            )
         }
     }
 
     data class UiState(
-        val events:  List<CalendarEventsDay> = emptyList(),
         val calendars: Map<String, List<Calendar>> = emptyMap(),
         val excludedCalendars: List<Int> = listOf(),
-        val months: List<String> = emptyList(),
+        val months: List<CalendarListMonth> = emptyList(),
+        val selectedDropdownMonthIndex: Int = 0,
         val isMonthView: Boolean = false,
         val currentMonth: LocalDate = currentLocalDate(),
         val selectedDate: LocalDate = currentLocalDate(),
@@ -235,4 +275,17 @@ class CalendarViewModel(
 
     private fun List<Int>.removeAndToStringSet(id: Int): Set<String> =
         this.filterNot { it == id }.map { it.toString() }.toHashSet()
+
+    private fun updateCalendarListRequest(update: (CalendarListRequest) -> CalendarListRequest) {
+        calendarListRequests.tryEmit(update(calendarListRequests.replayCache.last()))
+    }
+
+    private data class CalendarListRequest(
+        val excludedCalendars: List<Int> = emptyList(),
+        val initialMonthIndex: Int = 0,
+        val hasPermission: Boolean = false,
+        val isListView: Boolean = true
+    ) {
+        val enabled: Boolean get() = hasPermission && isListView
+    }
 }

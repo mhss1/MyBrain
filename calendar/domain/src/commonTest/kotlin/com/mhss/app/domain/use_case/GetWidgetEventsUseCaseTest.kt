@@ -8,6 +8,7 @@ import com.mhss.app.domain.repository.CalendarRepository
 import com.mhss.app.widget.WIDGET_ITEM_LIMIT
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.DateTimeUnit
@@ -101,6 +102,7 @@ private class FakeCalendarRepository(
     private val events: List<CalendarEvent>,
     private val failure: Exception? = null
 ) : CalendarRepository {
+    override fun observeChanges() = emptyFlow<Unit>()
     var requestedLimit: Int? = null
     var requestedExcludedCalendars: List<Int> = emptyList()
 

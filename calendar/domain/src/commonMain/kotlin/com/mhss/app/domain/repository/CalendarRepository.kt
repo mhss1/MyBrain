@@ -2,8 +2,11 @@ package com.mhss.app.domain.repository
 
 import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarEvent
+import kotlinx.coroutines.flow.Flow
 
 interface CalendarRepository {
+
+    fun observeChanges(): Flow<Unit>
 
     suspend fun getEvents(
         excludedCalendars: List<Int> = emptyList(),
