@@ -22,6 +22,8 @@ interface DiaryRepository {
 
     suspend fun getAllFullEntries(): List<DiaryEntry>
 
+    suspend fun getFullEntriesPage(afterId: String, limit: Int): List<DiaryEntry>
+
     suspend fun getEntry(id: String): DiaryEntry?
 
     suspend fun searchEntries(title: String): List<DiaryEntry>

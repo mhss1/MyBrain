@@ -38,6 +38,9 @@ interface BookmarkDao {
     @Query("SELECT * FROM bookmarks")
     suspend fun getAllFullBookmarks(): List<BookmarkEntity>
 
+    @Query("SELECT * FROM bookmarks WHERE id > :afterId ORDER BY id LIMIT :limit")
+    suspend fun getFullBookmarksPage(afterId: String, limit: Int): List<BookmarkEntity>
+
     @Query("SELECT * FROM bookmarks WHERE id = :id")
     suspend fun getBookmark(id: String): BookmarkEntity?
 

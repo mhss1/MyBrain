@@ -75,6 +75,12 @@ class DiaryRepositoryImpl(
         }
     }
 
+    override suspend fun getFullEntriesPage(afterId: String, limit: Int): List<DiaryEntry> {
+        return withContext(ioDispatcher) {
+            diaryDao.getFullEntriesPage(afterId, limit).map { it.toDiaryEntry() }
+        }
+    }
+
     override suspend fun getEntry(id: String): DiaryEntry? {
         return withContext(ioDispatcher) {
             diaryDao.getEntry(id)?.toDiaryEntry()

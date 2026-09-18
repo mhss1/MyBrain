@@ -68,6 +68,12 @@ class BookmarkRepositoryImpl(
             .flowOn(ioDispatcher)
     }
 
+    override suspend fun getFullBookmarksPage(afterId: String, limit: Int): List<Bookmark> {
+        return withContext(ioDispatcher) {
+            bookmarkDao.getFullBookmarksPage(afterId, limit).map { it.toBookmark() }
+        }
+    }
+
     override suspend fun getBookmark(id: String): Bookmark {
         return withContext(ioDispatcher) {
             bookmarkDao.getBookmark(id)?.toBookmark() ?: throw IllegalArgumentException("Bookmark with id $id not found")

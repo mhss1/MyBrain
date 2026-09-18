@@ -17,6 +17,8 @@ interface BookmarkRepository {
         sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)
     ): Flow<List<Bookmark>>
 
+    suspend fun getFullBookmarksPage(afterId: String, limit: Int): List<Bookmark>
+
     suspend fun getBookmark(id: String): Bookmark
 
     suspend fun searchBookmarks(query: String): List<Bookmark>

@@ -28,6 +28,8 @@ interface NoteRepository {
 
     suspend fun getAllFullNotes(): List<Note>
 
+    suspend fun getFullNotesPage(afterId: String, limit: Int): List<Note>
+
     suspend fun getNote(id: String): Note?
 
     suspend fun searchNotes(query: String): List<Note>
@@ -54,6 +56,8 @@ interface NoteRepository {
     fun getPagedNoteFolders(): Flow<PagingData<NoteFolder>>
 
     fun getAllNoteFolders(): Flow<List<NoteFolder>>
+
+    suspend fun getNoteFoldersPage(afterId: String, limit: Int): List<NoteFolder>
 
     suspend fun getNoteFolder(folderId: String): NoteFolder?
 

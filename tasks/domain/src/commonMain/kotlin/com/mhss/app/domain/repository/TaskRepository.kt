@@ -21,6 +21,8 @@ interface TaskRepository {
 
     fun getLimitedTasks(sortOrder: SortOrder, showCompleted: Boolean, limit: Int): Flow<List<Task>>
 
+    suspend fun getFullTasksPage(afterId: String, limit: Int): List<Task>
+
     fun getTaskSummary(createdAfter: Long): Flow<TaskSummary>
 
     suspend fun getTaskById(id: String): Task?

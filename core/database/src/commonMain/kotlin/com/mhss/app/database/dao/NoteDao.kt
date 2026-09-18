@@ -54,6 +54,9 @@ interface NoteDao {
     @Query("SELECT * FROM notes")
     suspend fun getAllFullNotes(): List<NoteEntity>
 
+    @Query("SELECT * FROM notes WHERE id > :afterId ORDER BY id LIMIT :limit")
+    suspend fun getFullNotesPage(afterId: String, limit: Int): List<NoteEntity>
+
     @Query("SELECT * FROM notes WHERE id = :id")
     suspend fun getNote(id: String): NoteEntity?
 
@@ -121,6 +124,9 @@ interface NoteDao {
 
     @Query("SELECT * FROM note_folders")
     fun getAllNoteFolders(): Flow<List<NoteFolderEntity>>
+
+    @Query("SELECT * FROM note_folders WHERE id > :afterId ORDER BY id LIMIT :limit")
+    suspend fun getNoteFoldersPage(afterId: String, limit: Int): List<NoteFolderEntity>
 
     @Query("SELECT * FROM note_folders WHERE sync_seq > :seq AND sync_seq <= :maxSeq")
     suspend fun getNoteFoldersAfterSeq(seq: Long, maxSeq: Long): List<NoteFolderEntity>

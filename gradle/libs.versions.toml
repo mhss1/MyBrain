@@ -41,6 +41,7 @@ liquid = "1.1.1"
 composeMultiplatform = "1.11.1"
 appFunctions = "1.0.0-alpha10"
 mlkitGenaiPrompt = "1.0.0-beta4"
+mokkery = "3.4.2"
 zstd = "1.5.7-11"
 zxing = "3.5.4"
 
@@ -138,6 +139,7 @@ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMu
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradlePlugin" }
 room3 = { id = "androidx.room3", version.ref = "room3" }
 koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-plugin" }
+mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
 
 [bundles]
 koin = ["koin-core", "koin-annotations"]

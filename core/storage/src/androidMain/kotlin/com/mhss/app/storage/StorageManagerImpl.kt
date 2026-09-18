@@ -7,10 +7,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
-import kotlinx.serialization.json.encodeToStream
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 
@@ -27,25 +25,30 @@ class StorageManagerImpl(
         coerceInputValues = true
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun <T> encodeJsonDataToFile(
+    override suspend fun writeBufferedFile(
         directoryUri: String,
         fileName: String,
         mimeType: String,
-        value: T,
-        serializer: SerializationStrategy<T>
+        block: suspend BufferedFileWriter.() -> Unit
     ) = withContext(ioDispatcher) {
         val dir = DocumentFile.fromTreeUri(context, directoryUri.toUri())
-        val destinationFile = dir?.createFile(mimeType, fileName) ?: throw IllegalStateException("Failed to create file")
+        val destinationFile = dir?.createFile(mimeType, fileName)
+            ?: throw IllegalStateException("Failed to create file")
 
-        val outputStream = context.contentResolver.openOutputStream(destinationFile.uri)
-
-        outputStream.use { stream ->
-            json.encodeToStream(
-                serializer = serializer,
-                value = value,
-                stream = stream ?: throw IllegalStateException("Failed to open output stream")
-            )
+        try {
+            val outputStream = context.contentResolver.openOutputStream(destinationFile.uri)
+                ?: throw IllegalStateException("Failed to open output stream")
+            outputStream.bufferedWriter().use { writer ->
+                val bufferedFileWriter = object : BufferedFileWriter {
+                    override suspend fun write(value: String, startIndex: Int, endIndex: Int) {
+                        writer.write(value, startIndex, endIndex - startIndex)
+                    }
+                }
+                bufferedFileWriter.block()
+            }
+        } catch (error: Throwable) {
+            runCatching { destinationFile.delete() }
+            throw error
         }
     }
 

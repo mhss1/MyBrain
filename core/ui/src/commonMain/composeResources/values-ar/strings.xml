@@ -267,6 +267,7 @@
     <string name="export_format">صيغة التصدير</string>
     <string name="import_format">صيغة الاستيراد</string>
     <string name="export_types">محتوى التصدير</string>
+    <string name="markdown_notes_export_not_supported">تصدير ملاحظات Markdown غير مدعوم.</string>
     <string name="export_format_json">ملف JSON</string>
     <string name="export_format_markdown">ملفات Markdown</string>
     <string name="offline">بدون إنترنت</string>

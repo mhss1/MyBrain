@@ -11,7 +11,6 @@ import com.mhss.app.preferences.domain.model.SortOrder
 import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -54,7 +53,13 @@ class MarkdownNoteRepositoryImpl(
             .map { it.take(limit) }
 
     override suspend fun getAllFullNotes(): List<Note> {
-        return getAllNotes().first()
+        // External Markdown notes are not included in app exports.
+        return emptyList()
+    }
+
+    override suspend fun getFullNotesPage(afterId: String, limit: Int): List<Note> {
+        // External Markdown notes are not included in app exports.
+        return emptyList()
     }
 
     override suspend fun getNote(id: String): Note {
@@ -108,6 +113,11 @@ class MarkdownNoteRepositoryImpl(
 
     override fun getAllNoteFolders(): Flow<List<NoteFolder>> {
         return markdownFileManager.getFolderFoldersFlow(rootId)
+    }
+
+    override suspend fun getNoteFoldersPage(afterId: String, limit: Int): List<NoteFolder> {
+        // External Markdown note folders are not included in app exports.
+        return emptyList()
     }
 
     override suspend fun getNoteFolder(folderId: String): NoteFolder? {

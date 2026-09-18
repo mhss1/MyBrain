@@ -99,6 +99,12 @@ class RoomNoteRepositoryImpl(
         }
     }
 
+    override suspend fun getFullNotesPage(afterId: String, limit: Int): List<Note> {
+        return withContext(ioDispatcher) {
+            noteDao.getFullNotesPage(afterId, limit).map { it.toNote() }
+        }
+    }
+
     override suspend fun getNote(id: String): Note? {
         return withContext(ioDispatcher) {
             noteDao.getNote(id)?.toNote()
@@ -248,6 +254,12 @@ class RoomNoteRepositoryImpl(
             .map { folders ->
                 folders.map { it.toNoteFolder() }
             }
+    }
+
+    override suspend fun getNoteFoldersPage(afterId: String, limit: Int): List<NoteFolder> {
+        return withContext(ioDispatcher) {
+            noteDao.getNoteFoldersPage(afterId, limit).map { it.toNoteFolder() }
+        }
     }
 
     override suspend fun getNoteFolder(folderId: String): NoteFolder? {

@@ -1,16 +1,14 @@
 package com.mhss.app.storage
 
 import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
 
 interface StorageManager {
 
-    suspend fun <T> encodeJsonDataToFile(
+    suspend fun writeBufferedFile(
         directoryUri: String,
         fileName: String,
         mimeType: String,
-        value: T,
-        serializer: SerializationStrategy<T>
+        block: suspend BufferedFileWriter.() -> Unit
     )
 
     suspend fun directoryExists(directoryUri: String): Boolean
@@ -37,6 +35,14 @@ interface StorageManager {
         fileUri: String,
         deserializer: DeserializationStrategy<T>
     ): DecodeDataFromFileResult<T>
+}
+
+interface BufferedFileWriter {
+    suspend fun write(
+        value: String,
+        startIndex: Int = 0,
+        endIndex: Int = value.length
+    )
 }
 
 sealed interface WriteTextFileResult {

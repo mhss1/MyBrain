@@ -90,6 +90,12 @@ class TaskRepositoryImpl(
             .flowOn(ioDispatcher)
     }
 
+    override suspend fun getFullTasksPage(afterId: String, limit: Int): List<Task> {
+        return withContext(ioDispatcher) {
+            taskDao.getFullTasksPage(afterId, limit).map { it.toTask() }
+        }
+    }
+
     override fun getTaskSummary(createdAfter: Long): Flow<TaskSummary> =
         taskDao.getTaskSummary(createdAfter).flowOn(ioDispatcher)
 

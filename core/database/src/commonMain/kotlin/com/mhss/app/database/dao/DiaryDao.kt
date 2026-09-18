@@ -57,6 +57,9 @@ interface DiaryDao {
     @Query("SELECT * FROM diary")
     suspend fun getAllFullEntries(): List<DiaryEntryEntity>
 
+    @Query("SELECT * FROM diary WHERE id > :afterId ORDER BY id LIMIT :limit")
+    suspend fun getFullEntriesPage(afterId: String, limit: Int): List<DiaryEntryEntity>
+
     @Query("SELECT * FROM diary WHERE id = :id")
     suspend fun getEntry(id: String): DiaryEntryEntity?
 
