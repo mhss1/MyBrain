@@ -22,7 +22,6 @@ import com.mhss.app.domain.use_case.`interface`.ExportMarkdownDataUseCase
 import com.mhss.app.storage.StorageManager
 import com.mhss.app.storage.WriteTextFileResult
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import kotlinx.datetime.TimeZone
@@ -66,32 +65,13 @@ class ExportMarkdownDataUseCaseImpl(
                         parent = storageManager.getDisplayName(directoryUri)
                     )
 
-                val notes = if (exportNotes) noteRepository.getAllFullNotes() else emptyList()
-                val noteFolders = if (exportNotes) noteRepository.getAllNoteFolders().first() else emptyList()
-                val tasks = if (exportTasks) taskRepository.getAllTasks().first() else emptyList()
-                val diaryEntries = if (exportDiary) diaryRepository.getAllFullEntries() else emptyList()
-                val bookmarks = if (exportBookmarks) bookmarkRepository.getAllBookmarks().first() else emptyList()
-
-                if (exportNotes) exportNotesMarkdown(
-                    rootDir = exportRoot,
-                    notes = notes.map { it.toBackupNote() },
-                    folders = noteFolders.map { it.toBackupNoteFolder() }
-                )
+                if (exportNotes) exportNotesMarkdown(rootDir = exportRoot)
                 yield()
-                if (exportTasks) exportTasksMarkdown(
-                    rootDir = exportRoot,
-                    tasks = tasks.map { it.toBackupTask() }
-                )
+                if (exportTasks) exportTasksMarkdown(rootDir = exportRoot)
                 yield()
-                if (exportDiary) exportDiaryMarkdown(
-                    rootDir = exportRoot,
-                    diaryEntries = diaryEntries.map { it.toBackupDiaryEntry() }
-                )
+                if (exportDiary) exportDiaryMarkdown(rootDir = exportRoot)
                 yield()
-                if (exportBookmarks) exportBookmarksMarkdown(
-                    rootDir = exportRoot,
-                    bookmarks = bookmarks.map { it.toBackupBookmark() }
-                )
+                if (exportBookmarks) exportBookmarksMarkdown(rootDir = exportRoot)
             } catch (e: BackupDataException) {
                 throw e
             } catch (_: Exception) {
@@ -101,9 +81,7 @@ class ExportMarkdownDataUseCaseImpl(
     }
  
     private suspend fun exportNotesMarkdown(
-        rootDir: String,
-        notes: List<BackupNote>,
-        folders: List<BackupNoteFolder>
+        rootDir: String
     ) {
         val notesDirName = "Notes"
         val notesDir = storageManager.createUniqueDirectory(
@@ -114,20 +92,15 @@ class ExportMarkdownDataUseCaseImpl(
                 directoryName = notesDirName,
                 parent = storageManager.getDisplayName(rootDir)
             )
-        val folderById = folders.associateBy { it.id }
         val notesDirFileNames = storageManager.listFileNames(notesDir).toMutableSet()
- 
-        notes.filter { it.folderId == null }.forEach { note ->
-            writeMarkdownFile(
-                directoryUri = notesDir,
-                preferredName = note.title.ifBlank { "Untitled Note" },
-                content = note.toMarkdown(),
-                existingFileNames = notesDirFileNames
-            )
-            yield()
-        }
+        val folderTargets = mutableMapOf<String, NoteFolderTarget>()
 
-        folders.forEach { folder ->
+        forEachPage(
+            getId = BackupNoteFolder::id,
+            loadPage = { afterId, limit ->
+                noteRepository.getNoteFoldersPage(afterId, limit).map { it.toBackupNoteFolder() }
+            }
+        ) { folder ->
             val folderName = folder.name.ifBlank { "Untitled Folder" }
             val folderDir = storageManager.createUniqueDirectory(
                 parentDirectoryUri = notesDir,
@@ -137,23 +110,42 @@ class ExportMarkdownDataUseCaseImpl(
                     directoryName = folderName,
                     parent = storageManager.getDisplayName(notesDir)
                 )
-            val folderFileNames = storageManager.listFileNames(folderDir).toMutableSet()
- 
-            notes.filter { it.folderId == folder.id }.forEach { note ->
-                writeMarkdownFile(
-                    directoryUri = folderDir,
-                    preferredName = note.title.ifBlank { "Untitled Note" },
-                    content = note.toMarkdown(folderName = folderById[note.folderId]?.name),
-                    existingFileNames = folderFileNames
-                )
-                yield()
+            folderTargets[folder.id] = NoteFolderTarget(
+                directoryUri = folderDir,
+                folderName = folder.name,
+                existingFileNames = storageManager.listFileNames(folderDir).toMutableSet()
+            )
+        }
+
+        forEachPage(
+            getId = BackupNote::id,
+            loadPage = { afterId, limit ->
+                noteRepository.getFullNotesPage(afterId, limit).map { it.toBackupNote() }
             }
+        ) { note ->
+            if (note.folderId == null) {
+                writeMarkdownFile(
+                    directoryUri = notesDir,
+                    preferredName = note.title.ifBlank { "Untitled Note" },
+                    content = note.toMarkdown(),
+                    existingFileNames = notesDirFileNames
+                )
+            } else {
+                folderTargets[note.folderId]?.let { target ->
+                    writeMarkdownFile(
+                        directoryUri = target.directoryUri,
+                        preferredName = note.title.ifBlank { "Untitled Note" },
+                        content = note.toMarkdown(folderName = target.folderName),
+                        existingFileNames = target.existingFileNames
+                    )
+                }
+            }
+            yield()
         }
     }
  
     private suspend fun exportTasksMarkdown(
-        rootDir: String,
-        tasks: List<BackupTask>
+        rootDir: String
     ) {
         val tasksDirName = "Tasks"
         val tasksDir = storageManager.createUniqueDirectory(
@@ -165,7 +157,12 @@ class ExportMarkdownDataUseCaseImpl(
                 parent = storageManager.getDisplayName(rootDir)
             )
         val tasksDirFileNames = storageManager.listFileNames(tasksDir).toMutableSet()
-        tasks.forEach { task ->
+        forEachPage(
+            getId = BackupTask::id,
+            loadPage = { afterId, limit ->
+                taskRepository.getFullTasksPage(afterId, limit).map { it.toBackupTask() }
+            }
+        ) { task ->
             writeMarkdownFile(
                 directoryUri = tasksDir,
                 preferredName = task.title.ifBlank { "Untitled Task" },
@@ -177,8 +174,7 @@ class ExportMarkdownDataUseCaseImpl(
     }
  
     private suspend fun exportDiaryMarkdown(
-        rootDir: String,
-        diaryEntries: List<BackupDiaryEntry>
+        rootDir: String
     ) {
         val diaryDirName = "Diary"
         val diaryDir = storageManager.createUniqueDirectory(
@@ -190,7 +186,12 @@ class ExportMarkdownDataUseCaseImpl(
                 parent = storageManager.getDisplayName(rootDir)
             )
         val diaryDirFileNames = storageManager.listFileNames(diaryDir).toMutableSet()
-        diaryEntries.forEach { entry ->
+        forEachPage(
+            getId = BackupDiaryEntry::id,
+            loadPage = { afterId, limit ->
+                diaryRepository.getFullEntriesPage(afterId, limit).map { it.toBackupDiaryEntry() }
+            }
+        ) { entry ->
             writeMarkdownFile(
                 directoryUri = diaryDir,
                 preferredName = entry.title.ifBlank { "Diary Entry ${entry.createdDate.safeTimestampForName()}" },
@@ -202,8 +203,7 @@ class ExportMarkdownDataUseCaseImpl(
     }
  
     private suspend fun exportBookmarksMarkdown(
-        rootDir: String,
-        bookmarks: List<BackupBookmark>
+        rootDir: String
     ) {
         val bookmarksDirName = "Bookmarks"
         val bookmarksDir = storageManager.createUniqueDirectory(
@@ -215,7 +215,12 @@ class ExportMarkdownDataUseCaseImpl(
                 parent = storageManager.getDisplayName(rootDir)
             )
         val bookmarksDirFileNames = storageManager.listFileNames(bookmarksDir).toMutableSet()
-        bookmarks.forEach { bookmark ->
+        forEachPage(
+            getId = BackupBookmark::id,
+            loadPage = { afterId, limit ->
+                bookmarkRepository.getFullBookmarksPage(afterId, limit).map { it.toBackupBookmark() }
+            }
+        ) { bookmark ->
             writeMarkdownFile(
                 directoryUri = bookmarksDir,
                 preferredName = bookmark.title.ifBlank { bookmark.url },
@@ -223,6 +228,20 @@ class ExportMarkdownDataUseCaseImpl(
                 existingFileNames = bookmarksDirFileNames
             )
             yield()
+        }
+    }
+
+    private suspend fun <T> forEachPage(
+        getId: (T) -> String,
+        loadPage: suspend (afterId: String, limit: Int) -> List<T>,
+        processItem: suspend (T) -> Unit
+    ) {
+        var afterId = ""
+        var page = loadPage(afterId, PAGE_SIZE)
+        while (page.isNotEmpty()) {
+            page.forEach { processItem(it) }
+            afterId = getId(page.last())
+            page = loadPage(afterId, PAGE_SIZE)
         }
     }
  
@@ -387,5 +406,15 @@ class ExportMarkdownDataUseCaseImpl(
                 )
             }
         }
+    }
+
+    private data class NoteFolderTarget(
+        val directoryUri: String,
+        val folderName: String,
+        val existingFileNames: MutableSet<String>
+    )
+
+    private companion object {
+        const val PAGE_SIZE = 100
     }
 }
