@@ -3,9 +3,9 @@ package com.mhss.app.database
 import androidx.paging.PagingConfig
 
 val DefaultPagingConfig = PagingConfig(
-    pageSize = 30,
-    initialLoadSize = 60,
-    prefetchDistance = 20,
-    maxSize = 120,
+    pageSize = 20,
+    initialLoadSize = 30,
+    prefetchDistance = 15,
+    maxSize = 100,
     enablePlaceholders = true,
 )

@@ -1,3 +1,5 @@
+import com.mhss.app.buildlogic.androidHostTest
+
 plugins {
     alias(libs.plugins.mybrain.android.kmp.library)
     alias(libs.plugins.koin.compiler)
@@ -27,6 +29,13 @@ kotlin {
                 implementation(libs.androidx.core.ktx)
                 implementation(libs.androidx.documentfile)
             }
+        }
+        androidHostTest.dependencies {
+            implementation(libs.androidx.test.core)
+            implementation(libs.junit)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.kotlin.test)
+            implementation(libs.robolectric)
         }
     }
 }

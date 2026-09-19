@@ -36,6 +36,8 @@ kotlin {
 
         commonTest {
             dependencies {
+                implementation(projects.core.alarm)
+                implementation(projects.core.widget)
                 implementation(libs.kotlin.test)
                 implementation(libs.kotlinx.coroutines.test)
             }

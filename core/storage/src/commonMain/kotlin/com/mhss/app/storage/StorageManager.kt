@@ -1,6 +1,6 @@
 package com.mhss.app.storage
 
-import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.json.JsonElement
 
 interface StorageManager {
 
@@ -31,10 +31,11 @@ interface StorageManager {
         existingFileNames: MutableSet<String>
     ): WriteTextFileResult
 
-    suspend fun <T> decodeJsonDataFromFile(
+    suspend fun readJsonArraysFromFile(
         fileUri: String,
-        deserializer: DeserializationStrategy<T>
-    ): DecodeDataFromFileResult<T>
+        arrayNames: Set<String>,
+        onItem: suspend (arrayName: String, item: JsonElement) -> Unit
+    ): ReadJsonFileResult
 }
 
 interface BufferedFileWriter {
@@ -51,7 +52,7 @@ sealed interface WriteTextFileResult {
     data class CouldNotWriteFile(val fileName: String) : WriteTextFileResult
 }
 
-sealed interface DecodeDataFromFileResult<out T> {
-    data class Success<T>(val value: T) : DecodeDataFromFileResult<T>
-    data object CouldNotReadFile : DecodeDataFromFileResult<Nothing>
+sealed interface ReadJsonFileResult {
+    data object Success : ReadJsonFileResult
+    data object CouldNotReadFile : ReadJsonFileResult
 }

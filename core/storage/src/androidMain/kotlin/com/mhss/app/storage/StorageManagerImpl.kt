@@ -1,14 +1,19 @@
 package com.mhss.app.storage
 
 import android.content.Context
+import android.util.JsonReader
+import android.util.JsonToken
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.JsonUnquotedLiteral
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 
@@ -17,13 +22,6 @@ class StorageManagerImpl(
     private val context: Context,
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ): StorageManager {
-
-    private val json = Json {
-        encodeDefaults = true
-        ignoreUnknownKeys = true
-        explicitNulls = false
-        coerceInputValues = true
-    }
 
     override suspend fun writeBufferedFile(
         directoryUri: String,
@@ -127,29 +125,84 @@ class StorageManagerImpl(
         )
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun <T> decodeJsonDataFromFile(
+    override suspend fun readJsonArraysFromFile(
         fileUri: String,
-        deserializer: DeserializationStrategy<T>
-    ): DecodeDataFromFileResult<T> = withContext(ioDispatcher) {
+        arrayNames: Set<String>,
+        onItem: suspend (arrayName: String, item: JsonElement) -> Unit
+    ): ReadJsonFileResult = withContext(ioDispatcher) {
         val inputStream = context.contentResolver.openInputStream(fileUri.toUri())
-            ?: return@withContext DecodeDataFromFileResult.CouldNotReadFile
+            ?: return@withContext ReadJsonFileResult.CouldNotReadFile
 
-        runCatching {
-            inputStream.use { stream ->
-                json.decodeFromStream(
-                    deserializer = deserializer,
-                    stream = stream
-                )
+        try {
+            val remainingArrayNames = arrayNames.toMutableSet()
+            inputStream.bufferedReader().use { reader ->
+                JsonReader(reader).use { jsonReader ->
+                    jsonReader.beginObject()
+
+                    while (jsonReader.hasNext() && remainingArrayNames.isNotEmpty()) {
+                        val arrayName = jsonReader.nextName()
+                        if (arrayName !in remainingArrayNames) {
+                            jsonReader.skipValue()
+                            continue
+                        }
+
+                        jsonReader.beginArray()
+                        while (jsonReader.hasNext()) {
+                            val item = jsonReader.readJsonElement()
+                            try {
+                                onItem(arrayName, item)
+                            } catch (error: Throwable) {
+                                throw JsonArrayItemException(error)
+                            }
+                        }
+                        jsonReader.endArray()
+                        remainingArrayNames.remove(arrayName)
+                    }
+
+                    if (remainingArrayNames.isNotEmpty()) {
+                        jsonReader.endObject()
+                        check(jsonReader.peek() == JsonToken.END_DOCUMENT)
+                    }
+                }
             }
-        }.fold(
-            onSuccess = { value ->
-                DecodeDataFromFileResult.Success(value)
-            },
-            onFailure = {
-                DecodeDataFromFileResult.CouldNotReadFile
+            ReadJsonFileResult.Success
+        } catch (error: JsonArrayItemException) {
+            throw error.itemError
+        } catch (error: CancellationException) {
+            throw error
+        } catch (_: Exception) {
+            ReadJsonFileResult.CouldNotReadFile
+        }
+    }
+
+    private fun JsonReader.readJsonElement(): JsonElement = when (peek()) {
+        JsonToken.BEGIN_ARRAY -> {
+            beginArray()
+            val values = buildList {
+                while (hasNext()) add(readJsonElement())
             }
-        )
+            endArray()
+            JsonArray(values)
+        }
+
+        JsonToken.BEGIN_OBJECT -> {
+            beginObject()
+            val values = buildMap {
+                while (hasNext()) put(nextName(), readJsonElement())
+            }
+            endObject()
+            JsonObject(values)
+        }
+
+        JsonToken.STRING -> JsonPrimitive(nextString())
+        JsonToken.NUMBER -> JsonUnquotedLiteral(nextString())
+        JsonToken.BOOLEAN -> JsonPrimitive(nextBoolean())
+        JsonToken.NULL -> {
+            nextNull()
+            JsonNull
+        }
+
+        else -> error("Unexpected JSON token: ${peek()}")
     }
 
     private fun DocumentFile.createUniqueFile(
@@ -180,4 +233,6 @@ class StorageManagerImpl(
         private val FILE_NAME_INVALID_CHARS_REGEX = Regex("""[\\/:*?"<>|]""")
         private val WHITESPACE_REGEX = Regex("\\s+")
     }
+
+    private class JsonArrayItemException(val itemError: Throwable) : Exception(itemError)
 }

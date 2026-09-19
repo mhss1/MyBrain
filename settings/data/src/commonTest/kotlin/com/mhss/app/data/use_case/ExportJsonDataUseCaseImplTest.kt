@@ -18,7 +18,7 @@ import com.mhss.app.domain.repository.DiaryRepository
 import com.mhss.app.domain.repository.NoteRepository
 import com.mhss.app.domain.repository.TaskRepository
 import com.mhss.app.storage.BufferedFileWriter
-import com.mhss.app.storage.DecodeDataFromFileResult
+import com.mhss.app.storage.ReadJsonFileResult
 import com.mhss.app.storage.StorageManager
 import com.mhss.app.storage.WriteTextFileResult
 import dev.mokkery.answering.calls
@@ -29,8 +29,8 @@ import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -83,7 +83,7 @@ class ExportJsonDataUseCaseImplTest {
         everySuspend {
             noteRepository.getFullNotesPage(any(), any())
         } calls { (afterId: String, limit: Int) ->
-            noteRequests += afterId to limit
+            noteRequests.add(afterId to limit)
             notes.pageAfter(afterId, limit, Note::id)
         }
         everySuspend {
@@ -258,10 +258,11 @@ private class RecordingStorageManager : StorageManager {
         existingFileNames: MutableSet<String>
     ): WriteTextFileResult = unused()
 
-    override suspend fun <T> decodeJsonDataFromFile(
+    override suspend fun readJsonArraysFromFile(
         fileUri: String,
-        deserializer: DeserializationStrategy<T>
-    ): DecodeDataFromFileResult<T> = unused()
+        arrayNames: Set<String>,
+        onItem: suspend (arrayName: String, item: JsonElement) -> Unit
+    ): ReadJsonFileResult = unused()
 
     private fun <T> unused(): T = error("Unused in test")
 }
