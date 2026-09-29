@@ -29,6 +29,8 @@
     <string name="title">العنوان</string>
     <string name="delete_sub_task">حذف المهمة الفرعية</string>
     <string name="add_sub_task">إضافة مهام فرعية</string>
+    <string name="sub_task_deleted">تم حذف المهمة الفرعية</string>
+    <string name="undo">تراجع</string>
     <string name="description">الوصف</string>
     <string name="request_feature_report_bug">طلب ميزة / ابلاغ عن مشكلة</string>
     <string name="low">منخفض</string>

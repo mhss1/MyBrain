@@ -38,6 +38,7 @@ markdownRenderer = "0.43.0"
 koog = "1.1.1"
 koogGoogle = "1.1.1-beta"
 liquid = "1.1.1"
+reorderable = "3.1.0"
 composeMultiplatform = "1.11.1"
 appFunctions = "1.0.0-alpha10"
 mlkitGenaiPrompt = "1.0.0-beta4"
@@ -117,6 +118,7 @@ koog-google-client = { module = "ai.koog:prompt-executor-google-client", version
 koog-http-client-ktor = { module = "ai.koog:http-client-ktor", version.ref = "koog"}
 koog-openrouter-client = { module = "ai.koog:prompt-executor-openrouter-client", version.ref = "koog"}
 liquid = { module = "io.github.fletchmckee.liquid:liquid", version.ref = "liquid"}
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }

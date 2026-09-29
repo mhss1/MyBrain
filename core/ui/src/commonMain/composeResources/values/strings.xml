@@ -28,6 +28,8 @@
     <string name="title">Title</string>
     <string name="delete_sub_task">Delete sub task</string>
     <string name="add_sub_task">Add sub task</string>
+    <string name="sub_task_deleted">Subtask deleted</string>
+    <string name="undo">Undo</string>
     <string name="description">Description</string>
     <string name="request_feature_report_bug">Request a feature / Report a bug</string>
     <string name="low">Low</string>
