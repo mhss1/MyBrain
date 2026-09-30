@@ -2,8 +2,6 @@
 
 package com.mhss.app.presentation
 
-import androidx.paging.compose.LazyPagingItems
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -13,6 +11,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -26,16 +25,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -43,6 +39,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,6 +67,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.mhss.app.domain.model.NoteFolder
@@ -81,9 +79,9 @@ import com.mhss.app.ui.add_note
 import com.mhss.app.ui.cancel
 import com.mhss.app.ui.components.PagingLoadState
 import com.mhss.app.ui.components.PagingPlaceholder
+import com.mhss.app.ui.components.common.FloatingGlassTabBar
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
-import com.mhss.app.ui.components.common.FloatingGlassTabBar
 import com.mhss.app.ui.components.isEmpty
 import com.mhss.app.ui.components.notes.NoteCard
 import com.mhss.app.ui.create_folder
@@ -108,8 +106,8 @@ import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.resources.stringResource as cmpStringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.resources.stringResource as cmpStringResource
 
 @Suppress("AssignedValueIsNeverRead")
 @Composable
@@ -148,12 +146,13 @@ fun NotesScreen(
                 )
             )
         },
+        floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
             ) {
                 AnimatedVisibility(
+                    modifier = Modifier.align(Alignment.Center),
                     visible = !isScrolling,
                     enter = fadeIn() + slideInVertically { it },
                     exit = fadeOut() + slideOutVertically { it }
@@ -166,6 +165,7 @@ fun NotesScreen(
                     )
                 }
                 LiquidFloatingActionButton(
+                    modifier = Modifier.align(Alignment.CenterEnd),
                     onClick = {
                         if (selectedTab == 0) {
                             navController.navigate(Screen.NoteDetailsScreen())
