@@ -5,6 +5,10 @@ package com.mhss.app.presentation
 import androidx.paging.compose.LazyPagingItems
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,13 +26,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -39,14 +47,13 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -76,6 +83,7 @@ import com.mhss.app.ui.components.PagingLoadState
 import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.components.common.FloatingGlassTabBar
 import com.mhss.app.ui.components.isEmpty
 import com.mhss.app.ui.components.notes.NoteCard
 import com.mhss.app.ui.create_folder
@@ -115,6 +123,20 @@ fun NotesScreen(
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
     var openCreateFolderDialog by remember { mutableStateOf(false) }
     val liquidState = rememberLiquidState()
+    val notesListState = rememberLazyListState()
+    val notesGridState = rememberLazyStaggeredGridState()
+    val foldersGridState = rememberLazyGridState()
+    val isScrolling by remember(selectedTab, uiState.noteView) {
+        derivedStateOf {
+            if (selectedTab == 1) {
+                foldersGridState.isScrollInProgress
+            } else if (uiState.noteView == ItemView.LIST) {
+                notesListState.isScrollInProgress
+            } else {
+                notesGridState.isScrollInProgress
+            }
+        }
+    }
     Scaffold(
         snackbarHost = {
             LocalisedSnackbarHost(uiState.snackbarHostState)
@@ -127,55 +149,40 @@ fun NotesScreen(
             )
         },
         floatingActionButton = {
-            LiquidFloatingActionButton(
-                onClick = {
-                    if (selectedTab == 0) {
-                        navController.navigate(Screen.NoteDetailsScreen())
-                    } else {
-                        openCreateFolderDialog = true
-                    }
-                },
-                iconPainter = if (selectedTab == 0) painterResource(Res.drawable.ic_add) else painterResource(
-                    Res.drawable.ic_create_folder
-                ),
-                contentDescription = stringResource(Res.string.add_note),
-                liquidState = liquidState
-            )
-
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AnimatedVisibility(
+                    visible = !isScrolling,
+                    enter = fadeIn() + slideInVertically { it },
+                    exit = fadeOut() + slideOutVertically { it }
+                ) {
+                    FloatingGlassTabBar(
+                        tabs = listOf(stringResource(Res.string.notes), stringResource(Res.string.folders)),
+                        selectedTabIndex = selectedTab,
+                        onTabSelected = { selectedTab = it },
+                        liquidState = liquidState
+                    )
+                }
+                LiquidFloatingActionButton(
+                    onClick = {
+                        if (selectedTab == 0) {
+                            navController.navigate(Screen.NoteDetailsScreen())
+                        } else {
+                            openCreateFolderDialog = true
+                        }
+                    },
+                    iconPainter = if (selectedTab == 0) painterResource(Res.drawable.ic_add) else painterResource(
+                        Res.drawable.ic_create_folder
+                    ),
+                    contentDescription = stringResource(Res.string.add_note),
+                    liquidState = liquidState
+                )
+            }
         },
     ) { paddingValues ->
         Column(modifier = Modifier.liquefiable(liquidState).padding(paddingValues).fillMaxSize()) {
-            PrimaryTabRow(
-                selectedTabIndex = selectedTab,
-                containerColor = MaterialTheme.colorScheme.background,
-            ) {
-                Tab(
-                    text = {
-                        Text(
-                            stringResource(Res.string.notes),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    selected = selectedTab == 0,
-                    onClick = {
-                        selectedTab = 0
-                    },
-                    unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                )
-                Tab(
-                    text = {
-                        Text(
-                            stringResource(Res.string.folders),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    selected = selectedTab == 1,
-                    onClick = {
-                        selectedTab = 1
-                    },
-                    unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                )
-            }
             if (selectedTab == 0) {
                 if (notes.isEmpty)
                     NoNotesMessage()
@@ -220,10 +227,11 @@ fun NotesScreen(
                 PagingLoadState(notes)
                 if (uiState.noteView == ItemView.LIST) {
                     LazyColumn(
+                        state = notesListState,
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(
                             top = 12.dp,
-                            bottom = 24.dp,
+                            bottom = 96.dp,
                             start = 12.dp,
                             end = 12.dp
                         ),
@@ -248,9 +256,10 @@ fun NotesScreen(
                     }
                 } else {
                     LazyVerticalStaggeredGrid(
+                        state = notesGridState,
                         columns = StaggeredGridCells.Adaptive(150.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(12.dp),
+                        contentPadding = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 96.dp),
                         modifier = Modifier.weight(1f)
                     ) {
                         items(notes.itemCount, key = notes.itemKey { it.id }) { index ->
@@ -274,7 +283,10 @@ fun NotesScreen(
                     }
                 }
             } else {
-                FoldersTab(viewModel.folders.collectAsLazyPagingItems()) {
+                FoldersTab(
+                    folders = viewModel.folders.collectAsLazyPagingItems(),
+                    state = foldersGridState
+                ) {
                     navController.navigate(
                         Screen.NoteFolderDetailsScreen(
                             folderId = it.id
@@ -301,16 +313,18 @@ fun NotesScreen(
 @Composable
 fun FoldersTab(
     folders: LazyPagingItems<NoteFolder>,
+    state: LazyGridState = rememberLazyGridState(),
     onItemClick: (NoteFolder) -> Unit
 ) {
     PagingLoadState(folders)
     LazyVerticalGrid(
+        state = state,
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(
             top = 12.dp,
-            bottom = 24.dp,
+            bottom = 96.dp,
             start = 12.dp,
             end = 12.dp
         )
