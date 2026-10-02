@@ -3,6 +3,8 @@ package com.mhss.app.mybrain.presentation.localsync
 import com.mhss.app.mybrain.sync.model.PairedDevice
 
 sealed interface PairedDevicesEvent {
+    data object LocalNetworkPermissionGranted : PairedDevicesEvent
+
     data class PairDirectly(
         val deviceId: String,
         val ips: List<String>,

@@ -41,9 +41,6 @@ class MainActivity : AppCompatActivity() {
             if (!isNotificationPermissionGranted()) {
                 add(Manifest.permission.POST_NOTIFICATIONS)
             }
-            if (!isLocalNetworkPermissionGranted()) {
-                add(Manifest.permission.ACCESS_LOCAL_NETWORK)
-            }
         }
         if (permissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(
@@ -106,29 +103,6 @@ class MainActivity : AppCompatActivity() {
             this,
             Manifest.permission.POST_NOTIFICATIONS
         ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun isLocalNetworkPermissionGranted(): Boolean {
-        return Build.VERSION.SDK_INT < 37
-                || ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_LOCAL_NETWORK
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (permissions.indices.any {
-                permissions.getOrNull(it) == Manifest.permission.ACCESS_LOCAL_NETWORK &&
-                    grantResults.getOrNull(it) == PackageManager.PERMISSION_GRANTED
-            }
-        ) {
-            viewModel.startNetworkDiscovery()
-        }
     }
 
     override fun onStart() {

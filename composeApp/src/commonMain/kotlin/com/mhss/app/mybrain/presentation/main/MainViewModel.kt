@@ -60,10 +60,6 @@ class MainViewModel(
         syncOrchestrator.syncAllAsync()
     }
 
-    fun startNetworkDiscovery() {
-        syncOrchestrator.startNetworkDiscovery()
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     val dashboardTasks: Flow<PagingData<Task>> = combine(
         getPreference(

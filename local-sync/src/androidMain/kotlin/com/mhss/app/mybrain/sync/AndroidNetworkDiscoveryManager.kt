@@ -1,6 +1,8 @@
 package com.mhss.app.mybrain.sync
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.os.Build
@@ -15,7 +17,7 @@ private const val DEVICE_ID_ATTRIBUTE = "deviceId"
 
 @Single(binds = [NetworkDiscoveryManager::class])
 class AndroidNetworkDiscoveryManager(
-    context: Context
+    private val context: Context
 ) : NetworkDiscoveryManager {
 
     private val nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
@@ -24,6 +26,7 @@ class AndroidNetworkDiscoveryManager(
     private var onDeviceDiscovered: ((DiscoveredDevice) -> Unit)? = null
 
     override fun registerService(deviceId: String, port: Int) {
+        if (!hasLocalNetworkPermission()) return
         if (registrationListener != null) return
 
         val listener = object : NsdManager.RegistrationListener {
@@ -57,6 +60,7 @@ class AndroidNetworkDiscoveryManager(
     }
 
     override fun startDiscovery(onDeviceDiscovered: (DiscoveredDevice) -> Unit) {
+        if (!hasLocalNetworkPermission()) return
         this.onDeviceDiscovered = onDeviceDiscovered
         if (discoveryListener != null) return
 
@@ -87,6 +91,12 @@ class AndroidNetworkDiscoveryManager(
             discoveryListener = null
             e.printStackTrace()
         }
+    }
+
+    private fun hasLocalNetworkPermission(): Boolean {
+        return Build.VERSION.SDK_INT < 37 || context.checkSelfPermission(
+            Manifest.permission.ACCESS_LOCAL_NETWORK
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     @Suppress("DEPRECATION")
