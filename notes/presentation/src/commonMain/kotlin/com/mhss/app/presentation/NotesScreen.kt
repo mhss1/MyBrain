@@ -182,7 +182,13 @@ fun NotesScreen(
             }
         },
     ) { paddingValues ->
-        Column(modifier = Modifier.liquefiable(liquidState).padding(paddingValues).fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .liquefiable(liquidState)
+                .background(MaterialTheme.colorScheme.background)
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
             if (selectedTab == 0) {
                 if (notes.isEmpty)
                     NoNotesMessage()
