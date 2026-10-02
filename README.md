@@ -29,7 +29,9 @@ height="80">](https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/
 > **F-Droid notice:** My Brain is being discontinued on F-Droid because future releases will introduce native dependencies that would add significant build and maintenance complexity, and may use proprietary components such as Google ML Kit that are incompatible with F-Droid's policy. If you currently use the F-Droid version, export your data first, then install the latest version from [GitHub Releases](https://github.com/mhss1/MyBrain/releases/latest) and import your data.
       
 ## Features
-- Local and Private with no data collection at all.
+
+- Local and private, with no data collection and a focus on performance and memory efficiency.
+- Encrypted Local device sync for tasks, notes, diary entries, bookmarks, and AI conversations over the same local network.
 - Create tasks with priority, sub-tasks, due date and reminders.
 - Create Notes that supports markdown which enables you to use Headers, lists, links etc..
 - Record your mood daily and view your mood summary with beautiful graphs.
@@ -39,22 +41,35 @@ height="80">](https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/
 - AI assistant and Agent to help you with your daily workflow. You can chat and attach objects and also ask the AI to create and find items for you.
 
 ## Technologies
-- 100% Kotlin.
+
+- Kotlin Multiplatform, currently targeting Android.
 - Multi-module project.
-- Made Using Jetpack Compose.
+- Compose Multiplatform with Material 3.
 - Widgets made with Jetpack Glance.
 - Following Clean Architecture approach. 
 - MVI Design Pattern.
 - Room DB
+- Jetpack Paging
 - Koin
-- Ktor
+- Ktor Client for API requests and local sync connections.
+- Ktor Server with the CIO engine for hosting local sync endpoints.
+- Ktor WebSockets for live sync communication.
 - Preferences DataStore
 - Kotlin coroutines
 - Kotlin Flows
+- Kotlinx Serialization
+- Kotlinx DateTime
+- WorkManager
 - Alarm Manager
 - Content Provider
 - Biometric Authentication
 - Koog
+- Google ML Kit GenAI Prompt API for on-device AI.
+- Android App Functions
+- Android Network Service Discovery (NSD) for local device discovery.
+- AES-GCM encryption for local sync transfers.
+- Zstandard compression for sync payloads.
+- ZXing for pairing QR codes.
 
 ## Translation
 Project localisation is managed via [Crowdin](https://crowdin.com/project/my-brain-app)
