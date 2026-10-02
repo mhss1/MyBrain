@@ -77,6 +77,34 @@ class Migration6To7Test : PlatformTest() {
     }
 
     @Test
+    fun `migration preserves tasks across multiple cleanup batches`() = runTest {
+        val before = helper.createDatabase(6).use { connection ->
+            connection.execSQL(
+                """
+                WITH RECURSIVE task_ids(id) AS (
+                    SELECT 1
+                    UNION ALL
+                    SELECT id + 1 FROM task_ids WHERE id < 1001
+                )
+                INSERT INTO tasks (title, description, is_completed, priority, created_date,
+                    updated_date, sub_tasks, dueDate, recurring, frequency, frequency_amount,
+                    alarmId, id, sync_seq)
+                SELECT 'Task ' || id, 'Description ' || id, id % 2, id % 3, id, id + 1,
+                    '[]', CASE WHEN id % 2 = 0 THEN 0 ELSE id * 1000 END, 0, 2, 1,
+                    NULL, 'task-' || id, id
+                FROM task_ids
+                """.trimIndent()
+            )
+            connection.readRows("tasks")
+        }
+
+        helper.runMigrationsAndValidate(7, listOf(MIGRATION_6_7)).use { connection ->
+            assertEquals(1001, before.size)
+            assertEquals(before, connection.readRows("tasks"))
+        }
+    }
+
+    @Test
     fun `migration preserves devices and initializes confirmations to zero`() = runTest {
         val before = helper.createDatabase(6).use { connection ->
             connection.execSQL(
