@@ -178,13 +178,15 @@ fun AddTaskFloatingCard(
                     Modifier.frostedGlass(
                         liquidState = liquidState,
                         shape = RoundedCornerShape(24.dp),
+                        tint = MaterialTheme.colorScheme.surface.copy(0.3f),
                         refraction = 0.40f,
-                        frost = 8.dp,
+                        frost = 9.dp,
                         curve = 0.05f,
+                        edge = 0.015f
                     )
                 } else {
                     Modifier.background(
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                         shape = RoundedCornerShape(24.dp)
                     )
                 }

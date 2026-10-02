@@ -76,12 +76,13 @@ import com.mhss.app.ui.tasks_img
 import com.mhss.app.ui.titleRes
 import com.mhss.app.util.permissions.Permission
 import com.mhss.app.util.permissions.rememberPermissionState
+import io.github.fletchmckee.liquid.LiquidState
 import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.resources.stringResource as cmpStringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.resources.stringResource as cmpStringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,7 +120,10 @@ fun TasksScreen(
     ) { paddingValues ->
         LaunchedEffect(uiState.alarmError) {
             if (uiState.alarmError) {
-                val snackbarResult = snackbarHostState.showSnackbar(Res.string.no_alarm_permission, Res.string.grant_permission)
+                val snackbarResult = snackbarHostState.showSnackbar(
+                    Res.string.no_alarm_permission,
+                    Res.string.grant_permission
+                )
                 if (snackbarResult == SnackbarResult.ActionPerformed) {
                     alarmPermissionState.launchRequest()
                 }
@@ -136,11 +140,14 @@ fun TasksScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (tasks.isEmpty) NoTasksMessage()
+            if (tasks.isEmpty) NoTasksMessage(liquidState)
             Column(
                 Modifier
                     .fillMaxSize()
                     .liquefiable(liquidState)
+                    .background(
+                        if (tasks.isEmpty) Color.Transparent else MaterialTheme.colorScheme.background
+                    )
             ) {
                 Column(
                     Modifier.fillMaxWidth()
@@ -202,6 +209,7 @@ fun TasksScreen(
                                     )
                                 },
                                 onClick = {
+                                    showAddTaskCard = false
                                     navController.navigate(
                                         Screen.TaskDetailScreen(
                                             taskId = task.id
@@ -234,9 +242,12 @@ fun TasksScreen(
 }
 
 @Composable
-fun NoTasksMessage() {
+fun NoTasksMessage(liquidState: LiquidState) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .liquefiable(liquidState)
+            .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -256,7 +267,6 @@ fun NoTasksMessage() {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TasksSettingsSection(
     sortOrder: SortOrder,
