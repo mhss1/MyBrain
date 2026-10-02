@@ -7,6 +7,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import com.mhss.app.alarm.di.AlarmModule
 import com.mhss.app.data.NoteDataModule
@@ -31,6 +32,7 @@ import com.mhss.app.mybrain.appfunctions.AppFunctionsModule
 import com.mhss.app.mybrain.di.MainPresentationModule
 import com.mhss.app.mybrain.notification.NotificationConstants
 import com.mhss.app.mybrain.sync.SyncOrchestrator
+import com.mhss.app.mybrain.sync.domain.TombstoneCleanupScheduler
 import com.mhss.app.mybrain.sync.di.LocalSyncModule
 import com.mhss.app.mybrain.sync.repository.DeviceKeyStore
 import com.mhss.app.mybrain.sync.repository.PairedDevicesRepository
@@ -51,6 +53,7 @@ import com.mhss.app.storage.di.StorageModule
 import com.mhss.app.ui.R
 import com.mhss.app.widget.di.WidgetModule
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
@@ -68,6 +71,7 @@ import kotlin.system.exitProcess
 class MyBrainApplication : Application() {
 
     private val getPreference: GetPreferenceUseCase by inject()
+    private val tombstoneCleanupScheduler: TombstoneCleanupScheduler by inject()
     private val syncOrchestrator: SyncOrchestrator by inject()
     private val deviceKeyStore: DeviceKeyStore by inject()
     private val pairedDevicesRepository: PairedDevicesRepository by inject()
@@ -82,6 +86,7 @@ class MyBrainApplication : Application() {
             workManagerFactory()
         }
         loadNotesModule()
+        scheduleTombstoneCleanup()
 
         appScope.launch {
             deviceKeyStore.getCurrentDeviceId()
@@ -98,6 +103,18 @@ class MyBrainApplication : Application() {
                 Toast.makeText(this, getString(R.string.exception_stack_trace_copied), Toast.LENGTH_LONG).show()
             }
             exitProcess(1)
+        }
+    }
+
+    private fun scheduleTombstoneCleanup() {
+        appScope.launch {
+            try {
+                tombstoneCleanupScheduler.schedule()
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: Exception) {
+                Log.e("MyBrainApplication", "Tombstone cleanup scheduling failed", error)
+            }
         }
     }
 

@@ -52,6 +52,23 @@ interface SyncDao {
     @Query("SELECT EXISTS(SELECT 1 FROM deleted_entities WHERE entity_type = :entityType AND entity_id = :entityId)")
     suspend fun deletedEntityExists(entityType: String, entityId: String): Boolean
 
+    @Query(
+        """
+        DELETE FROM deleted_entities
+        WHERE id IN (
+          SELECT id FROM deleted_entities
+          WHERE deleted_at <= :cutoff
+          AND (
+            (SELECT MIN(last_acknowledged_local_seq) FROM paired_devices) IS NULL
+            OR sync_seq <= (SELECT MIN(last_acknowledged_local_seq) FROM paired_devices)
+          )
+          ORDER BY sync_seq
+          LIMIT :limit
+        )
+        """
+    )
+    suspend fun deleteExpiredTombstones(cutoff: Long, limit: Int): Int
+
 }
 
 suspend inline fun SyncDao.incrementAndGet(): Long {

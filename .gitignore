@@ -6,6 +6,10 @@
 .DS_Store
 /build
 /build-logic/build
+/build-logic/.kotlin/
+.agents
+.claude
+AGENTS.md
 /captures
 .externalNativeBuild
 .cxx

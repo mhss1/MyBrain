@@ -1,7 +1,11 @@
+import com.mhss.app.buildlogic.androidHostTest
+import com.mhss.app.buildlogic.configureHostTest
+
 plugins {
     alias(libs.plugins.mybrain.android.kmp.library)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.koin.compiler)
+    alias(libs.plugins.mokkery)
 }
 
 kotlin {
@@ -11,6 +15,10 @@ kotlin {
             version = release(libs.versions.compileSdk.get().toInt())
         }
         minSdk = libs.versions.minSdk.get().toInt()
+        androidResources.enable = true
+        configureHostTest {
+            isIncludeAndroidResources = true
+        }
     }
 
     sourceSets {
@@ -41,13 +49,27 @@ kotlin {
             implementation(libs.ktor.client.websockets)
         }
 
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+        }
+
         androidMain.dependencies {
             implementation(libs.koin.android)
+            implementation(libs.koin.android.workmanager)
+            implementation(libs.androidx.work.runtime.ktx)
 
             implementation("${libs.zstd.jni.get()}@aar")
             implementation(libs.zxing.core)
 
             implementation(libs.ktor.okhttp)
+        }
+
+        androidHostTest.dependencies {
+            implementation(libs.androidx.work.testing)
+            implementation(libs.androidx.test.core)
+            implementation(libs.junit)
+            implementation(libs.robolectric)
         }
     }
 }
