@@ -76,6 +76,28 @@ class Migration6To7Test : PlatformTest() {
         }
     }
 
+    @Test
+    fun `migration preserves devices and initializes confirmations to zero`() = runTest {
+        val before = helper.createDatabase(6).use { connection ->
+            connection.execSQL(
+                "INSERT INTO paired_devices (id, name, ip_address, port, last_synced_at, encryption_key, " +
+                    "device_version, is_connected, candidate_ip_addresses, custom_ip_address) " +
+                    "VALUES ('phone', 'Phone', '192.168.1.2', 8080, 150, 'phone-key', 1, 1, '[]', NULL), " +
+                    "('laptop', 'Laptop', '192.168.1.3', 8081, 100, 'laptop-key', 1, 0, '[]', '192.168.1.4')"
+            )
+            connection.execSQL("INSERT INTO sync_state (id, last_seq) VALUES (1, 200)")
+            connection.readRows("paired_devices")
+        }
+
+        helper.runMigrationsAndValidate(7, listOf(MIGRATION_6_7)).use { connection ->
+            assertEquals(before.map { it + "0" }, connection.readRows("paired_devices"))
+            connection.prepare("SELECT last_seq FROM sync_state WHERE id = 1").use { statement ->
+                assertTrue(statement.step())
+                assertEquals(200L, statement.getLong(0))
+            }
+        }
+    }
+
     private suspend fun SQLiteConnection.readRows(table: String): List<List<String?>> =
         prepare("SELECT * FROM `$table` ORDER BY id").use { statement ->
             buildList {

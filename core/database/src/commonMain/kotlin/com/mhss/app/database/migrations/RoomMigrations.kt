@@ -322,5 +322,7 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_diary_updated_date` ON `diary` (`updated_date` ASC)")
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_diary_created_date` ON `diary` (`created_date` ASC)")
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_bookmarks_updated_date` ON `bookmarks` (`updated_date` ASC)")
+
+        connection.execSQL("ALTER TABLE paired_devices ADD COLUMN last_acknowledged_local_seq INTEGER NOT NULL DEFAULT 0")
     }
 }

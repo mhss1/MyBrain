@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "d3a219b2391251978ff94e440e572c0a",
+    "identityHash": "434d1ac6d7f67a51964c521daf982135",
     "entities": [
       {
         "tableName": "notes",
@@ -602,7 +602,7 @@
       },
       {
         "tableName": "paired_devices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `ip_address` TEXT NOT NULL, `port` INTEGER NOT NULL, `last_synced_at` INTEGER NOT NULL, `encryption_key` TEXT NOT NULL, `device_version` INTEGER NOT NULL DEFAULT 1, `is_connected` INTEGER NOT NULL DEFAULT 0, `candidate_ip_addresses` TEXT NOT NULL DEFAULT '[]', `custom_ip_address` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `ip_address` TEXT NOT NULL, `port` INTEGER NOT NULL, `last_synced_at` INTEGER NOT NULL, `encryption_key` TEXT NOT NULL, `device_version` INTEGER NOT NULL DEFAULT 1, `is_connected` INTEGER NOT NULL DEFAULT 0, `candidate_ip_addresses` TEXT NOT NULL DEFAULT '[]', `custom_ip_address` TEXT, `last_acknowledged_local_seq` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -665,6 +665,13 @@
             "fieldPath": "customIpAddress",
             "columnName": "custom_ip_address",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastAcknowledgedLocalSeq",
+            "columnName": "last_acknowledged_local_seq",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -765,7 +772,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd3a219b2391251978ff94e440e572c0a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '434d1ac6d7f67a51964c521daf982135')"
     ]
   }
 }

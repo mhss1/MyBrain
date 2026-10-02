@@ -23,6 +23,7 @@ data class PairedDeviceEntity(
     @ColumnInfo(name = "candidate_ip_addresses", defaultValue = "[]")
     val candidateIpAddresses: List<String> = emptyList(),
     @ColumnInfo(name = "custom_ip_address")
-    val customIpAddress: String? = null
+    val customIpAddress: String? = null,
+    @ColumnInfo(name = "last_acknowledged_local_seq", defaultValue = "0")
+    val lastAcknowledgedLocalSeq: Long = 0L
 )
-

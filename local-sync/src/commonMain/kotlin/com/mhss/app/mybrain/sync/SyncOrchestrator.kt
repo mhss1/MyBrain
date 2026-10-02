@@ -475,7 +475,7 @@ class SyncOrchestrator(
                         requestChanges(peerDeviceId, session)
                     } else {
                         val applied = applyChanges(peerDeviceId, message.payload)
-                        if (applied && message.payload.hasMore) {
+                        if (applied) {
                             requestChanges(peerDeviceId, session)
                         }
                     }
@@ -514,6 +514,11 @@ class SyncOrchestrator(
         session: WebSocketSession
     ) {
         val peerKey = deviceKeyStore.getDeviceKey(peerDeviceId) ?: return
+        if (lastSyncedSeq < 0L || lastSyncedSeq > syncRepository.getMaxSyncSequence()) {
+            sendSocketError(peerDeviceId, session, "Invalid sync sequence")
+            return
+        }
+        pairedDevicesRepository.updateLastAcknowledgedLocalSeq(peerDeviceId, lastSyncedSeq)
         val payload = buildSyncPayload(lastSyncedSeq)
         session.sendEncrypted(
             ChangesMessage(

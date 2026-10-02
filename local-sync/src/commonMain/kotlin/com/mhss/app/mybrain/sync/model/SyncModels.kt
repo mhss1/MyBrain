@@ -24,7 +24,8 @@ data class PairedDevice(
     @SerialName("deviceVersion") val deviceVersion: Int = 1,
     @SerialName("isConnected") val isConnected: Boolean = false,
     @SerialName("candidateIpAddresses") val candidateIpAddresses: List<String> = emptyList(),
-    @SerialName("customIpAddress") val customIpAddress: String? = null
+    @SerialName("customIpAddress") val customIpAddress: String? = null,
+    @SerialName("lastAcknowledgedLocalSeq") val lastAcknowledgedLocalSeq: Long = 0L
 )
 
 @Serializable
