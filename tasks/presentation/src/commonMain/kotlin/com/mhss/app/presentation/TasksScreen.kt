@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -48,12 +47,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_task
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.components.isEmpty
 import com.mhss.app.ui.components.tasks.TaskCard
 import com.mhss.app.ui.grant_permission
 import com.mhss.app.ui.ic_add
@@ -72,6 +76,7 @@ import com.mhss.app.ui.tasks_img
 import com.mhss.app.ui.titleRes
 import com.mhss.app.util.permissions.Permission
 import com.mhss.app.util.permissions.rememberPermissionState
+import io.github.fletchmckee.liquid.LiquidState
 import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
 import org.jetbrains.compose.resources.painterResource
@@ -86,6 +91,7 @@ fun TasksScreen(
     addTask: Boolean = false,
     viewModel: TasksViewModel = koinViewModel()
 ) {
+    val tasks = viewModel.tasks.collectAsLazyPagingItems()
     var orderSettingsVisible by remember { mutableStateOf(false) }
     val uiState = viewModel.tasksUiState
     val snackbarHostState = remember { SnackbarHostState() }
@@ -114,7 +120,10 @@ fun TasksScreen(
     ) { paddingValues ->
         LaunchedEffect(uiState.alarmError) {
             if (uiState.alarmError) {
-                val snackbarResult = snackbarHostState.showSnackbar(Res.string.no_alarm_permission, Res.string.grant_permission)
+                val snackbarResult = snackbarHostState.showSnackbar(
+                    Res.string.no_alarm_permission,
+                    Res.string.grant_permission
+                )
                 if (snackbarResult == SnackbarResult.ActionPerformed) {
                     alarmPermissionState.launchRequest()
                 }
@@ -131,11 +140,14 @@ fun TasksScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (uiState.tasks.isEmpty()) NoTasksMessage()
+            if (tasks.isEmpty) NoTasksMessage(liquidState)
             Column(
                 Modifier
                     .fillMaxSize()
                     .liquefiable(liquidState)
+                    .background(
+                        if (tasks.isEmpty) Color.Transparent else MaterialTheme.colorScheme.background
+                    )
             ) {
                 Column(
                     Modifier.fillMaxWidth()
@@ -164,7 +176,7 @@ fun TasksScreen(
                     }
                     AnimatedVisibility(visible = orderSettingsVisible) {
                         TasksSettingsSection(
-                            uiState.taskOrder,
+                            uiState.taskSortOrder,
                             uiState.showCompletedTasks,
                             onShowCompletedChange = {
                                 viewModel.onEvent(
@@ -179,29 +191,33 @@ fun TasksScreen(
                         )
                     }
                 }
+                PagingLoadState(tasks)
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
                 ) {
-                    items(uiState.tasks, key = { it.id }) { task ->
-                        TaskCard(
-                            task = task,
-                            onComplete = {
-                                viewModel.onEvent(
-                                    TaskEvent.CompleteTask(
-                                        task,
-                                        !task.isCompleted
+                    items(tasks.itemCount, key = tasks.itemKey { it.id }) { index ->
+                        tasks[index]?.let { task ->
+                            TaskCard(
+                                task = task,
+                                onComplete = {
+                                    viewModel.onEvent(
+                                        TaskEvent.CompleteTask(
+                                            task,
+                                            !task.isCompleted
+                                        )
                                     )
-                                )
-                            },
-                            onClick = {
-                                navController.navigate(
-                                    Screen.TaskDetailScreen(
-                                        taskId = task.id
+                                },
+                                onClick = {
+                                    showAddTaskCard = false
+                                    navController.navigate(
+                                        Screen.TaskDetailScreen(
+                                            taskId = task.id
+                                        )
                                     )
-                                )
-                            },
-                        )
+                                },
+                            )
+                        } ?: PagingPlaceholder(Modifier.padding(horizontal = 8.dp))
                     }
                 }
             }
@@ -226,9 +242,12 @@ fun TasksScreen(
 }
 
 @Composable
-fun NoTasksMessage() {
+fun NoTasksMessage(liquidState: LiquidState) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .liquefiable(liquidState)
+            .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -248,28 +267,27 @@ fun NoTasksMessage() {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TasksSettingsSection(
-    order: Order,
+    sortOrder: SortOrder,
     showCompleted: Boolean,
-    onOrderChange: (Order) -> Unit,
+    onOrderChange: (SortOrder) -> Unit,
     onShowCompletedChange: (Boolean) -> Unit
 ) {
-    val orders = remember {
+    val sortOrders = remember {
         listOf(
-            Order.DateModified(),
-            Order.DueDate(),
-            Order.DateCreated(),
-            Order.Alphabetical(),
-            Order.Priority(),
-            Order.Done()
+            SortOrder.DateModified(),
+            SortOrder.DueDate(),
+            SortOrder.DateCreated(),
+            SortOrder.Alphabetical(),
+            SortOrder.Priority(),
+            SortOrder.Done()
         )
     }
-    val orderTypes = remember {
+    val sortTypes = remember {
         listOf(
-            OrderType.ASC,
-            OrderType.DESC
+            SortType.ASC,
+            SortType.DESC
         )
     }
     Column(
@@ -283,14 +301,14 @@ fun TasksSettingsSection(
         FlowRow(
             modifier = Modifier.padding(end = 8.dp)
         ) {
-            orders.forEach {
+            sortOrders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order::class == it::class,
+                        selected = sortOrder::class == it::class,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    it.copyOrder(orderType = order.orderType)
+                                    it.copyOrder(sortType = sortOrder.sortType)
                                 )
                         }
                     )
@@ -303,14 +321,14 @@ fun TasksSettingsSection(
         }
         HorizontalDivider()
         FlowRow {
-            orderTypes.forEach {
+            sortTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderType == it,
+                        selected = sortOrder.sortType == it,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    order.copyOrder(it)
+                                    sortOrder.copyOrder(it)
                                 )
                         }
                     )

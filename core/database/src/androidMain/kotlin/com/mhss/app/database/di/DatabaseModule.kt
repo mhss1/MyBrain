@@ -14,6 +14,7 @@ import com.mhss.app.database.migrations.MIGRATION_2_3
 import com.mhss.app.database.migrations.MIGRATION_3_4
 import com.mhss.app.database.migrations.MIGRATION_4_5
 import com.mhss.app.database.migrations.MIGRATION_5_6
+import com.mhss.app.database.migrations.MIGRATION_6_7
 import com.mhss.app.database.sync.LocalChangeObserver
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.annotation.Module
@@ -29,7 +30,14 @@ class DatabaseModule {
             context = context,
             name = dbFile.absolutePath
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+            .addMigrations(
+                MIGRATION_1_2,
+                MIGRATION_2_3,
+                MIGRATION_3_4,
+                MIGRATION_4_5,
+                MIGRATION_5_6,
+                MIGRATION_6_7
+            )
             .addCallback(object : RoomDatabase.Callback() {
                 override suspend fun onCreate(connection: SQLiteConnection) {
                     connection.execSQL("INSERT INTO sync_state (id, last_seq) VALUES (1, 0)")

@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -36,10 +34,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_note
 import com.mhss.app.ui.cancel
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.notes.NoteCard
@@ -67,6 +69,7 @@ fun NoteFolderDetailsScreen(
     id: String,
     viewModel: NoteFolderDetailsViewModel = koinViewModel(parameters = { parametersOf(id) })
 ) {
+    val notes = viewModel.folderNotes.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val folder = uiState.folder
     val snackbarHostState = uiState.snackbarHostState
@@ -111,6 +114,7 @@ fun NoteFolderDetailsScreen(
         Column(
             Modifier.fillMaxSize().padding(contentPadding).liquefiable(liquidState)
         ) {
+            PagingLoadState(notes)
             if (uiState.noteView == ItemView.LIST) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -121,18 +125,20 @@ fun NoteFolderDetailsScreen(
                         end = 12.dp
                     ),
                 ) {
-                    items(uiState.folderNotes, key = { it.id }) { note ->
-                        NoteCard(
-                            note = note,
-                            onClick = {
-                                navController.navigate(
-                                    Screen.NoteDetailsScreen(
-                                        noteId = note.id,
-                                        folderId = id
+                    items(notes.itemCount, key = notes.itemKey { it.id }) { index ->
+                        notes[index]?.let { note ->
+                            NoteCard(
+                                note = note,
+                                onClick = {
+                                    navController.navigate(
+                                        Screen.NoteDetailsScreen(
+                                            noteId = note.id,
+                                            folderId = id
+                                        )
                                     )
-                                )
-                            }
-                        )
+                                }
+                            )
+                        } ?: PagingPlaceholder()
                     }
                 }
             } else {
@@ -148,23 +154,25 @@ fun NoteFolderDetailsScreen(
                     ),
                     modifier = Modifier.liquefiable(liquidState)
                 ) {
-                    items(uiState.folderNotes) { note ->
-                        key(note.id) {
-                            NoteCard(
-                                note = note,
-                                onClick = {
-                                    navController.navigate(
-                                        Screen.NoteDetailsScreen(
-                                            noteId = note.id,
-                                            folderId = id
+                    items(notes.itemCount, key = notes.itemKey { it.id }) { index ->
+                        notes[index]?.let { note ->
+                            key(note.id) {
+                                NoteCard(
+                                    note = note,
+                                    onClick = {
+                                        navController.navigate(
+                                            Screen.NoteDetailsScreen(
+                                                noteId = note.id,
+                                                folderId = id
+                                            )
                                         )
-                                    )
-                                },
-                                modifier = Modifier
-                                    .animateItem()
-                                    .height(220.dp)
-                            )
-                        }
+                                    },
+                                    modifier = Modifier
+                                        .animateItem()
+                                        .height(220.dp)
+                                )
+                            }
+                        } ?: PagingPlaceholder()
                     }
                 }
             }

@@ -1,6 +1,8 @@
+import com.mhss.app.buildlogic.androidHostTest
+import com.mhss.app.buildlogic.configureHostTest
+
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.mybrain.android.kmp.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.koin.compiler)
     alias(libs.plugins.kotlinx.serialization)
@@ -14,6 +16,10 @@ kotlin {
             version = release(libs.versions.compileSdk.get().toInt())
         }
         minSdk = libs.versions.minSdk.get().toInt()
+        androidResources.enable = true
+        configureHostTest {
+            isIncludeAndroidResources = true
+        }
     }
 
     sourceSets {
@@ -27,6 +33,7 @@ kotlin {
 
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.androidx.room3.runtime)
+                implementation(libs.androidx.room3.paging)
                 implementation(libs.androidx.sqlite.bundled)
                 implementation(libs.kotlinx.serialization.json)
 
@@ -35,10 +42,26 @@ kotlin {
             }
         }
 
+        commonTest {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.androidx.room3.testing)
+            }
+        }
+
         androidMain {
             dependencies {
                 implementation(libs.koin.android)
             }
+        }
+
+        androidHostTest.dependencies {
+            implementation(libs.androidx.test.core)
+            implementation(libs.androidx.test.runner)
+            implementation(libs.androidx.sqlite.framework)
+            implementation(libs.junit)
+            implementation(libs.robolectric)
         }
     }
 }
@@ -49,6 +72,14 @@ dependencies {
 
 room3 {
     schemaDirectory("$projectDir/schemas")
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.hostTests.values.forEach { test ->
+            test.sources.assets?.addStaticSourceDirectory("$projectDir/schemas")
+        }
+    }
 }
 
 koinCompiler {

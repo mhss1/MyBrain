@@ -2,7 +2,13 @@
 
 package com.mhss.app.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.mhss.app.database.DefaultPagingConfig
 import com.mhss.app.database.dao.BookmarkDao
+import com.mhss.app.database.dao.BookmarkOrder
+import com.mhss.app.database.dao.QueryOrder
 import com.mhss.app.database.dao.SyncDao
 import com.mhss.app.database.dao.incrementAndGet
 import com.mhss.app.database.entity.DeletedEntityEntity
@@ -14,6 +20,10 @@ import com.mhss.app.database.sync.LocalChangeObserver
 import com.mhss.app.datetime.now
 import com.mhss.app.domain.model.Bookmark
 import com.mhss.app.domain.repository.BookmarkRepository
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -21,8 +31,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Single
 class BookmarkRepositoryImpl(
@@ -33,14 +41,37 @@ class BookmarkRepositoryImpl(
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : BookmarkRepository {
 
-    override fun getAllBookmarks(): Flow<List<Bookmark>> {
-        return bookmarkDao.getAllBookmarks()
+    override fun getPagedBookmarks(sortOrder: SortOrder): Flow<PagingData<Bookmark>> {
+        val sortOrderBy = when (sortOrder) {
+            is SortOrder.Alphabetical -> BookmarkOrder.TITLE
+            is SortOrder.DateCreated -> BookmarkOrder.CREATED_DATE
+            else -> BookmarkOrder.UPDATED_DATE
+        }
+        return Pager(config = DefaultPagingConfig) {
+            bookmarkDao.getPagedBookmarks(sortOrderBy, sortOrder.sortType.toQueryOrder())
+        }.flow.map { page -> page.map { it.toBookmark() } }
+    }
+
+    override fun searchPagedBookmarks(query: String): Flow<PagingData<Bookmark>> =
+        Pager(config = DefaultPagingConfig) {
+            bookmarkDao.searchPagedBookmarks(query)
+        }.flow.map { page -> page.map { it.toBookmark() } }
+
+    override fun getAllBookmarks(sortOrder: SortOrder): Flow<List<Bookmark>> {
+        val sortOrderBy = when (sortOrder) {
+            is SortOrder.Alphabetical -> BookmarkOrder.TITLE
+            is SortOrder.DateCreated -> BookmarkOrder.CREATED_DATE
+            else -> BookmarkOrder.UPDATED_DATE
+        }
+        return bookmarkDao.getAllBookmarks(sortOrderBy, sortOrder.sortType.toQueryOrder())
+            .map { bookmarks -> bookmarks.map { it.toBookmark() } }
             .flowOn(ioDispatcher)
-            .map { bookmarks ->
-                bookmarks.map {
-                    it.toBookmark()
-                }
-            }
+    }
+
+    override suspend fun getFullBookmarksPage(afterId: String, limit: Int): List<Bookmark> {
+        return withContext(ioDispatcher) {
+            bookmarkDao.getFullBookmarksPage(afterId, limit).map { it.toBookmark() }
+        }
     }
 
     override suspend fun getBookmark(id: String): Bookmark {
@@ -103,4 +134,9 @@ class BookmarkRepositoryImpl(
             changeObserver.notifyChange()
         }
     }
+}
+
+private fun SortType.toQueryOrder() = when (this) {
+    SortType.ASC -> QueryOrder.ASC
+    SortType.DESC -> QueryOrder.DESC
 }

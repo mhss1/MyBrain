@@ -86,7 +86,7 @@ fun AddTaskFloatingCard(
 ) {
     var title by rememberSaveable { mutableStateOf("") }
     var priority by rememberSaveable { mutableStateOf(Priority.LOW) }
-    var dueDate by rememberSaveable { mutableLongStateOf(0L) }
+    var dueDate by rememberSaveable { mutableStateOf<Long?>(null) }
     var pendingDueDate by remember { mutableLongStateOf(now()) }
     var showDateDialog by remember { mutableStateOf(false) }
     var showTimeDialog by remember { mutableStateOf(false) }
@@ -141,7 +141,7 @@ fun AddTaskFloatingCard(
 
     if (showDateDialog) {
         DateDialog(
-            initialDate = dueDate.takeIf { it != 0L } ?: now(),
+            initialDate = dueDate ?: now(),
             onDismissRequest = { showDateDialog = false },
             onDatePicked = {
                 pendingDueDate = it
@@ -178,13 +178,15 @@ fun AddTaskFloatingCard(
                     Modifier.frostedGlass(
                         liquidState = liquidState,
                         shape = RoundedCornerShape(24.dp),
+                        tint = MaterialTheme.colorScheme.surface.copy(0.3f),
                         refraction = 0.40f,
-                        frost = 8.dp,
+                        frost = 9.dp,
                         curve = 0.05f,
+                        edge = 0.015f
                     )
                 } else {
                     Modifier.background(
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                         shape = RoundedCornerShape(24.dp)
                     )
                 }
@@ -275,13 +277,12 @@ fun AddTaskFloatingCard(
                     AddSubTaskButton(onClick = ::addSubTask)
                     DueDateButton(
                         dueDate = dueDate,
-                        formattedDate = dueDate.takeIf { it != 0L }
-                            ?.let(formatter::formatDateDependingOnDay),
+                        formattedDate = dueDate?.let(formatter::formatDateDependingOnDay),
                         onClick = {
                             keyboardController?.hide()
                             showDateDialog = true
                         },
-                        onClear = { dueDate = 0L }
+                        onClear = { dueDate = null }
                     )
                     PriorityButton(
                         priority = priority,
@@ -377,12 +378,12 @@ private fun SubTaskInput(
 
 @Composable
 private fun DueDateButton(
-    dueDate: Long,
+    dueDate: Long?,
     formattedDate: String?,
     onClick: () -> Unit,
     onClear: () -> Unit,
 ) {
-    if (dueDate == 0L) {
+    if (dueDate == null) {
         Surface(
             onClick = onClick,
             modifier = Modifier.size(34.dp),

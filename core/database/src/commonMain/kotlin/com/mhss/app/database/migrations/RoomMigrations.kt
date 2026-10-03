@@ -303,3 +303,41 @@ val MIGRATION_5_6 = object : Migration(5, 6) {
         connection.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_deleted_entities_entity_type_entity_id` ON `deleted_entities` (`entity_type`, `entity_id`)")
     }
 }
+
+val MIGRATION_6_7 = object : Migration(6, 7) {
+    override suspend fun migrate(connection: SQLiteConnection) {
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_notes_pinned_updated_date` ON `notes` (`pinned` ASC, `updated_date` ASC)")
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_notes_folder_id_pinned_updated_date` ON `notes` (`folder_id` ASC, `pinned` ASC, `updated_date` ASC)")
+
+        connection.execSQL("CREATE TABLE `tasks_new` (`title` TEXT NOT NULL, `description` TEXT NOT NULL, `is_completed` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `updated_date` INTEGER NOT NULL, `sub_tasks` TEXT NOT NULL, `dueDate` INTEGER, `recurring` INTEGER NOT NULL, `frequency` INTEGER NOT NULL, `frequency_amount` INTEGER NOT NULL, `alarmId` INTEGER, `id` TEXT NOT NULL, `sync_seq` INTEGER NOT NULL DEFAULT 1, PRIMARY KEY(`id`))")
+        connection.execSQL("INSERT INTO `tasks_new` SELECT `title`, `description`, `is_completed`, `priority`, `created_date`, `updated_date`, `sub_tasks`, NULLIF(`dueDate`, 0), `recurring`, `frequency`, `frequency_amount`, `alarmId`, `id`, `sync_seq` FROM `tasks`")
+        dropOldTasksInBatches(connection)
+        connection.execSQL("ALTER TABLE `tasks_new` RENAME TO `tasks`")
+        connection.execSQL("CREATE INDEX `index_tasks_sync_seq` ON `tasks` (`sync_seq`)")
+        connection.execSQL("CREATE INDEX `index_tasks_updated_date` ON `tasks` (`updated_date`)")
+        connection.execSQL("CREATE INDEX `index_tasks_is_completed_updated_date` ON `tasks` (`is_completed`, `updated_date`)")
+        connection.execSQL("CREATE INDEX `index_tasks_dueDate` ON `tasks` (`dueDate`)")
+        connection.execSQL("CREATE INDEX `index_tasks_is_completed_dueDate` ON `tasks` (`is_completed`, `dueDate`)")
+
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_diary_updated_date` ON `diary` (`updated_date` ASC)")
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_diary_created_date` ON `diary` (`created_date` ASC)")
+        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_bookmarks_updated_date` ON `bookmarks` (`updated_date` ASC)")
+
+        connection.execSQL("ALTER TABLE paired_devices ADD COLUMN last_acknowledged_local_seq INTEGER NOT NULL DEFAULT 0")
+    }
+}
+
+private fun dropOldTasksInBatches(connection: SQLiteConnection) {
+    while (true) {
+        connection.execSQL("DELETE FROM tasks WHERE rowid IN (SELECT rowid FROM tasks LIMIT $TASK_MIGRATION_BATCH_SIZE)")
+
+        val deletedRows = connection.prepare("SELECT changes()").use {
+            it.step()
+            it.getLong(0)
+        }
+
+        if (deletedRows < TASK_MIGRATION_BATCH_SIZE) break
+    }
+
+    connection.execSQL("DROP TABLE tasks")
+}

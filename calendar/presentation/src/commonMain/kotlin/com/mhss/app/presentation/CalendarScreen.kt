@@ -45,6 +45,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mhss.app.datetime.HOUR_MILLIS
 import com.mhss.app.datetime.LocalDateTimeFormatter
 import com.mhss.app.datetime.currentLocalDate
@@ -54,9 +57,12 @@ import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarDay
 import com.mhss.app.domain.model.CalendarEvent
 import com.mhss.app.domain.use_case.CalendarEventsDay
+import com.mhss.app.domain.use_case.CalendarListMonth
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_event
 import com.mhss.app.ui.calendar
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.go_to_settings
@@ -86,6 +92,7 @@ fun CalendarScreen(
     viewModel: CalendarViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val listEvents = viewModel.listEvents.collectAsLazyPagingItems()
     val listViewState = rememberLazyListState()
     val dayEventsState = rememberLazyListState()
     var settingsVisible by remember { mutableStateOf(false) }
@@ -113,21 +120,19 @@ fun CalendarScreen(
     val scope = rememberCoroutineScope()
     val liquidState = rememberLiquidState()
 
-    val listMonthLabel by remember(state.events) {
+    val listMonthLabel by remember(listEvents, listViewState) {
         derivedStateOf {
-            if (state.events.isEmpty()) ""
-            else {
-                val events = state.events
-                val index =
-                    listViewState.firstVisibleItemIndex.coerceIn(0, events.lastIndex)
-                events.getOrNull(index)?.monthName.orEmpty()
-            }
+            val index = listViewState.firstVisibleItemIndex
+            if (index in 0 until listEvents.itemCount) listEvents.peek(index)?.monthName.orEmpty()
+            else ""
         }
     }
 
     val selectedMonthLabel = when (viewMode) {
         CalendarViewMode.Month -> LocalDateTimeFormatter.current.monthName(currentMonth)
-        CalendarViewMode.List -> listMonthLabel
+        CalendarViewMode.List -> listMonthLabel.ifEmpty {
+            months.firstOrNull { it.index == state.selectedDropdownMonthIndex }?.name.orEmpty()
+        }
     }
 
     LaunchedEffect(viewMode) {
@@ -147,10 +152,8 @@ fun CalendarScreen(
                             months = months,
                             onMonthSelected = { selected ->
                                 scope.launch {
-                                    val targetIndex = state.events.indexOfFirst { it.monthName == selected }
-                                    if (targetIndex >= 0) {
-                                        listViewState.scrollToItem(targetIndex)
-                                    }
+                                    viewModel.onEvent(CalendarViewModelEvent.DropdownMonthSelected(selected.index))
+                                    listViewState.scrollToItem(0)
                                 }
                             }
                         )
@@ -235,10 +238,11 @@ fun CalendarScreen(
                             }
                         )
                     }
+                    PagingLoadState(listEvents)
                     CalendarListView(
                         modifier = Modifier.fillMaxSize(),
                         state = listViewState,
-                        events = state.events,
+                        events = listEvents,
                         onEventClick = { event ->
                             navController.navigate(
                                 Screen.CalendarEventDetailsScreen(
@@ -327,17 +331,18 @@ fun NoReadCalendarPermissionMessage(
 private fun CalendarListView(
     modifier: Modifier = Modifier,
     state: LazyListState,
-    events: List<CalendarEventsDay>,
+    events: LazyPagingItems<CalendarEventsDay>,
     onEventClick: (CalendarEvent) -> Unit
 ) {
+    val itemKey = events.itemKey { it.formattedDate }
     LazyColumn(
         modifier = modifier,
         state = state,
         contentPadding = PaddingValues(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        events.forEach { eventDay ->
-            item(key = eventDay.formattedDate) {
+        items(events.itemCount, key = itemKey) { index ->
+            events[index]?.let { eventDay ->
                 Column(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
@@ -349,7 +354,7 @@ private fun CalendarListView(
                         CalendarEventItem(event = event, onClick = onEventClick)
                     }
                 }
-            }
+            } ?: PagingPlaceholder()
         }
     }
 }
@@ -357,8 +362,8 @@ private fun CalendarListView(
 @Composable
 fun MonthDropDownMenu(
     selectedMonth: String,
-    months: List<String>,
-    onMonthSelected: (String) -> Unit
+    months: List<CalendarListMonth>,
+    onMonthSelected: (CalendarListMonth) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(Modifier.clickable { expanded = true }) {
@@ -386,7 +391,7 @@ fun MonthDropDownMenu(
                         expanded = false
                     },
                     text = {
-                        Text(text = it)
+                        Text(text = it.name)
                     })
             }
         }

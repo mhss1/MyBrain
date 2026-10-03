@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.mhss.app.domain.model.Task
+import com.mhss.app.domain.model.TaskSummary
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.no_tasks_yet
 import com.mhss.app.ui.of_last_week_tasks
@@ -40,7 +40,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun TasksSummaryCard(
-    tasks: List<Task>,
+    summary: TaskSummary,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -52,9 +52,9 @@ fun TasksSummaryCard(
             .fillMaxWidth()
             .padding(6.dp)
     ) {
-        val percentage by remember(tasks) {
+        val percentage by remember(summary) {
             derivedStateOf {
-                tasks.count { it.isCompleted }.toFloat() / tasks.size
+                summary.completed.toFloat() / summary.total
             }
         }
         Column {
@@ -66,7 +66,7 @@ fun TasksSummaryCard(
                     .padding(12.dp),
                 textAlign = TextAlign.Center
             )
-            if (tasks.isNotEmpty()) {
+            if (summary.total > 0) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

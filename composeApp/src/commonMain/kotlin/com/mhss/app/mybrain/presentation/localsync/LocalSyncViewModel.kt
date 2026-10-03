@@ -96,6 +96,10 @@ class LocalSyncViewModel(
 
     fun onEvent(event: PairedDevicesEvent) {
         when (event) {
+            PairedDevicesEvent.LocalNetworkPermissionGranted -> {
+                orchestrator.startNetworkDiscovery()
+            }
+
             is PairedDevicesEvent.PairDirectly -> {
                 if (deepLinkHandled) return
                 deepLinkHandled = true

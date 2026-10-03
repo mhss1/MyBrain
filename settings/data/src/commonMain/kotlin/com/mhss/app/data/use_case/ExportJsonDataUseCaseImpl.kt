@@ -1,6 +1,11 @@
 package com.mhss.app.data.use_case
 
 import com.mhss.app.domain.exception.BackupDataException
+import com.mhss.app.domain.model.backup.BackupBookmark
+import com.mhss.app.domain.model.backup.BackupDiaryEntry
+import com.mhss.app.domain.model.backup.BackupNote
+import com.mhss.app.domain.model.backup.BackupNoteFolder
+import com.mhss.app.domain.model.backup.BackupTask
 import com.mhss.app.domain.model.backup.JsonBackupData
 import com.mhss.app.domain.model.backup.toBackupBookmark
 import com.mhss.app.domain.model.backup.toBackupDiaryEntry
@@ -12,10 +17,13 @@ import com.mhss.app.domain.repository.DiaryRepository
 import com.mhss.app.domain.repository.NoteRepository
 import com.mhss.app.domain.repository.TaskRepository
 import com.mhss.app.domain.use_case.`interface`.ExportJsonDataUseCase
+import com.mhss.app.storage.BufferedFileWriter
 import com.mhss.app.storage.StorageManager
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 
@@ -28,6 +36,12 @@ class ExportJsonDataUseCaseImpl(
     private val bookmarkRepository: BookmarkRepository,
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : ExportJsonDataUseCase {
+
+    private val json = Json {
+        encodeDefaults = true
+        explicitNulls = false
+    }
+
     override suspend fun invoke(
         directoryUri: String,
         exportNotes: Boolean,
@@ -39,31 +53,68 @@ class ExportJsonDataUseCaseImpl(
     ) {
         withContext(ioDispatcher) {
             try {
-                val notes = if (exportNotes) noteRepository.getAllFullNotes() else emptyList()
-                val noteFolders = if (exportNotes) noteRepository.getAllNoteFolders().first() else emptyList()
-                val tasks = if (exportTasks) taskRepository.getAllTasks().first() else emptyList()
-                val diary = if (exportDiary) diaryRepository.getAllFullEntries() else emptyList()
-                val bookmarks = if (exportBookmarks) bookmarkRepository.getAllBookmarks().first() else emptyList()
-
-                val backupData = JsonBackupData(
-                    schemaVersion = JsonBackupData.CURRENT_SCHEMA_VERSION,
-                    notes = notes.map { it.toBackupNote() },
-                    noteFolders = noteFolders.map { it.toBackupNoteFolder() },
-                    tasks = tasks.map { it.toBackupTask() },
-                    diary = diary.map { it.toBackupDiaryEntry() },
-                    bookmarks = bookmarks.map { it.toBackupBookmark() }
-                )
-
-
-                val fileName = "MyBrain_Backup_${System.currentTimeMillis()}.json"
-
-                storageManager.encodeJsonDataToFile(
+                storageManager.writeBufferedFile(
                     directoryUri = directoryUri,
-                    fileName = fileName,
-                    mimeType = "application/json",
-                    value = backupData,
-                    serializer = JsonBackupData.serializer()
-                )
+                    fileName = "MyBrain_Backup_${System.currentTimeMillis()}.json",
+                    mimeType = "application/json"
+                ) {
+                    write("{\"schemaVersion\":${JsonBackupData.CURRENT_SCHEMA_VERSION},")
+
+                    writePagedArray(
+                        propertyName = "notes",
+                        enabled = exportNotes,
+                        serializer = BackupNote.serializer(),
+                        getId = BackupNote::id
+                    ) { afterId, limit ->
+                        noteRepository.getFullNotesPage(afterId, limit).map { it.toBackupNote() }
+                    }
+
+                    write(",")
+
+                    writePagedArray(
+                        propertyName = "noteFolders",
+                        enabled = exportNotes,
+                        serializer = BackupNoteFolder.serializer(),
+                        getId = BackupNoteFolder::id
+                    ) { afterId, limit ->
+                        noteRepository.getNoteFoldersPage(afterId, limit).map { it.toBackupNoteFolder() }
+                    }
+
+                    write(",")
+
+                    writePagedArray(
+                        propertyName = "tasks",
+                        enabled = exportTasks,
+                        serializer = BackupTask.serializer(),
+                        getId = BackupTask::id
+                    ) { afterId, limit ->
+                        taskRepository.getFullTasksPage(afterId, limit).map { it.toBackupTask() }
+                    }
+
+                    write(",")
+
+                    writePagedArray(
+                        propertyName = "diary",
+                        enabled = exportDiary,
+                        serializer = BackupDiaryEntry.serializer(),
+                        getId = BackupDiaryEntry::id
+                    ) { afterId, limit ->
+                        diaryRepository.getFullEntriesPage(afterId, limit).map { it.toBackupDiaryEntry() }
+                    }
+
+                    write(",")
+
+                    writePagedArray(
+                        propertyName = "bookmarks",
+                        enabled = exportBookmarks,
+                        serializer = BackupBookmark.serializer(),
+                        getId = BackupBookmark::id
+                    ) { afterId, limit ->
+                        bookmarkRepository.getFullBookmarksPage(afterId, limit).map { it.toBackupBookmark() }
+                    }
+
+                    write("}")
+                }
             } catch (e: BackupDataException) {
                 throw e
             } catch (_: Exception) {
@@ -72,4 +123,33 @@ class ExportJsonDataUseCaseImpl(
         }
     }
 
+    private suspend fun <T> BufferedFileWriter.writePagedArray(
+        propertyName: String,
+        enabled: Boolean,
+        serializer: KSerializer<T>,
+        getId: (T) -> String,
+        loadPage: suspend (afterId: String, limit: Int) -> List<T>
+    ) {
+        write("\"$propertyName\":[")
+        if (enabled) {
+            var afterId = ""
+            var firstPage = true
+            var page = loadPage(afterId, PAGE_SIZE)
+            while (page.isNotEmpty()) {
+                val encodedPage = json.encodeToString(ListSerializer(serializer), page)
+                if (!firstPage) write(",")
+                // Skip the page brackets so its items can be appended to the open backup array.
+                write(encodedPage, startIndex = 1, endIndex = encodedPage.lastIndex)
+
+                firstPage = false
+                afterId = getId(page.last())
+                page = loadPage(afterId, PAGE_SIZE)
+            }
+        }
+        write("]")
+    }
+
+    private companion object {
+        const val PAGE_SIZE = 100
+    }
 }

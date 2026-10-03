@@ -1,27 +1,65 @@
 package com.mhss.app.data.impl
 
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
 import com.mhss.app.data.storage.MarkdownFileManager
 import com.mhss.app.domain.model.Note
 import com.mhss.app.domain.model.NoteFolder
 import com.mhss.app.domain.repository.NoteRepository
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
 class MarkdownNoteRepositoryImpl(
     private val markdownFileManager: MarkdownFileManager,
     private val rootId: String,
+    private val defaultDispatcher: CoroutineDispatcher,
 ) : NoteRepository {
 
-    override fun getAllFolderlessNotes(): Flow<List<Note>> {
-        return markdownFileManager.getFolderNotesFlow(rootId)
+    override fun getPagedNotes(sortOrder: SortOrder, showAllNotes: Boolean): Flow<PagingData<Note>> =
+        (if (showAllNotes) getAllNotes(sortOrder) else getAllFolderlessNotes(sortOrder))
+            .map { it.toPagingData() }
+
+    override fun searchPagedNotes(query: String): Flow<PagingData<Note>> = flow {
+        emit(searchNotes(query).toPagingData())
     }
 
-    override fun getAllNotes(): Flow<List<Note>> {
-        return markdownFileManager.getAllNotesFlow(rootId)
+    override fun getPagedNotesByFolder(folderId: String, sortOrder: SortOrder): Flow<PagingData<Note>> =
+        getNotesByFolder(folderId, sortOrder).map { it.toPagingData() }
+
+    override fun getAllFolderlessNotes(sortOrder: SortOrder): Flow<List<Note>> {
+        return markdownFileManager.getFolderNotesFlow(rootId)
+            .map { it.sorted(sortOrder) }
+            .flowOn(defaultDispatcher)
     }
+
+    override fun getAllNotes(sortOrder: SortOrder): Flow<List<Note>> {
+        return markdownFileManager.getAllNotesFlow(rootId)
+            .map { it.sorted(sortOrder) }
+            .flowOn(defaultDispatcher)
+    }
+
+    override fun getLimitedNotes(
+        sortOrder: SortOrder,
+        showAllNotes: Boolean,
+        limit: Int
+    ): Flow<List<Note>> =
+        (if (showAllNotes) getAllNotes(sortOrder) else getAllFolderlessNotes(sortOrder))
+            .map { it.take(limit) }
 
     override suspend fun getAllFullNotes(): List<Note> {
-        return getAllNotes().first()
+        // External Markdown notes are not included in app exports.
+        return emptyList()
+    }
+
+    override suspend fun getFullNotesPage(afterId: String, limit: Int): List<Note> {
+        // External Markdown notes are not included in app exports.
+        return emptyList()
     }
 
     override suspend fun getNote(id: String): Note {
@@ -32,8 +70,10 @@ class MarkdownNoteRepositoryImpl(
         return markdownFileManager.searchNotes(query, rootId)
     }
 
-    override fun getNotesByFolder(folderId: String): Flow<List<Note>> {
+    override fun getNotesByFolder(folderId: String, sortOrder: SortOrder): Flow<List<Note>> {
         return markdownFileManager.getFolderNotesFlow(folderId)
+            .map { it.sorted(sortOrder) }
+            .flowOn(defaultDispatcher)
     }
 
     override suspend fun upsertNote(note: Note, currentFolderId: String?): String {
@@ -68,8 +108,16 @@ class MarkdownNoteRepositoryImpl(
         markdownFileManager.deleteFolder(folder.id, rootId)
     }
 
+    override fun getPagedNoteFolders(): Flow<PagingData<NoteFolder>> =
+        getAllNoteFolders().map { it.toPagingData() }
+
     override fun getAllNoteFolders(): Flow<List<NoteFolder>> {
         return markdownFileManager.getFolderFoldersFlow(rootId)
+    }
+
+    override suspend fun getNoteFoldersPage(afterId: String, limit: Int): List<NoteFolder> {
+        // External Markdown note folders are not included in app exports.
+        return emptyList()
     }
 
     override suspend fun getNoteFolder(folderId: String): NoteFolder? {
@@ -81,3 +129,27 @@ class MarkdownNoteRepositoryImpl(
         return markdownFileManager.searchFolderByName(name, rootId)
     }
 }
+
+private fun List<Note>.sorted(sortOrder: SortOrder): List<Note> {
+    val valueComparator = when (sortOrder) {
+        is SortOrder.Alphabetical -> Comparator<Note> { first, second ->
+            first.title.compareTo(second.title, ignoreCase = true)
+        }
+        is SortOrder.DateCreated -> compareBy<Note> { it.createdDate }
+        else -> compareBy<Note> { it.updatedDate }
+    }
+    val comparator = when (sortOrder.sortType) {
+        SortType.ASC -> valueComparator
+        SortType.DESC -> valueComparator.reversed()
+    }
+    return sortedWith(compareByDescending<Note> { it.pinned }.then(comparator))
+}
+
+private fun <T : Any> List<T>.toPagingData(): PagingData<T> = PagingData.from(
+    data = this,
+    sourceLoadStates = LoadStates(
+        refresh = LoadState.NotLoading(false),
+        prepend = LoadState.NotLoading(true),
+        append = LoadState.NotLoading(true)
+    )
+)

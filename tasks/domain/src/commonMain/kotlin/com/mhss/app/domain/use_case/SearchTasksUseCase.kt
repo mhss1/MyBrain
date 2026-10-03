@@ -9,6 +9,8 @@ import org.koin.core.annotation.Single
 class SearchTasksUseCase(
     private val tasksRepository: TaskRepository
 ) {
+    fun paged(query: String) = tasksRepository.searchPagedTasks(query)
+
     operator fun invoke(query: String): Flow<List<Task>> {
         return tasksRepository.searchTasks(query)
     }

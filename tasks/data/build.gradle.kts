@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.mybrain.android.kmp.library)
     alias(libs.plugins.koin.compiler)
 }
 
@@ -17,6 +16,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.core.database)
+                implementation(projects.core.preferences)
                 implementation(projects.core.alarm)
                 implementation(projects.tasks.domain)
                 implementation(projects.core.datetime)

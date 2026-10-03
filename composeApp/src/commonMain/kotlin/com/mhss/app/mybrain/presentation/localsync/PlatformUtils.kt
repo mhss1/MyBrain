@@ -15,6 +15,9 @@ expect fun KmpImage(
 @Composable
 expect fun rememberQrScanLauncher(onResult: (KmpBitmap?) -> Unit): () -> Unit
 
+@Composable
+expect fun RequestLocalNetworkPermission(onGranted: () -> Unit)
+
 interface QrCodeUtils {
     fun generateQrCode(content: String, size: Int = 512): KmpBitmap
     fun decodeQrFromBitmap(bitmap: KmpBitmap): String?

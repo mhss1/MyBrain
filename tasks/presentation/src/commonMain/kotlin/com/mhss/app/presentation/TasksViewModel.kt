@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.mhss.app.datetime.now
 import com.mhss.app.domain.model.SubTask
 import com.mhss.app.domain.model.Task
@@ -14,31 +15,31 @@ import com.mhss.app.domain.use_case.SearchTasksUseCase
 import com.mhss.app.domain.use_case.UpdateTaskCompletedUseCase
 import com.mhss.app.domain.use_case.UpsertTaskUseCase
 import com.mhss.app.preferences.PrefsConstants
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
 import com.mhss.app.preferences.domain.model.toInt
-import com.mhss.app.preferences.domain.model.toOrder
+import com.mhss.app.preferences.domain.model.toSortOrder
 import com.mhss.app.preferences.domain.use_case.GetPreferenceUseCase
 import com.mhss.app.preferences.domain.use_case.SavePreferenceUseCase
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.error_empty_title
 import com.mhss.app.ui.snackbar.showSnackbar
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
 import org.koin.core.annotation.Named
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 @KoinViewModel
 class TasksViewModel(
     private val addTask: UpsertTaskUseCase,
@@ -53,22 +54,28 @@ class TasksViewModel(
     var tasksUiState by mutableStateOf(UiState())
         private set
 
-    private var getTasksJob: Job? = null
-    private var searchTasksJob: Job? = null
+    private val pagingRequest = MutableStateFlow<Pair<SortOrder, Boolean>>(SortOrder.DueDate(SortType.ASC) to false)
+    val tasks = pagingRequest.flatMapLatest { getAllTasks.paged(it.first, it.second) }.cachedIn(viewModelScope)
+
+    private val searchQuery = MutableStateFlow("")
+    val searchResults = searchQuery.flatMapLatest {
+        delay(250)
+        searchTasksUseCase.paged(it)
+    }.cachedIn(viewModelScope)
 
     init {
         viewModelScope.launch {
             combine(
                 getPreference(
                     intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
-                    Order.DateModified(OrderType.ASC).toInt()
+                    SortOrder.DueDate(SortType.ASC).toInt()
                 ),
                 getPreference(
                     booleanPreferencesKey(PrefsConstants.SHOW_COMPLETED_TASKS_KEY),
                     false
                 )
             ) { order, showCompleted ->
-                getTasks(order.toOrder(), showCompleted)
+                getTasks(order.toSortOrder(), showCompleted)
             }.collect()
         }
     }
@@ -109,7 +116,7 @@ class TasksViewModel(
             is TaskEvent.UpdateOrder -> viewModelScope.launch {
                 savePreference(
                     intPreferencesKey(PrefsConstants.TASKS_ORDER_KEY),
-                    event.order.toInt()
+                    event.sortOrder.toInt()
                 )
             }
 
@@ -120,46 +127,19 @@ class TasksViewModel(
                 )
             }
 
-            is TaskEvent.SearchTasks -> {
-                viewModelScope.launch {
-                    searchTasks(event.query)
-                }
-            }
+            is TaskEvent.SearchTasks -> searchQuery.value = event.query
         }
     }
 
     data class UiState(
-        val tasks: List<Task> = emptyList(),
-        val taskOrder: Order = Order.DateModified(OrderType.ASC),
+        val taskSortOrder: SortOrder = SortOrder.DueDate(SortType.ASC),
         val showCompletedTasks: Boolean = false,
         val alarmError: Boolean = false,
-        val searchTasks: List<Task> = emptyList(),
         val snackbarHostState: SnackbarHostState = SnackbarHostState()
     )
 
-    private fun getTasks(order: Order, showCompleted: Boolean) {
-        getTasksJob?.cancel()
-        getTasksJob = getAllTasks(order)
-            .map { list ->
-                if (showCompleted)
-                    list
-                else
-                    list.filter { !it.isCompleted }
-            }.onEach { tasks ->
-                tasksUiState = tasksUiState.copy(
-                    tasks = tasks,
-                    taskOrder = order,
-                    showCompletedTasks = showCompleted
-                )
-            }.launchIn(viewModelScope)
-    }
-
-    private fun searchTasks(query: String) {
-        searchTasksJob?.cancel()
-        searchTasksJob = searchTasksUseCase(query).onEach { tasks ->
-            tasksUiState = tasksUiState.copy(
-                searchTasks = tasks
-            )
-        }.launchIn(viewModelScope)
+    private fun getTasks(sortOrder: SortOrder, showCompleted: Boolean) {
+        pagingRequest.value = sortOrder to showCompleted
+        tasksUiState = tasksUiState.copy(taskSortOrder = sortOrder, showCompletedTasks = showCompleted)
     }
 }

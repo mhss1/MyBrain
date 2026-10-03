@@ -13,7 +13,11 @@ import org.koin.core.annotation.Single
 class LocalSyncModule {
 
     @Single
-    fun provideJson(): Json = Json { ignoreUnknownKeys = true }
+    fun provideJson(): Json = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = false
+        explicitNulls = false
+    }
 
     @Single
     fun provideEncryptionManager(): EncryptionManager = EncryptionManager()

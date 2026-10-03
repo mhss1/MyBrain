@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ fun DashboardScreen(
         }
     ) {paddingValues ->
         LaunchedEffect(true) { viewModel.onDashboardEvent(DashboardEvent.InitAll) }
+        val dashboardTasks = viewModel.dashboardTasks.collectAsLazyPagingItems()
         LazyColumn(contentPadding = paddingValues) {
             item {
                 CalendarDashboardWidget(
@@ -68,7 +70,7 @@ fun DashboardScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1.5f),
-                    tasks = viewModel.uiState.dashBoardTasks,
+                    tasks = dashboardTasks,
                     onCheck = { task, completed ->
                         viewModel.onDashboardEvent(DashboardEvent.CompleteTask(task, completed))
                     },
@@ -103,7 +105,7 @@ fun DashboardScreen(
                     )
                     TasksSummaryCard(
                         modifier = Modifier.weight(1f, fill = true),
-                        tasks = viewModel.uiState.summaryTasks
+                        summary = viewModel.uiState.taskSummary
                     )
                 }
             }

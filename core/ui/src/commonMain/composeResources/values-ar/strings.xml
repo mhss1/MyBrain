@@ -29,6 +29,8 @@
     <string name="title">العنوان</string>
     <string name="delete_sub_task">حذف المهمة الفرعية</string>
     <string name="add_sub_task">إضافة مهام فرعية</string>
+    <string name="sub_task_deleted">تم حذف المهمة الفرعية</string>
+    <string name="undo">تراجع</string>
     <string name="description">الوصف</string>
     <string name="request_feature_report_bug">طلب ميزة / ابلاغ عن مشكلة</string>
     <string name="low">منخفض</string>
@@ -59,8 +61,8 @@
     <string name="delete_bookmark_confirmation_message">هل أنت متأكد من حذف هذه العلامة المرجعية؟</string>
     <string name="delete_diary_entry_confirmation_message">هل أنت متأكد من حذف هذه من اليوميات؟</string>
     <string name="cancel">إلغاء</string>
-    <string name="no_tasks_message">ليس لديك أي مهام\n أظغط على زر + لإضافة مهام جديدة \n أو \n بواسطة الإختصار من قائمة الاعدادات السريعة بجهازك</string>
-    <string name="no_notes_message">ليس لديك أي ملاحظات.\n اضغط على + لإضافة ملاحظة جديدة</string>
+    <string name="no_tasks_message">لا توجد مهام</string>
+    <string name="no_notes_message">لا توجد ملاحظات</string>
     <string name="no_entries_message">ليس لديك أي يوميات.\n اضغط على + لإضافة يومية جديدة</string>
     <string name="no_bookmarks_message">ليس لديك أي محفوظات. \n أضغط + لإضافة علامة مرجعة جديدة\n أو \n عن طريق مشاركة الرابط للتطبيق من أي متصفح</string>
     <string name="project_roadmap">خارطة التطبيق</string>
@@ -116,7 +118,7 @@
     <string name="last_30_days">أخر 30 يوم</string>
     <string name="last_year">أخر عام</string>
     <string name="no_data_yet">لا يوجد بيانات بعد</string>
-    <string name="no_events">لا يوجد مواعيد بعد</string>
+    <string name="no_events">لا توجد مواعيد</string>
     <string name="tasks_summary">ملخص المهام</string>
     <string name="you_completed">لقد أكملت</string>
     <string name="of_last_week_tasks">من المهام في آخر اسبوع</string>
@@ -267,6 +269,7 @@
     <string name="export_format">صيغة التصدير</string>
     <string name="import_format">صيغة الاستيراد</string>
     <string name="export_types">محتوى التصدير</string>
+    <string name="markdown_notes_export_not_supported">تصدير ملاحظات Markdown غير مدعوم.</string>
     <string name="export_format_json">ملف JSON</string>
     <string name="export_format_markdown">ملفات Markdown</string>
     <string name="offline">بدون إنترنت</string>

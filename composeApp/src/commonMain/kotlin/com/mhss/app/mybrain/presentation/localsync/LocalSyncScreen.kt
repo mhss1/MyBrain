@@ -115,6 +115,9 @@ fun LocalSyncScreen(
     val isLoading = uiState.isLoading
     val clipboardManager = LocalClipboard.current
     val scope = rememberCoroutineScope()
+    RequestLocalNetworkPermission {
+        viewModel.onEvent(PairedDevicesEvent.LocalNetworkPermissionGranted)
+    }
 
     var showRenameDialog by remember { mutableStateOf(false) }
     var showCustomIpDialogForDevice by remember { mutableStateOf<PairedDevice?>(null) }

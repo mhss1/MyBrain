@@ -16,14 +16,14 @@
     <string name="due_date">Due date</string>
     <string name="error_empty_title">Title cannot be empty</string>
     <string name="cancel">Cancel</string>
-    <string name="no_tasks_message">You don\'t have any tasks\n Click the + button to add a new Task\n or \nby using the shortcut in the quick settings menu</string>
-    <string name="no_notes_message">You don\'t have any notes\n Click the + button to add a new Note</string>
+    <string name="no_tasks_message">No tasks</string>
+    <string name="no_notes_message">No notes</string>
     <string name="bookmark_saved">Bookmark saved successfully</string>
     <string name="invalid_url">Invalid URL</string>
     <string name="no_read_calendar_permission_message">Read Calendar permission required for this feature to be available.\nPlease grant the permission</string>
     <string name="go_to_settings">Go to settings</string>
     <string name="added_task">Added to tasks</string>
-    <string name="no_events">No events yet</string>
+    <string name="no_events">No events</string>
     <string name="loading">Loading…</string>
     <string name="calendar_widget_refresh_message">Click the refresh button if you already granted the permission</string>
     <string name="thursday_30_calendar_preview">Thursday 30</string>

@@ -1,28 +1,61 @@
 package com.mhss.app.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room3.Dao
+import androidx.room3.DaoReturnTypeConverters
 import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import androidx.room3.RawQuery
+import androidx.room3.RoomRawQuery
 import androidx.room3.Transaction
 import androidx.room3.Update
 import androidx.room3.Upsert
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import com.mhss.app.database.entity.NoteEntity
 import com.mhss.app.database.entity.NoteFolderEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 interface NoteDao {
 
-    @Query("SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes WHERE folder_id IS NULL")
-    fun getAllFolderlessNotes(): Flow<List<NoteEntity>>
+    @RawQuery(observedEntities = [NoteEntity::class])
+    fun pageNotes(query: RoomRawQuery): PagingSource<Int, NoteEntity>
 
-    @Query("SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes")
-    fun getAllNotes(): Flow<List<NoteEntity>>
+    fun getPagedNotes(orderBy: NoteOrder, order: QueryOrder, showAllNotes: Boolean): PagingSource<Int, NoteEntity> =
+        pageNotes(noteQuery(if (showAllNotes) null else "folder_id IS NULL", orderBy, order))
+
+    fun getPagedNotesByFolder(folderId: String, orderBy: NoteOrder, order: QueryOrder): PagingSource<Int, NoteEntity> =
+        pageNotes(noteQuery("folder_id = ?", orderBy, order) { it.bindText(1, folderId) })
+
+    @Query("SELECT title, SUBSTR(content, 1, 100) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%' ORDER BY pinned DESC, updated_date DESC")
+    fun searchPagedNotes(query: String): PagingSource<Int, NoteEntity>
+
+    @RawQuery(observedEntities = [NoteEntity::class])
+    fun observeNotes(query: RoomRawQuery): Flow<List<NoteEntity>>
+
+    fun getAllFolderlessNotes(orderBy: NoteOrder, order: QueryOrder): Flow<List<NoteEntity>> =
+        observeNotes(noteQuery("folder_id IS NULL", orderBy, order))
+
+    fun getAllNotes(orderBy: NoteOrder, order: QueryOrder): Flow<List<NoteEntity>> =
+        observeNotes(noteQuery(null, orderBy, order))
+
+    fun getLimitedNotes(
+        orderBy: NoteOrder,
+        order: QueryOrder,
+        showAllNotes: Boolean,
+        limit: Int
+    ): Flow<List<NoteEntity>> = observeNotes(
+        noteQuery(if (showAllNotes) null else "folder_id IS NULL", orderBy, order, limit = limit)
+    )
 
     @Query("SELECT * FROM notes")
     suspend fun getAllFullNotes(): List<NoteEntity>
+
+    @Query("SELECT * FROM notes WHERE id > :afterId ORDER BY id LIMIT :limit")
+    suspend fun getFullNotesPage(afterId: String, limit: Int): List<NoteEntity>
 
     @Query("SELECT * FROM notes WHERE id = :id")
     suspend fun getNote(id: String): NoteEntity?
@@ -42,8 +75,13 @@ interface NoteDao {
     @Query("SELECT title, SUBSTR(content, 1, 100) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
     suspend fun getNotesByTitle(query: String): List<NoteEntity>
 
-    @Query("SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes WHERE folder_id = :folderId")
-    fun getNotesByFolder(folderId: String): Flow<List<NoteEntity>>
+    fun getNotesByFolder(
+        folderId: String,
+        orderBy: NoteOrder,
+        order: QueryOrder
+    ): Flow<List<NoteEntity>> = observeNotes(
+        noteQuery("folder_id = ?", orderBy, order) { it.bindText(1, folderId) }
+    )
 
     @Query("DELETE FROM notes WHERE folder_id = :folderId")
     suspend fun deleteNotesByFolderId(folderId: String)
@@ -81,8 +119,14 @@ interface NoteDao {
         deleteNoteFolderById(folderId)
     }
 
+    @Query("SELECT * FROM note_folders ORDER BY rowid ASC")
+    fun getPagedNoteFolders(): PagingSource<Int, NoteFolderEntity>
+
     @Query("SELECT * FROM note_folders")
     fun getAllNoteFolders(): Flow<List<NoteFolderEntity>>
+
+    @Query("SELECT * FROM note_folders WHERE id > :afterId ORDER BY id LIMIT :limit")
+    suspend fun getNoteFoldersPage(afterId: String, limit: Int): List<NoteFolderEntity>
 
     @Query("SELECT * FROM note_folders WHERE sync_seq > :seq AND sync_seq <= :maxSeq")
     suspend fun getNoteFoldersAfterSeq(seq: Long, maxSeq: Long): List<NoteFolderEntity>
@@ -98,4 +142,32 @@ interface NoteDao {
 
     @Query("SELECT * FROM note_folders WHERE name LIKE '%' || :name || '%'")
     suspend fun searchFolderByName(name: String): List<NoteFolderEntity>
+}
+
+private fun noteQuery(
+    where: String?,
+    orderBy: NoteOrder,
+    order: QueryOrder,
+    limit: Int? = null,
+    bind: (androidx.sqlite.SQLiteStatement) -> Unit = {}
+): RoomRawQuery {
+    val whereSql = where?.let { " WHERE $it" }.orEmpty()
+    val column = when (orderBy) {
+        NoteOrder.TITLE -> "title COLLATE NOCASE"
+        else -> orderBy.column
+    }
+    val limitSql = limit?.let {
+        require(it >= 0)
+        " LIMIT $it"
+    }.orEmpty()
+    return RoomRawQuery(
+        "SELECT title, SUBSTR(content, 1, 150) AS content, created_date, updated_date, pinned, folder_id, id, sync_seq FROM notes$whereSql ORDER BY pinned DESC, $column ${order.sql}$limitSql",
+        bind
+    )
+}
+
+enum class NoteOrder(val column: String) {
+    TITLE("title"),
+    CREATED_DATE("created_date"),
+    UPDATED_DATE("updated_date")
 }

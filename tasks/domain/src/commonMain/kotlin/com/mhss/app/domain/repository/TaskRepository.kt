@@ -1,11 +1,29 @@
 package com.mhss.app.domain.repository
 
+import androidx.paging.PagingData
 import com.mhss.app.domain.model.Task
+import com.mhss.app.domain.model.TaskSummary
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface TaskRepository {
 
-    fun getAllTasks(): Flow<List<Task>>
+    fun getPagedTasks(sortOrder: SortOrder, showCompleted: Boolean): Flow<PagingData<Task>>
+
+    fun searchPagedTasks(query: String): Flow<PagingData<Task>>
+
+
+    fun getAllTasks(
+        sortOrder: SortOrder = SortOrder.DueDate(SortType.ASC),
+        showCompleted: Boolean = true
+    ): Flow<List<Task>>
+
+    fun getLimitedTasks(sortOrder: SortOrder, showCompleted: Boolean, limit: Int): Flow<List<Task>>
+
+    suspend fun getFullTasksPage(afterId: String, limit: Int): List<Task>
+
+    fun getTaskSummary(createdAfter: Long): Flow<TaskSummary>
 
     suspend fun getTaskById(id: String): Task?
 

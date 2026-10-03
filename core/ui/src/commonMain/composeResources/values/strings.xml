@@ -28,6 +28,8 @@
     <string name="title">Title</string>
     <string name="delete_sub_task">Delete sub task</string>
     <string name="add_sub_task">Add sub task</string>
+    <string name="sub_task_deleted">Subtask deleted</string>
+    <string name="undo">Undo</string>
     <string name="description">Description</string>
     <string name="request_feature_report_bug">Request a feature / Report a bug</string>
     <string name="low">Low</string>
@@ -58,8 +60,8 @@
     <string name="delete_bookmark_confirmation_message">Are you sure you want to delete this bookmark""?</string>
     <string name="delete_diary_entry_confirmation_message">Are you sure you want to delete this entry""?</string>
     <string name="cancel">Cancel</string>
-    <string name="no_tasks_message">You don\'t have any tasks\n Click the + button to add a new Task\n or \nby using the shortcut in the quick settings menu</string>
-    <string name="no_notes_message">You don\'t have any notes\n Click the + button to add a new Note</string>
+    <string name="no_tasks_message">No tasks</string>
+    <string name="no_notes_message">No notes</string>
     <string name="no_entries_message">You don\'t have any entries\n Click the + button to add a new entry</string>
     <string name="no_bookmarks_message">You don\'t have any bookmarks\n Click the + button to add a new bookmark\n or \nby using the share option from any browser</string>
     <string name="project_roadmap">Project roadmap</string>
@@ -115,7 +117,7 @@
     <string name="last_30_days">Last 30 days</string>
     <string name="last_year">Last year</string>
     <string name="no_data_yet">No data yet</string>
-    <string name="no_events">No events yet</string>
+    <string name="no_events">No events</string>
     <string name="tasks_summary">Tasks summary</string>
     <string name="you_completed">You completed</string>
     <string name="of_last_week_tasks">of tasks in the last week</string>
@@ -262,6 +264,7 @@
     <string name="export_format">Export format</string>
     <string name="import_format">Import format</string>
     <string name="export_types">Export content</string>
+    <string name="markdown_notes_export_not_supported">Exporting Markdown notes is not supported.</string>
     <string name="export_format_json">JSON file</string>
     <string name="export_format_markdown">Markdown files</string>
     <string name="tool_call_limit_exceeded">The assistant has stopped after many consecutive actions. If you expect this, you can send "Continue" to the assistant.</string>

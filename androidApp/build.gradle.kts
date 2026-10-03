@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.baselineprofile)
 }
 
 val releaseStoreFile = providers.environmentVariable("SIGNING_STORE_FILE").orNull
@@ -16,8 +17,8 @@ android {
         applicationId = "com.mhss.app.mybrain"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 20
-        versionName = "3.6.0"
+        versionCode = 21
+        versionName = "3.7.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -88,7 +89,12 @@ android {
     }
 }
 
+baselineProfile {
+    saveInSrc = true
+}
+
 dependencies {
+    implementation(libs.androidx.profileinstaller)
     implementation(projects.composeApp)
     implementation(projects.core.ui)
     implementation(projects.core.datetime)
@@ -103,4 +109,5 @@ dependencies {
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.android.workmanager)
+    baselineProfile(projects.baselineProfile)
 }

@@ -17,7 +17,8 @@ import androidx.glance.currentState
 import androidx.glance.material3.ColorProviders
 import com.mhss.app.datetime.DateTimeFormatter
 import com.mhss.app.datetime.LocalDateTimeFormatter
-import com.mhss.app.domain.use_case.GetAllEventsUseCase
+import com.mhss.app.domain.use_case.GetAllEventsResult
+import com.mhss.app.domain.use_case.GetWidgetEventsUseCase
 import com.mhss.app.preferences.PrefsConstants
 import com.mhss.app.preferences.domain.model.booleanPreferencesKey
 import com.mhss.app.preferences.domain.model.intPreferencesKey
@@ -36,7 +37,7 @@ import org.koin.core.component.inject
 class CalendarWidget : GlanceAppWidget(), KoinComponent {
 
     private val getSettings: GetPreferenceUseCase by inject()
-    private val getAllEvents: GetAllEventsUseCase by inject()
+    private val getWidgetEvents: GetWidgetEventsUseCase by inject()
     private val dateTimeFormatter: DateTimeFormatter by inject()
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -45,7 +46,15 @@ class CalendarWidget : GlanceAppWidget(), KoinComponent {
             stringSetPreferencesKey(PrefsConstants.EXCLUDED_CALENDARS_KEY),
             emptySet()
         ).first()
-        val events = getAllEvents(includedCalendars.toIntList(), fromWidget = true)
+        val hasPermission = ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.READ_CALENDAR
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        val events = if (hasPermission) {
+            getWidgetEvents(includedCalendars.toIntList())
+        } else {
+            GetAllEventsResult(emptyList(), emptyList())
+        }
 
         provideContent {
             val widgetPreferences = currentState<Preferences>()
@@ -66,13 +75,6 @@ class CalendarWidget : GlanceAppWidget(), KoinComponent {
             val isDarkMode = remember(themeSetting, isSystemDarkMode) {
                 themeSetting == ThemeSettings.DARK.value ||
                     (themeSetting == ThemeSettings.AUTO.value && isSystemDarkMode)
-            }
-
-            val hasPermission = remember {
-                ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.READ_CALENDAR
-                ) == android.content.pm.PackageManager.PERMISSION_GRANTED
             }
 
             CompositionLocalProvider(

@@ -4,6 +4,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.database.ContentObserver
 import android.net.Uri
 import android.provider.CalendarContract
 import com.mhss.app.domain.model.Calendar
@@ -15,6 +16,10 @@ import com.mhss.app.datetime.at
 import com.mhss.app.datetime.now
 import com.mhss.app.datetime.toDayOfWeek
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.DayOfWeek
 import org.koin.core.annotation.Named
@@ -29,7 +34,22 @@ class CalendarRepositoryImpl(
     @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher
 ) : CalendarRepository {
 
-    override suspend fun getEvents(excludedCalendars: List<Int>, until: Long?): List<CalendarEvent> {
+    override fun observeChanges(): Flow<Unit> = callbackFlow {
+        val resolver = context.contentResolver
+        val observer = object : ContentObserver(null) {
+            override fun onChange(selfChange: Boolean) {
+                trySend(Unit)
+            }
+        }
+        resolver.registerContentObserver(CalendarContract.CONTENT_URI, true, observer)
+        awaitClose { resolver.unregisterContentObserver(observer) }
+    }.conflate()
+
+    override suspend fun getEvents(
+        excludedCalendars: List<Int>,
+        until: Long?,
+        limit: Int?
+    ): List<CalendarEvent> {
         return withContext(ioDispatcher) {
             val instancesProjection = getCalendarEventsProjection()
             val contentResolver = context.contentResolver
@@ -54,7 +74,7 @@ class CalendarRepositoryImpl(
                 instancesSelectionArgs,
                 "${CalendarContract.Instances.BEGIN} ASC"
             )
-            curI?.use { it.getEvents() } ?: emptyList()
+            curI?.use { it.getEvents(limit) } ?: emptyList()
         }
     }
 
@@ -434,9 +454,9 @@ class CalendarRepositoryImpl(
         CalendarContract.Instances.CALENDAR_COLOR
     )
 
-    private fun Cursor.getEvents(): List<CalendarEvent> {
+    private fun Cursor.getEvents(limit: Int? = null): List<CalendarEvent> {
         val events = mutableListOf<CalendarEvent>()
-        while (moveToNext()) {
+        while ((limit == null || events.size < limit) && moveToNext()) {
             val eventId: Long = getLong(ID_INDEX)
             val title: String = getString(TITLE_INDEX) ?: continue
             val description: String? = getString(DESC_INDEX)

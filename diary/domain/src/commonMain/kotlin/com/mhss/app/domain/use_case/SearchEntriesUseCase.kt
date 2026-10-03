@@ -7,5 +7,7 @@ import org.koin.core.annotation.Single
 class SearchEntriesUseCase(
     private val repository: DiaryRepository
 ) {
+    fun paged(query: String) = repository.searchPagedEntries(query)
+
     suspend operator fun invoke(query: String) = repository.searchEntries(query)
 }

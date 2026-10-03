@@ -6,9 +6,12 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.mhss.app.ui.navigation.NavigationTestTags
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -23,6 +26,11 @@ fun MainBottomBar(
         val currentDestination = navBackStackEntry?.destination
         items.forEach {
             NavigationBarItem(
+                modifier = when (it) {
+                    BottomNavItem.Dashboard -> Modifier.testTag(NavigationTestTags.NAVIGATE_DASHBOARD)
+                    BottomNavItem.Spaces -> Modifier.testTag(NavigationTestTags.NAVIGATE_SPACES)
+                    BottomNavItem.Settings -> Modifier
+                },
                 icon = { Icon(
                     if (currentDestination?.route == it.screen::class.qualifiedName)
                         painterResource(it.iconSelected)

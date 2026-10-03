@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,9 +26,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mhss.app.domain.model.Task
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_event
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.ic_add
 import com.mhss.app.ui.no_tasks_message
 import com.mhss.app.ui.tasks
@@ -39,7 +43,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun TasksDashboardWidget(
     modifier: Modifier = Modifier,
-    tasks: List<Task>,
+    tasks: LazyPagingItems<Task>,
     onTaskClick: (Task) -> Unit = {},
     onCheck: (Task, Boolean) -> Unit = {_,_ ->},
     onAddClick: () -> Unit = {},
@@ -78,6 +82,7 @@ fun TasksDashboardWidget(
                 )
             }
             Spacer(Modifier.height(8.dp))
+            PagingLoadState(tasks)
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -89,7 +94,7 @@ fun TasksDashboardWidget(
                 contentPadding = PaddingValues(vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                if (tasks.isEmpty()){
+                if (tasks.itemCount == 0 && tasks.loadState.refresh is LoadState.NotLoading){
                     item {
                         Text(
                             text = stringResource(Res.string.no_tasks_message),
@@ -98,13 +103,15 @@ fun TasksDashboardWidget(
                             textAlign = TextAlign.Center
                         )
                     }
-                } else items(tasks, key = { it.id }) {
-                    TaskSmallCard(
-                        task = it,
-                        onClick = { onTaskClick(it) },
-                        onComplete = { onCheck(it, !it.isCompleted) },
-                        modifier = Modifier.animateItem()
-                    )
+                } else items(tasks.itemCount, key = tasks.itemKey { it.id }) { index ->
+                    tasks[index]?.let { task ->
+                        TaskSmallCard(
+                            task = task,
+                            onClick = { onTaskClick(task) },
+                            onComplete = { onCheck(task, !task.isCompleted) },
+                            modifier = Modifier.animateItem()
+                        )
+                    } ?: PagingPlaceholder()
                 }
             }
         }

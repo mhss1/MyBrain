@@ -85,6 +85,11 @@ fun ImportExportScreen(
         false
     ).collectAsStateWithLifecycle(false)
 
+    val externalNotesEnabled by viewModel.getSettings(
+        BooleanKey(PrefsConstants.EXTERNAL_NOTES_ENABLED),
+        false
+    ).collectAsStateWithLifecycle(false)
+
     val autoBackupFrequencyValue by viewModel.getSettings(
         IntKey(PrefsConstants.AUTO_BACKUP_FREQUENCY),
         BackupFrequency.DAILY.value
@@ -116,7 +121,7 @@ fun ImportExportScreen(
             viewModel.onEvent(
                 BackupEvent.ExportData(
                     directoryUri = it,
-                    exportNotes = exportNotes,
+                    exportNotes = exportNotes && !externalNotesEnabled,
                     exportTasks = exportTasks,
                     exportDiary = exportDiary,
                     exportBookmarks = exportBookmarks,
@@ -161,7 +166,8 @@ fun ImportExportScreen(
             Spacer(Modifier.height(10.dp))
 
             ExportTypesCard(
-                exportNotes = exportNotes,
+                exportNotes = exportNotes && !externalNotesEnabled,
+                notesExportEnabled = !externalNotesEnabled,
                 exportTasks = exportTasks,
                 exportDiary = exportDiary,
                 exportBookmarks = exportBookmarks,

@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.mybrain.android.kmp.library)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.koin.compiler)
 }
@@ -19,6 +18,7 @@ kotlin {
             dependencies {
                 implementation(projects.core.preferences)
 
+                api(libs.androidx.paging.common)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
 

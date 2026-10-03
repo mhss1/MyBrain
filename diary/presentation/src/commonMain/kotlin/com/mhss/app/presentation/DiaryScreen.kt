@@ -20,7 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,13 +40,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mhss.app.datetime.LocalDateTimeFormatter
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.datetime.localDateTime
+import com.mhss.app.domain.model.DiaryEntry
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_entry
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.components.isEmpty
 import com.mhss.app.ui.diary
 import com.mhss.app.ui.diary_chart
 import com.mhss.app.ui.diary_img
@@ -73,6 +81,8 @@ fun DiaryScreen(
     viewModel: DiaryViewModel = koinViewModel()
 ) {
     val uiState = viewModel.uiState
+    val entries = viewModel.entries.collectAsLazyPagingItems()
+    val formatter = LocalDateTimeFormatter.current
     var orderSettingsVisible by remember { mutableStateOf(false) }
     val liquidState = rememberLiquidState()
     Scaffold(
@@ -105,7 +115,7 @@ fun DiaryScreen(
             )
         }
     ) { paddingValues ->
-        if (uiState.entries.isEmpty()) {
+        if (entries.isEmpty) {
             NoEntriesMessage()
         }
         Column(Modifier.padding(paddingValues).liquefiable(liquidState)) {
@@ -133,62 +143,93 @@ fun DiaryScreen(
             }
             AnimatedVisibility(visible = orderSettingsVisible) {
                 DiarySettingsSection(
-                    uiState.entriesOrder,
+                    uiState.entriesSortOrder,
                     onOrderChange = {
                         viewModel.onEvent(DiaryEvent.UpdateOrder(it))
                     },
                 )
             }
+            PagingLoadState(entries)
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(vertical = 12.dp),
                 modifier = Modifier.weight(1f)
             ) {
-                uiState.entries.forEach { (day, entries) ->
-                    stickyHeader {
-                        Text(
-                            text = day,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.background)
-                                .padding(bottom = 4.dp)
-                                .padding(horizontal = 12.dp)
-                        )
+                if (uiState.entriesSortOrder is SortOrder.DateCreated) {
+                    val snapshot = entries.itemSnapshotList
+
+                    diaryItems(entries, 0, snapshot.placeholdersBefore, navController)
+
+                    var offset = snapshot.placeholdersBefore
+                    var loadedIndex = 0
+                    while (loadedIndex < snapshot.items.size) {
+                        val first = snapshot.items[loadedIndex]
+                        val day = first.createdDate.localDateTime.date
+
+                        var end = loadedIndex + 1
+                        while (end < snapshot.items.size && snapshot.items[end].createdDate.localDateTime.date == day) {
+                            end++
+                        }
+                        stickyHeader(key = "day-$day-${first.id}") {
+                            Text(
+                                text = formatter.formatDateForMapping(first.createdDate),
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.background)
+                                    .padding(bottom = 4.dp)
+                                    .padding(horizontal = 12.dp)
+                            )
+                        }
+
+                        diaryItems(entries, offset, end - loadedIndex, navController)
+
+                        offset += end - loadedIndex
+                        loadedIndex = end
                     }
-                    items(entries) { entry ->
-                        DiaryEntryItem(
-                            modifier = Modifier.padding(horizontal = 12.dp),
-                            entry = entry,
-                            timeText = LocalDateTimeFormatter.current.formatTime(entry.createdDate),
-                            onClick = {
-                                navController.navigate(
-                                    Screen.DiaryDetailScreen(
-                                        entry.id
-                                    )
-                                )
-                            }
-                        )
-                    }
+
+                    diaryItems(entries, offset, snapshot.placeholdersAfter, navController)
+                } else {
+                    diaryItems(entries, 0, entries.itemCount, navController)
                 }
             }
         }
     }
 }
 
+
+private fun LazyListScope.diaryItems(
+    entries: LazyPagingItems<DiaryEntry>,
+    offset: Int,
+    count: Int,
+    navController: NavHostController,
+) {
+    val itemKey = entries.itemKey { it.id }
+    items(count, key = { itemKey(offset + it) }) { index ->
+        entries[offset + index]?.let { entry ->
+            DiaryEntryItem(
+                modifier = Modifier.padding(horizontal = 12.dp),
+                entry = entry,
+                timeText = LocalDateTimeFormatter.current.formatTime(entry.createdDate),
+                onClick = { navController.navigate(Screen.DiaryDetailScreen(entry.id)) }
+            )
+        } ?: PagingPlaceholder(Modifier.padding(horizontal = 12.dp))
+    }
+}
+
 @Composable
-fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
-    val orders = remember {
+fun DiarySettingsSection(sortOrder: SortOrder, onOrderChange: (SortOrder) -> Unit) {
+    val sortOrders = remember {
         listOf(
-            Order.DateModified(),
-            Order.DateCreated(),
-            Order.Alphabetical()
+            SortOrder.DateModified(),
+            SortOrder.DateCreated(),
+            SortOrder.Alphabetical()
         )
     }
-    val orderTypes = remember {
+    val sortTypes = remember {
         listOf(
-            OrderType.ASC,
-            OrderType.DESC
+            SortType.ASC,
+            SortType.DESC
         )
     }
     Column(
@@ -202,14 +243,14 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
         FlowRow(
             modifier = Modifier.padding(end = 8.dp)
         ) {
-            orders.forEach {
+            sortOrders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order::class == it::class,
+                        selected = sortOrder::class == it::class,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    it.copyOrder(orderType = order.orderType)
+                                    it.copyOrder(sortType = sortOrder.sortType)
                                 )
                         }
                     )
@@ -222,14 +263,14 @@ fun DiarySettingsSection(order: Order, onOrderChange: (Order) -> Unit) {
         }
         HorizontalDivider()
         FlowRow {
-            orderTypes.forEach {
+            sortTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderType == it,
+                        selected = sortOrder.sortType == it,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    order.copyOrder(it)
+                                    sortOrder.copyOrder(it)
                                 )
                         }
                     )

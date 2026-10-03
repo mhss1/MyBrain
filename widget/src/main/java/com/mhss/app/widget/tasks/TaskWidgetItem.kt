@@ -130,7 +130,7 @@ fun TaskWidgetItem(
                     }
                     Spacer(GlanceModifier.width(4.dp))
                 }
-                if (task.dueDate != 0L) {
+                if (task.dueDate != null) {
                     Row(
                         modifier = GlanceModifier.padding(top = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -149,7 +149,7 @@ fun TaskWidgetItem(
                         )
                         Spacer(GlanceModifier.width(3.dp))
                         Text(
-                            text = LocalDateTimeFormatter.current.formatDateDependingOnDay(task.dueDate),
+                            text = task.dueDate?.let { LocalDateTimeFormatter.current.formatDateDependingOnDay(it) } ?: "",
                             style = TextStyle(
                                 color = if (task.dueDate.isDueDateOverdue())
                                     ColorProvider(day = Color.Red, night = Color.Red)

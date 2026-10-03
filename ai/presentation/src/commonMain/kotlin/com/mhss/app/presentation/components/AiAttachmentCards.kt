@@ -220,7 +220,7 @@ internal fun TaskAttachmentCard(
                         textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
                     )
                 }
-                if (task.subTasks.isNotEmpty() || task.dueDate != 0L) Spacer(Modifier.height(4.dp))
+                if (task.subTasks.isNotEmpty() || task.dueDate != null) Spacer(Modifier.height(4.dp))
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     if (task.subTasks.isNotEmpty()) {
                         val completed = remember {
@@ -234,7 +234,7 @@ internal fun TaskAttachmentCard(
                         )
                     }
                     Spacer(Modifier.width(6.dp))
-                    if (task.dueDate != 0L) {
+                    if (task.dueDate != null) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -248,7 +248,7 @@ internal fun TaskAttachmentCard(
                             )
                             Spacer(Modifier.width(4.dp))
                             Text(
-                                text = LocalDateTimeFormatter.current.formatDateDependingOnDay(task.dueDate),
+                                text = task.dueDate?.let { LocalDateTimeFormatter.current.formatDateDependingOnDay(it) } ?: "",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = if (task.dueDate.isDueDateOverdue()) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant.copy(
                                     alpha = 0.7f

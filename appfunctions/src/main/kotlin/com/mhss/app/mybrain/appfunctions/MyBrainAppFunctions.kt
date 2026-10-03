@@ -145,8 +145,10 @@ abstract class MyBrainAppFunctions : AppFunctionService() {
     ): AppTask = withContext(Dispatchers.IO) {
         val id = Uuid.generateV7().toString()
         val actualDescription = description ?: ""
-        val actualDueDate = dueDate?.toDateMillis()
-            ?: if (dueDate == null) 0L else throw IllegalArgumentException("Invalid due date. Expected format: HH:mm dd-MM-yyyy")
+        val actualDueDate = dueDate?.let {
+            it.toDateMillis()
+                ?: throw IllegalArgumentException("Invalid due date. Expected format: HH:mm dd-MM-yyyy")
+        }
         val actualPriority = when (priority?.uppercase()) {
             Priority.HIGH.name -> Priority.HIGH
             Priority.MEDIUM.name -> Priority.MEDIUM
@@ -169,7 +171,7 @@ abstract class MyBrainAppFunctions : AppFunctionService() {
             description = actualDescription,
             isCompleted = false,
             priority = actualPriority.name,
-            dueAt = actualDueDate.takeIf { it > 0 }?.toReadableDate()
+            dueAt = actualDueDate?.toReadableDate()
         )
     }
 
@@ -190,7 +192,7 @@ abstract class MyBrainAppFunctions : AppFunctionService() {
                 description = task.description,
                 isCompleted = task.isCompleted,
                 priority = task.priority.name,
-                dueAt = task.dueDate.takeIf { it > 0 }?.toReadableDate()
+                dueAt = task.dueDate?.toReadableDate()
             )
         }
     }

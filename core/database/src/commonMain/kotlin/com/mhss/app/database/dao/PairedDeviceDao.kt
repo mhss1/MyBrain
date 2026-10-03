@@ -26,6 +26,9 @@ interface PairedDeviceDao {
     @Query("UPDATE paired_devices SET last_synced_at = :lastSyncedSeq WHERE id = :id")
     suspend fun updateLastSyncedSeq(id: String, lastSyncedSeq: Long)
 
+    @Query("UPDATE paired_devices SET last_acknowledged_local_seq = :seq WHERE id = :id AND last_acknowledged_local_seq < :seq")
+    suspend fun updateLastAcknowledgedLocalSeq(id: String, seq: Long)
+
     @Query("UPDATE paired_devices SET ip_address = :ipAddress, candidate_ip_addresses = :candidateIpAddresses WHERE id = :id")
     suspend fun updateIpAddresses(id: String, ipAddress: String, candidateIpAddresses: List<String>)
 

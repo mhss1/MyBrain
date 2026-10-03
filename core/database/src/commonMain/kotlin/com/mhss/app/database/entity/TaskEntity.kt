@@ -11,7 +11,13 @@ import com.mhss.app.domain.model.TaskFrequency
 
 @Entity(
     tableName = "tasks",
-    indices = [Index(value = ["sync_seq"])]
+    indices = [
+        Index(value = ["sync_seq"]),
+        Index(value = ["updated_date"]),
+        Index(value = ["is_completed", "updated_date"]),
+        Index(value = ["dueDate"]),
+        Index(value = ["is_completed", "dueDate"])
+    ]
 )
 data class TaskEntity(
     val title: String,
@@ -25,7 +31,7 @@ data class TaskEntity(
     val updatedDate: Long = 0L,
     @ColumnInfo(name = "sub_tasks")
     val subTasks: List<SubTask> = emptyList(),
-    val dueDate: Long = 0L,
+    val dueDate: Long? = null,
     val recurring: Boolean = false,
     val frequency: Int = TaskFrequency.DAILY.value,
     @ColumnInfo(name = "frequency_amount")

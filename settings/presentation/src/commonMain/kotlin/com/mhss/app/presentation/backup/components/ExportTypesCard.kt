@@ -25,6 +25,7 @@ import com.mhss.app.ui.Res
 import com.mhss.app.ui.bookmarks
 import com.mhss.app.ui.diary
 import com.mhss.app.ui.export_types
+import com.mhss.app.ui.markdown_notes_export_not_supported
 import com.mhss.app.ui.notes
 import com.mhss.app.ui.tasks
 import com.mhss.app.ui.theme.MyBrainTheme
@@ -33,6 +34,7 @@ import com.mhss.app.ui.theme.MyBrainTheme
 @Composable
 fun ExportTypesCard(
     exportNotes: Boolean,
+    notesExportEnabled: Boolean,
     exportTasks: Boolean,
     exportDiary: Boolean,
     exportBookmarks: Boolean,
@@ -67,6 +69,7 @@ fun ExportTypesCard(
                 ExportTypeChip(
                     text = stringResource(Res.string.notes),
                     selected = exportNotes,
+                    enabled = notesExportEnabled,
                     onClick = { onExportNotesChanged(!exportNotes) }
                 )
                 ExportTypeChip(
@@ -85,6 +88,14 @@ fun ExportTypesCard(
                     onClick = { onExportBookmarksChanged(!exportBookmarks) }
                 )
             }
+            if (!notesExportEnabled) {
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    text = stringResource(Res.string.markdown_notes_export_not_supported),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
@@ -93,11 +104,13 @@ fun ExportTypesCard(
 private fun ExportTypeChip(
     text: String,
     selected: Boolean,
+    enabled: Boolean = true,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     FilterChip(
         selected = selected,
+        enabled = enabled,
         onClick = onClick,
         label = { Text(text) },
         modifier = modifier,
@@ -110,7 +123,8 @@ private fun ExportTypeChip(
 private fun ExportTypesCardPreview() {
     MyBrainTheme {
         ExportTypesCard(
-            exportNotes = true,
+            exportNotes = false,
+            notesExportEnabled = false,
             exportTasks = true,
             exportDiary = false,
             exportBookmarks = true,

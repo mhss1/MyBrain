@@ -1,22 +1,43 @@
 package com.mhss.app.domain.repository
 
+import androidx.paging.PagingData
 import com.mhss.app.domain.model.Note
 import com.mhss.app.domain.model.NoteFolder
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    fun getAllFolderlessNotes(): Flow<List<Note>>
+    fun getPagedNotes(sortOrder: SortOrder, showAllNotes: Boolean): Flow<PagingData<Note>>
 
-    fun getAllNotes(): Flow<List<Note>>
+    fun searchPagedNotes(query: String): Flow<PagingData<Note>>
+
+    fun getPagedNotesByFolder(folderId: String, sortOrder: SortOrder): Flow<PagingData<Note>>
+
+
+    fun getAllFolderlessNotes(
+        sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)
+    ): Flow<List<Note>>
+
+    fun getAllNotes(
+        sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)
+    ): Flow<List<Note>>
+
+    fun getLimitedNotes(sortOrder: SortOrder, showAllNotes: Boolean, limit: Int): Flow<List<Note>>
 
     suspend fun getAllFullNotes(): List<Note>
+
+    suspend fun getFullNotesPage(afterId: String, limit: Int): List<Note>
 
     suspend fun getNote(id: String): Note?
 
     suspend fun searchNotes(query: String): List<Note>
 
-    fun getNotesByFolder(folderId: String): Flow<List<Note>>
+    fun getNotesByFolder(
+        folderId: String,
+        sortOrder: SortOrder = SortOrder.DateModified(SortType.DESC)
+    ): Flow<List<Note>>
 
     suspend fun upsertNote(note: Note, currentFolderId: String? = null): String
 
@@ -32,7 +53,11 @@ interface NoteRepository {
 
     suspend fun deleteNoteFolder(folder: NoteFolder)
 
+    fun getPagedNoteFolders(): Flow<PagingData<NoteFolder>>
+
     fun getAllNoteFolders(): Flow<List<NoteFolder>>
+
+    suspend fun getNoteFoldersPage(afterId: String, limit: Int): List<NoteFolder>
 
     suspend fun getNoteFolder(folderId: String): NoteFolder?
 

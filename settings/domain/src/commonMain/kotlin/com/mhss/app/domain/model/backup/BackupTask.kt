@@ -24,7 +24,7 @@ data class BackupTask(
     @SerialName("subTasks")
     val subTasks: List<BackupSubTask> = emptyList(),
     @SerialName("dueDate")
-    val dueDate: Long = 0L,
+    val dueDate: Long? = null,
     @SerialName("recurring")
     val recurring: Boolean = false,
     @SerialName("frequency")
@@ -62,7 +62,7 @@ fun BackupTask.toTask() = Task(
     createdDate = createdDate,
     updatedDate = updatedDate,
     subTasks = subTasks.map(BackupSubTask::toSubTask),
-    dueDate = dueDate,
+    dueDate = dueDate?.takeUnless { it == 0L },
     recurring = recurring,
     frequency = TaskFrequency.entries.firstOrNull { it.value == frequency } ?: TaskFrequency.DAILY,
     frequencyAmount = frequencyAmount,

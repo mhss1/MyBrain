@@ -7,5 +7,7 @@ import org.koin.core.annotation.Factory
 class SearchNotesUseCase(
     private val notesRepository: NoteRepository
 ) {
+    fun paged(query: String) = notesRepository.searchPagedNotes(query)
+
     suspend operator fun invoke(query: String) = notesRepository.searchNotes(query)
 }

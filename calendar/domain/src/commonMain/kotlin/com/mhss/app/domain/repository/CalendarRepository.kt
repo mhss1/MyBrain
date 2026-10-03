@@ -2,10 +2,17 @@ package com.mhss.app.domain.repository
 
 import com.mhss.app.domain.model.Calendar
 import com.mhss.app.domain.model.CalendarEvent
+import kotlinx.coroutines.flow.Flow
 
 interface CalendarRepository {
 
-    suspend fun getEvents(excludedCalendars: List<Int> = emptyList(), until: Long? = null): List<CalendarEvent>
+    fun observeChanges(): Flow<Unit>
+
+    suspend fun getEvents(
+        excludedCalendars: List<Int> = emptyList(),
+        until: Long? = null,
+        limit: Int? = null
+    ): List<CalendarEvent>
 
     suspend fun getEvents(start: Long, end: Long, excludedCalendars: List<Int> = emptyList()): List<CalendarEvent>
 

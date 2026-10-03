@@ -3,10 +3,15 @@
 package com.mhss.app.presentation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -21,30 +26,31 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -55,23 +61,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mhss.app.domain.model.NoteFolder
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.Res
 import com.mhss.app.ui.add_note
 import com.mhss.app.ui.cancel
+import com.mhss.app.ui.components.PagingLoadState
+import com.mhss.app.ui.components.PagingPlaceholder
+import com.mhss.app.ui.components.common.FloatingGlassTabBar
 import com.mhss.app.ui.components.common.LiquidFloatingActionButton
 import com.mhss.app.ui.components.common.MyBrainAppBar
+import com.mhss.app.ui.components.isEmpty
 import com.mhss.app.ui.components.notes.NoteCard
 import com.mhss.app.ui.create_folder
 import com.mhss.app.ui.folders
@@ -93,6 +104,8 @@ import com.mhss.app.ui.titleRes
 import com.mhss.app.ui.view_as
 import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.jetbrains.compose.resources.stringResource as cmpStringResource
 
@@ -102,11 +115,26 @@ fun NotesScreen(
     navController: NavHostController,
     viewModel: NotesViewModel = koinViewModel()
 ) {
+    val notes = viewModel.notes.collectAsLazyPagingItems()
     val uiState by viewModel.notesUiState.collectAsStateWithLifecycle()
     var orderSettingsVisible by remember { mutableStateOf(false) }
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
     var openCreateFolderDialog by remember { mutableStateOf(false) }
     val liquidState = rememberLiquidState()
+    val notesListState = rememberLazyListState()
+    val notesGridState = rememberLazyStaggeredGridState()
+    val foldersGridState = rememberLazyGridState()
+    val isScrolling by remember(selectedTab, uiState.noteView) {
+        derivedStateOf {
+            if (selectedTab == 1) {
+                foldersGridState.isScrollInProgress
+            } else if (uiState.noteView == ItemView.LIST) {
+                notesListState.isScrollInProgress
+            } else {
+                notesGridState.isScrollInProgress
+            }
+        }
+    }
     Scaffold(
         snackbarHost = {
             LocalisedSnackbarHost(uiState.snackbarHostState)
@@ -118,58 +146,51 @@ fun NotesScreen(
                 )
             )
         },
+        floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            LiquidFloatingActionButton(
-                onClick = {
-                    if (selectedTab == 0) {
-                        navController.navigate(Screen.NoteDetailsScreen())
-                    } else {
-                        openCreateFolderDialog = true
-                    }
-                },
-                iconPainter = if (selectedTab == 0) painterResource(Res.drawable.ic_add) else painterResource(
-                    Res.drawable.ic_create_folder
-                ),
-                contentDescription = stringResource(Res.string.add_note),
-                liquidState = liquidState
-            )
-
-        },
-    ) { paddingValues ->
-        Column(modifier = Modifier.liquefiable(liquidState).padding(paddingValues).fillMaxSize()) {
-            PrimaryTabRow(
-                selectedTabIndex = selectedTab,
-                containerColor = MaterialTheme.colorScheme.background,
+            Box(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
             ) {
-                Tab(
-                    text = {
-                        Text(
-                            stringResource(Res.string.notes),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    selected = selectedTab == 0,
+                AnimatedVisibility(
+                    modifier = Modifier.align(Alignment.Center),
+                    visible = !isScrolling,
+                    enter = fadeIn() + slideInVertically { it },
+                    exit = fadeOut() + slideOutVertically { it }
+                ) {
+                    FloatingGlassTabBar(
+                        tabs = listOf(stringResource(Res.string.notes), stringResource(Res.string.folders)),
+                        selectedTabIndex = selectedTab,
+                        onTabSelected = { selectedTab = it },
+                        liquidState = liquidState
+                    )
+                }
+                LiquidFloatingActionButton(
+                    modifier = Modifier.align(Alignment.CenterEnd),
                     onClick = {
-                        selectedTab = 0
+                        if (selectedTab == 0) {
+                            navController.navigate(Screen.NoteDetailsScreen())
+                        } else {
+                            openCreateFolderDialog = true
+                        }
                     },
-                    unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                )
-                Tab(
-                    text = {
-                        Text(
-                            stringResource(Res.string.folders),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    selected = selectedTab == 1,
-                    onClick = {
-                        selectedTab = 1
-                    },
-                    unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                    iconPainter = if (selectedTab == 0) painterResource(Res.drawable.ic_add) else painterResource(
+                        Res.drawable.ic_create_folder
+                    ),
+                    contentDescription = stringResource(Res.string.add_note),
+                    liquidState = liquidState
                 )
             }
+        },
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .liquefiable(liquidState)
+                .background(MaterialTheme.colorScheme.background)
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
             if (selectedTab == 0) {
-                if (uiState.notes.isEmpty())
+                if (notes.isEmpty)
                     NoNotesMessage()
                 Row(
                     Modifier.fillMaxWidth(),
@@ -195,7 +216,7 @@ fun NotesScreen(
                 }
                 AnimatedVisibility(visible = orderSettingsVisible) {
                     NotesSettingsSection(
-                        uiState.notesOrder,
+                        uiState.notesSortOrder,
                         uiState.noteView,
                         uiState.showAllNotes,
                         onOrderChange = {
@@ -209,41 +230,21 @@ fun NotesScreen(
                         }
                     )
                 }
+                PagingLoadState(notes)
                 if (uiState.noteView == ItemView.LIST) {
                     LazyColumn(
+                        state = notesListState,
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(
                             top = 12.dp,
-                            bottom = 24.dp,
+                            bottom = 96.dp,
                             start = 12.dp,
                             end = 12.dp
                         ),
                         modifier = Modifier.weight(1f)
                     ) {
-                        items(uiState.notes, key = { it.id }) { note ->
-                            NoteCard(
-                                note = note,
-                                onClick = {
-                                    navController.navigate(
-                                        Screen.NoteDetailsScreen(
-                                            noteId = note.id,
-                                            folderId = note.folderId
-                                        )
-                                    )
-                                },
-                                modifier = Modifier.animateItem()
-                            )
-                        }
-                    }
-                } else {
-                    LazyVerticalStaggeredGrid(
-                        columns = StaggeredGridCells.Adaptive(150.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(12.dp),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        items(uiState.notes) { note ->
-                            key(note.id) {
+                        items(notes.itemCount, key = notes.itemKey { it.id }) { index ->
+                            notes[index]?.let { note ->
                                 NoteCard(
                                     note = note,
                                     onClick = {
@@ -254,14 +255,44 @@ fun NotesScreen(
                                             )
                                         )
                                     },
-                                    modifier = Modifier.padding(bottom = 12.dp)
+                                    modifier = Modifier.animateItem()
                                 )
-                            }
+                            } ?: PagingPlaceholder()
+                        }
+                    }
+                } else {
+                    LazyVerticalStaggeredGrid(
+                        state = notesGridState,
+                        columns = StaggeredGridCells.Adaptive(150.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 96.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        items(notes.itemCount, key = notes.itemKey { it.id }) { index ->
+                            notes[index]?.let { note ->
+                                key(note.id) {
+                                    NoteCard(
+                                        note = note,
+                                        onClick = {
+                                            navController.navigate(
+                                                Screen.NoteDetailsScreen(
+                                                    noteId = note.id,
+                                                    folderId = note.folderId
+                                                )
+                                            )
+                                        },
+                                        modifier = Modifier.padding(bottom = 12.dp)
+                                    )
+                                }
+                            } ?: PagingPlaceholder(Modifier.padding(bottom = 12.dp))
                         }
                     }
                 }
             } else {
-                FoldersTab(uiState.folders) {
+                FoldersTab(
+                    folders = viewModel.folders.collectAsLazyPagingItems(),
+                    state = foldersGridState
+                ) {
                     navController.navigate(
                         Screen.NoteFolderDetailsScreen(
                             folderId = it.id
@@ -287,50 +318,55 @@ fun NotesScreen(
 
 @Composable
 fun FoldersTab(
-    folders: List<NoteFolder>,
+    folders: LazyPagingItems<NoteFolder>,
+    state: LazyGridState = rememberLazyGridState(),
     onItemClick: (NoteFolder) -> Unit
 ) {
+    PagingLoadState(folders)
     LazyVerticalGrid(
+        state = state,
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(
             top = 12.dp,
-            bottom = 24.dp,
+            bottom = 96.dp,
             start = 12.dp,
             end = 12.dp
         )
     ) {
-        items(folders) { folder ->
-            Card(
-                modifier = Modifier.height(180.dp),
-                shape = RoundedCornerShape(20.dp),
-                elevation = CardDefaults.elevatedCardElevation(
-                    8.dp
-                )
-            ) {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .clickable { onItemClick(folder) },
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+        items(folders.itemCount, key = folders.itemKey { it.id }) { index ->
+            folders[index]?.let { folder ->
+                Card(
+                    modifier = Modifier.height(180.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    elevation = CardDefaults.elevatedCardElevation(
+                        8.dp
+                    )
                 ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_folder),
-                        contentDescription = folder.name,
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Text(
-                        text = folder.name,
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .clickable { onItemClick(folder) },
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_folder),
+                            contentDescription = folder.name,
+                            modifier = Modifier.size(100.dp)
+                        )
+                        Text(
+                            text = folder.name,
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
-            }
+            } ?: PagingPlaceholder()
         }
     }
 }
@@ -338,24 +374,24 @@ fun FoldersTab(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun NotesSettingsSection(
-    order: Order,
+    sortOrder: SortOrder,
     view: ItemView,
     showAllNotes: Boolean,
-    onOrderChange: (Order) -> Unit,
+    onOrderChange: (SortOrder) -> Unit,
     onViewChange: (ItemView) -> Unit,
     onShowAllNotesChange: (Boolean) -> Unit
 ) {
-    val orders = remember {
+    val sortOrders = remember {
         listOf(
-            Order.DateModified(),
-            Order.DateCreated(),
-            Order.Alphabetical()
+            SortOrder.DateModified(),
+            SortOrder.DateCreated(),
+            SortOrder.Alphabetical()
         )
     }
-    val orderTypes = remember {
+    val sortTypes = remember {
         listOf(
-            OrderType.ASC,
-            OrderType.DESC
+            SortType.ASC,
+            SortType.DESC
         )
     }
     val noteViews = remember {
@@ -375,14 +411,14 @@ fun NotesSettingsSection(
         FlowRow(
             modifier = Modifier.padding(end = 8.dp)
         ) {
-            orders.forEach {
+            sortOrders.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order::class == it::class,
+                        selected = sortOrder::class == it::class,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    it.copyOrder(orderType = order.orderType)
+                                    it.copyOrder(sortType = sortOrder.sortType)
                                 )
                         }
                     )
@@ -395,14 +431,14 @@ fun NotesSettingsSection(
         }
         HorizontalDivider()
         FlowRow {
-            orderTypes.forEach {
+            sortTypes.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = order.orderType == it,
+                        selected = sortOrder.sortType == it,
                         onClick = {
-                            if (order != it)
+                            if (sortOrder != it)
                                 onOrderChange(
-                                    order.copyOrder(it)
+                                    sortOrder.copyOrder(it)
                                 )
                         }
                     )

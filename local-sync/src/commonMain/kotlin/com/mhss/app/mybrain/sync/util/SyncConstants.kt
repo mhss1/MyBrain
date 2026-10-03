@@ -1,10 +1,17 @@
 package com.mhss.app.mybrain.sync.util
 
 import com.mhss.app.mybrain.sync.model.SyncTriggerMessage
+import kotlin.time.Duration.Companion.days
 
 const val DEFAULT_SYNC_PORT = 38300
 const val SYNC_PAGE_SIZE = 150
 const val PAIRING_INVITE_DURATION_MS = 5 * 60 * 1000L
+
+const val TOMBSTONE_CLEANUP_BATCH_SIZE = 500
+const val TOMBSTONE_CLEANUP_MAX_ATTEMPTS = 3
+const val TOMBSTONE_CLEANUP_WORK_NAME = "tombstone_cleanup_work"
+val TOMBSTONE_RETENTION = 90.days
+val TOMBSTONE_CLEANUP_INTERVAL = 1.days
 
 const val ROUTE_PAIR = "/pair"
 const val ROUTE_PING = "/ping"

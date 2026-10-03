@@ -5,8 +5,8 @@ import androidx.compose.ui.graphics.Color
 import com.mhss.app.domain.model.BackupFrequency
 import com.mhss.app.domain.model.Priority
 import com.mhss.app.domain.model.TaskFrequency
-import com.mhss.app.preferences.domain.model.Order
-import com.mhss.app.preferences.domain.model.OrderType
+import com.mhss.app.preferences.domain.model.SortOrder
+import com.mhss.app.preferences.domain.model.SortType
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.theme.Green
 import com.mhss.app.ui.theme.Orange
@@ -73,20 +73,20 @@ fun Int.getFontSizeName(): String {
     }
 }
 
-val Order.titleRes: StringResource
+val SortOrder.titleRes: StringResource
     get() = when (this) {
-        is Order.Alphabetical -> Res.string.alphabetical
-        is Order.DateCreated -> Res.string.date_created
-        is Order.DateModified -> Res.string.date_modified
-        is Order.Priority -> Res.string.priority
-        is Order.DueDate -> Res.string.due_date
-        is Order.Done -> Res.string.done
+        is SortOrder.Alphabetical -> Res.string.alphabetical
+        is SortOrder.DateCreated -> Res.string.date_created
+        is SortOrder.DateModified -> Res.string.date_modified
+        is SortOrder.Priority -> Res.string.priority
+        is SortOrder.DueDate -> Res.string.due_date
+        is SortOrder.Done -> Res.string.done
     }
 
-val OrderType.titleRes: StringResource
+val SortType.titleRes: StringResource
     get() = when (this) {
-        is OrderType.ASC -> Res.string.ascending
-        is OrderType.DESC -> Res.string.descending
+        is SortType.ASC -> Res.string.ascending
+        is SortType.DESC -> Res.string.descending
     }
 
 val TaskFrequency.titleRes: StringResource

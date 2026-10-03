@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -31,6 +32,7 @@ import com.mhss.app.ui.components.common.MyBrainAppBar
 import com.mhss.app.ui.components.common.singleGradientBackground
 import com.mhss.app.ui.diary
 import com.mhss.app.ui.diary_img
+import com.mhss.app.ui.navigation.NavigationTestTags
 import com.mhss.app.ui.navigation.Screen
 import com.mhss.app.ui.notes
 import com.mhss.app.ui.notes_img
@@ -71,7 +73,7 @@ fun SpacesScreen(
         val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
         LazyVerticalGrid(
             columns = GridCells.Adaptive(140.dp),
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues).testTag(NavigationTestTags.SPACES_GRID),
             contentPadding = PaddingValues(
                 top = 10.dp,
                 bottom = 32.dp,
@@ -81,14 +83,14 @@ fun SpacesScreen(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(spaces) { (title, image, color, screen) ->
+            items(spaces) { (title, image, color, screen, testTag) ->
                 SpaceCard(
                     title = stringResource(title),
                     image = image,
                     onClick = {
                         navController.navigate(screen)
                     },
-                    contentModifier = Modifier.singleGradientBackground(
+                    contentModifier = Modifier.testTag(testTag).singleGradientBackground(
                         gradientColor = color,
                         background = MaterialTheme.colorScheme.surfaceVariant,
                         backgroundAlpha = 0.35f,
@@ -104,6 +106,7 @@ fun SpacesScreen(
                         navController.navigate(Screen.AssistantScreen)
                     },
                     contentModifier = Modifier
+                        .testTag(NavigationTestTags.OPEN_ASSISTANT)
                         .drawBehind {
                             drawAiGradientRadials(
                                 background = surfaceVariant,
@@ -118,18 +121,19 @@ fun SpacesScreen(
 }
 
 private val spaces = listOf(
-    Space(Res.string.notes, Res.drawable.notes_img, Blue, Screen.NotesScreen),
-    Space(Res.string.tasks, Res.drawable.tasks_img, Red, Screen.TasksScreen()),
-    Space(Res.string.diary, Res.drawable.diary_img, Green, Screen.DiaryScreen),
-    Space(Res.string.bookmarks, Res.drawable.bookmarks_img, Orange, Screen.BookmarksScreen),
-    Space(Res.string.calendar, Res.drawable.calendar_img, Purple, Screen.CalendarScreen),
+    Space(Res.string.notes, Res.drawable.notes_img, Blue, Screen.NotesScreen, NavigationTestTags.OPEN_NOTES),
+    Space(Res.string.tasks, Res.drawable.tasks_img, Red, Screen.TasksScreen(), NavigationTestTags.OPEN_TASKS),
+    Space(Res.string.diary, Res.drawable.diary_img, Green, Screen.DiaryScreen, NavigationTestTags.OPEN_DIARY),
+    Space(Res.string.bookmarks, Res.drawable.bookmarks_img, Orange, Screen.BookmarksScreen, NavigationTestTags.OPEN_BOOKMARKS),
+    Space(Res.string.calendar, Res.drawable.calendar_img, Purple, Screen.CalendarScreen, NavigationTestTags.OPEN_CALENDAR),
 )
 
 private data class Space(
     val title: StringResource,
     val image: DrawableResource,
     val color: Color,
-    val route: Screen
+    val route: Screen,
+    val testTag: String
 )
 
 @Preview(widthDp = 360, heightDp = 680)

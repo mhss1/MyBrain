@@ -6,6 +6,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.compositeOver
+import androidx.paging.compose.LazyPagingItems
 import com.mhss.app.domain.model.Note
 import com.mhss.app.ui.ItemView
 import com.mhss.app.ui.components.notes.NoteSearchContent
@@ -15,7 +16,7 @@ import com.mhss.app.ui.components.notes.NoteSearchContent
 fun AttachNoteSheet(
     state: SheetState,
     onDismissRequest: () -> Unit,
-    notes: List<Note>,
+    notes: LazyPagingItems<Note>,
     view: ItemView,
     onQueryChange: (String) -> Unit,
     onNoteClick: (Note) -> Unit

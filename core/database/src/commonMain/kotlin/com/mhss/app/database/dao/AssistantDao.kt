@@ -1,5 +1,9 @@
 package com.mhss.app.database.dao
 
+import androidx.paging.PagingSource
+import androidx.room3.DaoReturnTypeConverters
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
+
 import androidx.room3.Dao
 import androidx.room3.Query
 import androidx.room3.Transaction
@@ -9,10 +13,14 @@ import com.mhss.app.database.entity.AssistantThreadEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 interface AssistantDao {
 
     @Query("SELECT * FROM assistant_threads ORDER BY updated_at DESC")
     fun getAllThreads(): Flow<List<AssistantThreadEntity>>
+
+    @Query("SELECT * FROM assistant_threads ORDER BY updated_at DESC")
+    fun getPagedThreads(): PagingSource<Int, AssistantThreadEntity>
 
     @Upsert
     suspend fun upsertThread(thread: AssistantThreadEntity)

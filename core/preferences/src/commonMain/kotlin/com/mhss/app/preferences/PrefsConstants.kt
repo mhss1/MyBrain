@@ -50,4 +50,6 @@ object PrefsConstants {
     const val AUTO_BACKUP_FOLDER_URI = "auto_backup_folder_uri"
     const val AUTO_BACKUP_FREQUENCY = "auto_backup_frequency"
     const val AUTO_BACKUP_FREQUENCY_AMOUNT = "auto_backup_frequency_amount"
+
+    const val LAST_TOMBSTONE_CLEANUP_AT = "last_tombstone_cleanup_at"
 }

@@ -35,6 +35,7 @@ interface SyncRepository {
     suspend fun getDeletedEntitiesAfterSeq(seq: Long, maxSeq: Long): List<DeletedEntityEntity>
     suspend fun getDeletedEntityIds(entityType: String, entityIds: List<String>): List<String>
     suspend fun deletedEntityExists(entityType: String, entityId: String): Boolean
+    suspend fun deleteExpiredTombstones(cutoff: Long, limit: Int): Int
 
     suspend fun getNotesByIds(ids: List<String>): List<Note>
     suspend fun getNoteFoldersByIds(ids: List<String>): List<NoteFolder>
@@ -121,6 +122,10 @@ class SyncRepositoryImpl(
 
     override suspend fun deletedEntityExists(entityType: String, entityId: String): Boolean {
         return syncDao.deletedEntityExists(entityType, entityId)
+    }
+
+    override suspend fun deleteExpiredTombstones(cutoff: Long, limit: Int): Int {
+        return syncDao.deleteExpiredTombstones(cutoff, limit)
     }
 
     override suspend fun getNotesByIds(ids: List<String>): List<Note> {

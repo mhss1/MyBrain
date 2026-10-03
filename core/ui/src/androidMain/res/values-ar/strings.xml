@@ -16,14 +16,14 @@
     <string name="due_date">الوقت</string>
     <string name="error_empty_title">العنوال لا يمكن أن يكون فارغ</string>
     <string name="cancel">إلغاء</string>
-    <string name="no_tasks_message">ليس لديك أي مهام\n أظغط على زر + لإضافة مهام جديدة \n أو \n بواسطة الإختصار من قائمة الاعدادات السريعة بجهازك</string>
-    <string name="no_notes_message">ليس لديك أي ملاحظات.\n اضغط على + لإضافة ملاحظة جديدة</string>
+    <string name="no_tasks_message">لا توجد مهام</string>
+    <string name="no_notes_message">لا توجد ملاحظات</string>
     <string name="bookmark_saved">تم الحفظ بنجاح</string>
     <string name="invalid_url">رابط غير صالح</string>
     <string name="no_read_calendar_permission_message">إذن قرائة التقويم مطلوب لهذه الميزة. \n الرجاء منح الإذن للإستخدام</string>
     <string name="go_to_settings">الإنتقال الى الاعدادات</string>
     <string name="added_task">تمت الإضافة الى المهام</string>
-    <string name="no_events">لا يوجد مواعيد بعد</string>
+    <string name="no_events">لا توجد مواعيد</string>
     <string name="loading">جاري التحميل…</string>
     <string name="calendar_widget_refresh_message">أضغط زر التحديث إذا كنت قد منحت الاذن بالفعل</string>
     <string name="thursday_30_calendar_preview">الخميس 30</string>

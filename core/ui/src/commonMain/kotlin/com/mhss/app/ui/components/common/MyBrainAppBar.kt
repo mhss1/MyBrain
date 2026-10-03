@@ -8,10 +8,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mhss.app.ui.navigation.NavigationTestTags
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyBrainAppBar(
     title: String,
@@ -24,6 +25,7 @@ fun MyBrainAppBar(
         title = {
             Text(
                 text = title,
+                modifier = Modifier.testTag(NavigationTestTags.SCREEN_TITLE),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
         },

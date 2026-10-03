@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.mhss.app.ui.components.notes.NoteSearchContent
 import com.mhss.app.ui.navigation.Screen
 import org.koin.compose.viewmodel.koinViewModel
@@ -21,7 +22,7 @@ fun NotesSearchScreen(
     val state by viewModel.notesUiState.collectAsStateWithLifecycle()
     NoteSearchContent(
         modifier = Modifier.padding(WindowInsets.statusBars.asPaddingValues()),
-        notes = state.searchNotes,
+        notes = viewModel.searchResults.collectAsLazyPagingItems(),
         onQueryChange = { viewModel.onEvent(NoteEvent.SearchNotes(it)) },
         onNoteClick = {
             navController.navigate(

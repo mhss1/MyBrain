@@ -8,7 +8,10 @@ import com.mhss.app.domain.model.Bookmark
 
 @Entity(
     tableName = "bookmarks",
-    indices = [Index(value = ["sync_seq"])]
+    indices = [
+        Index(value = ["sync_seq"]),
+        Index(value = ["updated_date"])
+    ]
 )
 data class BookmarkEntity(
     val url: String,
